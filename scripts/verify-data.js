@@ -1,0 +1,12 @@
+const fs = require('fs');
+const code = fs.readFileSync(__dirname + '/../assets/creative-data.js', 'utf8');
+const mod = {};
+new Function('module', code + '\nmodule.exports = {REELS,STATICS,CAROUSELS,CATS};')(mod);
+const { REELS, STATICS, CAROUSELS, CATS } = mod.exports;
+console.log('REELS', REELS.length, REELS[0].cat, REELS[0].title, REELS[0].dur);
+console.log('STATICS', STATICS.length, STATICS[0].cat, STATICS[0].title);
+console.log('CAROUSELS', CAROUSELS.length, CAROUSELS[0].cat, CAROUSELS[0].slides.length);
+console.log('CATS', JSON.stringify(CATS));
+console.log('reel cats', REELS.map(r=>r.cat));
+console.log('static cats', STATICS.map(r=>r.cat));
+console.log('all thumbs valid dataURI:', REELS.every(r=>r.thumb.startsWith('data:image')) && STATICS.every(r=>r.thumb.startsWith('data:image')));
