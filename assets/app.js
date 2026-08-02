@@ -591,13 +591,23 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     return item.type === "carousel" ? item.slides[0] : item.thumb;
   }
 
+  // Graceful video hook point: if a delivered item ever carries a `video`
+  // field (real file/URL), prefer it; otherwise fall back to the static
+  // thumbnail exactly as today. No item currently has `.video`.
+  function mediaTagHTML(item, cls, extraAttrs) {
+    if (item.video) {
+      return `<video class="${cls}" src="${item.video}" poster="${item.thumb || ""}" muted loop playsinline ${extraAttrs || ""}></video>`;
+    }
+    return `<img class="${cls}" src="${item.thumb}" loading="lazy" alt="${escapeHtml(item.title)}" ${extraAttrs || ""}>`;
+  }
+
   function workCardHTML(item, idx) {
     if (item.type === "carousel") {
       const slideDots = item.slides
         .map((_, i) => `<span class="wc-dot${i === 0 ? " active" : ""}" data-slide="${i}"></span>`)
         .join("");
       return `
-      <article class="work-card carousel-card" data-idx="${idx}" data-slide="0">
+      <article class="work-card carousel-card" data-idx="${idx}" data-slide="0" style="--i:${idx}">
         <div class="wc-media-wrap">
           <img class="wc-media wc-slide-img" src="${item.slides[0]}" loading="lazy" alt="${escapeHtml(item.title)}">
           <button class="wc-mini-prev" aria-label="Previous slide">‹</button>
@@ -612,9 +622,9 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
       </article>`;
     }
     return `
-      <article class="work-card" data-idx="${idx}">
+      <article class="work-card" data-idx="${idx}" style="--i:${idx}">
         <div class="wc-media-wrap">
-          <img class="wc-media" src="${item.thumb}" loading="lazy" alt="${escapeHtml(item.title)}">
+          ${mediaTagHTML(item, "wc-media")}
           <span class="wc-badge">${item.dur ? item.dur : ""}</span>
         </div>
         <div class="wc-info">
@@ -653,8 +663,31 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     attachCardHandlers();
   }
 
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isTouch = window.matchMedia && window.matchMedia("(hover: none)").matches;
+
+  function attachCardTilt(card) {
+    if (prefersReducedMotion || isTouch) return;
+    let raf = null;
+    card.addEventListener("mousemove", (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `translateY(-6px) rotateX(${py * -8}deg) rotateY(${px * 10}deg)`;
+        raf = null;
+      });
+    });
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "";
+    });
+  }
+
   function attachCardHandlers() {
     showcaseTrack.querySelectorAll(".work-card").forEach((card) => {
+      attachCardTilt(card);
       card.addEventListener("click", (e) => {
         if (e.target.closest(".wc-mini-prev") || e.target.closest(".wc-mini-next") || e.target.closest(".wc-dot")) return;
         openLightbox(Number(card.dataset.idx));
@@ -750,10 +783,13 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
       lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)} — Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
     } else {
       const isReel = activeShowcaseCat === "reels";
+      const mediaEl = item.video
+        ? `<video src="${item.video}" poster="${item.thumb || ""}" controls playsinline></video>`
+        : `<img src="${item.thumb}" alt="${escapeHtml(item.title)}">`;
       lbMedia.innerHTML = `
         <div class="lb-frame ${isReel ? "lb-frame-vertical" : "lb-frame-square"}">
-          <img src="${item.thumb}" alt="${escapeHtml(item.title)}">
-          ${isReel ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
+          ${mediaEl}
+          ${isReel && !item.video ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
         </div>`;
       lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)}</p>`;
     }
@@ -789,39 +825,52 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
   });
 
   /* ----------------------------------------------------------
-     10. HERO — floating creative collage + parallax
+     10. HERO — kinetic filmstrip of real creative thumbnails
+     Two rows, auto-scrolling opposite directions (pure CSS
+     transform animation — cheap, GPU-composited). A single
+     rAF-throttled scroll listener adds a subtle parallax drift
+     so the rows feel scroll-linked, not just looping.
   ---------------------------------------------------------- */
-  (function buildHeroCollage() {
-    const wrap = document.getElementById("heroCollage");
+  (function buildHeroFilmstrip() {
+    const wrap = document.getElementById("heroFilmstrip");
     if (!wrap) return;
-    const picks = [];
-    REELS.slice(0, 6).forEach((r) => picks.push({ src: r.thumb, tall: true }));
-    STATICS.slice(0, 4).forEach((s) => picks.push({ src: s.thumb, tall: false }));
-    wrap.innerHTML = picks
-      .map(
-        (p, i) =>
-          `<div class="hero-tile ${p.tall ? "hero-tile-tall" : "hero-tile-sq"}" style="--i:${i}"><img src="${p.src}" loading="lazy" alt=""></div>`
-      )
-      .join("");
 
-    const hero = document.getElementById("hero");
-    let raf = null;
-    hero.addEventListener("mousemove", (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        const r = hero.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        wrap.querySelectorAll(".hero-tile").forEach((tile, i) => {
-          const depth = 1 + (i % 4) * 0.6;
-          tile.style.transform = `translate3d(${x * depth * 14}px, ${y * depth * 14}px, 0)`;
+    const rowA = []
+      .concat(REELS.slice(0, 8).map((r) => r.thumb))
+      .concat(STATICS.slice(0, 4).map((s) => s.thumb));
+    const rowB = []
+      .concat(STATICS.map((s) => s.thumb))
+      .concat(REELS.slice(8).map((r) => r.thumb))
+      .concat(CAROUSELS.map((c) => (c.slides ? c.slides[0] : null)).filter(Boolean));
+
+    function rowHTML(imgs, dir, dur) {
+      if (!imgs.length) return "";
+      const doubled = imgs.concat(imgs); // seamless loop
+      const tiles = doubled
+        .map((src) => `<div class="filmstrip-tile"><img src="${src}" loading="lazy" alt=""></div>`)
+        .join("");
+      return `<div class="filmstrip-row dir-${dir}" style="--dur:${dur}s"><div class="filmstrip-track">${tiles}</div></div>`;
+    }
+
+    wrap.innerHTML = rowHTML(rowA, "left", 48) + rowHTML(rowB, "right", 60);
+
+    // Subtle scroll-linked parallax: rows drift vertically at
+    // slightly different rates as the hero scrolls out of view.
+    if (prefersReducedMotion) return;
+    const rows = wrap.querySelectorAll(".filmstrip-row");
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY || window.pageYOffset || 0;
+        rows.forEach((row, i) => {
+          row.style.transform = `translateY(${y * (0.04 + i * 0.03)}px)`;
         });
-        raf = null;
+        ticking = false;
       });
-    });
-    hero.addEventListener("mouseleave", () => {
-      wrap.querySelectorAll(".hero-tile").forEach((tile) => (tile.style.transform = ""));
-    });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
   })();
 
   /* ----------------------------------------------------------
