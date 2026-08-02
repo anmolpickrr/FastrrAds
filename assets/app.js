@@ -574,7 +574,7 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
   ---------------------------------------------------------- */
   const SHOWCASE_SOURCES = {
     reels: REELS,
-    catalogue: [],
+    catalogue: CATALOGUE,
     static: STATICS,
     carousel: CAROUSELS,
   };
@@ -591,12 +591,12 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     return item.type === "carousel" ? item.slides[0] : item.thumb;
   }
 
-  // Graceful video hook point: if a delivered item ever carries a `video`
-  // field (real file/URL), prefer it; otherwise fall back to the static
-  // thumbnail exactly as today. No item currently has `.video`.
+  // Card thumbnail: real delivered videos (e.g. 360° Catalogue) render a
+  // <video> pinned to its poster frame via preload="none" — no bytes are
+  // fetched until the user opens the lightbox and presses play there.
   function mediaTagHTML(item, cls, extraAttrs) {
     if (item.video) {
-      return `<video class="${cls}" src="${item.video}" poster="${item.thumb || ""}" muted loop playsinline ${extraAttrs || ""}></video>`;
+      return `<video class="${cls}" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none" ${extraAttrs || ""}></video>`;
     }
     return `<img class="${cls}" src="${item.thumb}" loading="lazy" alt="${escapeHtml(item.title)}" ${extraAttrs || ""}>`;
   }
@@ -782,14 +782,14 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
       });
       lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)} — Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
     } else {
-      const isReel = activeShowcaseCat === "reels";
+      const isVertical = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
       const mediaEl = item.video
-        ? `<video src="${item.video}" poster="${item.thumb || ""}" controls playsinline></video>`
+        ? `<video src="${item.video}" poster="${item.thumb || ""}" controls playsinline preload="metadata"></video>`
         : `<img src="${item.thumb}" alt="${escapeHtml(item.title)}">`;
       lbMedia.innerHTML = `
-        <div class="lb-frame ${isReel ? "lb-frame-vertical" : "lb-frame-square"}">
+        <div class="lb-frame ${isVertical ? "lb-frame-vertical" : "lb-frame-square"}">
           ${mediaEl}
-          ${isReel && !item.video ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
+          ${isVertical && !item.video ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
         </div>`;
       lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)}</p>`;
     }
@@ -841,6 +841,7 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     const rowB = []
       .concat(STATICS.map((s) => s.thumb))
       .concat(REELS.slice(8).map((r) => r.thumb))
+      .concat(CATALOGUE.map((c) => c.thumb))
       .concat(CAROUSELS.map((c) => (c.slides ? c.slides[0] : null)).filter(Boolean));
 
     function rowHTML(imgs, dir, dur) {
