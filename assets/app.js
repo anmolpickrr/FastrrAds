@@ -27,7 +27,7 @@
       revisions: "No revisions",
       scripting: "No scripting",
       language: "Not applicable",
-      turnaround: "5–7 business days after we receive everything needed from you",
+      turnaround: "24–48 working hours after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
         "Silent, looped motion, 8–15 sec",
@@ -62,7 +62,7 @@
       revisions: "1 revision",
       scripting: "Not applicable",
       language: "Not applicable",
-      turnaround: "3–5 business days after we receive everything needed from you",
+      turnaround: "24 working hours after we receive all required details, assets, and final confirmation from you",
       included: [
         "1 designed static creative",
         "2 aspect ratios (1:1 and 9:16)",
@@ -95,7 +95,7 @@
       revisions: "1 revision",
       scripting: "Not applicable",
       language: "Not applicable",
-      turnaround: "5–7 business days after we receive everything needed from you",
+      turnaround: "24–48 working hours after we receive all required details, assets, and final confirmation from you",
       included: [
         "Up to 5-slide carousel",
         "2 aspect ratios (1:1 and 9:16)",
