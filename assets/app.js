@@ -46,6 +46,10 @@
         "Product page/link for reference",
       ],
       deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent, delivered via shared drive folder",
+      // No scripting step on this service (see `scripting: "No scripting"` above), so
+      // no dedicated writer or Creative Director script sign-off applies — only the
+      // editor building the rotation and the standard brief/requirement call.
+      support: ["editor", "call"],
     },
     static: {
       name: "Static Creative",
@@ -76,6 +80,9 @@
         "Key message/offer to highlight",
       ],
       deliver: "2 files — 1:1 and 9:16, PNG/JPG, print-ready resolution, delivered via shared drive folder",
+      // Design-only, no scripting (`scripting: "Not applicable"`) — editor/designer
+      // builds the creative, no dedicated writer or CD script oversight needed.
+      support: ["editor", "call"],
     },
     carousel: {
       name: "Carousel Creative",
@@ -105,6 +112,8 @@
         "High-res product images (white background)",
       ],
       deliver: "Up to 5 slides × 2 sizes, PNG/JPG set, numbered & sequenced, delivered via shared drive folder",
+      // Same reasoning as Static — design-only, `scripting: "Not applicable"`.
+      support: ["editor", "call"],
     },
     reel1: {
       name: "AI Reel — Tier 1", tier: 1, unit: "reel", basePrice: 2000,
@@ -128,6 +137,9 @@
       ],
       deliver: "1 MP4, 9:16, max 20 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      // `excluded` explicitly rules out "Script shared for approval" and there's no
+      // writer/CD mention in `included` — brief-only build, editor assembles it.
+      support: ["editor", "call"],
     },
     reel2: {
       name: "AI Reel — Tier 2", tier: 2, unit: "reel", basePrice: 3500,
@@ -152,6 +164,9 @@
       ],
       deliver: "1 MP4, 9:16, max 25 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      // Adds a limited-scope revision but `excluded` still rules out "Script shared
+      // for approval" — no writer/CD role beyond Tier 1.
+      support: ["editor", "call"],
     },
     reel3: {
       name: "AI Reel — Tier 3", tier: 3, unit: "reel", basePrice: 5000,
@@ -177,6 +192,10 @@
       ],
       deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for review, delivered via shared drive folder",
       dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      // `included` explicitly says "Reel built with Writer + Editor input" — writer
+      // added. `excluded` rules out "Script sign-off/approval (review only)", so no
+      // Creative Director oversight yet — that arrives at Tier 4.
+      support: ["writer", "editor", "call"],
     },
     reel4: {
       name: "AI Reel — Tier 4", tier: 4, unit: "reel", basePrice: 8000,
@@ -202,6 +221,9 @@
       ],
       deliver: "1 MP4, 9:16, max 35 sec, plus 1 script + 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      // `included` explicitly says "full Writer + Editor + Creative Director
+      // involvement" — all four support roles are covered at this tier.
+      support: ["writer", "editor", "director", "call"],
     },
   };
 
@@ -236,8 +258,9 @@
     qty: 1,
     discountPct: 0,
     scopeTab: "inc", // inc | exc | need
-    clientName: "",
     brandName: "",
+    website: "",
+    brandCategory: "",
     specialReq: "",
   };
 
@@ -281,13 +304,53 @@
     return items.map((i) => `<li>${i}</li>`).join("");
   }
 
+  const SUPPORT_ROLES = [
+    {
+      key: "writer",
+      label: "Dedicated Content Writer",
+      icon: '<path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>',
+    },
+    {
+      key: "editor",
+      label: "Dedicated Video Editor",
+      icon: '<polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
+    },
+    {
+      key: "director",
+      label: "Creative Director Oversight",
+      icon: '<circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>',
+    },
+    {
+      key: "call",
+      label: "Call Support &amp; Requirement Discussion",
+      icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>',
+    },
+  ];
+
+  function renderSupportBlock() {
+    const d = currentData();
+    const support = d.support || [];
+    const wrap = document.getElementById("supportBlock");
+    wrap.innerHTML = SUPPORT_ROLES.map((role) => {
+      const included = support.indexOf(role.key) !== -1;
+      const state = included ? "is-included" : "is-excluded";
+      const badge = included ? "✓" : "✕";
+      return `<div class="support-item ${state}">
+        <span class="support-badge">${badge}</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg>
+        <span>${role.label}</span>
+        <em class="support-state-label">${included ? "Included" : "Not Included"}</em>
+      </div>`;
+    }).join("");
+  }
+
   function renderServiceSummary() {
     const d = currentData();
     document.getElementById("svcName").textContent = d.name;
     document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
     document.getElementById("svcShort").textContent = d.short || "";
     document.getElementById("svcBenefit").textContent = d.benefit || "";
-    document.getElementById("supportBlock").style.display = state.service === "reels" ? "" : "none";
+    renderSupportBlock();
   }
 
   function renderScopePanel() {
@@ -370,8 +433,13 @@
   function renderMessages() {
     const q = computeQuote();
     const d = q.d;
-    const clientName = state.clientName.trim() || "[Client Name]";
-    const brandName = state.brandName.trim() || "[Brand Name]";
+    const brandName = state.brandName.trim() || "[Client / Brand Name]";
+    const clientName = brandName;
+    const website = state.website.trim() || "[Website]";
+    const brandCategory = state.brandCategory.trim() || "[Brand Category]";
+    const packageDetails = SERVICE_META[state.service].label + (state.service === "reels" ? " — Tier " + state.tier : "");
+    const packageDetailsEl = document.getElementById("packageDetailsVal");
+    if (packageDetailsEl) packageDetailsEl.textContent = packageDetails;
     const qtyLine = q.qty > 1 ? `${q.qty} × ${d.name}` : d.name;
 
     const priceBlock = [
@@ -383,6 +451,9 @@
       .join("\n");
 
     const clientMsg = `Hi ${clientName},
+
+Brand: ${brandName}
+Website: ${website}
 
 As discussed, we'll be delivering:
 
@@ -405,7 +476,9 @@ Let us know if you have any questions before we begin!`;
 
     const internalMsg = `INTERNAL PURCHASE BRIEF — for Creative Team
 
-Client / Brand: ${brandName}
+Client / Brand: ${brandName} (${brandCategory})
+Website: ${website}
+Package Details: ${packageDetails}
 Service: ${SERVICE_META[state.service].label}${state.service === "reels" ? " / Tier: Tier " + state.tier : ""}
 Quantity: ${q.qty}
 Final Price: ${fmtINR(q.final)}${q.pct > 0 ? ` (Discount applied: ${q.pct}% / − ${fmtINR(q.discountAmt)} off subtotal ${fmtINR(q.subtotal)})` : ""}
@@ -498,12 +571,27 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     });
   });
 
-  document.getElementById("clientNameInput").addEventListener("input", (e) => {
-    state.clientName = e.target.value;
+  const brandNameInput = document.getElementById("brandNameInput");
+  const websiteInput = document.getElementById("websiteInput");
+  const brandCategorySelect = document.getElementById("brandCategorySelect");
+  const REQUIRED_FIELDS = [brandNameInput, websiteInput, brandCategorySelect];
+
+  function clearFieldError(el) {
+    el.classList.remove("input-error");
+  }
+  brandNameInput.addEventListener("input", (e) => {
+    state.brandName = e.target.value;
+    clearFieldError(brandNameInput);
     renderMessages();
   });
-  document.getElementById("brandNameInput").addEventListener("input", (e) => {
-    state.brandName = e.target.value;
+  websiteInput.addEventListener("input", (e) => {
+    state.website = e.target.value;
+    clearFieldError(websiteInput);
+    renderMessages();
+  });
+  brandCategorySelect.addEventListener("change", (e) => {
+    state.brandCategory = e.target.value;
+    clearFieldError(brandCategorySelect);
     renderMessages();
   });
   document.getElementById("specialReqInput").addEventListener("input", (e) => {
@@ -511,9 +599,31 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     renderMessages();
   });
 
+  // Returns the first empty required field, or null if all are filled.
+  // Highlights every empty required field with an inline error state
+  // (border + shake) instead of a blocking alert().
+  function validateRequiredFields() {
+    let firstInvalid = null;
+    REQUIRED_FIELDS.forEach((el) => {
+      const empty = !el.value || !el.value.trim();
+      el.classList.toggle("input-error", empty);
+      if (empty && !firstInvalid) firstInvalid = el;
+    });
+    if (firstInvalid) {
+      // restart the shake animation on repeat clicks
+      firstInvalid.classList.remove("input-error");
+      // eslint-disable-next-line no-unused-expressions
+      void firstInvalid.offsetWidth;
+      firstInvalid.classList.add("input-error");
+      firstInvalid.focus();
+    }
+    return firstInvalid;
+  }
+
   function wireCopyButton(btnId, sourceId) {
     const btn = document.getElementById(btnId);
     btn.addEventListener("click", async () => {
+      if (validateRequiredFields()) return; // incomplete — inline error shown, no copy
       const text = document.getElementById(sourceId).value;
       let ok = false;
       try {
