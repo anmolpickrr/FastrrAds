@@ -282,14 +282,17 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 }
 .work-card.ar-square{width:250px;}
 .work-card.ar-portrait{width:196px;}
+.work-card.ar-4x5{width:222px;}
 @media (max-width:520px){
   .work-card.ar-square{width:208px;}
   .work-card.ar-portrait{width:164px;}
+  .work-card.ar-4x5{width:184px;}
 }
 @keyframes cardIn{from{opacity:0; transform:translateY(22px);}to{opacity:1; transform:translateY(0);}}
 .work-card:hover{box-shadow:var(--card-shadow); border-color:var(--glass-strong);}
 .wc-media-wrap{position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--bg-2);}
 .work-card.ar-portrait .wc-media-wrap{aspect-ratio:9/16;}
+.work-card.ar-4x5 .wc-media-wrap{aspect-ratio:4/5;}
 .wc-media-wrap .wc-media{width:100%; height:100%; object-fit:cover; transition:transform .5s; will-change:transform;}
 .work-card:hover .wc-media{transform:scale(1.05);}
 .wc-badge{
@@ -330,6 +333,7 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .lb-frame{position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line-soft); background:#000; max-height:76vh;}
 .lb-frame-vertical{aspect-ratio:9/16; height:76vh; max-height:76vh;}
 .lb-frame-square{aspect-ratio:1/1; max-height:76vh;}
+.lb-frame-4x5{aspect-ratio:4/5; height:76vh; max-height:76vh;}
 .lb-frame img,.lb-frame video{width:100%; height:100%; object-fit:cover;}
 .lb-play-badge{position:absolute; top:14px; left:14px; background:rgba(0,0,0,.55); color:#fff; font-family:var(--font-mono); font-size:12px; padding:5px 11px; border-radius:100px;}
 .lb-carousel{position:relative; border-radius:var(--radius); overflow:hidden; max-height:76vh; aspect-ratio:1/1; background:#000;}

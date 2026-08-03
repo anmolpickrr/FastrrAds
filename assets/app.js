@@ -746,12 +746,15 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
   }
 
   // AI Reels + 360° Catalogue are real 1080x1920 (9:16) source video;
-  // Static + Carousel are real 1:1 source content. Sizing each category's
-  // cards to match its actual media ratio (instead of a single hardcoded
-  // square for everything) is the fix for the showcase "misalignment"
-  // complaint — see .ar-square / .ar-portrait in the stylesheet.
+  // Static creatives are real 4:5 source ad creative; Carousel slides are
+  // 1:1 source content. Sizing each category's cards to match its actual
+  // media ratio (instead of a single hardcoded square for everything) is
+  // the fix for the showcase "misalignment" complaint — see .ar-square /
+  // .ar-portrait / .ar-4x5 in the stylesheet.
   function showcaseArClass(cat) {
-    return cat === "reels" || cat === "catalogue" ? "ar-portrait" : "ar-square";
+    if (cat === "reels" || cat === "catalogue") return "ar-portrait";
+    if (cat === "static") return "ar-4x5";
+    return "ar-square";
   }
 
   function workCardHTML(item, idx) {
@@ -937,11 +940,13 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
       lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)} — Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
     } else {
       const isVertical = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
+      const isFourFive = activeShowcaseCat === "static";
+      const lbFrameClass = isVertical ? "lb-frame-vertical" : isFourFive ? "lb-frame-4x5" : "lb-frame-square";
       const mediaEl = item.video
         ? `<video src="${item.video}" poster="${item.thumb || ""}" controls playsinline preload="metadata"></video>`
         : `<img src="${item.thumb}" alt="${escapeHtml(item.title)}">`;
       lbMedia.innerHTML = `
-        <div class="lb-frame ${isVertical ? "lb-frame-vertical" : "lb-frame-square"}">
+        <div class="lb-frame ${lbFrameClass}">
           ${mediaEl}
           ${isVertical && !item.video ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
         </div>`;
