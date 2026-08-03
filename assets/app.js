@@ -601,13 +601,23 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     return `<img class="${cls}" src="${item.thumb}" loading="lazy" alt="${escapeHtml(item.title)}" ${extraAttrs || ""}>`;
   }
 
+  // AI Reels + 360° Catalogue are real 1080x1920 (9:16) source video;
+  // Static + Carousel are real 1:1 source content. Sizing each category's
+  // cards to match its actual media ratio (instead of a single hardcoded
+  // square for everything) is the fix for the showcase "misalignment"
+  // complaint — see .ar-square / .ar-portrait in the stylesheet.
+  function showcaseArClass(cat) {
+    return cat === "reels" || cat === "catalogue" ? "ar-portrait" : "ar-square";
+  }
+
   function workCardHTML(item, idx) {
+    const arClass = showcaseArClass(activeShowcaseCat);
     if (item.type === "carousel") {
       const slideDots = item.slides
         .map((_, i) => `<span class="wc-dot${i === 0 ? " active" : ""}" data-slide="${i}"></span>`)
         .join("");
       return `
-      <article class="work-card carousel-card" data-idx="${idx}" data-slide="0" style="--i:${idx}">
+      <article class="work-card carousel-card ${arClass}" data-idx="${idx}" data-slide="0" style="--i:${idx}">
         <div class="wc-media-wrap">
           <img class="wc-media wc-slide-img" src="${item.slides[0]}" loading="lazy" alt="${escapeHtml(item.title)}">
           <button class="wc-mini-prev" aria-label="Previous slide">‹</button>
@@ -622,7 +632,7 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
       </article>`;
     }
     return `
-      <article class="work-card" data-idx="${idx}" style="--i:${idx}">
+      <article class="work-card ${arClass}" data-idx="${idx}" style="--i:${idx}">
         <div class="wc-media-wrap">
           ${mediaTagHTML(item, "wc-media")}
           <span class="wc-badge">${item.dur ? item.dur : ""}</span>
