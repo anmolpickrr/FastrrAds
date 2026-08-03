@@ -474,8 +474,6 @@
     const packageDetails = SERVICE_META[state.service].label + (state.service === "reels" ? " — Tier " + state.tier : "");
     const packageDetailsEl = document.getElementById("packageDetailsVal");
     if (packageDetailsEl) packageDetailsEl.textContent = packageDetails;
-    const qtyLine = q.qty > 1 ? `${q.qty} × ${d.name}` : d.name;
-
     const priceBlock = [
       `Subtotal: ${fmtINR(q.subtotal)}`,
       q.pct > 0 ? `Discount (${q.pct}%): − ${fmtINR(q.discountAmt)}` : null,
@@ -497,7 +495,7 @@ Brand: ${brandName} (${brandCategory})
 Website: ${website}
 
 Service: ${SERVICE_META[state.service].label}${state.service === "reels" ? " / Tier " + state.tier : ""}
-Quantity: ${qtyLine}
+Quantity: ${q.qty}
 
 Pricing:
 ${priceBlock}
