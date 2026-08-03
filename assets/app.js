@@ -1144,30 +1144,69 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
      transform animation — cheap, GPU-composited). A single
      rAF-throttled scroll listener adds a subtle parallax drift
      so the rows feel scroll-linked, not just looping.
+
+     Row 1 = AI Reels + 360° Catalogue only, real 9:16 content,
+     rendered in a 9:16 tile (see .tile-video CSS) so cover never
+     crops. Items with a real .video get an actual <video muted
+     loop playsinline preload="none">, started only once the tile
+     scrolls into the filmstrip's horizontal viewport (see the
+     IntersectionObserver below) — never more than a handful of
+     the real clips decode/play at once. Items without .video fall
+     back to their thumb image.
+
+     Row 2 = Static Ads only, real 4:5 content, rendered in a 4:5
+     tile (.tile-static). No Carousel content in either row — it
+     already has its own tab in the main showcase.
   ---------------------------------------------------------- */
   (function buildHeroFilmstrip() {
     const wrap = document.getElementById("heroFilmstrip");
     if (!wrap) return;
 
-    const rowA = []
-      .concat(REELS.slice(0, 8).map((r) => r.thumb))
-      .concat(STATICS.slice(0, 4).map((s) => s.thumb));
-    const rowB = []
-      .concat(STATICS.map((s) => s.thumb))
-      .concat(REELS.slice(8).map((r) => r.thumb))
-      .concat(CATALOGUE.map((c) => c.thumb))
-      .concat(CAROUSELS.map((c) => (c.slides ? c.slides[0] : null)).filter(Boolean));
+    const rowA = [].concat(REELS, CATALOGUE); // video row: reels + catalogue only
+    const rowB = STATICS.slice(); // static row: static ads only
 
-    function rowHTML(imgs, dir, dur) {
-      if (!imgs.length) return "";
-      const doubled = imgs.concat(imgs); // seamless loop
+    function videoTileHTML(item) {
+      if (item.video) {
+        return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
+      }
+      return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
+    }
+
+    function rowHTML(items, dir, dur, tileClass, mediaFn) {
+      if (!items.length) return "";
+      const doubled = items.concat(items); // seamless loop
       const tiles = doubled
-        .map((src) => `<div class="filmstrip-tile"><img src="${src}" loading="lazy" alt=""></div>`)
+        .map((item) => `<div class="filmstrip-tile ${tileClass}">${mediaFn(item)}</div>`)
         .join("");
       return `<div class="filmstrip-row dir-${dir}" style="--dur:${dur}s"><div class="filmstrip-track">${tiles}</div></div>`;
     }
 
-    wrap.innerHTML = rowHTML(rowA, "left", 48) + rowHTML(rowB, "right", 60);
+    wrap.innerHTML =
+      rowHTML(rowA, "left", 48, "tile-video", videoTileHTML) +
+      rowHTML(rowB, "right", 60, "tile-static", (item) => `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`);
+
+    // Lazy-start real video tiles only once horizontally visible
+    // within the filmstrip — keeps far more than a couple of the
+    // ~44 real 9:16 clips from ever decoding/playing simultaneously.
+    if ("IntersectionObserver" in window) {
+      const vio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const vid = entry.target.querySelector("video");
+            if (!vid) return;
+            if (entry.isIntersecting && !prefersReducedMotion) {
+              vid.play && vid.play().catch(() => {});
+            } else {
+              vid.pause && vid.pause();
+            }
+          });
+        },
+        { root: null, threshold: 0.15 }
+      );
+      wrap.querySelectorAll(".filmstrip-tile.tile-video").forEach((el) => {
+        if (el.querySelector("video")) vio.observe(el);
+      });
+    }
 
     // Subtle scroll-linked parallax: rows drift vertically at
     // slightly different rates as the hero scrolls out of view.
