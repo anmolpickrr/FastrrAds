@@ -424,33 +424,41 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{background:var(--vi
 .rules-panel li b{color:var(--text-0);}
 
 /* ---------- CALCULATOR ---------- */
-.calc-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+.calc-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start;}
 @media (max-width:900px){.calc-grid{grid-template-columns:1fr;}}
-.calc-card{padding:30px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);}
+.calc-card{padding:26px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);}
+.calc-selection-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:11px 16px; margin-bottom:20px; border-radius:var(--radius-sm); background:var(--violet-soft); border:1px solid var(--line);}
+.calc-selection-label{font-size:10.5px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
+.calc-selection-value{font-size:14.5px; font-weight:700; color:var(--violet);}
+.calc-card .field-row{display:flex; flex-direction:column; gap:6px; margin-bottom:14px;}
 .field-row{display:flex; flex-direction:column; gap:6px; margin-bottom:18px;}
 .field-row label{font-size:12px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
+.field-row-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.field-row-split .field-row{margin-bottom:14px;}
+@media (max-width:480px){.field-row-split{grid-template-columns:1fr;}}
 .select-input,.text-input{
   padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1); color:var(--text-0);
   font-size:14px; font-family:inherit;
 }
 .select-input:focus,.text-input:focus{outline:none; border-color:var(--violet);}
 .select-input::placeholder,.text-input::placeholder,textarea.msg-box::placeholder{color:var(--text-2); opacity:1;}
-.qty-row{display:flex; align-items:center; gap:10px;}
-.qty-btn{width:36px; height:36px; border-radius:8px; border:1px solid var(--line); background:var(--surface-1); font-size:18px; color:var(--text-0);}
+.qty-row{display:flex; align-items:center; gap:8px;}
+.qty-btn{width:36px; height:36px; flex:0 0 auto; border-radius:8px; border:1px solid var(--line); background:var(--surface-1); font-size:18px; color:var(--text-0);}
 .qty-btn:hover{background:var(--surface-hover);}
-#qQtyInput{width:70px; text-align:center;}
+#qQtyInput{width:100%; min-width:0; text-align:center;}
 .tier-mini-row{display:flex; gap:6px; flex-wrap:wrap;}
 .qtier-chip{padding:6px 12px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1); font-size:12.5px; color:var(--text-1); transition:all .2s;}
+.qtier-chip:hover{background:var(--surface-hover);}
 .qtier-chip.active{background:var(--violet); color:var(--btn-ink); border-color:var(--violet);}
 .calc-readout{display:flex; justify-content:space-between; align-items:center;}
-.summary-row{display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--line-soft); font-size:14px;}
+.summary-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line-soft); font-size:14px;}
 .summary-row span{color:var(--text-2);}
-.summary-row.total{border-bottom:none; padding-top:16px; font-size:19px; font-weight:700; font-family:var(--font-display);}
+.summary-row.total{border-bottom:none; padding-top:14px; font-size:19px; font-weight:700; font-family:var(--font-display);}
 .summary-row.total span{color:var(--text-1); font-family:var(--font-body); font-weight:600; font-size:14px;}
-.meta-pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+.meta-pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;}
 .meta-pill{font-size:12px; padding:6px 12px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px;}
 .meta-pill .dot{width:5px; height:5px; border-radius:50%; background:var(--teal);}
-.deliver-callout{margin-top:18px; padding:14px 16px; border-radius:var(--radius-sm); background:var(--violet-soft); font-size:13px; line-height:1.5;}
+.deliver-callout{margin-top:16px; padding:14px 16px; border-radius:var(--radius-sm); background:var(--violet-soft); font-size:13px; line-height:1.5;}
 
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);}
@@ -690,8 +698,13 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
 
     <div class="calc-grid reveal-on-scroll">
       <div class="calc-card">
+        <div class="calc-selection-bar">
+          <span class="calc-selection-label">Selected package</span>
+          <span class="calc-selection-value" id="qSelectionSummary">AI Reel · Tier 3</span>
+        </div>
+
         <div class="field-row">
-          <label>Service</label>
+          <label for="qServiceSelect">Creative Type</label>
           <select class="select-input" id="qServiceSelect">
             <option value="reels">AI Reel</option>
             <option value="catalogue">360° Catalogue Video</option>
@@ -700,31 +713,32 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           </select>
         </div>
         <div class="field-row" id="qTierField">
-          <label>Tier <span id="qTierVal"></span></label>
+          <label>Package Tier</label>
           <div class="tier-mini-row">
             <button class="qtier-chip" data-tier="1">Tier 1</button>
             <button class="qtier-chip" data-tier="2">Tier 2</button>
-            <button class="qtier-chip active" data-tier="3">Tier 3</button>
+            <button class="qtier-chip" data-tier="3">Tier 3</button>
             <button class="qtier-chip" data-tier="4">Tier 4</button>
           </div>
         </div>
-        <div class="field-row">
-          <label>Quantity</label>
-          <div class="qty-row">
-            <button class="qty-btn" id="qtyMinus">−</button>
-            <input class="text-input" type="number" id="qQtyInput" min="1" value="1">
-            <button class="qty-btn" id="qtyPlus">+</button>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label>Quantity</label>
+            <div class="qty-row">
+              <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+              <input class="text-input" type="number" id="qQtyInput" min="1" value="1">
+              <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+            </div>
           </div>
-        </div>
-        <div class="field-row">
-          <label>Discount (%)</label>
-          <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+          <div class="field-row">
+            <label>Discount (%)</label>
+            <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+          </div>
         </div>
         <div class="field-row">
           <label>Unit Price</label>
           <div class="text-input" id="qUnitPrice" style="background:transparent; border-style:dashed;"></div>
         </div>
-        <p style="font-size:11px; color:var(--text-2); margin-top:6px;">Service: <b id="qServiceVal" style="color:var(--text-1);"></b></p>
       </div>
 
       <div class="calc-card">

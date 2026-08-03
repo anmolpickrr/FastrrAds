@@ -403,10 +403,38 @@
   ---------------------------------------------------------- */
   function renderCalculator() {
     const q = computeQuote();
-    document.getElementById("qServiceVal").textContent = SERVICE_META[state.service].label;
-    document.getElementById("qTierVal").parentElement.style.display =
-      state.service === "reels" ? "" : "none";
-    document.getElementById("qTierVal").textContent = "Tier " + state.tier;
+    const isReel = state.service === "reels";
+
+    // Single breadcrumb-style summary — reads state directly, so it can
+    // never disagree with the chip/select below it (this replaces the old
+    // "Tier " + qTierVal.textContent concatenation that produced the
+    // garbled "Tier TIER 1" label — a second, independently-updated copy
+    // of the same information that could drift out of sync).
+    document.getElementById("qSelectionSummary").textContent =
+      SERVICE_META[state.service].label + (isReel ? " · Tier " + state.tier : "");
+
+    // Keep the <select> itself in sync with state too — state.service can
+    // change from outside this control (e.g. the Services section's own
+    // svc-tab buttons), and previously nothing here ever wrote back to
+    // qServiceSelect.value, so the dropdown could silently show a
+    // different service than the one actually active/priced below it.
+    const qServiceSelect = document.getElementById("qServiceSelect");
+    if (qServiceSelect.value !== state.service) qServiceSelect.value = state.service;
+
+    // Tier chips only apply to AI Reel — hide the whole field for
+    // tier-less services (matches how the Services section's #tierRow
+    // hides itself for the same case), and keep exactly one chip marked
+    // .active, driven directly from state.tier (previously this class was
+    // never touched here at all, so whichever chip happened to be marked
+    // "active" in the static HTML markup stayed highlighted forever,
+    // regardless of the actual selection).
+    document.getElementById("qTierField").style.display = isReel ? "" : "none";
+    if (isReel) {
+      document.querySelectorAll(".qtier-chip").forEach((chip) => {
+        chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
+      });
+    }
+
     document.getElementById("qUnitPrice").textContent = fmtINR(q.d.basePrice) + " / " + (q.d.unit || "pkg");
     document.getElementById("qQtyInput").value = q.qty;
     document.getElementById("qDiscountInput").value = state.discountPct;
@@ -414,13 +442,19 @@
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(q.discountAmt);
     document.getElementById("qFinal").textContent = fmtINR(q.final);
 
-    const pills = [
+    // Only show pills for fields that actually apply to this package —
+    // e.g. skip Script/Language for services that don't have a scripting
+    // or voiceover step, instead of always rendering a fixed 4-pill set.
+    const pillCandidates = [
       ["Revisions", q.d.revisions],
       ["Duration", q.d.duration],
       ["Turnaround", q.d.turnaround.split(" after")[0]],
       ["Format", q.d.format],
+      ["Script", q.d.scripting && !/^(no scripting|not applicable)/i.test(q.d.scripting) ? q.d.scripting : null],
+      ["Language", q.d.language && q.d.language !== "Not applicable" ? q.d.language : null],
     ];
-    document.getElementById("qMetaPills").innerHTML = pills
+    document.getElementById("qMetaPills").innerHTML = pillCandidates
+      .filter(([, v]) => v)
       .map(([l, v]) => `<div class="meta-pill"><span class="dot"></span>${l}: <b>${v}</b></div>`)
       .join("");
 
