@@ -133,31 +133,32 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 
 /* ---------- HERO ---------- */
 .hero{
-  position:relative; min-height:100vh; overflow:hidden;
-  padding:136px 0 0; display:flex; flex-direction:column; justify-content:flex-start;
+  position:relative; min-height:0; overflow:hidden; max-width:100vw;
+  padding:104px 0 0; display:flex; flex-direction:column; justify-content:flex-start;
 }
-.hero > .wrap{width:100%; position:relative; z-index:2;}
+.hero > .wrap{width:100%; position:relative; z-index:2; max-width:1280px; overflow:visible;}
 .hero-bg-glow{
-  position:absolute; inset:-10%; z-index:0; pointer-events:none;
+  position:absolute; inset:0; z-index:0; pointer-events:none;
   background: radial-gradient(560px circle at 12% 12%, var(--violet-soft), transparent 62%),
               radial-gradient(480px circle at 92% 30%, var(--teal-soft), transparent 60%);
 }
-.hero-stage{position:relative; min-height:640px; padding-bottom:36px;}
+.hero-stage{position:relative; min-height:600px; padding-bottom:20px;}
 @media (max-width:900px){.hero-stage{min-height:0; padding-bottom:0;}}
-.hero-eyebrow{margin-bottom:20px;}
-.hero-head{max-width:600px; position:relative; z-index:3;}
+.hero-eyebrow{margin-bottom:16px;}
+.hero-head{max-width:600px; width:100%; position:relative; z-index:3;}
 .hero-title{
-  font-size:clamp(42px,7.4vw,96px); line-height:0.98; font-weight:700; letter-spacing:-0.02em;
+  font-size:clamp(42px,7.4vw,88px); line-height:0.98; font-weight:700; letter-spacing:-0.02em;
+  max-width:100%;
 }
-.hero-title .word{display:inline-block; overflow:hidden; vertical-align:top;}
+.hero-title .word{display:inline-block; overflow:hidden; vertical-align:top; max-width:100%;}
 .hero-title .word span{display:inline-block; transform:translateY(105%); animation:wordUp .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:calc(var(--w,0) * .08s);}
 @keyframes wordUp{to{transform:translateY(0);}}
 .hero-title .accent{
   background:linear-gradient(100deg,var(--violet),var(--teal));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.hero-sub{margin-top:24px; font-size:17.5px; line-height:1.6; color:var(--text-1); max-width:560px;}
-.hero-cta-row{display:flex; gap:14px; margin-top:32px; flex-wrap:wrap;}
+.hero-sub{margin-top:18px; font-size:17.5px; line-height:1.6; color:var(--text-1); max-width:560px;}
+.hero-cta-row{display:flex; gap:14px; margin-top:26px; flex-wrap:wrap;}
 .btn{
   padding:13px 24px; border-radius:12px; font-weight:600; font-size:14.5px; border:1px solid transparent; display:inline-flex; align-items:center; gap:8px;
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s, background .25s, border-color .25s;
@@ -167,13 +168,27 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .btn-primary:hover{box-shadow:0 12px 28px -10px var(--violet-soft); transform:translateY(-2px);}
 .btn-ghost{background:var(--surface-1); border-color:var(--line); color:var(--text-0);}
 .btn-ghost:hover{background:var(--surface-hover); transform:translateY(-2px);}
-.hero-stats{display:flex; gap:32px; margin-top:40px; flex-wrap:wrap;}
+.hero-stats{display:flex; gap:32px; margin-top:30px; flex-wrap:wrap;}
 .hero-stat b{display:block; font-family:var(--font-display); font-size:26px;}
 .hero-stat span{font-size:12.5px; color:var(--text-2);}
 
-/* ---------- HERO ORBIT — layered/overlapping real-creative tiles ---------- */
+/* ---------- HERO ORBIT — layered/overlapping real-creative tiles ----------
+   .hero-visual is a single fixed-size composition box (tiles + stamp)
+   anchored to the top-right of the hero stage. Keeping it one bounded
+   box — instead of scattering tiles across the full stage height with
+   percentage offsets — is what keeps the collage reading as one tight,
+   intentional cluster instead of drifting into empty space. It scales
+   as a single unit at narrower desktop widths so every tile's relative
+   position/overlap stays identical (no re-scattering) while it shrinks
+   to stay clear of the headline. */
+.hero-visual{
+  position:absolute; top:0; right:0; width:420px; height:600px; z-index:1;
+  transform-origin:top right;
+}
+@media (max-width:1180px){.hero-visual{transform:scale(.86);}}
+@media (max-width:1060px){.hero-visual{transform:scale(.72);}}
+@media (max-width:900px){.hero-visual{display:none;}}
 .hero-orbit{position:absolute; inset:0; z-index:1; pointer-events:none;}
-@media (max-width:900px){.hero-orbit{display:none;}}
 .hero-tile{
   position:absolute; opacity:0; pointer-events:auto;
   transform:rotate(var(--r,0deg)) translateY(24px) scale(.92);
@@ -201,13 +216,12 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   color:var(--text-0); background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px);
   padding:9px 16px; border-radius:100px; transform:rotate(-6deg);
   animation:stampIn .9s .5s cubic-bezier(.16,1,.3,1) both;
-  top:44%; right:-4px; white-space:nowrap;
+  top:214px; right:118px; white-space:nowrap;
 }
 @keyframes stampIn{from{opacity:0; transform:rotate(-6deg) scale(.7);}to{opacity:1; transform:rotate(-6deg) scale(1);}}
-@media (max-width:900px){.hero-stamp{display:none;}}
 
 /* Kinetic filmstrip — real creative thumbnails, auto-scrolling rows */
-.hero-filmstrip{position:relative; z-index:1; margin-top:54px; padding-bottom:40px; display:flex; flex-direction:column; gap:14px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+.hero-filmstrip{position:relative; z-index:1; margin-top:36px; padding-bottom:26px; display:flex; flex-direction:column; gap:14px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
 .filmstrip-row{overflow:hidden; width:100%;}
 .filmstrip-track{display:flex; gap:14px; width:max-content; will-change:transform;}
 .filmstrip-row.dir-left .filmstrip-track{animation:strip-left var(--dur,55s) linear infinite;}
@@ -479,8 +493,10 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           <div class="hero-stat"><b>24–54h</b><span>Working-Hour Turnaround</span></div>
         </div>
       </div>
-      <div class="hero-orbit" id="heroOrbit" aria-hidden="true"></div>
-      <span class="hero-stamp">★ Real delivered creative — not mockups</span>
+      <div class="hero-visual" id="heroVisual">
+        <div class="hero-orbit" id="heroOrbit" aria-hidden="true"></div>
+        <span class="hero-stamp">★ Real delivered creative — not mockups</span>
+      </div>
     </div>
   </div>
   <div class="hero-filmstrip" id="heroFilmstrip"></div>
