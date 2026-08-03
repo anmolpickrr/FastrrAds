@@ -988,82 +988,55 @@ Please also share anything else you'd like us to consider from your end.${specia
 
     const heroVideo = REELS.find((r) => r.video && r.video.includes("bang-bang-reel"));
     const catVideo = CATALOGUE.find((c) => c.video && c.video.includes("apex-edge"));
-    const catStill = CATALOGUE.find((c) => c.video && c.video.includes("aurex"));
+    // Simplified, explicitly-aligned 2-column layout — replaces an
+    // earlier rotated/deep-overlap cascade that repeatedly read as
+    // "misaligned" no matter how precisely the overlap math was tuned.
+    // No rotation, no overlap: each column shares ONE fixed width, so
+    // every tile's left/right edges line up exactly with its column
+    // neighbors, separated by a small constant 14px gap. That's the
+    // literal definition of "aligned" — edges that line up — rather
+    // than a deliberately-imprecise collage look.
+    //
+    // Column A (right, dominant): hero video + 1 supporting static.
+    // Column B (left, secondary): 360° catalogue video + reel still +
+    // 1 supporting static. Column B is offset 36px lower than column A
+    // for a touch of rhythm without breaking either column's internal
+    // alignment.
+    //
+    // w/h are EXACT source aspect ratios, computed from a per-column
+    // width that's a multiple of 36 (=lcm(4,9)) so BOTH the 4:5 static
+    // ratio and 16:9 video ratio land on exact integer heights within
+    // the same column width — zero rounding error, 0.8 or 0.5625 to
+    // full floating-point precision.
+    const colAWidth = 180; // right column
+    const colBWidth = 144; // left column
+    const gap = 14;
 
-    // Curated tile layout — all offsets are px, relative to the fixed
-    // 440x650 .hero-visual composition box (see CSS), not the full
-    // stage. That keeps every tile's overlap/spacing deliberate and
-    // consistent instead of scattering tiles across the whole stage
-    // height with loose percentages.
-    //
-    // Bolder hierarchy than a flat cascade: heroVideo is scaled up
-    // noticeably against every other tile (it's the largest single
-    // element in the cluster, deliberately) while catVideo anchors a
-    // visibly smaller secondary column on the left, so the two videos
-    // read as "lead + support" rather than two equal-weight tiles.
-    // Static ads cascade below each with a consistent overlap, and a
-    // small reel still bridges the seam between columns near the top
-    // so the middle never reads as an empty gutter.
-    //
-    // w/h are EXACT source aspect ratios — no approximation. Statics
-    // (STATICS[n].ratio === "4x5") get h = w * 1.25 exactly; video and
-    // video-still content (reels/catalogue, both real 9:16 source,
-    // including catStill/REELS[1] which are stills pulled from 9:16
-    // video assets) get h = w * 16/9 exactly. Widths are chosen as
-    // multiples of 4 (statics) or 9 (video) so the resulting height is
-    // an exact integer px with zero rounding error — every tile is
-    // 0.8 or 0.5625 to full floating-point precision, not "close".
-    //
-    // {top/right px, w/h px, r deg rotate, z z-index, d entrance-delay s,
-    // ix/iy px entrance-converge offset (tiles converge in from their own
-    // side of the cluster rather than all sliding up from the same
-    // direction), drift true for the 2 tiles that get a slow idle
-    // float once settled, depth {mx,my,sy} parallax factors}
     const tiles = [
-      // Right column — hero video, the dominant tile. 198×352 = 9:16 exact.
+      // Column A — hero video, the dominant tile. 180×320 = 9:16 exact.
       {
-        top: "0px", right: "0px", w: 198, h: 352, r: -4, z: 6, d: 0.05, ix: 34, iy: 20,
-        depth: { mx: 15, my: 10, sy: 0.032 }, extraClass: "tile-hero",
+        top: "0px", right: "0px", w: colAWidth, h: 320, r: 0, z: 4, d: 0.05, ix: 0, iy: 22,
+        depth: { mx: 10, my: 7, sy: 0.024 }, extraClass: "tile-hero",
         kind: "video", item: heroVideo, badge: heroVideo ? (heroVideo.dur || "") : "",
       },
-      // Left column — catalogue 360° video, deliberately smaller/secondary. 162×288 = 9:16 exact.
+      // Column A — static ad (health: Matri, "Shark Tank" claim). 180×225 = 4:5 exact.
       {
-        top: "40px", right: "255px", w: 162, h: 288, r: 5, z: 5, d: 0.12, ix: -32, iy: 22,
-        depth: { mx: 13, my: 8, sy: 0.028 }, extraClass: "tile-secondary",
-        kind: "video", item: catVideo, badge: "360°",
-      },
-      // Bridging reel still (9:16 source) — sits over the seam between
-      // the two columns so the middle never reads as an empty gap.
-      // 81×144 = 9:16 exact. Gets the slow idle drift — small enough
-      // that a few px of float reads as alive, not distracting.
-      {
-        top: "150px", right: "180px", w: 81, h: 144, r: 9, z: 7, d: 0.2, ix: 0, iy: -16, drift: true, driftDur: "6.5s",
+        top: `${320 + gap}px`, right: "0px", w: colAWidth, h: 225, r: 0, z: 3, d: 0.16, ix: 0, iy: 22,
         depth: { mx: 8, my: 5, sy: 0.02 },
-        kind: "img", item: REELS[1],
-      },
-      // Right column — static ad #1 (health: Matri, bold "Shark Tank" claim). 140×175 = 4:5 exact.
-      {
-        top: "332px", right: "14px", w: 140, h: 175, r: 4, z: 4, d: 0.28, ix: 26, iy: 24,
-        depth: { mx: 9, my: 6, sy: 0.022 },
         kind: "img", item: STATICS[12],
       },
-      // Left column — static ad #2 (fashion: Mysore Pattu, "Celebrity Spotted"). 148×185 = 4:5 exact.
+      // Column B — catalogue 360° video, secondary column, offset down
+      // 36px from column A for rhythm. 144×256 = 9:16 exact.
       {
-        top: "300px", right: "250px", w: 148, h: 185, r: -6, z: 4, d: 0.34, ix: -24, iy: 24,
-        depth: { mx: 9, my: 6, sy: 0.022 },
+        top: "36px", right: `${colAWidth + gap}px`, w: colBWidth, h: 256, r: 0, z: 4, d: 0.12, ix: 0, iy: 22,
+        depth: { mx: 9, my: 6, sy: 0.022 }, extraClass: "tile-secondary",
+        kind: "video", item: catVideo, badge: "360°",
+      },
+      // Column B — static ad (fashion: Mysore Pattu, "Celebrity Spotted"). 144×180 = 4:5 exact.
+      {
+        top: `${36 + 256 + gap}px`, right: `${colAWidth + gap}px`, w: colBWidth, h: 180, r: 0, z: 3, d: 0.24, ix: 0, iy: 22,
+        depth: { mx: 7, my: 5, sy: 0.018 },
         kind: "img", item: STATICS[3],
-      },
-      // Right column — catalogue still (Aurex watch, 9:16 video source), closes the column. 99×176 = 9:16 exact.
-      {
-        top: "470px", right: "34px", w: 99, h: 176, r: 6, z: 3, d: 0.4, ix: 20, iy: 20, drift: true, driftDur: "8s",
-        depth: { mx: 6, my: 4, sy: 0.016 },
-        kind: "img", item: catStill,
-      },
-      // Left column — static ad #3 (food: Krafted Millets), closes the column. 132×165 = 4:5 exact.
-      {
-        top: "452px", right: "266px", w: 132, h: 165, r: -3, z: 3, d: 0.46, ix: -18, iy: 20,
-        depth: { mx: 8, my: 5, sy: 0.02 },
-        kind: "img", item: STATICS[4],
       },
     ].filter((t) => t.item);
 

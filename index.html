@@ -152,7 +152,7 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   background: radial-gradient(560px circle at 12% 12%, var(--violet-soft), transparent 62%),
               radial-gradient(480px circle at 92% 30%, var(--teal-soft), transparent 60%);
 }
-.hero-stage{position:relative; min-height:620px; padding-bottom:20px;}
+.hero-stage{position:relative; min-height:580px; padding-bottom:20px;}
 @media (max-width:900px){.hero-stage{min-height:0; padding-bottom:0;}}
 .hero-eyebrow{margin-bottom:16px;}
 .hero-head{max-width:600px; width:100%; position:relative; z-index:3;}
@@ -182,28 +182,24 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .hero-stat b{display:block; font-family:var(--font-display); font-size:26px;}
 .hero-stat span{font-size:12.5px; color:var(--text-2);}
 
-/* ---------- HERO ORBIT — sculptural layered creative cluster ----------
+/* ---------- HERO ORBIT — explicitly-aligned 2-column creative cluster ----------
    .hero-visual is a single fixed-size composition box anchored to the
-   top-right of the hero stage. Keeping it one bounded box — instead of
-   scattering tiles across the full stage height with percentage offsets
-   — is what keeps the collage reading as one tight, intentional cluster
-   instead of drifting into empty space. It scales as a single unit at
-   narrower desktop widths so every tile's relative position/overlap
-   stays identical (no re-scattering) while it shrinks to stay clear of
-   the headline. Box is 440x650 — the hero video tile is deliberately
-   scaled up against its neighbours (bolder hierarchy than a flat cascade
-   of similarly-sized rectangles), the 360° catalogue video anchors the
-   left column, static ads and a reel still cascade/bridge around both.
+   top-right of the hero stage. Two fixed-width columns (180px right /
+   144px left), each tile inside a column sharing that exact width and
+   separated by a constant 14px gap — no rotation, no overlap. Edges
+   line up because they share literal pixel widths, not because of
+   tuned overlap math — this replaced an earlier rotated/overlapping
+   cascade that kept reading as "misaligned" regardless of how precise
+   the overlap spacing was. Box is 360x580.
 
-   Each tile is four nested layers, one motion concern each, so nothing
+   Each tile is three nested layers, one motion concern each, so nothing
    fights over the `transform` property:
-     .hero-tile        — entrance choreography (rotate + converge + scale)
-     .hero-tile-drift   — optional slow idle float ("breathing"), 2 tiles only
+     .hero-tile        — entrance choreography (converge + fade, no rotation)
      .hero-tile-inner   — mouse/scroll parallax (JS, translate3d)
      .hero-tile-media   — hover zoom on the image/video itself
    Caption reveal + the gradient glow accent sit on top of that. */
 .hero-visual{
-  position:absolute; top:0; right:0; width:440px; height:650px; z-index:1;
+  position:absolute; top:0; right:0; width:360px; height:580px; z-index:1;
   transform-origin:top right;
 }
 @media (max-width:1180px){.hero-visual{transform:scale(.86);}}
