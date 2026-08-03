@@ -80,7 +80,11 @@ body.lb-locked{overflow:hidden;}
   .reveal-on-scroll{opacity:1 !important; transform:none !important;}
   .filmstrip-track{animation:none !important;}
   .hero-tile{opacity:1 !important; animation:none !important; transform:rotate(var(--r,0deg)) !important;}
+  .hero-tile-drift{animation:none !important; transform:none !important;}
   .hero-tile-inner{transition:none !important; transform:none !important;}
+  .hero-tile-media{transition:none !important; transform:none !important;}
+  .hero-tile-caption{transition:none !important;}
+  .hero-tile.tile-hero::before,.hero-tile.tile-secondary::before{transition:none !important;}
   .hero-title .word span{animation:none !important; transform:none !important;}
 }
 h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
@@ -148,7 +152,7 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   background: radial-gradient(560px circle at 12% 12%, var(--violet-soft), transparent 62%),
               radial-gradient(480px circle at 92% 30%, var(--teal-soft), transparent 60%);
 }
-.hero-stage{position:relative; min-height:600px; padding-bottom:20px;}
+.hero-stage{position:relative; min-height:620px; padding-bottom:20px;}
 @media (max-width:900px){.hero-stage{min-height:0; padding-bottom:0;}}
 .hero-eyebrow{margin-bottom:16px;}
 .hero-head{max-width:600px; width:100%; position:relative; z-index:3;}
@@ -178,19 +182,28 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .hero-stat b{display:block; font-family:var(--font-display); font-size:26px;}
 .hero-stat span{font-size:12.5px; color:var(--text-2);}
 
-/* ---------- HERO ORBIT — layered/overlapping real-creative tiles ----------
-   .hero-visual is a single fixed-size composition box (tiles + stamp)
-   anchored to the top-right of the hero stage. Keeping it one bounded
-   box — instead of scattering tiles across the full stage height with
-   percentage offsets — is what keeps the collage reading as one tight,
-   intentional cluster instead of drifting into empty space. It scales
-   as a single unit at narrower desktop widths so every tile's relative
-   position/overlap stays identical (no re-scattering) while it shrinks
-   to stay clear of the headline. Box is 420x630 — the two video tiles
-   anchor the left/right columns, with static ads cascading below each
-   and a small reel still bridging the seam between columns. */
+/* ---------- HERO ORBIT — sculptural layered creative cluster ----------
+   .hero-visual is a single fixed-size composition box anchored to the
+   top-right of the hero stage. Keeping it one bounded box — instead of
+   scattering tiles across the full stage height with percentage offsets
+   — is what keeps the collage reading as one tight, intentional cluster
+   instead of drifting into empty space. It scales as a single unit at
+   narrower desktop widths so every tile's relative position/overlap
+   stays identical (no re-scattering) while it shrinks to stay clear of
+   the headline. Box is 440x650 — the hero video tile is deliberately
+   scaled up against its neighbours (bolder hierarchy than a flat cascade
+   of similarly-sized rectangles), the 360° catalogue video anchors the
+   left column, static ads and a reel still cascade/bridge around both.
+
+   Each tile is four nested layers, one motion concern each, so nothing
+   fights over the `transform` property:
+     .hero-tile        — entrance choreography (rotate + converge + scale)
+     .hero-tile-drift   — optional slow idle float ("breathing"), 2 tiles only
+     .hero-tile-inner   — mouse/scroll parallax (JS, translate3d)
+     .hero-tile-media   — hover zoom on the image/video itself
+   Caption reveal + the gradient glow accent sit on top of that. */
 .hero-visual{
-  position:absolute; top:0; right:0; width:420px; height:630px; z-index:1;
+  position:absolute; top:0; right:0; width:440px; height:650px; z-index:1;
   transform-origin:top right;
 }
 @media (max-width:1180px){.hero-visual{transform:scale(.86);}}
@@ -199,11 +212,17 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .hero-orbit{position:absolute; inset:0; z-index:1; pointer-events:none;}
 .hero-tile{
   position:absolute; opacity:0; pointer-events:auto;
-  transform:rotate(var(--r,0deg)) translateY(24px) scale(.92);
-  animation:tileIn .85s cubic-bezier(.16,1,.3,1) forwards;
+  transform:rotate(var(--r,0deg)) translate(var(--ix,0px),var(--iy,26px)) scale(.9);
+  animation:tileIn .95s cubic-bezier(.16,1,.3,1) forwards;
   animation-delay:var(--d,0s);
 }
-@keyframes tileIn{to{opacity:1; transform:rotate(var(--r,0deg)) translateY(0) scale(1);}}
+@keyframes tileIn{to{opacity:1; transform:rotate(var(--r,0deg)) translate(0,0) scale(1);}}
+.hero-tile-drift{position:absolute; inset:0;}
+.hero-tile.tile-drift .hero-tile-drift{animation:tileDrift var(--drift-dur,7s) ease-in-out calc(var(--d,0s) + .95s) infinite;}
+@keyframes tileDrift{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-7px) scale(1.012);}
+}
 .hero-tile-inner{
   position:absolute; inset:0; border-radius:var(--radius); overflow:hidden;
   border:1px solid var(--line); background:var(--bg-2);
@@ -211,14 +230,37 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease;
   will-change:transform;
 }
-.hero-tile-inner:hover{box-shadow:0 30px 64px -18px rgba(0,0,0,0.6);}
-.hero-tile-inner img,.hero-tile-inner video{width:100%; height:100%; object-fit:cover; border-radius:inherit;}
-.hero-tile-badge{position:absolute; bottom:8px; left:8px; background:rgba(8,9,12,0.6); color:#f4f5f7; font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; padding:3px 8px; border-radius:100px; backdrop-filter:blur(6px);}
-.hero-tile.tile-hero::before{
-  content:''; position:absolute; inset:-14px; z-index:-1; border-radius:calc(var(--radius) + 12px); opacity:.55;
-  background:conic-gradient(from 140deg,var(--violet),var(--teal),var(--gold),var(--violet));
-  filter:blur(18px);
+.hero-tile-inner:hover{box-shadow:0 32px 68px -18px rgba(0,0,0,0.62);}
+.hero-tile-media{position:absolute; inset:0; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.hero-tile-inner:hover .hero-tile-media{transform:scale(1.07);}
+.hero-tile-media img,.hero-tile-media video{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;}
+.hero-tile-badge{position:absolute; top:8px; left:8px; z-index:2; background:rgba(8,9,12,0.6); color:#f4f5f7; font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; padding:3px 8px; border-radius:100px; backdrop-filter:blur(6px);}
+/* Hover caption reveal — title + category, scrimmed so it reads over
+   live video motion too. Kept compact given tile sizes. */
+.hero-tile-caption{
+  position:absolute; inset:auto 0 0 0; padding:12px 10px 9px; z-index:2;
+  opacity:0; transform:translateY(6px); transition:opacity .3s ease, transform .3s ease; pointer-events:none;
 }
+.hero-tile-caption::before{
+  content:''; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(to top, rgba(6,7,10,0.82), rgba(6,7,10,0.25) 65%, transparent);
+}
+.hero-tile-caption b{display:block; color:#f6f6f8; font-size:11.5px; font-weight:600; line-height:1.28; letter-spacing:-0.005em;}
+.hero-tile-caption span{display:block; color:rgba(246,246,248,0.72); font-size:9px; font-family:var(--font-mono); letter-spacing:.05em; text-transform:uppercase; margin-top:3px;}
+.hero-tile-inner:hover .hero-tile-caption{opacity:1; transform:translateY(0);}
+/* Restrained gradient accents — subtle by default, opens up on hover so
+   the cluster still reads as mostly photographic/video, not gradient-
+   washed. tile-hero (the dominant video) gets the fuller accent; a second,
+   quieter echo on tile-secondary (the catalogue video) ties the two video
+   tiles together without repeating the effect on every tile. */
+.hero-tile.tile-hero::before,.hero-tile.tile-secondary::before{
+  content:''; position:absolute; inset:-14px; z-index:-1; border-radius:calc(var(--radius) + 12px);
+  background:conic-gradient(from 140deg,var(--violet),var(--teal),var(--gold),var(--violet));
+  filter:blur(18px); opacity:.32; transition:opacity .45s ease;
+}
+.hero-tile.tile-hero:hover::before{opacity:.68;}
+.hero-tile.tile-secondary::before{opacity:.14; filter:blur(14px);}
+.hero-tile.tile-secondary:hover::before{opacity:.4;}
 
 /* Kinetic filmstrip — real creative thumbnails, auto-scrolling rows */
 .hero-filmstrip{position:relative; z-index:1; margin-top:36px; padding-bottom:26px; display:flex; flex-direction:column; gap:14px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
