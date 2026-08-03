@@ -82,6 +82,9 @@ body.lb-locked{overflow:hidden;}
   .hero-tile{opacity:1 !important; animation:none !important; transform:rotate(var(--r,0deg)) !important;}
   .hero-tile-inner{transition:none !important; transform:none !important;}
   .hero-title .word span{animation:none !important; transform:none !important;}
+  .work-card,.wc-filler{opacity:1 !important; transform:none !important; transition:none !important;}
+  .wc-feature::before,.wc-feature .wc-info::before,.wc-media-wrap::after,.wc-play-hint{transition:none !important;}
+  .showcase-grid{scroll-behavior:auto !important;}
 }
 h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
 p{margin:0;}
@@ -256,53 +259,111 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .section-head h2{font-size:clamp(28px,3.4vw,40px); margin-top:14px;}
 .section-head p{margin-top:14px; color:var(--text-1); font-size:15.5px; line-height:1.6;}
 
-/* ---------- SHOWCASE ---------- */
+/* ---------- SHOWCASE — bento-cluster gallery ----------
+   Every 3 consecutive items (in data order) form one "cluster": one
+   larger .wc-feature tile plus a stacked column of up to two smaller
+   .wc-support tiles beside it. Clusters wrap in a flex row (multi-row
+   bento on desktop) and fall back to single-row horizontal scroll on
+   narrow viewports. Feature/support are pure SIZE variants — both
+   still use the category's real aspect ratio via .ar-square/.ar-portrait/
+   .ar-4x5 on .wc-media-wrap (unchanged from the previous build), so the
+   bento rhythm comes from scale, never from cropping real 9:16/4:5/1:1
+   creative into the wrong shape. */
 .showcase-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:26px;}
 .showcase-tab{
   padding:9px 18px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1);
   color:var(--text-1); font-size:13.5px; font-weight:600; transition:all .25s;
 }
 .showcase-tab:hover{background:var(--surface-hover); color:var(--text-0);}
-.showcase-tab.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet);}
+/* Restrained gradient use #1: active tab gets a two-tone wash instead of
+   a flat tint — a small, deliberate accent, not a blanket gradient. */
+.showcase-tab.active{background:linear-gradient(100deg,var(--violet-soft),var(--teal-soft)); color:var(--violet); border-color:var(--violet);}
 .showcase-row-wrap{position:relative;}
-.showcase-track{
-  display:flex; align-items:flex-start; gap:14px; overflow-x:auto; scroll-snap-type:x proximity; padding:6px 4px 18px;
-  scrollbar-width:thin; perspective:1000px;
+.showcase-grid{
+  display:flex; flex-wrap:wrap; align-items:flex-start; gap:22px; padding:6px 4px 22px; perspective:1200px;
 }
-/* Card sizing is aspect-ratio driven (see .ar-square / .ar-portrait below)
-   rather than one fixed width for every category. Static/Carousel content
-   is genuinely 1:1 and AI Reels/360° Catalogue source video is genuinely
-   9:16 — sizing each category's cards to its real media ratio (instead of
-   force-cropping everything into a square) is what fixes the "misaligned"
-   complaint. Within a single showcase tab every card shares the same
-   width+aspect, so the row still reads as one clean, evenly-spaced strip. */
-.work-card{
-  flex:0 0 auto; scroll-snap-align:start; border-radius:var(--radius); overflow:hidden;
-  border:1px solid var(--line); background:var(--surface-1); cursor:pointer;
-  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s, border-color .35s;
+@media (max-width:720px){
+  .showcase-grid{flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:thin; gap:14px;}
+}
+.wc-cluster{display:flex; align-items:flex-start; gap:14px; flex:0 0 auto; scroll-snap-align:start;}
+.wc-supports{display:flex; flex-direction:column; gap:14px; flex:0 0 auto;}
+
+.work-card, .wc-filler{
+  flex:0 0 auto; border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--line); background:var(--surface-1);
   transform-style:preserve-3d; will-change:transform;
-  opacity:0; animation:cardIn .6s cubic-bezier(.16,1,.3,1) forwards;
-  animation-delay:calc(var(--i,0) * 55ms);
 }
-.work-card.ar-square{width:250px;}
-.work-card.ar-portrait{width:196px;}
-.work-card.ar-4x5{width:222px;}
-@media (max-width:520px){
-  .work-card.ar-square{width:208px;}
-  .work-card.ar-portrait{width:164px;}
-  .work-card.ar-4x5{width:184px;}
-}
-@keyframes cardIn{from{opacity:0; transform:translateY(22px);}to{opacity:1; transform:translateY(0);}}
+.work-card{cursor:pointer; transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s, border-color .35s;}
 .work-card:hover{box-shadow:var(--card-shadow); border-color:var(--glass-strong);}
+
+/* Scroll/tab-triggered staggered reveal — cards start hidden and only
+   animate in once the showcase grid has entered the viewport (see the
+   IntersectionObserver in app.js) or a category tab is switched, which
+   replays this same transition. Runs on opacity/transform only. */
+.work-card, .wc-filler{
+  opacity:0; transform:translateY(24px) scale(.96);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+  transition-delay:calc(var(--i,0) * 55ms);
+}
+.showcase-grid.in-view .work-card,
+.showcase-grid.in-view .wc-filler{opacity:1; transform:translateY(0) scale(1);}
+
+/* Feature = larger cluster anchor; Support = smaller stacked companions.
+   Both keep the category's true media ratio (see .ar-* below). */
+.wc-feature.ar-portrait, .wc-filler.wc-feature.ar-portrait{width:220px;}
+.wc-support.ar-portrait, .wc-filler.wc-support.ar-portrait{width:103px;}
+.wc-feature.ar-4x5, .wc-filler.wc-feature.ar-4x5{width:258px;}
+.wc-support.ar-4x5, .wc-filler.wc-support.ar-4x5{width:122px;}
+.wc-feature.ar-square, .wc-filler.wc-feature.ar-square{width:258px;}
+.wc-support.ar-square, .wc-filler.wc-support.ar-square{width:122px;}
+@media (max-width:520px){
+  .wc-feature.ar-portrait, .wc-filler.wc-feature.ar-portrait{width:178px;}
+  .wc-support.ar-portrait, .wc-filler.wc-support.ar-portrait{width:84px;}
+  .wc-feature.ar-4x5, .wc-filler.wc-feature.ar-4x5{width:206px;}
+  .wc-support.ar-4x5, .wc-filler.wc-support.ar-4x5{width:98px;}
+  .wc-feature.ar-square, .wc-filler.wc-feature.ar-square{width:206px;}
+  .wc-support.ar-square, .wc-filler.wc-support.ar-square{width:98px;}
+}
+
+/* Restrained gradient use #2: a soft blurred glow behind the feature
+   tile only, revealed on hover — mirrors the same "rare accent glow"
+   technique already used on the hero's tile-hero, not repeated per-card. */
+.wc-feature{position:relative;}
+.wc-feature::before{
+  content:''; position:absolute; inset:-10px; z-index:-1; border-radius:calc(var(--radius) + 10px);
+  background:conic-gradient(from 140deg,var(--violet),var(--teal),var(--gold),var(--violet));
+  filter:blur(22px); opacity:0; transition:opacity .4s ease;
+}
+.wc-feature:hover::before{opacity:.45;}
+.wc-feature .wc-info::before{
+  content:''; display:block; height:2px; width:0; margin-bottom:9px; border-radius:2px;
+  background:linear-gradient(100deg,var(--violet),var(--teal)); transition:width .35s cubic-bezier(.16,1,.3,1);
+}
+.wc-feature:hover .wc-info::before{width:34px;}
+
 .wc-media-wrap{position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--bg-2);}
-.work-card.ar-portrait .wc-media-wrap{aspect-ratio:9/16;}
-.work-card.ar-4x5 .wc-media-wrap{aspect-ratio:4/5;}
-.wc-media-wrap .wc-media{width:100%; height:100%; object-fit:cover; transition:transform .5s; will-change:transform;}
-.work-card:hover .wc-media{transform:scale(1.05);}
+.work-card.ar-portrait .wc-media-wrap, .wc-filler.ar-portrait{aspect-ratio:9/16;}
+.work-card.ar-4x5 .wc-media-wrap, .wc-filler.ar-4x5{aspect-ratio:4/5;}
+.wc-media-wrap .wc-media{width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.16,1,.3,1); will-change:transform;}
+.work-card:hover .wc-media{transform:scale(1.06);}
 .wc-badge{
   position:absolute; top:10px; left:10px; background:rgba(8,9,12,0.6); color:#f4f5f7; font-size:11px;
   font-family:var(--font-mono); padding:4px 9px; border-radius:100px; backdrop-filter:blur(6px);
 }
+/* Hover-reveal scrim + play affordance for video tiles — plays muted on
+   hover (see attachCardHandlers in app.js) with a soft gradient scrim so
+   the badge/caption stay legible over live motion. */
+.wc-media-wrap::after{
+  content:''; position:absolute; inset:0; opacity:0; transition:opacity .35s ease; pointer-events:none;
+  background:linear-gradient(to top, rgba(4,4,6,0.55), transparent 55%);
+}
+.work-card:hover .wc-media-wrap::after{opacity:1;}
+.wc-play-hint{
+  position:absolute; bottom:10px; right:10px; width:26px; height:26px; border-radius:50%;
+  background:rgba(8,9,12,0.55); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:11px; opacity:0; transform:scale(.7); transition:opacity .25s ease, transform .25s ease; backdrop-filter:blur(6px);
+}
+.work-card:hover .wc-play-hint{opacity:1; transform:scale(1);}
 .wc-mini-prev,.wc-mini-next{
   position:absolute; top:50%; transform:translateY(-50%); width:28px; height:28px; border-radius:50%;
   border:none; background:rgba(8,9,12,0.55); color:#fff; opacity:0; transition:opacity .25s;
@@ -314,9 +375,15 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .wc-dot{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.45);}
 .wc-dot.active{background:#fff;}
 .wc-info{padding:13px 14px 15px;}
-.wc-cat{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--teal);}
+.wc-cat{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--teal); transition:color .25s;}
+.work-card:hover .wc-cat{color:var(--violet);}
+.wc-support .wc-hook{-webkit-line-clamp:2; min-height:calc(12px * 1.35 * 2); font-size:12px;}
+.wc-support .wc-info{padding:10px 11px 12px;}
 .wc-hook{margin-top:6px; font-size:13.5px; color:var(--text-1); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:calc(13.5px * 1.4 * 2);}
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
+.wc-filler{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:14px; color:var(--text-2); background:var(--glass); aspect-ratio:1/1;}
+.wc-filler svg{opacity:.6;}
+.wc-filler span{font-size:11px; line-height:1.4;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
 .nav-arrow{
   width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:var(--surface-1);
@@ -595,7 +662,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
         <button class="nav-arrow" id="carPrev" aria-label="Scroll left">‹</button>
         <button class="nav-arrow" id="carNext" aria-label="Scroll right">›</button>
       </div>
-      <div class="showcase-track" id="showcaseTrack"></div>
+      <div class="showcase-grid" id="showcaseTrack"></div>
     </div>
   </div>
 </section>
