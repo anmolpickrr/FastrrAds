@@ -746,18 +746,14 @@ Please also share anything else you'd like us to consider from your end.${specia
     return "ar-square";
   }
 
-  // role: "wc-feature" (larger cluster anchor) | "wc-support" (smaller,
-  // stacked alongside a feature). Both use the same real media ratio —
-  // role only changes on-screen SIZE, never crops/reshapes the source.
-  function workCardHTML(item, idx, role) {
+  function workCardHTML(item, idx) {
     const arClass = showcaseArClass(activeShowcaseCat);
-    const roleClass = role || "wc-support";
     if (item.type === "carousel") {
       const slideDots = item.slides
         .map((_, i) => `<span class="wc-dot${i === 0 ? " active" : ""}" data-slide="${i}"></span>`)
         .join("");
       return `
-      <article class="work-card carousel-card ${roleClass} ${arClass}" data-idx="${idx}" data-slide="0" style="--i:${idx}">
+      <article class="work-card carousel-card ${arClass}" data-idx="${idx}" data-slide="0" style="--i:${idx}">
         <div class="wc-media-wrap">
           <img class="wc-media wc-slide-img" src="${item.slides[0]}" loading="lazy" alt="${escapeHtml(item.title)}">
           <button class="wc-mini-prev" aria-label="Previous slide">‹</button>
@@ -772,30 +768,16 @@ Please also share anything else you'd like us to consider from your end.${specia
       </article>`;
     }
     return `
-      <article class="work-card ${roleClass} ${arClass}" data-idx="${idx}" style="--i:${idx}">
+      <article class="work-card ${arClass}" data-idx="${idx}" style="--i:${idx}">
         <div class="wc-media-wrap">
           ${mediaTagHTML(item, "wc-media")}
           <span class="wc-badge">${item.dur ? item.dur : ""}</span>
-          ${item.video ? `<span class="wc-play-hint">▶</span>` : ""}
         </div>
         <div class="wc-info">
           <span class="wc-cat">${escapeHtml(item.catlabel || item.cat)}</span>
           <p class="wc-hook">${escapeHtml(item.hook)}</p>
         </div>
       </article>`;
-  }
-
-  // Non-interactive placeholder used to fill out a bento cluster when a
-  // category has too few real items (e.g. Carousel's single delivered
-  // sample) — never mixed into the real lightbox index, never counted
-  // as a .work-card by any click/tilt handler.
-  function fillerCardHTML(cat, role) {
-    const meta = CATS[cat] || {};
-    const arClass = showcaseArClass(cat);
-    return `<div class="wc-filler ${role} ${arClass}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-      <span>${escapeHtml(meta.empty || "More samples coming soon.")}</span>
-    </div>`;
   }
 
   function emptyCardHTML(cat) {
@@ -812,36 +794,6 @@ Please also share anything else you'd like us to consider from your end.${specia
     }[c]));
   }
 
-  // Groups the flat item list into bento clusters of up to 3: one
-  // .wc-feature (larger) + up to two .wc-support tiles stacked beside it.
-  // Clusters then wrap in a flex row, giving the grid its asymmetric,
-  // premium-agency rhythm while every tile still keeps its own real
-  // aspect ratio (see workCardHTML above).
-  function clusterHTML(cat, list) {
-    let html = "";
-    for (let i = 0; i < list.length; i += 3) {
-      const group = list.slice(i, i + 3);
-      const feature = group[0];
-      const supports = group.slice(1);
-      // Only the very first cluster of a sparse category (e.g. Carousel's
-      // single delivered sample) gets non-interactive filler tiles, so it
-      // still reads as a complete bento group instead of one lonely tile.
-      const fillCount = i === 0 ? Math.max(0, 3 - group.length) : 0;
-      let clusterInner = workCardHTML(feature, i, "wc-feature");
-      if (supports.length || fillCount) {
-        let supportsInner = supports
-          .map((item, si) => workCardHTML(item, i + si + 1, "wc-support"))
-          .join("");
-        for (let f = 0; f < fillCount; f++) supportsInner += fillerCardHTML(cat, "wc-support");
-        clusterInner += `<div class="wc-supports">${supportsInner}</div>`;
-      }
-      html += `<div class="wc-cluster">${clusterInner}</div>`;
-    }
-    return html;
-  }
-
-  let gridInView = false;
-
   function renderShowcase(cat) {
     activeShowcaseCat = cat;
     const list = SHOWCASE_SOURCES[cat] || [];
@@ -853,47 +805,13 @@ Please also share anything else you'd like us to consider from your end.${specia
       return;
     }
     document.getElementById("showcaseNav").style.display = "";
-    showcaseTrack.innerHTML = clusterHTML(cat, list);
+    showcaseTrack.innerHTML = list.map((item, i) => workCardHTML(item, i)).join("");
     attachCardHandlers();
-    replayGridReveal();
-  }
-
-  // Replays the staggered reveal transition on the current set of cards —
-  // used both by the initial scroll-into-view trigger and every category
-  // tab switch, so switching tabs reads as a deliberate re-reveal rather
-  // than an instant content swap.
-  function replayGridReveal() {
-    if (!gridInView) return;
-    showcaseTrack.classList.remove("in-view");
-    // Force reflow, then re-add on the next frame so the transition fires.
-    void showcaseTrack.offsetWidth;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => showcaseTrack.classList.add("in-view"));
-    });
   }
 
   const prefersReducedMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isTouch = window.matchMedia && window.matchMedia("(hover: none)").matches;
-
-  if ("IntersectionObserver" in window) {
-    const gridObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            gridInView = true;
-            showcaseTrack.classList.add("in-view");
-            gridObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -60px 0px" }
-    );
-    gridObserver.observe(showcaseTrack);
-  } else {
-    gridInView = true;
-    showcaseTrack.classList.add("in-view");
-  }
 
   function attachCardTilt(card) {
     if (prefersReducedMotion || isTouch) return;
@@ -913,30 +831,9 @@ Please also share anything else you'd like us to consider from your end.${specia
     });
   }
 
-  // Hover-to-preview: lazily-loaded video tiles (preload="none") start
-  // muted playback on hover/focus and pause+rewind on leave, so browsing
-  // the grid gives a real motion preview without autoplaying dozens of
-  // clips at once. Skipped under prefers-reduced-motion, same guard used
-  // by the hero filmstrip's own hover/visibility-driven playback.
-  function attachCardVideoPreview(card) {
-    if (prefersReducedMotion) return;
-    const video = card.querySelector(".wc-media-wrap video");
-    if (!video) return;
-    const start = () => { video.play && video.play().catch(() => {}); };
-    const stop = () => {
-      if (video.pause) video.pause();
-      try { video.currentTime = 0.1; } catch (e) {}
-    };
-    card.addEventListener("mouseenter", start);
-    card.addEventListener("mouseleave", stop);
-    card.addEventListener("focus", start);
-    card.addEventListener("blur", stop);
-  }
-
   function attachCardHandlers() {
     showcaseTrack.querySelectorAll(".work-card").forEach((card) => {
       attachCardTilt(card);
-      attachCardVideoPreview(card);
       card.addEventListener("click", (e) => {
         if (e.target.closest(".wc-mini-prev") || e.target.closest(".wc-mini-next") || e.target.closest(".wc-dot")) return;
         openLightbox(Number(card.dataset.idx));
@@ -984,34 +881,12 @@ Please also share anything else you'd like us to consider from your end.${specia
     showcaseTrack.scrollBy({ left: amount * direction, behavior: "smooth" });
   }
 
-  // Deliberate tab-switch transition: briefly fade the grid out, swap in
-  // the new category's cards while invisible, then fade back in — so
-  // switching feels like an intentional transition rather than an
-  // instant content swap. Falls back to an instant swap under
-  // prefers-reduced-motion.
-  function transitionShowcase(cat) {
-    if (cat === activeShowcaseCat && showcaseTrack.children.length) {
-      renderShowcase(cat);
-      return;
-    }
-    if (prefersReducedMotion) {
-      renderShowcase(cat);
-      return;
-    }
-    showcaseTrack.style.transition = "opacity .18s ease";
-    showcaseTrack.style.opacity = "0";
-    setTimeout(() => {
-      renderShowcase(cat);
-      requestAnimationFrame(() => { showcaseTrack.style.opacity = "1"; });
-    }, 160);
-  }
-
   showcaseTabs.forEach((tab) => {
-    tab.addEventListener("click", () => transitionShowcase(tab.dataset.cat));
+    tab.addEventListener("click", () => renderShowcase(tab.dataset.cat));
   });
   function switchShowcaseCat(svc) {
     // 'reels' | 'catalogue' | 'static' | 'carousel'
-    if (SHOWCASE_SOURCES[svc]) transitionShowcase(svc);
+    if (SHOWCASE_SOURCES[svc]) renderShowcase(svc);
   }
 
   /* ---- Lightbox ---- */
