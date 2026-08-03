@@ -825,6 +825,154 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
   });
 
   /* ----------------------------------------------------------
+     10a. HERO ORBIT — layered/overlapping real-creative tiles
+     around the headline. Curated (not random) positions with
+     varied size/rotation/z-index for depth. Two tiles use real
+     inline video (muted/loop/playsinline/preload=none), started
+     only once visible via IntersectionObserver, to keep hero
+     load light. Mouse + scroll parallax is rAF-throttled and
+     applied to an inner wrapper element so it never fights the
+     CSS entrance animation running on the outer tile.
+  ---------------------------------------------------------- */
+  (function buildHeroOrbit() {
+    const orbit = document.getElementById("heroOrbit");
+    if (!orbit) return;
+
+    const heroVideo = REELS.find((r) => r.video && r.video.includes("bang-bang-reel"));
+    const catVideo = CATALOGUE.find((c) => c.video && c.video.includes("apex-edge"));
+    const catStill = CATALOGUE.find((c) => c.video && c.video.includes("aurex"));
+    const carouselFirst = CAROUSELS[0];
+
+    // Curated tile layout: {top/right in %, w/h px, r deg rotate,
+    // z z-index, d entrance-delay s, depth {mx,my,sy} parallax factors}
+    const tiles = [
+      {
+        top: "3%", right: "3%", w: 216, h: 288, r: -5, z: 6, d: 0.05,
+        depth: { mx: 22, my: 14, sy: 0.05 }, extraClass: "tile-hero",
+        kind: "video", item: heroVideo, badge: heroVideo ? (heroVideo.dur || "") : "",
+      },
+      {
+        top: "-3%", right: "33%", w: 148, h: 186, r: 7, z: 2, d: 0.16,
+        depth: { mx: 10, my: 8, sy: 0.03 },
+        kind: "img", item: REELS[1],
+      },
+      {
+        top: "34%", right: "0%", w: 198, h: 198, r: 4, z: 5, d: 0.1,
+        depth: { mx: 18, my: 12, sy: 0.045 },
+        kind: "video", item: catVideo, badge: "360°",
+      },
+      {
+        top: "55%", right: "31%", w: 158, h: 158, r: -8, z: 2, d: 0.24,
+        depth: { mx: 9, my: 7, sy: 0.025 },
+        kind: "img", item: STATICS[0],
+      },
+      {
+        top: "68%", right: "5%", w: 148, h: 188, r: 6, z: 4, d: 0.3,
+        depth: { mx: 14, my: 10, sy: 0.035 },
+        kind: "img", item: STATICS[2],
+      },
+      {
+        top: "1%", right: "15%", w: 104, h: 132, r: -11, z: 1, d: 0.38,
+        depth: { mx: 8, my: 6, sy: 0.02 },
+        kind: "carousel", item: carouselFirst,
+      },
+      {
+        top: "85%", right: "23%", w: 122, h: 122, r: 9, z: 1, d: 0.45,
+        depth: { mx: 7, my: 5, sy: 0.018 },
+        kind: "img", item: catStill,
+      },
+    ].filter((t) => t.item);
+
+    function mediaHTML(t) {
+      if (t.kind === "video" && t.item.video) {
+        return `<video src="${t.item.video}#t=0.1" poster="${t.item.thumb || ""}" muted loop playsinline preload="none"></video>`;
+      }
+      if (t.kind === "carousel") {
+        const src = t.item.slides ? t.item.slides[0] : "";
+        return `<img src="${src}" loading="lazy" alt="">`;
+      }
+      return `<img src="${t.item.thumb}" loading="lazy" alt="">`;
+    }
+
+    orbit.innerHTML = tiles
+      .map((t, i) => {
+        const style = [
+          `top:${t.top}`, `right:${t.right}`, `width:${t.w}px`, `height:${t.h}px`,
+          `z-index:${t.z}`, `--r:${t.r}deg`, `--d:${t.d}s`,
+        ].join(";");
+        return `<div class="hero-tile${t.extraClass ? " " + t.extraClass : ""}" data-i="${i}" style="${style}">
+          <div class="hero-tile-inner">${mediaHTML(t)}${t.badge ? `<span class="hero-tile-badge">${t.badge}</span>` : ""}</div>
+        </div>`;
+      })
+      .join("");
+
+    const tileEls = Array.from(orbit.querySelectorAll(".hero-tile"));
+
+    // Lazy-start real video tiles only once visible.
+    if ("IntersectionObserver" in window) {
+      const vio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const vid = entry.target.querySelector("video");
+            if (!vid) return;
+            if (entry.isIntersecting) {
+              vid.play && vid.play().catch(() => {});
+            } else {
+              vid.pause && vid.pause();
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      tileEls.forEach((el) => {
+        if (el.querySelector("video")) vio.observe(el);
+      });
+    }
+
+    if (prefersReducedMotion || isTouch) return;
+
+    // Combined mouse + scroll parallax, rAF-throttled, applied to
+    // the inner wrapper so it never fights the outer entrance animation.
+    const stage = document.getElementById("heroStage");
+    let mx = 0, my = 0, sy = 0, raf = null;
+    function apply() {
+      raf = null;
+      tileEls.forEach((el, i) => {
+        const t = tiles[i];
+        const inner = el.querySelector(".hero-tile-inner");
+        if (!inner || !t.depth) return;
+        const tx = mx * t.depth.mx;
+        const ty = my * t.depth.my + sy * t.depth.sy;
+        inner.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0)`;
+      });
+    }
+    function queue() {
+      if (raf) return;
+      raf = requestAnimationFrame(apply);
+    }
+    if (stage) {
+      stage.addEventListener("mousemove", (e) => {
+        const r = stage.getBoundingClientRect();
+        mx = (e.clientX - r.left) / r.width - 0.5;
+        my = (e.clientY - r.top) / r.height - 0.5;
+        queue();
+      });
+      stage.addEventListener("mouseleave", () => {
+        mx = 0; my = 0;
+        queue();
+      });
+    }
+    window.addEventListener(
+      "scroll",
+      () => {
+        sy = window.scrollY || window.pageYOffset || 0;
+        queue();
+      },
+      { passive: true }
+    );
+  })();
+
+  /* ----------------------------------------------------------
      10. HERO — kinetic filmstrip of real creative thumbnails
      Two rows, auto-scrolling opposite directions (pure CSS
      transform animation — cheap, GPU-composited). A single
