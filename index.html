@@ -231,7 +231,7 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   will-change:transform;
 }
 .hero-tile-inner:hover{box-shadow:0 32px 68px -18px rgba(0,0,0,0.62);}
-.hero-tile-media{position:absolute; inset:0; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.hero-tile-media{position:absolute; inset:0; border-radius:var(--radius); overflow:hidden; transition:transform .5s cubic-bezier(.16,1,.3,1);}
 .hero-tile-inner:hover .hero-tile-media{transform:scale(1.07);}
 .hero-tile-media img,.hero-tile-media video{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;}
 .hero-tile-badge{position:absolute; top:8px; left:8px; z-index:2; background:rgba(8,9,12,0.6); color:#f4f5f7; font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; padding:3px 8px; border-radius:100px; backdrop-filter:blur(6px);}
