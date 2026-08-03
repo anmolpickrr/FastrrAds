@@ -1000,58 +1000,72 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     const heroVideo = REELS.find((r) => r.video && r.video.includes("bang-bang-reel"));
     const catVideo = CATALOGUE.find((c) => c.video && c.video.includes("apex-edge"));
     const catStill = CATALOGUE.find((c) => c.video && c.video.includes("aurex"));
-    const carouselFirst = CAROUSELS[0];
 
     // Curated tile layout — all offsets are px, relative to the fixed
-    // 420x600 .hero-visual composition box (see CSS), not the full
+    // 420x630 .hero-visual composition box (see CSS), not the full
     // stage. That keeps every tile's overlap/spacing deliberate and
     // consistent instead of scattering tiles across the whole stage
-    // height with loose percentages. Tiles cascade down two loosely
-    // overlapping columns (hero video → reel → carousel → static →
-    // catalogue still on the left; hero video → catalogue video →
-    // bottom static on the right) with each cascade step overlapping
-    // its neighbor by a consistent ~22-27px margin — deliberate and
-    // even, not a razor-thin sliver and not a stray gap. w/h are sized
-    // close to each tile's real source aspect ratio (reels/catalogue
-    // video ≈9:16, carousel ≈1:1, statics/catalogue stills ≈4:5) so
+    // height with loose percentages.
+    //
+    // Two video-capable tiles (the only real video content in this
+    // cluster) are deliberately split left/right per client feedback:
+    // catVideo anchors the left column, heroVideo anchors the right
+    // column, so the collage doesn't read as "both videos stacked on
+    // one side". Each column then cascades a static tile below its
+    // video with a consistent ~40-45px vertical overlap, and a small
+    // reel still bridges the gap between the two columns near the top
+    // so there's no awkward empty gutter down the middle. Three
+    // different static-ad brands (fashion/food/health) replace the old
+    // repeated-brand statics + demo carousel placeholder for variety.
+    //
+    // w/h are sized close to each tile's real source aspect ratio
+    // (reels/catalogue video ≈9:16, statics/catalogue stills ≈4:5) so
     // object-fit:cover crops only a little to fill the collage shape,
     // never egregiously. {top/right px, w/h px, r deg rotate, z
     // z-index, d entrance-delay s, depth {mx,my,sy} parallax factors}
     const tiles = [
+      // Right column — hero video (anchors right side)
       {
-        top: "0px", right: "0px", w: 195, h: 290, r: -4, z: 6, d: 0.05,
+        top: "0px", right: "0px", w: 180, h: 300, r: -4, z: 6, d: 0.05,
         depth: { mx: 14, my: 9, sy: 0.03 }, extraClass: "tile-hero",
         kind: "video", item: heroVideo, badge: heroVideo ? (heroVideo.dur || "") : "",
       },
+      // Left column — catalogue 360° video (anchors left side)
       {
-        top: "-6px", right: "173px", w: 148, h: 210, r: 7, z: 3, d: 0.14,
-        depth: { mx: 9, my: 6, sy: 0.022 },
-        kind: "img", item: REELS[1],
-      },
-      {
-        top: "263px", right: "6px", w: 165, h: 210, r: 3, z: 5, d: 0.1,
-        depth: { mx: 12, my: 8, sy: 0.028 },
+        top: "0px", right: "250px", w: 170, h: 300, r: 5, z: 5, d: 0.1,
+        depth: { mx: 13, my: 8, sy: 0.028 },
         kind: "video", item: catVideo, badge: "360°",
       },
+      // Bridging reel still — sits over the seam between the two
+      // columns so the middle never reads as an empty gap.
       {
-        top: "182px", right: "246px", w: 140, h: 140, r: -10, z: 2, d: 0.2,
+        top: "150px", right: "190px", w: 108, h: 108, r: 9, z: 7, d: 0.18,
         depth: { mx: 7, my: 5, sy: 0.018 },
-        kind: "carousel", item: carouselFirst,
+        kind: "img", item: REELS[1],
       },
+      // Right column — static ad #1 (health: Matri, bold "Shark Tank" claim)
       {
-        top: "300px", right: "210px", w: 160, h: 188, r: -6, z: 4, d: 0.28,
-        depth: { mx: 8, my: 6, sy: 0.02 },
-        kind: "img", item: STATICS[0],
+        top: "255px", right: "20px", w: 150, h: 188, r: 4, z: 4, d: 0.26,
+        depth: { mx: 9, my: 6, sy: 0.022 },
+        kind: "img", item: STATICS[12],
       },
+      // Left column — static ad #2 (fashion: Mysore Pattu, "Celebrity Spotted")
       {
-        top: "390px", right: "60px", w: 172, h: 205, r: 5, z: 3, d: 0.34,
-        depth: { mx: 10, my: 7, sy: 0.024 },
-        kind: "img", item: STATICS[2],
+        top: "255px", right: "235px", w: 165, h: 206, r: -6, z: 4, d: 0.32,
+        depth: { mx: 9, my: 6, sy: 0.022 },
+        kind: "img", item: STATICS[3],
       },
+      // Right column — catalogue still (Aurex watch), closes the column
       {
-        top: "462px", right: "280px", w: 105, h: 120, r: 9, z: 1, d: 0.4,
+        top: "410px", right: "40px", w: 140, h: 175, r: 6, z: 3, d: 0.38,
         depth: { mx: 6, my: 4, sy: 0.014 },
         kind: "img", item: catStill,
+      },
+      // Left column — static ad #3 (food: Krafted Millets), closes the column
+      {
+        top: "430px", right: "250px", w: 155, h: 194, r: -3, z: 3, d: 0.44,
+        depth: { mx: 8, my: 5, sy: 0.02 },
+        kind: "img", item: STATICS[4],
       },
     ].filter((t) => t.item);
 

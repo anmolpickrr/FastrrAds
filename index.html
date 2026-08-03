@@ -186,9 +186,11 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
    intentional cluster instead of drifting into empty space. It scales
    as a single unit at narrower desktop widths so every tile's relative
    position/overlap stays identical (no re-scattering) while it shrinks
-   to stay clear of the headline. */
+   to stay clear of the headline. Box is 420x630 — the two video tiles
+   anchor the left/right columns, with static ads cascading below each
+   and a small reel still bridging the seam between columns. */
 .hero-visual{
-  position:absolute; top:0; right:0; width:420px; height:600px; z-index:1;
+  position:absolute; top:0; right:0; width:420px; height:630px; z-index:1;
   transform-origin:top right;
 }
 @media (max-width:1180px){.hero-visual{transform:scale(.86);}}
