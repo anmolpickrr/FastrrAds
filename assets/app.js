@@ -1006,44 +1006,50 @@ Special requirements: ${state.specialReq.trim() || "None noted"}
     // 420x600 .hero-visual composition box (see CSS), not the full
     // stage. That keeps every tile's overlap/spacing deliberate and
     // consistent instead of scattering tiles across the whole stage
-    // height with loose percentages. Tiles are arranged in two loosely
-    // overlapping columns so each one touches or overlaps its neighbor
-    // by a similar ~15-30px margin, with no large empty gaps between
-    // clusters. {top/right px, w/h px, r deg rotate, z z-index,
-    // d entrance-delay s, depth {mx,my,sy} parallax factors}
+    // height with loose percentages. Tiles cascade down two loosely
+    // overlapping columns (hero video → reel → carousel → static →
+    // catalogue still on the left; hero video → catalogue video →
+    // bottom static on the right) with each cascade step overlapping
+    // its neighbor by a consistent ~22-27px margin — deliberate and
+    // even, not a razor-thin sliver and not a stray gap. w/h are sized
+    // close to each tile's real source aspect ratio (reels/catalogue
+    // video ≈9:16, carousel ≈1:1, statics/catalogue stills ≈4:5) so
+    // object-fit:cover crops only a little to fill the collage shape,
+    // never egregiously. {top/right px, w/h px, r deg rotate, z
+    // z-index, d entrance-delay s, depth {mx,my,sy} parallax factors}
     const tiles = [
       {
-        top: "0px", right: "0px", w: 210, h: 270, r: -4, z: 6, d: 0.05,
+        top: "0px", right: "0px", w: 195, h: 290, r: -4, z: 6, d: 0.05,
         depth: { mx: 14, my: 9, sy: 0.03 }, extraClass: "tile-hero",
         kind: "video", item: heroVideo, badge: heroVideo ? (heroVideo.dur || "") : "",
       },
       {
-        top: "-6px", right: "196px", w: 164, h: 196, r: 7, z: 3, d: 0.14,
+        top: "-6px", right: "173px", w: 148, h: 210, r: 7, z: 3, d: 0.14,
         depth: { mx: 9, my: 6, sy: 0.022 },
         kind: "img", item: REELS[1],
       },
       {
-        top: "240px", right: "6px", w: 196, h: 186, r: 3, z: 5, d: 0.1,
+        top: "263px", right: "6px", w: 165, h: 210, r: 3, z: 5, d: 0.1,
         depth: { mx: 12, my: 8, sy: 0.028 },
         kind: "video", item: catVideo, badge: "360°",
       },
       {
-        top: "170px", right: "246px", w: 132, h: 150, r: -10, z: 2, d: 0.2,
+        top: "182px", right: "246px", w: 140, h: 140, r: -10, z: 2, d: 0.2,
         depth: { mx: 7, my: 5, sy: 0.018 },
         kind: "carousel", item: carouselFirst,
       },
       {
-        top: "300px", right: "210px", w: 168, h: 168, r: -6, z: 3, d: 0.28,
+        top: "300px", right: "210px", w: 160, h: 188, r: -6, z: 4, d: 0.28,
         depth: { mx: 8, my: 6, sy: 0.02 },
         kind: "img", item: STATICS[0],
       },
       {
-        top: "400px", right: "0px", w: 180, h: 198, r: 5, z: 4, d: 0.34,
+        top: "390px", right: "60px", w: 172, h: 205, r: 5, z: 3, d: 0.34,
         depth: { mx: 10, my: 7, sy: 0.024 },
         kind: "img", item: STATICS[2],
       },
       {
-        top: "462px", right: "280px", w: 110, h: 110, r: 9, z: 1, d: 0.4,
+        top: "462px", right: "280px", w: 105, h: 120, r: 9, z: 1, d: 0.4,
         depth: { mx: 6, my: 4, sy: 0.014 },
         kind: "img", item: catStill,
       },

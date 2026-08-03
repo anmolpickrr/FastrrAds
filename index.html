@@ -82,7 +82,6 @@ body.lb-locked{overflow:hidden;}
   .hero-tile{opacity:1 !important; animation:none !important; transform:rotate(var(--r,0deg)) !important;}
   .hero-tile-inner{transition:none !important; transform:none !important;}
   .hero-title .word span{animation:none !important; transform:none !important;}
-  .hero-stamp{animation:none !important;}
 }
 h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
 p{margin:0;}
@@ -211,21 +210,13 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
   will-change:transform;
 }
 .hero-tile-inner:hover{box-shadow:0 30px 64px -18px rgba(0,0,0,0.6);}
-.hero-tile-inner img,.hero-tile-inner video{width:100%; height:100%; object-fit:cover;}
+.hero-tile-inner img,.hero-tile-inner video{width:100%; height:100%; object-fit:cover; border-radius:inherit;}
 .hero-tile-badge{position:absolute; bottom:8px; left:8px; background:rgba(8,9,12,0.6); color:#f4f5f7; font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; padding:3px 8px; border-radius:100px; backdrop-filter:blur(6px);}
 .hero-tile.tile-hero::before{
   content:''; position:absolute; inset:-14px; z-index:-1; border-radius:calc(var(--radius) + 12px); opacity:.55;
   background:conic-gradient(from 140deg,var(--violet),var(--teal),var(--gold),var(--violet));
   filter:blur(18px);
 }
-.hero-stamp{
-  position:absolute; z-index:2; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
-  color:var(--text-0); background:var(--glass); border:1px solid var(--line); backdrop-filter:blur(10px);
-  padding:9px 16px; border-radius:100px; transform:rotate(-6deg);
-  animation:stampIn .9s .5s cubic-bezier(.16,1,.3,1) both;
-  top:214px; right:118px; white-space:nowrap;
-}
-@keyframes stampIn{from{opacity:0; transform:rotate(-6deg) scale(.7);}to{opacity:1; transform:rotate(-6deg) scale(1);}}
 
 /* Kinetic filmstrip — real creative thumbnails, auto-scrolling rows */
 .hero-filmstrip{position:relative; z-index:1; margin-top:36px; padding-bottom:26px; display:flex; flex-direction:column; gap:14px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
@@ -556,10 +547,10 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
       <div class="hero-head">
         <span class="eyebrow">● Internal Sales Tool — Live Creative Portfolio</span>
         <h1 class="hero-title">
-          <span class="word" style="--w:0"><span>Pitch</span></span> <span class="word" style="--w:1"><span>creative</span></span> <span class="word" style="--w:2"><span>work</span></span><br>
-          <span class="word" style="--w:3"><span>that</span></span> <span class="word" style="--w:4"><span class="accent">actually</span></span> <span class="word" style="--w:5"><span class="accent">sells.</span></span>
+          <span class="word" style="--w:0"><span>Real</span></span> <span class="word" style="--w:1"><span>AI-powered</span></span> <span class="word" style="--w:2"><span>creative</span></span><br>
+          <span class="word" style="--w:3"><span>that</span></span> <span class="word" style="--w:4"><span class="accent">actually</span></span> <span class="word" style="--w:5"><span class="accent">performs.</span></span>
         </h1>
-        <p class="hero-sub">Showcase real Fastrr creative, quote AI Reels, 360° Catalogue Videos, Statics &amp; Carousels in seconds, and send a client-ready message before the call ends.</p>
+        <p class="hero-sub">Every reel, rotation, static, and carousel here is real delivered Fastrr work — not stock, not mockups. Pick a service, quote it in seconds, and send a client-ready message before the call ends.</p>
         <div class="hero-cta-row">
           <a href="#showcase" class="btn btn-primary">See the Work ↓</a>
           <a href="#quote" class="btn btn-ghost">Build a Quote</a>
@@ -572,7 +563,6 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
       </div>
       <div class="hero-visual" id="heroVisual">
         <div class="hero-orbit" id="heroOrbit" aria-hidden="true"></div>
-        <span class="hero-stamp">★ Real delivered creative — not mockups</span>
       </div>
     </div>
   </div>
