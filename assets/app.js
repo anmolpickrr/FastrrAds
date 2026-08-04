@@ -292,7 +292,7 @@
     svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.svc === state.service);
     });
-    tierRow.style.display = state.service === "reels" ? "flex" : "none";
+    tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
@@ -337,7 +337,7 @@
       const badge = included ? "✓" : "✕";
       return `<div class="support-item ${state}">
         <span class="support-badge">${badge}</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg>
+        <div class="support-icon-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg></div>
         <span>${role.label}</span>
         <em class="support-state-label">${included ? "Included" : "Not Included"}</em>
       </div>`;
