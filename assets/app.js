@@ -986,59 +986,77 @@ Please also share anything else you'd like us to consider from your end.${specia
     const orbit = document.getElementById("heroOrbit");
     if (!orbit) return;
 
+    // Explicitly-aligned 7-column layout — replaces the earlier 2-column
+    // cluster with a wider wall of creative. No rotation, no overlap:
+    // every column shares ONE fixed 72px width, so every tile's left/right
+    // edges line up exactly with its column neighbors, separated by a
+    // constant 14px gap. That's the literal definition of "aligned" —
+    // edges that line up — carried over unchanged from the 2-column build.
+    //
+    // 72px is a multiple of 36 (=lcm(4,9)), so BOTH the 4:5 static ratio
+    // (72×90) and the 9:16 video ratio (72×128) land on exact integer
+    // heights within the same column width — zero rounding error.
+    //
+    // Each column stacks 4 tiles, alternating video/static so every
+    // column mixes both media types. Columns alternate a 0/36px top
+    // offset for rhythm without breaking any single column's own
+    // alignment (same device the 2-column layout used).
+    const colW = 72;
+    const gap = 14;
+    const videoH = 128; // 72 × 16/9, exact
+    const staticH = 90; // 72 × 5/4, exact
+    const colCount = 7;
+
     const heroVideo = REELS.find((r) => r.video && r.video.includes("bang-bang-reel"));
     const catVideo = CATALOGUE.find((c) => c.video && c.video.includes("apex-edge"));
-    // Simplified, explicitly-aligned 2-column layout — replaces an
-    // earlier rotated/deep-overlap cascade that repeatedly read as
-    // "misaligned" no matter how precisely the overlap math was tuned.
-    // No rotation, no overlap: each column shares ONE fixed width, so
-    // every tile's left/right edges line up exactly with its column
-    // neighbors, separated by a small constant 14px gap. That's the
-    // literal definition of "aligned" — edges that line up — rather
-    // than a deliberately-imprecise collage look.
-    //
-    // Column A (right, dominant): hero video + 1 supporting static.
-    // Column B (left, secondary): 360° catalogue video + reel still +
-    // 1 supporting static. Column B is offset 36px lower than column A
-    // for a touch of rhythm without breaking either column's internal
-    // alignment.
-    //
-    // w/h are EXACT source aspect ratios, computed from a per-column
-    // width that's a multiple of 36 (=lcm(4,9)) so BOTH the 4:5 static
-    // ratio and 16:9 video ratio land on exact integer heights within
-    // the same column width — zero rounding error, 0.8 or 0.5625 to
-    // full floating-point precision.
-    const colAWidth = 180; // right column
-    const colBWidth = 144; // left column
-    const gap = 14;
+    const videoPool = CATALOGUE.filter((c) => c.video && c.video !== (catVideo && catVideo.video))
+      .concat(REELS.filter((r) => r.video && r.video !== (heroVideo && heroVideo.video)));
+    const staticPool = STATICS.filter((s) => s.thumb);
 
-    const tiles = [
-      // Column A — hero video, the dominant tile. 180×320 = 9:16 exact.
-      {
-        top: "0px", right: "0px", w: colAWidth, h: 320, r: 0, z: 4, d: 0.05, ix: 0, iy: 22,
-        depth: { mx: 10, my: 7, sy: 0.024 }, extraClass: "tile-hero",
-        kind: "video", item: heroVideo, badge: heroVideo ? (heroVideo.dur || "") : "",
-      },
-      // Column A — static ad (health: Matri, "Shark Tank" claim). 180×225 = 4:5 exact.
-      {
-        top: `${320 + gap}px`, right: "0px", w: colAWidth, h: 225, r: 0, z: 3, d: 0.16, ix: 0, iy: 22,
-        depth: { mx: 8, my: 5, sy: 0.02 },
-        kind: "img", item: STATICS[12],
-      },
-      // Column B — catalogue 360° video, secondary column, offset down
-      // 36px from column A for rhythm. 144×256 = 9:16 exact.
-      {
-        top: "36px", right: `${colAWidth + gap}px`, w: colBWidth, h: 256, r: 0, z: 4, d: 0.12, ix: 0, iy: 22,
-        depth: { mx: 9, my: 6, sy: 0.022 }, extraClass: "tile-secondary",
-        kind: "video", item: catVideo, badge: "360°",
-      },
-      // Column B — static ad (fashion: Mysore Pattu, "Celebrity Spotted"). 144×180 = 4:5 exact.
-      {
-        top: `${36 + 256 + gap}px`, right: `${colAWidth + gap}px`, w: colBWidth, h: 180, r: 0, z: 3, d: 0.24, ix: 0, iy: 22,
-        depth: { mx: 7, my: 5, sy: 0.018 },
-        kind: "img", item: STATICS[3],
-      },
-    ].filter((t) => t.item);
+    let videoCursor = 0;
+    let staticCursor = 0;
+    function nextVideo() {
+      const item = videoPool[videoCursor % videoPool.length];
+      videoCursor++;
+      return item;
+    }
+    function nextStatic() {
+      const item = staticPool[staticCursor % staticPool.length];
+      staticCursor++;
+      return item;
+    }
+
+    const tiles = [];
+    for (let c = 0; c < colCount; c++) {
+      const rightPx = c * (colW + gap);
+      const offsetTop = c % 2 === 0 ? 0 : 36;
+      // First column leads with the curated hero video; second column
+      // leads with the curated 360° catalogue video — both keep their
+      // restrained gradient-glow accent. Every other column's tiles are
+      // drawn from the pools so the whole wall stays a real mix of shots.
+      const pattern =
+        c === 0
+          ? [{ kind: "video", item: heroVideo, extraClass: "tile-hero" }, { kind: "img" }, { kind: "video" }, { kind: "img" }]
+          : c === 1
+          ? [{ kind: "video", item: catVideo, extraClass: "tile-secondary" }, { kind: "img" }, { kind: "video" }, { kind: "img" }]
+          : [{ kind: "video" }, { kind: "img" }, { kind: "video" }, { kind: "img" }];
+
+      let top = offsetTop;
+      pattern.forEach((spec, i) => {
+        const isVideo = spec.kind === "video";
+        const item = spec.item || (isVideo ? nextVideo() : nextStatic());
+        const h = isVideo ? videoH : staticH;
+        if (item) {
+          tiles.push({
+            top: `${top}px`, right: `${rightPx}px`, w: colW, h, r: 0,
+            z: 3 + (pattern.length - i), d: (c * 0.05 + i * 0.04).toFixed(2), ix: 0, iy: 18,
+            depth: { mx: 6 - i * 0.4, my: 4 - i * 0.3, sy: 0.014 },
+            extraClass: spec.extraClass, kind: isVideo ? "video" : "img", item,
+          });
+        }
+        top += h + gap;
+      });
+    }
 
     function mediaHTML(t) {
       if (t.kind === "video" && t.item.video) {
@@ -1064,14 +1082,10 @@ Please also share anything else you'd like us to consider from your end.${specia
         ]
           .filter(Boolean)
           .join(";");
-        const title = t.item.title ? escapeHtml(t.item.title) : "";
-        const catLabel = t.item.catlabel || t.item.cat || "";
         return `<div class="${cls.join(" ")}" data-i="${i}" style="${style}">
           <div class="hero-tile-drift">
             <div class="hero-tile-inner">
               <div class="hero-tile-media">${mediaHTML(t)}</div>
-              ${t.badge ? `<span class="hero-tile-badge">${t.badge}</span>` : ""}
-              ${title ? `<div class="hero-tile-caption"><b>${title}</b>${catLabel ? `<span>${escapeHtml(catLabel)}</span>` : ""}</div>` : ""}
             </div>
           </div>
         </div>`;
