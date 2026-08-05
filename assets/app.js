@@ -969,15 +969,26 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // Card face shows only what's genuinely useful to identify a creative at
   // a glance — its name, category, and type — instead of a duration badge
   // stamped over the media and a marketing-style "hook" tagline that read
-  // inconsistently from one creative to the next. Demo/placeholder items
-  // (not real delivered work) show their own explanatory label instead of
-  // a category, so they're never mistaken for one of the categories above.
+  // inconsistently from one creative to the next. Category sits in a pill
+  // (an "eyebrow" above the title) rather than as plain inline text, and
+  // every text block has a reserved height, so a row of cards with titles
+  // of different lengths still lines up card-for-card instead of each
+  // info panel settling to its own height. Demo/placeholder items (not
+  // real delivered work) show their own explanatory label instead of a
+  // category, so they're never mistaken for one of the categories above.
   function workCardMetaHTML(item) {
     const typeLabel = SHOWCASE_TYPE_LABEL[activeShowcaseCat] || "";
-    const catText = item.cat === "demo" ? escapeHtml(item.catlabel) : `${escapeHtml(item.catlabel || item.cat)} · ${typeLabel}`;
+    const isDemo = item.cat === "demo";
+    // Demo/placeholder copy is a full sentence, not a short label — forcing
+    // it into a pill alongside real categories would look broken, so it
+    // gets a plain muted caption instead, with no type row underneath.
+    const catHTML = isDemo
+      ? `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`
+      : `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
     return `<div class="wc-info">
+        ${catHTML}
         <h5 class="wc-title">${escapeHtml(item.title)}</h5>
-        <span class="wc-meta">${catText}</span>
+        ${isDemo ? "" : `<span class="wc-type-tag">${escapeHtml(typeLabel)}</span>`}
       </div>`;
   }
 

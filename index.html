@@ -362,14 +362,26 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .wc-dots{position:absolute; bottom:8px; left:0; right:0; display:flex; justify-content:center; gap:5px;}
 .wc-dot{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.45);}
 .wc-dot.active{background:#fff;}
-.wc-info{padding:13px 14px 15px;}
+/* Three stacked rows, each with a predictable height, so every card in a
+   row lines up regardless of how long its title or category text is — a
+   row with one 2-line title and five 1-line titles previously produced
+   six different card heights. Category (a pill — the eyebrow) is most
+   prominent, title is the primary heading, type is the smallest/last
+   since the active showcase tab already implies it. */
+.wc-info{padding:13px 14px 15px; display:flex; flex-direction:column; gap:7px;}
+.wc-cat-pill{
+  align-self:flex-start; max-width:100%; padding:4px 10px; border-radius:100px; background:var(--teal-soft); color:var(--teal);
+  font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.wc-demo-note{font-size:11px; color:var(--text-2); font-style:italic; line-height:1.4;}
 .wc-title{
   font-size:14px; font-weight:700; color:var(--text-0); line-height:1.35; letter-spacing:-0.005em;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  min-height:calc(14px * 1.35 * 2);
 }
-.wc-meta{
-  margin-top:6px; display:block; font-family:var(--font-mono); font-size:10.5px;
-  text-transform:uppercase; letter-spacing:.06em; color:var(--teal);
+.wc-type-tag{
+  display:block; font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2);
 }
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
@@ -1054,7 +1066,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
   </div>
 </div>
 
-<script src="assets/creative-data.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/creative-data.js?v=20260805-1"></script>
+<script src="assets/app.js?v=20260805-1"></script>
 </body>
 </html>
