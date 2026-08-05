@@ -44,9 +44,8 @@
         "Additional aspect ratios (quoted separately)",
       ],
       need: [
-        "High-resolution product images (white background, multiple angles preferred)",
-        "SKU list with product names",
-        "Product page/link for reference",
+        "SKU list with product names — which products need a rotation",
+        "Reference/inspiration for the rotation style (if any)",
       ],
       deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent — no text, voiceover, or music — delivered via shared drive folder",
       // Standard 360° rotation is deliberately silent/text-free/script-free (see
@@ -79,10 +78,9 @@
         "Photography or product shoots",
       ],
       need: [
-        "Brand logo",
-        "Colour palette & font family (if any)",
-        "High-res product images (white background)",
+        "Brief/summary of the creative idea or requirement",
         "Key message/offer to highlight",
+        "References/inspiration (if any)",
       ],
       deliver: "2 files — 1:1 and 9:16, PNG/JPG, print-ready resolution, delivered via shared drive folder",
       // Design-only, no scripting (`scripting: "Not applicable"`) — editor/designer
@@ -112,9 +110,8 @@
         "New concepts or major creative rework (new order)",
       ],
       need: [
-        "Brand logo & guidelines (if available)",
-        "Up to 5 key points/features to spotlight",
-        "High-res product images (white background)",
+        "Brief/summary of the narrative, or up to 5 key points/features to spotlight",
+        "References/inspiration (if any)",
       ],
       deliver: "Up to 5 slides × 2 sizes, PNG/JPG set, numbered & sequenced, delivered via shared drive folder",
       // Same reasoning as Static — design-only, `scripting: "Not applicable"`.
@@ -137,7 +134,6 @@
       excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, fully discussed brief before work starts",
-        "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
@@ -166,7 +162,6 @@
       excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, fully discussed brief before work starts",
-        "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
@@ -194,7 +189,6 @@
       excluded: ["Additional hook options", "Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, discussed brief before work starts",
-        "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
@@ -224,7 +218,6 @@
       excluded: ["Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, discussed brief before work starts",
-        "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
@@ -241,6 +234,21 @@
   // Applied once to the order's taxable value (post-discount subtotal) —
   // see computeCart().
   const GST_RATE = 0.18;
+
+  // Brand/product-level assets that only need to be collected once per
+  // order, no matter how many creative types or tiers are in it — every
+  // DATA[x].need array above is now creative-specific only (brief,
+  // references, tone/key-message, voiceover language, SKU list) and
+  // deliberately excludes these, so they're requested exactly once
+  // instead of once per line item.
+  const COMMON_NEED = [
+    "Brand logo",
+    "Brand colour palette (if available)",
+    "Brand fonts (if available)",
+    "Selected product(s) to be featured",
+    "Product page / website link",
+    "Product images — high-resolution with a clean background, or raw product images/footage, as available",
+  ];
 
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
@@ -450,9 +458,21 @@
     } else if (state.scopeTab === "exc") {
       html = `<ul class="scope-list scope-exc">${scopeListHTML(d.excluded)}</ul>`;
     } else {
-      html = `<ul class="scope-list scope-need">${scopeListHTML(d.need)}</ul>${
-        d.dimNote ? `<p class="scope-note">${d.dimNote}</p>` : ""
-      }`;
+      // Split into brand/product assets (identical for every package, so
+      // labeled as a one-time ask) vs. what's specific to this creative —
+      // same split the requirements message uses for a multi-item order,
+      // shown here for whoever's just browsing a single package.
+      html = `
+        <div class="scope-need-group">
+          <span class="scope-need-label">Brand &amp; product assets — once per order</span>
+          <ul class="scope-list scope-need">${scopeListHTML(COMMON_NEED)}</ul>
+        </div>
+        <div class="scope-need-group">
+          <span class="scope-need-label">Specific to this creative</span>
+          <ul class="scope-list scope-need">${scopeListHTML(d.need)}</ul>
+        </div>
+        ${d.dimNote ? `<p class="scope-note">${d.dimNote}</p>` : ""}
+      `;
     }
     document.getElementById("scopeListWrap").innerHTML = html;
 
@@ -649,11 +669,16 @@ ${orderBlock}
 Pricing:
 ${priceBlock}`;
 
-    // Message 2 — What We Need From You. Client-facing requirements
-    // checklist only, grouped per creative type so a multi-item order
-    // doesn't read as one undifferentiated list — sourced directly from
-    // each item's d.need (same arrays the scope panel above uses).
-    const needBlock = cart.items
+    // Message 2 — What We Need From You. Since every line item in the
+    // order belongs to the same brand, brand/product-level assets (logo,
+    // colours, fonts, product selection, website link, product images)
+    // are asked for exactly once via COMMON_NEED, instead of once per
+    // creative type — then each creative type's own d.need (brief,
+    // references, tone/key-message, voiceover language, etc.) is grouped
+    // underneath so the client can see at a glance what's shared vs.
+    // what's specific to each piece.
+    const commonBlock = COMMON_NEED.map((n) => "- " + n).join("\n");
+    const specificBlock = cart.items
       .map((item) => {
         const needs = item.d.need.map((n) => "- " + n).join("\n");
         return `${item.d.name}:\n${needs}`;
@@ -664,7 +689,12 @@ ${priceBlock}`;
       : "";
     const internalMsg = `Hi ${clientName}, thank you! To get production started on your order, could you please share the following at your earliest convenience:
 
-${needBlock}
+Brand & product assets (once for this order):
+${commonBlock}
+
+Creative-specific requirements:
+
+${specificBlock}
 
 Feel free to also share anything else you'd like us to keep in mind.${specialReqLine}`;
 
