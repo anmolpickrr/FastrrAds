@@ -433,16 +433,33 @@
       const state = included ? "is-included" : "is-excluded";
       const badge = included ? "✓" : "✕";
       return `<div class="support-item ${state}">
-        <div class="support-icon-badge">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg>
-          <span class="support-badge">${badge}</span>
-        </div>
-        <div class="support-item-body">
-          <span>${role.label}</span>
-          <em class="support-state-label">${included ? "Included" : "Not Included"}</em>
-        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg>
+        <span>${role.label}</span>
+        <b>${badge}</b>
       </div>`;
     }).join("");
+  }
+
+  // Single scan-strip of the facts a quick-checking viewer actually needs
+  // (price/revisions/duration/format/turnaround/script/language) — these
+  // don't change with the Included/Excluded/Client-Provides tab below, so
+  // they're rendered once here instead of duplicated inside a side-card
+  // that repeated the same facts already covered by that list.
+  function renderKeySpecs() {
+    const d = currentData();
+    const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
+    const rows = [
+      ["Price", fmtINR(d.basePrice) + " / " + (d.unit || "package")],
+      ["Revisions", d.revisions],
+      ["Duration", d.duration],
+      ["Format", d.format],
+      ["Turnaround", d.turnaround],
+      ["Script", notApplicable(d.scripting) ? null : d.scripting],
+      ["Language", notApplicable(d.language) ? null : d.language],
+    ].filter(([, v]) => v);
+    document.getElementById("keySpecs").innerHTML = rows
+      .map(([k, v]) => `<div class="key-spec"><span>${k}</span><b>${v}</b></div>`)
+      .join("");
   }
 
   function renderServiceSummary() {
@@ -450,8 +467,8 @@
     document.getElementById("svcName").textContent = d.name;
     document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
     document.getElementById("svcShort").textContent = d.short || "";
-    document.getElementById("svcBenefit").textContent = d.benefit || "";
     renderSupportBlock();
+    renderKeySpecs();
   }
 
   function renderScopePanel() {
@@ -482,23 +499,6 @@
       `;
     }
     document.getElementById("scopeListWrap").innerHTML = html;
-
-    const metaWrap = document.getElementById("scopeMeta");
-    const rows = [
-      ["Price", fmtINR(d.basePrice) + " / " + (d.unit || "package")],
-      ["Revisions", d.revisions],
-      ["Duration", d.duration],
-      ["Dimensions / Format", d.format],
-      ["Turnaround", d.turnaround],
-      ["Script / Approval", d.scripting],
-    ];
-    if (d.language) rows.push(["Language", d.language]);
-    metaWrap.innerHTML = rows
-      .map(
-        ([k, v]) =>
-          `<div class="scope-meta-row"><span>${k}</span><b>${v}</b></div>`
-      )
-      .join("");
     document.getElementById("scopeDeliver").textContent = d.deliver;
 
     // Reel comparison table (nested inside "Good to know") only makes
