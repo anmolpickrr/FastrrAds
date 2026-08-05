@@ -588,15 +588,18 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-general li::before{content:'—'; position:absolute; left:0; color:var(--text-2);}
 .rules-general li b{color:var(--text-0);}
 
-.rules-compare-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
-.rules-compare-toggle summary{
+.rules-compare-toggle,.mini-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
+.rules-compare-toggle summary,.mini-toggle summary{
   cursor:pointer; list-style:none; user-select:none; font-size:12.5px; font-weight:600; color:var(--text-1);
   display:flex; align-items:center; gap:6px;
 }
-.rules-compare-toggle summary::-webkit-details-marker{display:none;}
-.rules-compare-toggle summary::before{content:'›'; display:inline-block; font-size:15px; color:var(--text-2); transition:transform .2s ease;}
-.rules-compare-toggle[open] summary::before{transform:rotate(90deg);}
-.rules-compare-toggle summary:hover{color:var(--text-0);}
+.rules-compare-toggle summary::-webkit-details-marker,.mini-toggle summary::-webkit-details-marker{display:none;}
+.rules-compare-toggle summary::before,.mini-toggle summary::before{content:'›'; display:inline-block; font-size:15px; color:var(--text-2); transition:transform .2s ease;}
+.rules-compare-toggle[open] summary::before,.mini-toggle[open] summary::before{transform:rotate(90deg);}
+.rules-compare-toggle summary:hover,.mini-toggle summary:hover{color:var(--text-0);}
+.mini-toggle{margin-top:14px; margin-bottom:14px; padding-top:14px;}
+.mini-toggle[open]>summary{margin-bottom:12px;}
+.mini-toggle .ob-facts{margin:0;}
 
 /* ---------- ORDER BUILDER / CALCULATOR ----------
    Two-panel layout: a left "configure a creative" builder that feeds
@@ -630,12 +633,13 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .summary-row.total{border-bottom:none; padding-top:14px; font-size:19px; font-weight:700; font-family:var(--font-display);}
 .summary-row.total span{color:var(--text-1); font-family:var(--font-body); font-weight:600; font-size:14px;}
 
-.order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:22px; align-items:start;}
+.order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:18px; align-items:start;}
 @media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
 
-.ob-panel,.oc-panel{padding:28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
-.ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:20px;}
-.ob-facts{display:flex; flex-wrap:wrap; gap:8px; margin:-6px 0 20px;}
+.ob-panel,.oc-panel{padding:22px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:14px;}
+.ob-panel .field-row{margin-bottom:14px;}
+.ob-facts{display:flex; flex-wrap:wrap; gap:8px;}
 .ob-fact{font-size:11.5px; padding:5px 11px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px;}
 .ob-fact .dot{width:5px; height:5px; border-radius:50%; background:var(--teal); flex:0 0 auto;}
 .ob-add-btn{width:100%; justify-content:center; margin-top:4px;}
@@ -648,12 +652,12 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .oc-count{font-size:12.5px; color:var(--text-1); font-weight:600;}
 .oc-panel.flash-warn{animation:input-shake .32s;}
 
-.order-cart-list{margin-top:14px; border-top:1px solid var(--line-soft);}
-.cart-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:38px 20px; color:var(--text-2);}
-.cart-empty svg{color:var(--text-2); opacity:.6;}
-.cart-empty p{font-size:13px; line-height:1.55; max-width:260px;}
+.order-cart-list{margin-top:12px; border-top:1px solid var(--line-soft);}
+.cart-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; padding:26px 20px; color:var(--text-2);}
+.cart-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
+.cart-empty p{font-size:12.5px; line-height:1.5; max-width:260px;}
 
-.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line-soft);}
+.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
 .cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
 .cart-item-facts{margin-top:4px; font-size:11.5px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:4px 8px;}
 .cart-item-qty{display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
@@ -671,9 +675,9 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
   .cart-item-actions{margin-top:-4px;}
 }
 
-.order-tat-note{margin-top:14px; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
-.order-summary{margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);}
-.order-summary .field-row{margin-bottom:16px;}
+.order-tat-note{margin:0; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
+.order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
+.order-summary .field-row{margin-bottom:12px;}
 
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
@@ -694,6 +698,15 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 @media (max-width:900px){.msg-grid{grid-template-columns:1fr;}}
 .msg-card{padding:28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); display:flex; flex-direction:column; box-shadow:var(--shadow-md), var(--inset-hi);}
 .msg-card h4{font-size:16px; margin-bottom:14px; display:flex; align-items:center; gap:8px; letter-spacing:-0.005em;}
+.msg-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.msg-card-head h4{margin-bottom:0;}
+.pdf-btn{
+  flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 13px; margin-bottom:14px; border-radius:100px; border:1px solid var(--line);
+  background:var(--surface-1); color:var(--text-1); font-size:12px; font-weight:600;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.pdf-btn:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
+.pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none;}
 .msg-inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
 textarea.msg-box{
   width:100%; min-height:340px; resize:vertical; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1);
@@ -934,7 +947,10 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           </div>
         </div>
 
-        <div class="ob-facts" id="obFacts"></div>
+        <details class="mini-toggle">
+          <summary>Package details</summary>
+          <div class="ob-facts" id="obFacts"></div>
+        </details>
 
         <div class="field-row-split">
           <div class="field-row">
@@ -965,7 +981,10 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
 
         <div class="order-cart-list" id="orderCartList"></div>
 
-        <p class="order-tat-note">Turnaround shown per item is per single creative — total delivery for bulk orders or multiple creative types depends on quantity, creative type, package/tier, complexity, and final requirements.</p>
+        <details class="mini-toggle">
+          <summary>Turnaround note</summary>
+          <p class="order-tat-note">Turnaround shown per item is per single creative — total delivery for bulk orders or multiple creative types depends on quantity, creative type, package/tier, complexity, and final requirements.</p>
+        </details>
 
         <div class="order-summary">
           <div class="field-row">
@@ -1027,7 +1046,13 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
 
     <div class="msg-grid reveal-on-scroll">
       <div class="msg-card">
-        <h4>Package Summary</h4>
+        <div class="msg-card-head">
+          <h4>Package Summary</h4>
+          <button class="pdf-btn" id="downloadPdfBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span id="downloadPdfBtnLabel">Download PDF</span>
+          </button>
+        </div>
         <textarea class="msg-box" id="clientMsg" readonly></textarea>
         <button class="copy-btn" id="copyClientBtn">Copy Package Summary</button>
       </div>
@@ -1065,7 +1090,9 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
   </div>
 </div>
 
-<script src="assets/creative-data.js?v=20260805-3"></script>
-<script src="assets/app.js?v=20260805-3"></script>
+<script src="assets/vendor/jspdf.umd.min.js"></script>
+<script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
+<script src="assets/creative-data.js?v=20260805-4"></script>
+<script src="assets/app.js?v=20260805-4"></script>
 </body>
 </html>

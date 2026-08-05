@@ -254,6 +254,13 @@
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
 
+  // jsPDF's built-in fonts (WinAnsi/Latin-only) can't render ₹ — it falls
+  // back to an unrelated glyph — so the PDF path formats amounts with
+  // "Rs." instead. Everywhere else on the page keeps the ₹ symbol.
+  function fmtINRPdf(n) {
+    return "Rs. " + Math.round(n).toLocaleString("en-IN");
+  }
+
   /* ----------------------------------------------------------
      2. SHARED APPLICATION STATE
      Single source of truth. Every dependent view (Services
@@ -640,23 +647,15 @@
       .filter(Boolean)
       .join("\n");
 
-    // Message 1 — Package Summary. One block per creative type/tier in
-    // the order (deliverables/duration/revisions/script/format/language/
-    // timeline), then a single combined pricing breakdown for the whole
-    // order — readable by client AND creative team alike in one shared
-    // WhatsApp group. Deliberately excludes the client-requirements
-    // checklist (that's message 2's job only, no overlap between the two).
+    // Message 1 — Package Summary. Kept deliberately short — just the
+    // order line items and the combined pricing breakdown — so it stays
+    // readable dropped straight into a WhatsApp thread. The full
+    // per-item breakdown (deliverables/duration/revisions/script/format/
+    // language/timeline) plus general terms lives in the downloadable
+    // PDF only (see generatePackagePdf below), not duplicated here.
     const orderBlock = cart.items
-      .map((item, idx) => {
-        const d = item.d;
-        return `${idx + 1}. ${d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}
-Deliverables: ${d.deliver}
-Duration: ${d.duration}
-Revisions: ${d.revisions}${d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting) ? `\nScript / Approval: ${d.scripting}` : ""}
-Format / Dimensions: ${d.format}${d.language && !/^not applicable/i.test(d.language) ? `\nLanguage: ${d.language}` : ""}
-Timeline: ${d.turnaround}${d.dimNote ? "\n" + d.dimNote : ""}`;
-      })
-      .join("\n\n");
+      .map((item, idx) => `${idx + 1}. ${item.d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`)
+      .join("\n");
 
     const clientMsg = `Package Summary — ${brandName}
 
@@ -667,7 +666,9 @@ Order:
 ${orderBlock}
 
 Pricing:
-${priceBlock}`;
+${priceBlock}
+
+Full package details (deliverables, revisions, turnaround, terms) — download the PDF from the Package Summary panel.`;
 
     // Message 2 — What We Need From You. Since every line item in the
     // order belongs to the same brand, brand/product-level assets (logo,
@@ -700,6 +701,255 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
     document.getElementById("clientMsg").value = clientMsg;
     document.getElementById("internalMsg").value = internalMsg;
+  }
+
+  /* ----------------------------------------------------------
+     5b. PACKAGE SUMMARY PDF
+     The WhatsApp message stays short by design — everything that would
+     make it unreadable in a chat thread (full deliverables/revision/TAT
+     breakdown per line item, general terms) goes in this downloadable
+     PDF instead, built with the same cart/state data as the messages.
+  ---------------------------------------------------------- */
+  const PDF_TERMS = [
+    "Turnaround shown for each package is per single creative — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
+    "Turnaround timeline begins once we've received everything we need — all required assets and details, not the payment date.",
+    "New concepts, major creative rework, and any additions beyond what's included — extra dimensions, formats, slides, or aspect ratios — sit outside package scope and are quoted separately or as a new order.",
+    "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
+    "GST (18%) is calculated on the order total after any discount. Prices elsewhere in this document are base rates before GST.",
+    "A single discount applies to the whole order, not to each creative type individually.",
+  ];
+
+  // The source logo PNG is full-resolution (3476×1404, for crisp use
+  // anywhere on the page) — embedding it straight into the PDF at that
+  // resolution bloats the file to ~19MB despite rendering at ~9mm tall.
+  // Downscaling to a print-adequate thumbnail on a canvas first keeps the
+  // PDF a normal size.
+  function loadLogoThumbnail(src, maxWidthPx) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidthPx / img.naturalWidth);
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  async function generatePackagePdf() {
+    if (!validateCartNonEmpty()) return;
+    if (validateRequiredFields()) return;
+
+    const btn = document.getElementById("downloadPdfBtn");
+    const label = document.getElementById("downloadPdfBtnLabel");
+    const originalLabel = label.textContent;
+    btn.disabled = true;
+    label.textContent = "Preparing PDF…";
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pageW = doc.internal.pageSize.getWidth();
+      const pageH = doc.internal.pageSize.getHeight();
+      const marginX = 16;
+      let y = 16;
+
+      let logoDataUrl = null;
+      try {
+        logoDataUrl = await loadLogoThumbnail("assets/logo/fastrr-ads-black.png", 500);
+      } catch (e) {
+        logoDataUrl = null;
+      }
+      if (logoDataUrl) {
+        try {
+          const imgProps = doc.getImageProperties(logoDataUrl);
+          const logoH = 9;
+          const logoW = (imgProps.width / imgProps.height) * logoH;
+          doc.addImage(logoDataUrl, "PNG", marginX, y, logoW, logoH);
+        } catch (e) {}
+      }
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(120);
+      doc.text("Fastrr Ads — Creative Portfolio & Quotation", pageW - marginX, y + 4, { align: "right" });
+      const genDate = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+      doc.text("Generated: " + genDate, pageW - marginX, y + 9, { align: "right" });
+      y += 22;
+
+      doc.setDrawColor(225);
+      doc.line(marginX, y, pageW - marginX, y);
+      y += 10;
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(20);
+      doc.text("Package Summary", marginX, y);
+      y += 9;
+
+      const brandName = state.brandName.trim() || "—";
+      const website = state.website.trim() || "—";
+      const brandCategory = state.brandCategory.trim() || "—";
+
+      doc.autoTable({
+        startY: y,
+        theme: "plain",
+        styles: { fontSize: 10, cellPadding: { top: 1, bottom: 1 } },
+        columnStyles: { 0: { fontStyle: "bold", cellWidth: 34 }, 1: { textColor: 60 } },
+        body: [
+          ["Brand / Client", brandName],
+          ["Category", brandCategory],
+          ["Website", website],
+        ],
+        margin: { left: marginX, right: marginX },
+      });
+      y = doc.lastAutoTable.finalY + 8;
+
+      const cart = computeCart();
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11.5);
+      doc.setTextColor(20);
+      doc.text("Selected Services", marginX, y);
+      y += 4;
+
+      doc.autoTable({
+        startY: y,
+        head: [["#", "Creative", "Qty", "Unit Price", "Line Total"]],
+        body: cart.items.map((item, i) => [
+          String(i + 1),
+          item.d.name,
+          String(item.qty),
+          fmtINRPdf(item.d.basePrice) + " / " + (item.d.unit || "pkg"),
+          fmtINRPdf(item.lineSubtotal),
+        ]),
+        styles: { fontSize: 9.5, cellPadding: 4, valign: "middle" },
+        headStyles: { fillColor: [26, 20, 46], textColor: 255, fontStyle: "bold" },
+        columnStyles: {
+          0: { cellWidth: 9 },
+          2: { cellWidth: 14, halign: "center" },
+          3: { cellWidth: 40, halign: "right" },
+          4: { cellWidth: 32, halign: "right" },
+        },
+        margin: { left: marginX, right: marginX },
+      });
+      y = doc.lastAutoTable.finalY + 10;
+
+      cart.items.forEach((item) => {
+        const d = item.d;
+        if (y > pageH - 55) {
+          doc.addPage();
+          y = 18;
+        }
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(20);
+        doc.text(d.name + (item.qty > 1 ? ` (×${item.qty})` : ""), marginX, y);
+        y += 4;
+        const rows = [
+          ["Deliverables", d.deliver],
+          ["Duration / Format", `${d.duration} · ${d.format}`],
+          ["Revisions", d.revisions],
+        ];
+        if (d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)) rows.push(["Script / Approval", d.scripting]);
+        if (d.language && !/^not applicable/i.test(d.language)) rows.push(["Language", d.language]);
+        rows.push(["Turnaround", d.turnaround]);
+        doc.autoTable({
+          startY: y,
+          theme: "grid",
+          styles: { fontSize: 9, cellPadding: 4, textColor: 50, lineColor: 225, lineWidth: 0.2 },
+          columnStyles: {
+            0: { fontStyle: "bold", cellWidth: 38, fillColor: [246, 245, 250] },
+            1: { cellWidth: pageW - marginX * 2 - 38 },
+          },
+          body: rows,
+          margin: { left: marginX, right: marginX },
+        });
+        y = doc.lastAutoTable.finalY + 8;
+      });
+
+      if (y > pageH - 60) {
+        doc.addPage();
+        y = 18;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11.5);
+      doc.setTextColor(20);
+      doc.text("Pricing", marginX, y);
+      y += 4;
+      const priceRows = [["Subtotal", fmtINRPdf(cart.subtotal)]];
+      if (cart.pct > 0) priceRows.push([`Discount (${cart.pct}%)`, "− " + fmtINRPdf(cart.discountAmt)]);
+      priceRows.push(["GST (18%)", "+ " + fmtINRPdf(cart.gstAmt)]);
+      doc.autoTable({
+        startY: y,
+        theme: "plain",
+        styles: { fontSize: 10, cellPadding: 2.4 },
+        columnStyles: { 0: { textColor: 90 }, 1: { halign: "right", textColor: 40 } },
+        body: priceRows,
+        margin: { left: marginX, right: marginX },
+      });
+      y = doc.lastAutoTable.finalY + 2;
+      doc.setDrawColor(210);
+      doc.line(marginX, y, pageW - marginX, y);
+      y += 7;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.setTextColor(20);
+      doc.text("Final Amount", marginX, y);
+      doc.text(fmtINRPdf(cart.final) + " (incl. GST)", pageW - marginX, y, { align: "right" });
+      y += 12;
+
+      if (y > pageH - 60) {
+        doc.addPage();
+        y = 18;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11.5);
+      doc.setTextColor(20);
+      doc.text("Important Terms", marginX, y);
+      y += 5;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(70);
+      const usableWidth = pageW - marginX * 2 - 5;
+      PDF_TERMS.forEach((term) => {
+        const lines = doc.splitTextToSize("• " + term, usableWidth);
+        const blockH = lines.length * 4.2 + 2;
+        if (y + blockH > pageH - 20) {
+          doc.addPage();
+          y = 18;
+        }
+        doc.text(lines, marginX, y);
+        y += blockH;
+      });
+
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let p = 1; p <= pageCount; p++) {
+        doc.setPage(p);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(150);
+        doc.text("Fastrr Ads — Creative Portfolio & Quotation Tool", marginX, pageH - 10);
+        doc.text(`Page ${p} of ${pageCount}`, pageW - marginX, pageH - 10, { align: "right" });
+      }
+
+      const safeBrand = brandName.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() || "package";
+      doc.save(`package-summary-${safeBrand}.pdf`);
+    } catch (e) {
+      label.textContent = "Couldn't generate PDF";
+      setTimeout(() => {
+        label.textContent = originalLabel;
+      }, 2200);
+      btn.disabled = false;
+      return;
+    }
+    btn.disabled = false;
+    label.textContent = originalLabel;
   }
 
   /* ----------------------------------------------------------
@@ -889,6 +1139,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   wireCopyButton("copyClientBtn", "clientMsg");
   wireCopyButton("copyInternalBtn", "internalMsg");
+  document.getElementById("downloadPdfBtn").addEventListener("click", generatePackagePdf);
 
   /* ----------------------------------------------------------
      8. THEME TOGGLE (persisted)
