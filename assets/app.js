@@ -402,64 +402,22 @@
   }
 
   const SUPPORT_ROLES = [
-    {
-      key: "writer",
-      label: "Dedicated Content Writer",
-      icon: '<path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>',
-    },
-    {
-      key: "editor",
-      label: "Dedicated Video Editor",
-      icon: '<polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>',
-    },
-    {
-      key: "director",
-      label: "Creative Director Oversight",
-      icon: '<circle cx="12" cy="8" r="4"></circle><path d="M20 21a8 8 0 0 0-16 0"></path>',
-    },
-    {
-      key: "call",
-      label: "Call Support &amp; Requirement Discussion",
-      icon: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>',
-    },
+    { key: "writer", label: "Dedicated Content Writer" },
+    { key: "editor", label: "Dedicated Video Editor" },
+    { key: "director", label: "Creative Director Oversight" },
+    { key: "call", label: "Call Support &amp; Requirement Discussion" },
   ];
 
-  function renderSupportBlock() {
-    const d = currentData();
+  // One plain sentence instead of a 4-up icon grid — states only what's
+  // actually true for this exact service/tier, so it can't be read as a
+  // blanket promise that applies to every package.
+  function supportSummaryLine(d) {
     const support = d.support || [];
-    const wrap = document.getElementById("supportBlock");
-    wrap.innerHTML = SUPPORT_ROLES.map((role) => {
-      const included = support.indexOf(role.key) !== -1;
-      const state = included ? "is-included" : "is-excluded";
-      const badge = included ? "✓" : "✕";
-      return `<div class="support-item ${state}">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${role.icon}</svg>
-        <span>${role.label}</span>
-        <b>${badge}</b>
-      </div>`;
-    }).join("");
-  }
-
-  // Single scan-strip of the facts a quick-checking viewer actually needs
-  // (price/revisions/duration/format/turnaround/script/language) — these
-  // don't change with the Included/Excluded/Client-Provides tab below, so
-  // they're rendered once here instead of duplicated inside a side-card
-  // that repeated the same facts already covered by that list.
-  function renderKeySpecs() {
-    const d = currentData();
-    const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
-    const rows = [
-      ["Price", fmtINR(d.basePrice) + " / " + (d.unit || "package")],
-      ["Revisions", d.revisions],
-      ["Duration", d.duration],
-      ["Format", d.format],
-      ["Turnaround", d.turnaround],
-      ["Script", notApplicable(d.scripting) ? null : d.scripting],
-      ["Language", notApplicable(d.language) ? null : d.language],
-    ].filter(([, v]) => v);
-    document.getElementById("keySpecs").innerHTML = rows
-      .map(([k, v]) => `<div class="key-spec"><span>${k}</span><b>${v}</b></div>`)
-      .join("");
+    const included = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) !== -1).map((r) => r.label);
+    const excluded = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) === -1).map((r) => r.label);
+    let line = included.length ? `Support on this package: ${included.join(", ")}.` : "";
+    if (excluded.length) line += ` ${excluded.join(", ")} not included at this tier.`;
+    return line.trim();
   }
 
   function renderServiceSummary() {
@@ -467,8 +425,6 @@
     document.getElementById("svcName").textContent = d.name;
     document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
     document.getElementById("svcShort").textContent = d.short || "";
-    renderSupportBlock();
-    renderKeySpecs();
   }
 
   function renderScopePanel() {
@@ -476,9 +432,29 @@
     scopePanel.querySelectorAll(".scope-tab-btn").forEach((b) =>
       b.classList.toggle("active", b.dataset.tab === state.scopeTab)
     );
+
     let html = "";
     if (state.scopeTab === "inc") {
-      html = `<ul class="scope-list">${scopeListHTML(d.included)}</ul>`;
+      // Included tab is the section's single "everything about this
+      // package" view: the operational facts (as plain rows, not a
+      // second boxed panel), then what's included, then who delivers it.
+      // Not-Included and Client-Provides get their own tabs so this one
+      // isn't also carrying that weight.
+      const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
+      const specRows = [
+        ["Revisions", d.revisions],
+        ["Duration", d.duration],
+        ["Format", d.format],
+        ["Turnaround", d.turnaround],
+        ["Script", notApplicable(d.scripting) ? null : d.scripting],
+        ["Language", notApplicable(d.language) ? null : d.language],
+      ].filter(([, v]) => v);
+      html = `
+        <div class="scope-specs">${specRows.map(([k, v]) => `<div class="scope-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+        <ul class="scope-list">${scopeListHTML(d.included)}</ul>
+        <p class="scope-support-line">${supportSummaryLine(d)}</p>
+        <div class="scope-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
+      `;
     } else if (state.scopeTab === "exc") {
       html = `<ul class="scope-list scope-exc">${scopeListHTML(d.excluded)}</ul>`;
     } else {
@@ -498,8 +474,7 @@
         ${d.dimNote ? `<p class="scope-note">${d.dimNote}</p>` : ""}
       `;
     }
-    document.getElementById("scopeListWrap").innerHTML = html;
-    document.getElementById("scopeDeliver").textContent = d.deliver;
+    document.getElementById("scopeBody").innerHTML = html;
 
     // Reel comparison table (nested inside "Good to know") only makes
     // sense for AI Reels — hide the whole toggle, not just the table,
@@ -777,9 +752,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
       doc.setTextColor(120);
-      doc.text("Fastrr Ads — Creative Portfolio & Quotation", pageW - marginX, y + 4, { align: "right" });
       const genDate = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
-      doc.text("Generated: " + genDate, pageW - marginX, y + 9, { align: "right" });
+      doc.text("Generated: " + genDate, pageW - marginX, y + 4, { align: "right" });
       y += 22;
 
       doc.setDrawColor(225);
@@ -934,12 +908,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(150);
-        doc.text("Fastrr Ads — Creative Portfolio & Quotation Tool", marginX, pageH - 10);
+        doc.text("Fastrr Ads", marginX, pageH - 10);
         doc.text(`Page ${p} of ${pageCount}`, pageW - marginX, pageH - 10, { align: "right" });
       }
 
       const safeBrand = brandName.replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() || "package";
-      doc.save(`package-summary-${safeBrand}.pdf`);
+      const fileDate = new Date().toISOString().slice(0, 10);
+      doc.save(`Fastrr-Ads-Package-Summary-${safeBrand}-${fileDate}.pdf`);
     } catch (e) {
       label.textContent = "Couldn't generate PDF";
       setTimeout(() => {
@@ -1140,6 +1115,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   wireCopyButton("copyClientBtn", "clientMsg");
   wireCopyButton("copyInternalBtn", "internalMsg");
   document.getElementById("downloadPdfBtn").addEventListener("click", generatePackagePdf);
+
+  const footerYearEl = document.getElementById("footerYear");
+  if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
 
   /* ----------------------------------------------------------
      8. THEME TOGGLE (persisted)

@@ -500,42 +500,24 @@ html[data-theme="dark"] .theme-icon-moon{display:block;}
   .tier-chip::after{display:none;}
 }
 
-/* Key specs — a single compact scan-strip (label above value, wraps into
-   a responsive grid) replacing what used to be a duplicate label:value
-   side-card repeating the same facts already covered by the Included
-   list below it. */
-.key-specs{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:18px 24px;
-  margin-top:28px; padding-top:26px; border-top:1px solid var(--line-soft);
-}
-.key-spec{display:flex; flex-direction:column; gap:4px;}
-.key-spec span{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2);}
-.key-spec b{font-size:13px; font-weight:600; color:var(--text-0); line-height:1.4;}
-
-/* Support roles — compact pills instead of a 4-up icon grid with a
-   repeated "Included"/"Not Included" caption; the icon colour + ✓/✕
-   already carries that meaning. */
-.support-block{display:flex; flex-wrap:wrap; gap:10px; margin-top:24px; padding-top:24px; border-top:1px solid var(--line-soft);}
-.support-item{
-  display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:100px;
-  background:var(--surface-1); border:1px solid var(--line-soft); font-size:12.5px; color:var(--text-1);
-  transition:opacity .2s ease, border-color .2s ease;
-}
-.support-item svg{width:14px; height:14px; flex:0 0 auto; color:var(--text-2);}
-.support-item b{font-size:11px;}
-.support-item.is-included{border-color:var(--teal-soft);}
-.support-item.is-included svg{color:var(--teal);}
-.support-item.is-included b{color:var(--teal);}
-.support-item.is-excluded{opacity:.5;}
-.support-item.is-excluded b{color:var(--danger);}
-
 .scope-panel{margin-top:40px; padding-top:36px; border-top:1px solid var(--line-soft);}
 .scope-tab-bar{display:flex; gap:4px; margin-bottom:28px; padding:5px; border-radius:100px; background:var(--surface-1); border:1px solid var(--line-soft); max-width:560px;}
 .scope-tab-btn{flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 12px; border-radius:100px; border:1px solid transparent; background:transparent; font-size:12.5px; font-weight:600; color:var(--text-1); transition:background .2s ease, color .2s ease, box-shadow .2s ease;}
 .scope-tab-btn svg{width:13px; height:13px; flex:0 0 auto;}
 .scope-tab-btn:hover{color:var(--text-0);}
 .scope-tab-btn.active{background:var(--text-0); color:var(--bg-0); box-shadow:var(--shadow-sm);}
-.scope-list-card{padding:0; max-width:640px;}
+.scope-body{max-width:640px;}
+
+/* Plain label:value rows — used only inside the Included tab, once, as
+   the single place the operational facts (revisions/duration/format/
+   turnaround/script) live. No boxes/pills/borders per row: at this
+   point in the page the goal is fewer visual objects, not another card. */
+.scope-specs{margin-bottom:24px;}
+.scope-spec-row{display:flex; gap:16px; padding:7px 0; font-size:13px;}
+.scope-spec-row span{flex:0 0 116px; color:var(--text-2); font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding-top:2px;}
+.scope-spec-row b{color:var(--text-0); font-weight:600; line-height:1.5;}
+@media (max-width:480px){.scope-spec-row{flex-direction:column; gap:2px;} .scope-spec-row span{flex:none;}}
+
 .scope-list li{position:relative; padding-left:28px; margin-bottom:14px; font-size:14.5px; color:var(--text-1); line-height:1.55;}
 .scope-list li:last-child{margin-bottom:0;}
 .scope-list li::before{
@@ -549,7 +531,8 @@ html[data-theme="dark"] .theme-icon-moon{display:block;}
 .scope-need-group:last-of-type{margin-bottom:0;}
 .scope-need-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
 .scope-note{margin-top:14px; font-size:12.5px; color:var(--text-2); font-style:italic;}
-.scope-deliver-box{margin-top:24px; max-width:640px; padding:16px 18px; border-radius:var(--radius-sm); background:var(--teal-soft); font-size:13px; color:var(--text-0); line-height:1.5;}
+.scope-support-line{margin-top:20px; font-size:12.5px; color:var(--text-2); line-height:1.6;}
+.scope-deliver-box{margin-top:20px; padding:16px 18px; border-radius:var(--radius-sm); background:var(--teal-soft); font-size:13px; color:var(--text-0); line-height:1.5;}
 .scope-deliver-box b{color:var(--teal); display:block; margin-bottom:4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-mono);}
 
 .compare-wrap{overflow-x:auto; margin-top:16px;}
@@ -863,18 +846,13 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         <button class="tier-chip" data-tier="4"><span>Tier 4</span><b>₹8,000</b></button>
       </div>
 
-      <div class="key-specs" id="keySpecs"></div>
-
-      <div class="support-block" id="supportBlock"></div>
-
       <div class="scope-panel" id="scopePanel">
         <div class="scope-tab-bar">
           <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
           <button class="scope-tab-btn" data-tab="exc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not Included</button>
           <button class="scope-tab-btn" data-tab="need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg> Client Provides</button>
         </div>
-        <div class="scope-list-card" id="scopeListWrap"></div>
-        <div class="scope-deliver-box"><b>Creative Team Delivers</b><span id="scopeDeliver"></span></div>
+        <div class="scope-body" id="scopeBody"></div>
       </div>
     </div>
 
@@ -1088,7 +1066,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
       </div>
     </div>
     <div class="footer-bottom">
-      <p>Fastrr Ads — Creative Portfolio &amp; Quotation Tool</p>
+      <p>© <span id="footerYear"></span> Fastrr Ads. All rights reserved.</p>
       <p>Listed prices are exclusive of GST; the calculator adds GST automatically when building an order.</p>
     </div>
   </div>
