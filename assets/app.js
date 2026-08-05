@@ -35,7 +35,7 @@
         "Clean/white or brand-background finish",
       ],
       excluded: [
-        "Revisions of any kind",
+        "Revisions",
         "Scripting, voiceover or text overlay",
         "Model or human presenter",
         "Additional aspect ratios (quoted separately)",
@@ -125,18 +125,18 @@
       turnaround: "24 working hours after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built strictly from the discussed client brief",
+        "Reel built to closely follow the brief we discuss together",
         "Single 9:16 export, max 20 sec",
       ],
-      excluded: ["Any revision", "Script shared for approval", "Additional dimensions (quoted separately)"],
+      excluded: ["Revisions", "Script shared for approval", "Additional dimensions (quoted separately)"],
       need: [
-        "A clear, fully discussed brief before work starts (no script will be shared on this tier)",
+        "A clear, fully discussed brief before work starts",
         "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
       deliver: "1 MP4, 9:16, max 20 sec, delivered via shared drive folder",
-      dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // `excluded` explicitly rules out "Script shared for approval" and there's no
       // writer/CD mention in `included` — brief-only build, editor assembles it.
       support: ["editor", "call"],
@@ -151,19 +151,19 @@
       turnaround: "24 working hours after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built strictly from the discussed client brief",
+        "Reel built to closely follow the brief we discuss together",
         "Single 9:16 export, max 25 sec",
         "1 revision (limited scope — wording, hook length only)",
       ],
       excluded: ["Script shared for approval", "Additional dimensions (quoted separately)"],
       need: [
-        "A clear, fully discussed brief before work starts (no script will be shared on this tier)",
+        "A clear, fully discussed brief before work starts",
         "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
       deliver: "1 MP4, 9:16, max 25 sec, delivered via shared drive folder",
-      dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // Adds a limited-scope revision but `excluded` still rules out "Script shared
       // for approval" — no writer/CD role beyond Tier 1.
       support: ["editor", "call"],
@@ -191,7 +191,7 @@
         "Preferred voiceover language (Hindi/English)",
       ],
       deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for review, delivered via shared drive folder",
-      dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // `included` explicitly says "Reel built with Writer + Editor input" — writer
       // added. `excluded` rules out "Script sign-off/approval (review only)", so no
       // Creative Director oversight yet — that arrives at Tier 4.
@@ -220,7 +220,7 @@
         "Preferred voiceover language (Hindi/English)",
       ],
       deliver: "1 MP4, 9:16, max 35 sec, plus 1 script + 2 hook options for approval, delivered via shared drive folder",
-      dimNote: "Includes 1 dimension only (9:16). Additional dimensions are charged separately depending on requirement.",
+      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // `included` explicitly says "full Writer + Editor + Creative Director
       // involvement" — all four support roles are covered at this tier.
       support: ["writer", "editor", "director", "call"],
@@ -514,12 +514,11 @@ Timeline: ${d.turnaround}${d.dimNote ? "\n" + d.dimNote : ""}`;
     const specialReqLine = state.specialReq.trim()
       ? `\n\nAlso noting: ${state.specialReq.trim()}`
       : "";
-    const internalMsg = `Hi ${clientName}, please share the required details at the earliest so we can kick off production on your ${d.name} package.
+    const internalMsg = `Hi ${clientName}, thank you! To get production started on your ${d.name} package, could you please share the following at your earliest convenience:
 
-To proceed, we need:
 ${needBlock}
 
-Please also share anything else you'd like us to consider from your end.${specialReqLine}`;
+Feel free to also share anything else you'd like us to keep in mind.${specialReqLine}`;
 
     document.getElementById("clientMsg").value = clientMsg;
     document.getElementById("internalMsg").value = internalMsg;
