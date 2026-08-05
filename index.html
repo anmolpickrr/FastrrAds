@@ -149,6 +149,8 @@ img{max-width:100%; display:block;}
   box-shadow:var(--shadow-md), var(--inset-hi); transition:box-shadow .3s ease, border-color .3s ease;
 }
 .brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:18px;}
+.nav-pill .brand{margin-left:38px;}
+@media (max-width:520px){.nav-pill .brand{margin-left:14px;}}
 .brand-logo{height:40px; width:auto; display:block; transition:transform .4s cubic-bezier(.16,1,.3,1);}
 .brand-logo-dark{display:none;}
 html[data-theme="dark"] .brand-logo-light{display:none;}
@@ -160,15 +162,15 @@ footer .brand-logo{height:24px;}
 .nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
 .nav-right{display:flex; align-items:center; gap:12px;}
 .theme-toggle{
-  width:44px; height:26px; border-radius:14px; border:1px solid var(--line); background:var(--surface-2);
-  position:relative; padding:0; flex:0 0 auto; box-shadow:var(--inset-hi); transition:border-color .25s ease, box-shadow .25s ease;
+  width:32px; height:32px; border-radius:50%; border:none; background:transparent;
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--text-2);
+  transition:background .2s ease, color .2s ease;
 }
-.theme-toggle:hover{border-color:var(--violet);}
-.theme-toggle::after{
-  content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
-  background:var(--violet); box-shadow:0 2px 6px -1px rgba(139,124,246,0.5); transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-}
-html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
+.theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
+.theme-icon{width:16px; height:16px;}
+.theme-icon-moon{display:none;}
+html[data-theme="dark"] .theme-icon-sun{display:none;}
+html[data-theme="dark"] .theme-icon-moon{display:block;}
 @media (max-width:900px){.nav-links{display:none;}}
 @media (max-width:520px){.nav-pill{padding:0 8px 0 10px;}}
 
@@ -303,8 +305,8 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* ---------- SECTION HEADER ---------- */
-.section{padding:104px 0; position:relative;}
-.section-head{max-width:640px; margin-bottom:48px;}
+.section{padding:72px 0; position:relative;}
+.section-head{max-width:640px; margin-bottom:40px;}
 .section-head h2{font-size:clamp(28px,3.4vw,40px); margin-top:14px; line-height:1.08; letter-spacing:-0.015em;}
 .section-head p{margin-top:14px; color:var(--text-1); font-size:15.5px; line-height:1.65;}
 
@@ -362,26 +364,20 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .wc-dots{position:absolute; bottom:8px; left:0; right:0; display:flex; justify-content:center; gap:5px;}
 .wc-dot{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.45);}
 .wc-dot.active{background:#fff;}
-/* Three stacked rows, each with a predictable height, so every card in a
-   row lines up regardless of how long its title or category text is — a
-   row with one 2-line title and five 1-line titles previously produced
-   six different card heights. Category (a pill — the eyebrow) is most
-   prominent, title is the primary heading, type is the smallest/last
-   since the active showcase tab already implies it. */
-.wc-info{padding:13px 14px 15px; display:flex; flex-direction:column; gap:7px;}
+/* Nothing below the media — the creative is the whole card. Category is
+   the only label, overlaid on the image itself as a small pill, so every
+   card's height is just its fixed media aspect-ratio and a row always
+   lines up card-for-card regardless of text length. */
 .wc-cat-pill{
-  align-self:flex-start; max-width:100%; padding:4px 10px; border-radius:100px; background:var(--teal-soft); color:var(--teal);
-  font-family:var(--font-mono); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em;
+  position:absolute; top:10px; left:10px; z-index:2; max-width:calc(100% - 20px);
+  padding:4px 10px; border-radius:100px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px); color:#fff;
+  font-family:var(--font-mono); font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.05em;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.wc-demo-note{font-size:11px; color:var(--text-2); font-style:italic; line-height:1.4;}
-.wc-title{
-  font-size:14px; font-weight:700; color:var(--text-0); line-height:1.35; letter-spacing:-0.005em;
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-  min-height:calc(14px * 1.35 * 2);
-}
-.wc-type-tag{
-  display:block; font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2);
+.wc-demo-note{
+  position:absolute; top:10px; left:10px; right:10px; z-index:2;
+  padding:5px 10px; border-radius:10px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px);
+  font-size:10.5px; color:#fff; font-style:italic; line-height:1.4;
 }
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
@@ -738,7 +734,10 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
         <a href="#messages">Messages</a>
       </div>
       <div class="nav-right">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+        </button>
         <a href="#quote" class="btn btn-primary" style="padding:9px 18px; font-size:13px;">Start a Quote</a>
       </div>
     </div>
@@ -904,7 +903,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
   </div>
 </section>
 
-<section class="section" id="quote">
+<section class="section" id="quote" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">03 — Quote &amp; Price Calculator</span>
@@ -1066,7 +1065,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
   </div>
 </div>
 
-<script src="assets/creative-data.js?v=20260805-1"></script>
-<script src="assets/app.js?v=20260805-1"></script>
+<script src="assets/creative-data.js?v=20260805-3"></script>
+<script src="assets/app.js?v=20260805-3"></script>
 </body>
 </html>

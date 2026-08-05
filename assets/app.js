@@ -966,30 +966,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     carousel: "Carousel Creative",
   };
 
-  // Card face shows only what's genuinely useful to identify a creative at
-  // a glance — its name, category, and type — instead of a duration badge
-  // stamped over the media and a marketing-style "hook" tagline that read
-  // inconsistently from one creative to the next. Category sits in a pill
-  // (an "eyebrow" above the title) rather than as plain inline text, and
-  // every text block has a reserved height, so a row of cards with titles
-  // of different lengths still lines up card-for-card instead of each
-  // info panel settling to its own height. Demo/placeholder items (not
-  // real delivered work) show their own explanatory label instead of a
-  // category, so they're never mistaken for one of the categories above.
+  // The creative is the focus — no title, no type line, nothing below the
+  // media. The only label is the category, shown as a small pill overlaid
+  // on the image itself, so every card's total height is just its fixed
+  // media aspect-ratio and a row always lines up card-for-card. Demo/
+  // placeholder items (not real delivered work) get their own muted note
+  // instead, so they're never mistaken for a real category.
   function workCardMetaHTML(item) {
-    const typeLabel = SHOWCASE_TYPE_LABEL[activeShowcaseCat] || "";
     const isDemo = item.cat === "demo";
-    // Demo/placeholder copy is a full sentence, not a short label — forcing
-    // it into a pill alongside real categories would look broken, so it
-    // gets a plain muted caption instead, with no type row underneath.
-    const catHTML = isDemo
+    return isDemo
       ? `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`
       : `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
-    return `<div class="wc-info">
-        ${catHTML}
-        <h5 class="wc-title">${escapeHtml(item.title)}</h5>
-        ${isDemo ? "" : `<span class="wc-type-tag">${escapeHtml(typeLabel)}</span>`}
-      </div>`;
   }
 
   function workCardHTML(item, idx) {
@@ -1002,19 +989,19 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       <article class="work-card carousel-card ${arClass}" data-idx="${idx}" data-slide="0" style="--i:${idx}">
         <div class="wc-media-wrap">
           <img class="wc-media wc-slide-img" src="${item.slides[0]}" loading="lazy" alt="${escapeHtml(item.title)}">
+          ${workCardMetaHTML(item)}
           <button class="wc-mini-prev" aria-label="Previous slide">‹</button>
           <button class="wc-mini-next" aria-label="Next slide">›</button>
           <div class="wc-dots">${slideDots}</div>
         </div>
-        ${workCardMetaHTML(item)}
       </article>`;
     }
     return `
       <article class="work-card ${arClass}" data-idx="${idx}" style="--i:${idx}">
         <div class="wc-media-wrap">
           ${mediaTagHTML(item, "wc-media")}
+          ${workCardMetaHTML(item)}
         </div>
-        ${workCardMetaHTML(item)}
       </article>`;
   }
 
