@@ -438,29 +438,32 @@
       : "";
 
     return `<article class="pkg-card" data-svc="${service}">
-      <div class="pkg-card-top">
-        <span class="pkg-eyebrow">${escapeHtml(isReel ? `AI Reel — Tier ${tier}` : d.name)}</span>
-        <div class="pkg-price">${fmtINR(d.basePrice)} <span>/ ${escapeHtml(d.unit || "package")}</span></div>
+      <div class="pkg-card-accent"></div>
+      <div class="pkg-card-body">
+        <div class="pkg-card-top">
+          <span class="pkg-eyebrow">${escapeHtml(isReel ? `AI Reel — Tier ${tier}` : d.name)}</span>
+          <div class="pkg-price">${fmtINR(d.basePrice)}<span>/ ${escapeHtml(d.unit || "package")}</span></div>
+        </div>
+        <p class="pkg-short">${escapeHtml(d.short || "")}</p>
+        ${tierPickerHTML}
+        <div class="pkg-columns">
+          <div class="pkg-col pkg-col-covered">
+            <span class="pkg-col-label">Covered</span>
+            <ul>${scopeListHTML(d.included)}</ul>
+          </div>
+          <div class="pkg-col pkg-col-notcovered">
+            <span class="pkg-col-label">Not covered</span>
+            <ul>${scopeListHTML(d.excluded)}</ul>
+          </div>
+        </div>
+        <details class="pkg-more">
+          <summary>Revisions, turnaround &amp; delivery details</summary>
+          <div class="pkg-more-body">
+            <div class="pkg-spec-rows">${specRows.map(([k, v]) => `<div class="pkg-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+            <div class="pkg-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
+          </div>
+        </details>
       </div>
-      <p class="pkg-short">${escapeHtml(d.short || "")}</p>
-      ${tierPickerHTML}
-      <div class="pkg-columns">
-        <div class="pkg-col pkg-col-covered">
-          <span class="pkg-col-label">Covered</span>
-          <ul>${scopeListHTML(d.included)}</ul>
-        </div>
-        <div class="pkg-col pkg-col-notcovered">
-          <span class="pkg-col-label">Not covered</span>
-          <ul>${scopeListHTML(d.excluded)}</ul>
-        </div>
-      </div>
-      <details class="pkg-more">
-        <summary>Revisions, turnaround &amp; delivery details</summary>
-        <div class="pkg-more-body">
-          <div class="pkg-spec-rows">${specRows.map(([k, v]) => `<div class="pkg-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
-          <div class="pkg-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
-        </div>
-      </details>
     </article>`;
   }
 
