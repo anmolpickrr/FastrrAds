@@ -677,6 +677,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
   .cart-item-actions{margin-top:-4px;}
 }
 
+.order-tat-note{margin-top:14px; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
 .order-summary{margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:16px;}
 
@@ -764,7 +765,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
         <div class="hero-stats">
           <div class="hero-stat"><b>4</b><span>Creative Services</span></div>
           <div class="hero-stat"><b>4</b><span>AI Reel Tiers</span></div>
-          <div class="hero-stat"><b>24–54h</b><span>Working-Hour Turnaround</span></div>
+          <div class="hero-stat"><b>1–5 Days</b><span>Turnaround, per creative</span></div>
         </div>
       </div>
       <div class="hero-visual" id="heroVisual">
@@ -875,11 +876,14 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
       </summary>
       <div class="rules-current" id="rulesCurrent"></div>
       <div class="rules-general">
-        <span class="rules-general-label">Worth knowing — not always obvious from the package details above</span>
+        <span class="rules-general-label">General terms — across every service &amp; package, not just the selection above</span>
         <ul>
+          <li><b>Turnaround shown for each package is per single creative</b> — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.</li>
           <li><b>Your turnaround timeline begins once we've received everything we need</b> — all required assets and details, not your payment date.</li>
+          <li><b>New concepts, major creative rework, and any additions beyond what's included</b> — extra dimensions, formats, slides, or aspect ratios — sit outside package scope across every service, and are quoted separately or as a new order.</li>
           <li><b>AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted</b> for platform policy or technical feasibility — we always aim for the closest match to your brief.</li>
-          <li><b>All prices shown are exclusive of GST.</b></li>
+          <li><b>GST (18%) is calculated automatically in the calculator</b>, on the order total after any discount. Prices shown elsewhere on the page are base rates, before GST.</li>
+          <li><b>A single discount applies to the whole order</b>, not to each creative type individually.</li>
         </ul>
       </div>
       <details class="rules-compare-toggle" id="rulesCompareToggle">
@@ -965,6 +969,8 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
 
         <div class="order-cart-list" id="orderCartList"></div>
 
+        <p class="order-tat-note">Turnaround shown per item is per single creative — total delivery for bulk orders or multiple creative types depends on quantity, creative type, package/tier, complexity, and final requirements.</p>
+
         <div class="order-summary">
           <div class="field-row">
             <label for="qDiscountInput">Order Discount (%)</label>
@@ -972,6 +978,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           </div>
           <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
           <div class="summary-row"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+          <div class="summary-row"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
         </div>
       </div>
@@ -1047,7 +1054,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
       <img src="assets/logo/fastrr-ads-black.png" alt="Fastrr Ads" class="brand-logo brand-logo-light">
       <img src="assets/logo/fastrr-ads-white.png" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
     </div>
-    <p>Fastrr Ads — Creative Portfolio &amp; Quotation Tool. All prices are exclusive of GST.</p>
+    <p>Fastrr Ads — Creative Portfolio &amp; Quotation Tool. Listed prices are exclusive of GST; the calculator adds GST automatically when building an order.</p>
   </div>
 </footer>
 

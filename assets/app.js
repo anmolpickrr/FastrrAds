@@ -27,7 +27,7 @@
       revisions: "No revisions",
       scripting: "No scripting",
       language: "Not applicable — silent, no voiceover",
-      turnaround: "24–48 working hours after we receive all required details, assets, and final confirmation from you",
+      turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
         "Silent, looped motion, 8–15 sec",
@@ -67,7 +67,7 @@
       revisions: "1 revision",
       scripting: "Not applicable",
       language: "Not applicable",
-      turnaround: "24 working hours after we receive all required details, assets, and final confirmation from you",
+      turnaround: "24 working hours per creative after we receive all required details, assets, and final confirmation from you",
       included: [
         "1 designed static creative",
         "2 aspect ratios (1:1 and 9:16)",
@@ -100,7 +100,7 @@
       revisions: "1 revision",
       scripting: "Not applicable",
       language: "Not applicable",
-      turnaround: "24–48 working hours after we receive all required details, assets, and final confirmation from you",
+      turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
         "Up to 5-slide carousel",
         "2 aspect ratios (1:1 and 9:16)",
@@ -127,7 +127,7 @@
       duration: "Max 20 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in-frame changes only)", scripting: "Script written from your brief — no separate approval step",
       language: "Hindi / English voiceover",
-      turnaround: "1–2 working days after we receive everything needed from you",
+      turnaround: "1–2 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Script written from the brief we discuss together — no separate approval step",
@@ -156,7 +156,7 @@
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (limited scope — wording, hook length only)", scripting: "Script written from your brief — no separate approval step",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 3 working days after we receive everything needed from you",
+      turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Script written from the brief we discuss together — no separate approval step",
@@ -183,7 +183,7 @@
       duration: "Max 30 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script/communication changes)", scripting: "1 script option shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 4 working days after we receive everything needed from you",
+      turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Reel built with Writer + Editor input",
@@ -213,7 +213,7 @@
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script/communication changes)", scripting: "1 script + 2 hook options shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 5 working days after we receive everything needed from you",
+      turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Reel built with full Writer + Editor + Creative Director involvement",
@@ -236,6 +236,11 @@
       support: ["writer", "editor", "director", "call"],
     },
   };
+
+  // Standard GST rate for creative/advertising agency services in India.
+  // Applied once to the order's taxable value (post-discount subtotal) —
+  // see computeCart().
+  const GST_RATE = 0.18;
 
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
@@ -304,8 +309,10 @@
     const subtotal = items.reduce((sum, i) => sum + i.lineSubtotal, 0);
     const pct = Math.min(100, Math.max(0, state.discountPct || 0));
     const discountAmt = subtotal * (pct / 100);
-    const final = subtotal - discountAmt;
-    return { items, subtotal, pct, discountAmt, final };
+    const taxable = subtotal - discountAmt;
+    const gstAmt = taxable * GST_RATE;
+    const final = taxable + gstAmt;
+    return { items, subtotal, pct, discountAmt, taxable, gstAmt, final };
   }
 
   function addToOrder() {
@@ -612,6 +619,7 @@
     document.getElementById("qDiscountInput").value = state.discountPct;
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
+    document.getElementById("qGstAmt").textContent = "+ " + fmtINR(cart.gstAmt);
     document.getElementById("qFinal").textContent = fmtINR(cart.final);
   }
 
@@ -643,7 +651,8 @@
     const priceBlock = [
       `Subtotal: ${fmtINR(cart.subtotal)}`,
       cart.pct > 0 ? `Discount (${cart.pct}%): − ${fmtINR(cart.discountAmt)}` : null,
-      `Total: ${fmtINR(cart.final)} (excl. GST)`,
+      `GST (18%): + ${fmtINR(cart.gstAmt)}`,
+      `Total: ${fmtINR(cart.final)} (incl. GST)`,
     ]
       .filter(Boolean)
       .join("\n");
