@@ -553,12 +553,11 @@ table.compare-table thead th{color:var(--text-2); font-weight:600; font-family:v
 table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet);}
 
 /* ---------- GOOD TO KNOW / RULES ----------
-   Two tiers of information, visually separated: a compact, dynamic
-   recap of the *currently selected* service/tier (id="rulesCurrent",
-   rewritten on every render() alongside the rest of the scope panel —
-   see renderRulesCurrent() in app.js) so a client only ever reads
-   terms that apply to their package, followed by a short, fixed list
-   of terms that are genuinely universal across every package. */
+   Purely general, cross-cutting terms — deliberately NOT scoped to
+   whatever service/tier happens to be selected above (that's what the
+   scope panel's own Included/Not Included/Client Provides tabs and
+   spec sidebar are for). Keeping this list free of per-selection detail
+   is what stops it from just repeating the panel above in miniature. */
 .rules-panel{margin-top:40px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .rules-panel-label{
   display:flex; align-items:center; gap:9px; font-weight:700; font-size:14px; color:var(--gold);
@@ -568,25 +567,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-panel-chevron{margin-left:auto; color:var(--text-2); transition:transform .25s ease;}
 .rules-panel[open] .rules-panel-chevron{transform:rotate(180deg);}
 
-.rules-current{margin-top:20px; padding:18px 20px; border-radius:var(--radius-sm); background:var(--surface-1); border:1px solid var(--line-soft);}
-.rules-current-head{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
-.rules-current-head b{color:var(--text-0); font-family:var(--font-body); font-size:13.5px; text-transform:none; letter-spacing:normal; font-weight:700;}
-.rules-current-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:14px;}
-@media (max-width:600px){.rules-current-grid{grid-template-columns:1fr;}}
-.rules-col-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; margin-bottom:8px;}
-.rules-col-inc .rules-col-label{color:var(--teal);}
-.rules-col-exc .rules-col-label{color:var(--danger);}
-.rules-current-grid ul{margin:0;}
-.rules-current-grid li{position:relative; padding-left:16px; margin-bottom:6px; font-size:12.5px; color:var(--text-1); line-height:1.45;}
-.rules-current-grid li:last-child{margin-bottom:0;}
-.rules-current-grid li::before{content:'✓'; position:absolute; left:0; top:0; font-size:10px; color:var(--teal);}
-.rules-col-exc li::before{content:'✕'; color:var(--danger);}
-.rules-fact-row{display:flex; flex-wrap:wrap; gap:10px 28px; margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
-.rules-fact{font-size:12.5px;}
-.rules-fact span{display:block; color:var(--text-2); font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; font-family:var(--font-mono); margin-bottom:3px;}
-.rules-fact b{color:var(--text-0); font-weight:600;}
-
-.rules-general{margin-top:22px;}
+.rules-general{margin-top:20px;}
 .rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
 .rules-general ul{margin:0;}
 .rules-general li{position:relative; padding-left:20px; margin-bottom:11px; font-size:13.7px; color:var(--text-1); line-height:1.55;}
@@ -874,9 +855,8 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
         Good to know before you quote
         <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </summary>
-      <div class="rules-current" id="rulesCurrent"></div>
       <div class="rules-general">
-        <span class="rules-general-label">General terms — across every service &amp; package, not just the selection above</span>
+        <span class="rules-general-label">General terms — apply across every service &amp; package</span>
         <ul>
           <li><b>Turnaround shown for each package is per single creative</b> — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.</li>
           <li><b>Your turnaround timeline begins once we've received everything we need</b> — all required assets and details, not your payment date.</li>

@@ -487,43 +487,6 @@
     }
   }
 
-  // "Good to know" accordion recap — scoped to whatever service/tier is
-  // currently selected, instead of one static paragraph trying to cover
-  // every package's revision/scripting rules at once. Reuses the same
-  // d.included/d.excluded/d.revisions/d.scripting/d.turnaround the scope
-  // panel above already renders, so the two can never drift out of sync.
-  function renderRulesCurrent() {
-    const wrap = document.getElementById("rulesCurrent");
-    if (!wrap) return;
-    const d = currentData();
-    const scriptFact =
-      d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)
-        ? `<div class="rules-fact"><span>Scripting</span><b>${d.scripting}</b></div>`
-        : "";
-    // Turnaround strings are all "<duration> after we receive everything
-    // needed from you" — that shared condition is already stated once in
-    // the general terms below, so only the duration figure belongs here.
-    const turnaroundShort = (d.turnaround || "").split(" after ")[0];
-    wrap.innerHTML = `
-      <div class="rules-current-head">For your selected package — <b>${d.name}</b></div>
-      <div class="rules-current-grid">
-        <div class="rules-col-inc">
-          <span class="rules-col-label">Included</span>
-          <ul>${d.included.map((i) => `<li>${i}</li>`).join("")}</ul>
-        </div>
-        <div class="rules-col-exc">
-          <span class="rules-col-label">Not included</span>
-          <ul>${d.excluded.map((i) => `<li>${i}</li>`).join("")}</ul>
-        </div>
-      </div>
-      <div class="rules-fact-row">
-        <div class="rules-fact"><span>Revision scope</span><b>${d.revisions}</b></div>
-        ${scriptFact}
-        <div class="rules-fact"><span>Turnaround</span><b>${turnaroundShort}</b></div>
-      </div>
-    `;
-  }
-
   /* ----------------------------------------------------------
      4. RENDER: ORDER BUILDER + CART
   ---------------------------------------------------------- */
@@ -716,7 +679,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     renderServiceNav();
     renderServiceSummary();
     renderScopePanel();
-    renderRulesCurrent();
     renderCalculator();
     renderCart();
     renderMessages();
