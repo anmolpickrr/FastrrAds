@@ -26,18 +26,21 @@
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
-      language: "Not applicable",
+      language: "Not applicable — silent, no voiceover",
       turnaround: "24–48 working hours after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
         "Silent, looped motion, 8–15 sec",
         "1 aspect ratio of your choice",
         "Clean/white or brand-background finish",
+        "Lifestyle/product-use shots showing the product worn or used, where relevant",
       ],
       excluded: [
-        "Revisions",
-        "Scripting, voiceover or text overlay",
-        "Model or human presenter",
+        "Text overlays",
+        "Voiceover",
+        "Custom music",
+        "Offers or promotional elements",
+        "Scripting",
         "Additional aspect ratios (quoted separately)",
       ],
       need: [
@@ -45,10 +48,12 @@
         "SKU list with product names",
         "Product page/link for reference",
       ],
-      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent, delivered via shared drive folder",
-      // No scripting step on this service (see `scripting: "No scripting"` above), so
-      // no dedicated writer or Creative Director script sign-off applies — only the
-      // editor building the rotation and the standard brief/requirement call.
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent — no text, voiceover, or music — delivered via shared drive folder",
+      // Standard 360° rotation is deliberately silent/text-free/script-free (see
+      // `excluded` above); the one exception is that a human CAN appear wearing or
+      // using the product via lifestyle/product-use shots where relevant — that's
+      // not the same as a scripted presenter piece, so it stays editor-only, no
+      // writer/CD role.
       support: ["editor", "call"],
     },
     static: {
@@ -117,18 +122,19 @@
     },
     reel1: {
       name: "AI Reel — Tier 1", tier: 1, unit: "reel", basePrice: 2000,
-      short: "Brief-only build, fastest turnaround.",
+      short: "Script from your brief, 1 minor revision included.",
       benefit: "The quickest, most affordable way into AI reels.",
       duration: "Max 20 sec", format: "9:16 (1 dimension)",
-      revisions: "No revision", scripting: "No scripting approval",
+      revisions: "1 revision (minor, in-frame changes only)", scripting: "Script written from your brief — no separate approval step",
       language: "Hindi / English voiceover",
-      turnaround: "24 working hours after we receive everything needed from you",
+      turnaround: "1–2 working days after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built to closely follow the brief we discuss together",
+        "Script written from the brief we discuss together — no separate approval step",
         "Single 9:16 export, max 20 sec",
+        "1 revision — minor, in-frame changes (e.g. text or element placement)",
       ],
-      excluded: ["Revisions", "Script shared for approval", "Additional dimensions (quoted separately)"],
+      excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, fully discussed brief before work starts",
         "Product images / footage",
@@ -137,25 +143,27 @@
       ],
       deliver: "1 MP4, 9:16, max 20 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // `excluded` explicitly rules out "Script shared for approval" and there's no
-      // writer/CD mention in `included` — brief-only build, editor assembles it.
-      support: ["editor", "call"],
+      // Script is now written internally from the brief at every reel tier — the
+      // real differentiator between tiers is whether it's shared for approval
+      // (Tier 3+) and how generous the revision scope is. Writer is involved from
+      // Tier 1 onward even though there's no client-facing script approval step.
+      support: ["writer", "editor", "call"],
     },
     reel2: {
       name: "AI Reel — Tier 2", tier: 2, unit: "reel", basePrice: 3500,
-      short: "1 limited-scope revision included.",
+      short: "Script from your brief, 1 limited-scope revision included.",
       benefit: "A safety net for wording & hook-length tweaks.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (limited scope)", scripting: "No scripting approval",
+      revisions: "1 revision (limited scope — wording, hook length only)", scripting: "Script written from your brief — no separate approval step",
       language: "Hindi / English voiceover",
-      turnaround: "24 working hours after we receive everything needed from you",
+      turnaround: "Up to 3 working days after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built to closely follow the brief we discuss together",
+        "Script written from the brief we discuss together — no separate approval step",
         "Single 9:16 export, max 25 sec",
         "1 revision (limited scope — wording, hook length only)",
       ],
-      excluded: ["Script shared for approval", "Additional dimensions (quoted separately)"],
+      excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, fully discussed brief before work starts",
         "Product images / footage",
@@ -164,55 +172,56 @@
       ],
       deliver: "1 MP4, 9:16, max 25 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Adds a limited-scope revision but `excluded` still rules out "Script shared
-      // for approval" — no writer/CD role beyond Tier 1.
-      support: ["editor", "call"],
+      // Same brief-led scripting as Tier 1 (no separate approval step) — Tier 2's
+      // differentiator is a slightly wider revision scope, not the scripting process.
+      support: ["writer", "editor", "call"],
     },
     reel3: {
       name: "AI Reel — Tier 3", tier: 3, unit: "reel", basePrice: 5000,
-      short: "1 script shared for review, not approval.",
+      short: "1 script option shared for approval, room for small changes.",
       benefit: "Writer + Editor input for a stronger script direction.",
       duration: "Max 30 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (limited scope)", scripting: "1 script shared for review (not approval)",
+      revisions: "1 revision (small script/communication changes)", scripting: "1 script option shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "48 working hours after we receive everything needed from you",
+      turnaround: "Up to 4 working days after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Reel built with Writer + Editor input",
         "Single 9:16 export, max 30 sec",
-        "1 revision (limited scope)",
-        "1 script option shared for review (not approval)",
+        "1 script option shared for approval",
+        "Small script/communication changes accommodated — e.g. hook, CTA, minor additions/removals",
       ],
-      excluded: ["Script sign-off/approval (review only)", "Additional dimensions (quoted separately)", "Hook options"],
+      excluded: ["Additional hook options", "Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, discussed brief before work starts",
         "Product images / footage",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for review, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // `included` explicitly says "Reel built with Writer + Editor input" — writer
-      // added. `excluded` rules out "Script sign-off/approval (review only)", so no
-      // Creative Director oversight yet — that arrives at Tier 4.
+      // Script now goes through an actual approval step (not just review), with
+      // small script/communication changes accommodated as part of that approval —
+      // still no Creative Director oversight or multiple hook options, which is
+      // what separates this from Tier 4.
       support: ["writer", "editor", "call"],
     },
     reel4: {
       name: "AI Reel — Tier 4", tier: 4, unit: "reel", basePrice: 8000,
-      short: "1 script + 2 hooks, shared for approval.",
+      short: "1 script + 2 hook options, shared for approval.",
       benefit: "Full Creative Director involvement, top-tier polish.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (limited scope)", scripting: "1 script + 2 hooks shared for approval",
+      revisions: "1 revision (small script/communication changes)", scripting: "1 script + 2 hook options shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "54 working hours after we receive everything needed from you",
+      turnaround: "Up to 5 working days after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Reel built with full Writer + Editor + Creative Director involvement",
         "Single 9:16 export, max 35 sec",
-        "1 revision (limited scope)",
-        "1 script + 2 hooks shared for approval",
+        "1 script + 2 hook options shared for approval",
+        "Small script/communication changes accommodated — e.g. hook selection, CTA, minor additions/removals",
       ],
-      excluded: ["Additional dimensions (quoted separately)"],
+      excluded: ["Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
       need: [
         "A clear, discussed brief before work starts",
         "Product images / footage",
@@ -221,8 +230,9 @@
       ],
       deliver: "1 MP4, 9:16, max 35 sec, plus 1 script + 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // `included` explicitly says "full Writer + Editor + Creative Director
-      // involvement" — all four support roles are covered at this tier.
+      // Top tier: full Writer + Editor + Creative Director involvement, 2 hook
+      // options instead of Tier 3's 1, and the longest working-day window to match
+      // the deeper creative oversight.
       support: ["writer", "editor", "director", "call"],
     },
   };
