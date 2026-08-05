@@ -237,14 +237,6 @@
     },
   };
 
-  const REEL_TIER_KEYS = ["reel1", "reel2", "reel3", "reel4"];
-  const SERVICE_META = {
-    reels: { label: "AI Reels", dataKeyForTier: (t) => "reel" + t, startPrice: 2000 },
-    catalogue: { label: "360° Catalogue Video", dataKey: "catalogue" },
-    static: { label: "Static Creative", dataKey: "static" },
-    carousel: { label: "Carousel Creative", dataKey: "carousel" },
-  };
-
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
@@ -263,32 +255,105 @@
      state object and one render pass.
   ---------------------------------------------------------- */
   const state = {
-    service: "reels", // reels | catalogue | static | carousel
+    service: "reels", // reels | catalogue | static | carousel — also the order-builder's current selection
     tier: 3, // only relevant when service === 'reels'
-    qty: 1,
-    discountPct: 0,
+    qty: 1, // builder quantity, for the item about to be added to the order
+    cart: [], // order line items: { id, service, tier|null, qty }
+    discountPct: 0, // order-level discount, applied once to the whole cart's subtotal
     scopeTab: "inc", // inc | exc | need
     brandName: "",
     website: "",
     brandCategory: "",
     specialReq: "",
   };
+  let cartIdSeq = 1;
 
+  function keyFor(service, tier) {
+    return service === "reels" ? "reel" + tier : service;
+  }
+  function dataFor(service, tier) {
+    return DATA[keyFor(service, tier)];
+  }
   function currentKey() {
-    return state.service === "reels" ? "reel" + state.tier : state.service;
+    return keyFor(state.service, state.tier);
   }
   function currentData() {
     return DATA[currentKey()];
   }
 
-  function computeQuote() {
+  // Preview for whatever's currently configured in the order builder,
+  // before it's added to the cart — just unit price × qty, no discount
+  // (discount is order-level now, applied once in computeCart()).
+  function computeBuilderPreview() {
     const d = currentData();
     const qty = Math.max(1, state.qty || 1);
+    return { d, qty, lineSubtotal: d.basePrice * qty };
+  }
+
+  // Resolves every cart line item's live data + price, then applies the
+  // single order-level discount once across the combined subtotal —
+  // this is the actual "order total" shown in the summary and used by
+  // the message generator, and the only place quote math happens for
+  // more than one creative type at a time.
+  function computeCart() {
+    const items = state.cart.map((item) => {
+      const d = dataFor(item.service, item.tier);
+      const lineSubtotal = d.basePrice * item.qty;
+      return { ...item, d, lineSubtotal };
+    });
+    const subtotal = items.reduce((sum, i) => sum + i.lineSubtotal, 0);
     const pct = Math.min(100, Math.max(0, state.discountPct || 0));
-    const subtotal = d.basePrice * qty;
     const discountAmt = subtotal * (pct / 100);
     const final = subtotal - discountAmt;
-    return { d, qty, pct, subtotal, discountAmt, final };
+    return { items, subtotal, pct, discountAmt, final };
+  }
+
+  function addToOrder() {
+    const service = state.service;
+    const tier = service === "reels" ? state.tier : null;
+    const qty = Math.max(1, state.qty || 1);
+    const existing = state.cart.find((i) => i.service === service && i.tier === tier);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      state.cart.push({ id: cartIdSeq++, service, tier, qty });
+    }
+    state.qty = 1;
+    render();
+    const btn = document.getElementById("obAddBtn");
+    if (btn) {
+      btn.classList.remove("flash");
+      void btn.offsetWidth;
+      btn.classList.add("flash");
+    }
+  }
+
+  function removeCartItem(id) {
+    state.cart = state.cart.filter((i) => i.id !== id);
+    render();
+  }
+
+  function changeCartQty(id, delta) {
+    const item = state.cart.find((i) => i.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    render();
+  }
+
+  // Loads a cart line back into the builder for reconfiguring (service,
+  // tier, qty) and removes it from the cart — re-adding is then just
+  // clicking "Add to Order" again, so editing a tier doesn't need its
+  // own inline tier-picker duplicated on every row.
+  function editCartItem(id) {
+    const item = state.cart.find((i) => i.id === id);
+    if (!item) return;
+    state.service = item.service;
+    if (item.tier) state.tier = item.tier;
+    state.qty = item.qty;
+    state.cart = state.cart.filter((i) => i.id !== id);
+    render();
+    switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+    document.getElementById("qServiceSelect").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   /* ----------------------------------------------------------
@@ -402,10 +467,13 @@
       .join("");
     document.getElementById("scopeDeliver").textContent = d.deliver;
 
-    // Reel comparison table highlight
+    // Reel comparison table (nested inside "Good to know") only makes
+    // sense for AI Reels — hide the whole toggle, not just the table,
+    // for tier-less services.
+    const compareToggle = document.getElementById("rulesCompareToggle");
+    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
     const table = document.getElementById("reelCompareTable");
     if (table) {
-      table.style.display = state.service === "reels" ? "" : "none";
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
         cell.classList.toggle("ct-sel", Number(cell.dataset.tierCol) === state.tier);
       });
@@ -422,7 +490,7 @@
     if (!wrap) return;
     const d = currentData();
     const scriptFact =
-      d.scripting && d.scripting !== "Not applicable"
+      d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)
         ? `<div class="rules-fact"><span>Scripting</span><b>${d.scripting}</b></div>`
         : "";
     // Turnaround strings are all "<duration> after we receive everything
@@ -450,19 +518,24 @@
   }
 
   /* ----------------------------------------------------------
-     4. RENDER: CALCULATOR
+     4. RENDER: ORDER BUILDER + CART
   ---------------------------------------------------------- */
-  function renderCalculator() {
-    const q = computeQuote();
-    const isReel = state.service === "reels";
+  // Only the 3 facts a sales rep actually needs to sanity-check before
+  // adding a line to the order — not the full scope (that's what the
+  // Services section above is for). Skips any fact that doesn't apply
+  // to the given package instead of always showing a fixed set.
+  function keyFacts(d) {
+    return [
+      ["Revisions", d.revisions],
+      ["Turnaround", (d.turnaround || "").split(" after")[0]],
+      ["Script", d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting) ? d.scripting : null],
+      ["Format", !d.scripting || /^(no scripting|not applicable)/i.test(d.scripting) ? d.format : null],
+    ].filter(([, v]) => v);
+  }
 
-    // Single breadcrumb-style summary — reads state directly, so it can
-    // never disagree with the chip/select below it (this replaces the old
-    // "Tier " + qTierVal.textContent concatenation that produced the
-    // garbled "Tier TIER 1" label — a second, independently-updated copy
-    // of the same information that could drift out of sync).
-    document.getElementById("qSelectionSummary").textContent =
-      SERVICE_META[state.service].label + (isReel ? " · Tier " + state.tier : "");
+  function renderCalculator() {
+    const preview = computeBuilderPreview();
+    const isReel = state.service === "reels";
 
     // Keep the <select> itself in sync with state too — state.service can
     // change from outside this control (e.g. the Services section's own
@@ -475,10 +548,7 @@
     // Tier chips only apply to AI Reel — hide the whole field for
     // tier-less services (matches how the Services section's #tierRow
     // hides itself for the same case), and keep exactly one chip marked
-    // .active, driven directly from state.tier (previously this class was
-    // never touched here at all, so whichever chip happened to be marked
-    // "active" in the static HTML markup stayed highlighted forever,
-    // regardless of the actual selection).
+    // .active, driven directly from state.tier.
     document.getElementById("qTierField").style.display = isReel ? "" : "none";
     if (isReel) {
       document.querySelectorAll(".qtier-chip").forEach((chip) => {
@@ -486,86 +556,141 @@
       });
     }
 
-    document.getElementById("qUnitPrice").textContent = fmtINR(q.d.basePrice) + " / " + (q.d.unit || "pkg");
-    document.getElementById("qQtyInput").value = q.qty;
-    document.getElementById("qDiscountInput").value = state.discountPct;
-    document.getElementById("qSubtotal").textContent = fmtINR(q.subtotal);
-    document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(q.discountAmt);
-    document.getElementById("qFinal").textContent = fmtINR(q.final);
+    document.getElementById("qUnitPrice").textContent =
+      fmtINR(preview.d.basePrice) + " / " + (preview.d.unit || "pkg");
+    document.getElementById("qQtyInput").value = preview.qty;
 
-    // Only show pills for fields that actually apply to this package —
-    // e.g. skip Script/Language for services that don't have a scripting
-    // or voiceover step, instead of always rendering a fixed 4-pill set.
-    const pillCandidates = [
-      ["Revisions", q.d.revisions],
-      ["Duration", q.d.duration],
-      ["Turnaround", q.d.turnaround.split(" after")[0]],
-      ["Format", q.d.format],
-      ["Script", q.d.scripting && !/^(no scripting|not applicable)/i.test(q.d.scripting) ? q.d.scripting : null],
-      ["Language", q.d.language && q.d.language !== "Not applicable" ? q.d.language : null],
-    ];
-    document.getElementById("qMetaPills").innerHTML = pillCandidates
-      .filter(([, v]) => v)
-      .map(([l, v]) => `<div class="meta-pill"><span class="dot"></span>${l}: <b>${v}</b></div>`)
+    document.getElementById("obFacts").innerHTML = keyFacts(preview.d)
+      .map(([l, v]) => `<div class="ob-fact"><span class="dot"></span>${l}: <b>${v}</b></div>`)
       .join("");
 
-    document.getElementById("qDeliver").textContent = q.d.deliver;
+    const existing = state.cart.find((i) => i.service === state.service && i.tier === (isReel ? state.tier : null));
+    document.getElementById("obAddBtnLabel").textContent = existing
+      ? `Add ${preview.qty} more (already in order)`
+      : "Add to Order";
+  }
+
+  function renderCart() {
+    const cart = computeCart();
+    const list = document.getElementById("orderCartList");
+    document.getElementById("ocCount").textContent =
+      cart.items.length === 0 ? "0 items" : cart.items.length === 1 ? "1 item" : `${cart.items.length} items`;
+
+    if (cart.items.length === 0) {
+      list.innerHTML = `<div class="cart-empty">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <p>No creatives added yet — configure one on the left and click "Add to Order."</p>
+      </div>`;
+    } else {
+      list.innerHTML = cart.items
+        .map((item) => {
+          const name = item.d.name;
+          const facts = keyFacts(item.d)
+            .slice(0, 2)
+            .map(([l, v]) => `<span>${l}: ${v}</span>`)
+            .join("");
+          return `<div class="cart-item" data-id="${item.id}">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${name}</div>
+              <div class="cart-item-facts">${facts}</div>
+            </div>
+            <div class="cart-item-qty">
+              <button type="button" class="ci-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
+              <span>${item.qty}</span>
+              <button type="button" class="ci-qty-btn" data-action="inc" aria-label="Increase quantity">+</button>
+            </div>
+            <div class="cart-item-price">${fmtINR(item.lineSubtotal)}</div>
+            <div class="cart-item-actions">
+              <button type="button" class="ci-edit" data-action="edit" title="Edit" aria-label="Edit">✎</button>
+              <button type="button" class="ci-remove" data-action="remove" title="Remove" aria-label="Remove">✕</button>
+            </div>
+          </div>`;
+        })
+        .join("");
+    }
+
+    document.getElementById("qDiscountInput").value = state.discountPct;
+    document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
+    document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
+    document.getElementById("qFinal").textContent = fmtINR(cart.final);
   }
 
   /* ----------------------------------------------------------
      5. RENDER: MESSAGE TEMPLATES
   ---------------------------------------------------------- */
   function renderMessages() {
-    const q = computeQuote();
-    const d = q.d;
+    const cart = computeCart();
     const brandName = state.brandName.trim() || "[Client / Brand Name]";
     const clientName = brandName;
     const website = state.website.trim() || "[Website]";
     const brandCategory = state.brandCategory.trim() || "[Brand Category]";
-    const packageDetails = SERVICE_META[state.service].label + (state.service === "reels" ? " — Tier " + state.tier : "");
+
+    const packageDetails =
+      cart.items.length === 0
+        ? "No creatives added yet"
+        : cart.items.map((i) => `${i.d.name} ×${i.qty}`).join(", ");
     const packageDetailsEl = document.getElementById("packageDetailsVal");
     if (packageDetailsEl) packageDetailsEl.textContent = packageDetails;
+
+    if (cart.items.length === 0) {
+      const emptyMsg =
+        "No creatives have been added to this order yet — add at least one under \"03 — Quote & Price Calculator\" above to generate this message.";
+      document.getElementById("clientMsg").value = emptyMsg;
+      document.getElementById("internalMsg").value = emptyMsg;
+      return;
+    }
+
     const priceBlock = [
-      `Subtotal: ${fmtINR(q.subtotal)}`,
-      q.pct > 0 ? `Discount (${q.pct}%): − ${fmtINR(q.discountAmt)}` : null,
-      `Total: ${fmtINR(q.final)} (excl. GST)`,
+      `Subtotal: ${fmtINR(cart.subtotal)}`,
+      cart.pct > 0 ? `Discount (${cart.pct}%): − ${fmtINR(cart.discountAmt)}` : null,
+      `Total: ${fmtINR(cart.final)} (excl. GST)`,
     ]
       .filter(Boolean)
       .join("\n");
 
-    // Message 1 — Package Summary. Everything about the purchased
-    // package (brand/website/category, service+tier, qty, full price
-    // breakdown, deliverables/duration/revisions/script/format/
-    // language/timeline) — readable by client AND creative team alike
-    // in one shared WhatsApp group. Deliberately excludes the
-    // client-requirements checklist (that's message 2's job only, no
-    // overlap between the two).
+    // Message 1 — Package Summary. One block per creative type/tier in
+    // the order (deliverables/duration/revisions/script/format/language/
+    // timeline), then a single combined pricing breakdown for the whole
+    // order — readable by client AND creative team alike in one shared
+    // WhatsApp group. Deliberately excludes the client-requirements
+    // checklist (that's message 2's job only, no overlap between the two).
+    const orderBlock = cart.items
+      .map((item, idx) => {
+        const d = item.d;
+        return `${idx + 1}. ${d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}
+Deliverables: ${d.deliver}
+Duration: ${d.duration}
+Revisions: ${d.revisions}${d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting) ? `\nScript / Approval: ${d.scripting}` : ""}
+Format / Dimensions: ${d.format}${d.language && !/^not applicable/i.test(d.language) ? `\nLanguage: ${d.language}` : ""}
+Timeline: ${d.turnaround}${d.dimNote ? "\n" + d.dimNote : ""}`;
+      })
+      .join("\n\n");
+
     const clientMsg = `📦 Package Summary — ${brandName}
 
 Brand: ${brandName} (${brandCategory})
 Website: ${website}
 
-Service: ${SERVICE_META[state.service].label}${state.service === "reels" ? " / Tier " + state.tier : ""}
-Quantity: ${q.qty}
+Order:
+${orderBlock}
 
 Pricing:
-${priceBlock}
-
-Deliverables: ${d.deliver}
-Duration: ${d.duration}
-Revisions: ${d.revisions}${d.scripting && d.scripting !== "Not applicable" ? `\nScript / Approval: ${d.scripting}` : ""}${state.service === "reels" && state.tier === 4 ? "\nHooks: 2 hook options for approval" : ""}
-Format / Dimensions: ${d.format}${d.language && d.language !== "Not applicable" ? `\nLanguage: ${d.language}` : ""}
-Timeline: ${d.turnaround}${d.dimNote ? "\n" + d.dimNote : ""}`;
+${priceBlock}`;
 
     // Message 2 — What We Need From You. Client-facing requirements
-    // checklist only, sourced directly from d.need (same array used
-    // elsewhere) — no pricing, no internal-only framing, since this
-    // now goes to the client too, not just the internal team.
-    const needBlock = d.need.map((n) => "- " + n).join("\n");
+    // checklist only, grouped per creative type so a multi-item order
+    // doesn't read as one undifferentiated list — sourced directly from
+    // each item's d.need (same arrays the scope panel above uses).
+    const needBlock = cart.items
+      .map((item) => {
+        const needs = item.d.need.map((n) => "- " + n).join("\n");
+        return `${item.d.name}:\n${needs}`;
+      })
+      .join("\n\n");
     const specialReqLine = state.specialReq.trim()
       ? `\n\nAlso noting: ${state.specialReq.trim()}`
       : "";
-    const internalMsg = `Hi ${clientName}, thank you! To get production started on your ${d.name} package, could you please share the following at your earliest convenience:
+    const internalMsg = `Hi ${clientName}, thank you! To get production started on your order, could you please share the following at your earliest convenience:
 
 ${needBlock}
 
@@ -584,6 +709,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     renderScopePanel();
     renderRulesCurrent();
     renderCalculator();
+    renderCart();
     renderMessages();
   }
 
@@ -626,13 +752,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     render();
   });
 
+  // Order-level discount — applies once to the combined cart subtotal,
+  // not per line item.
   const qDiscountInput = document.getElementById("qDiscountInput");
   qDiscountInput.addEventListener("input", () => {
     state.discountPct = Math.min(100, Math.max(0, parseFloat(qDiscountInput.value) || 0));
-    render();
+    renderCart();
+    renderMessages();
   });
 
-  // calculator service/tier mirror controls
+  // order-builder service/tier controls
   document.getElementById("qServiceSelect").addEventListener("change", (e) => {
     state.service = e.target.value;
     render();
@@ -643,6 +772,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       state.tier = Number(chip.dataset.tier);
       render();
     });
+  });
+
+  document.getElementById("obAddBtn").addEventListener("click", addToOrder);
+
+  // Delegated so it keeps working as cart rows are added/removed/re-rendered.
+  document.getElementById("orderCartList").addEventListener("click", (e) => {
+    const row = e.target.closest(".cart-item");
+    if (!row) return;
+    const id = Number(row.dataset.id);
+    const action = e.target.closest("button")?.dataset.action;
+    if (action === "inc") changeCartQty(id, 1);
+    else if (action === "dec") changeCartQty(id, -1);
+    else if (action === "remove") removeCartItem(id);
+    else if (action === "edit") editCartItem(id);
   });
 
   const brandNameInput = document.getElementById("brandNameInput");
@@ -694,9 +837,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     return firstInvalid;
   }
 
+  // The order cart is as much a required "field" as brand name/website —
+  // there's nothing to summarize without it. Flashes the cart panel the
+  // same way an empty required input shakes, instead of silently copying
+  // a message that just says "no creatives added yet."
+  function validateCartNonEmpty() {
+    if (state.cart.length > 0) return true;
+    const panel = document.getElementById("ocPanel");
+    panel.classList.remove("flash-warn");
+    void panel.offsetWidth;
+    panel.classList.add("flash-warn");
+    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+
   function wireCopyButton(btnId, sourceId) {
     const btn = document.getElementById(btnId);
     btn.addEventListener("click", async () => {
+      if (!validateCartNonEmpty()) return; // empty order — panel flashes, no copy
       if (validateRequiredFields()) return; // incomplete — inline error shown, no copy
       const text = document.getElementById(sourceId).value;
       let ok = false;

@@ -543,8 +543,7 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .scope-deliver-box{margin-top:20px; padding:16px 18px; border-radius:var(--radius-sm); background:var(--teal-soft); font-size:13px; color:var(--text-0); line-height:1.5;}
 .scope-deliver-box b{color:var(--teal); display:block; margin-bottom:4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-mono);}
 
-.compare-label{margin-top:40px; margin-bottom:14px; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);}
-.compare-wrap{overflow-x:auto;}
+.compare-wrap{overflow-x:auto; margin-top:16px;}
 table.compare-table{width:100%; border-collapse:collapse; font-size:13px; min-width:560px;}
 table.compare-table th,table.compare-table td{padding:13px 16px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:nowrap;}
 table.compare-table th:first-child,table.compare-table td:first-child{padding-left:0;}
@@ -595,14 +594,23 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-general li::before{content:'—'; position:absolute; left:0; color:var(--text-2);}
 .rules-general li b{color:var(--text-0);}
 
-/* ---------- CALCULATOR ---------- */
-.calc-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start;}
-@media (max-width:900px){.calc-grid{grid-template-columns:1fr;}}
-.calc-card{padding:28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
-.calc-selection-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:11px 16px; margin-bottom:20px; border-radius:var(--radius-sm); background:var(--violet-soft); border:1px solid var(--line); box-shadow:var(--inset-hi);}
-.calc-selection-label{font-size:10.5px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
-.calc-selection-value{font-size:14.5px; font-weight:700; color:var(--violet);}
-.calc-card .field-row{display:flex; flex-direction:column; gap:6px; margin-bottom:14px;}
+.rules-compare-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
+.rules-compare-toggle summary{
+  cursor:pointer; list-style:none; user-select:none; font-size:12.5px; font-weight:600; color:var(--text-1);
+  display:flex; align-items:center; gap:6px;
+}
+.rules-compare-toggle summary::-webkit-details-marker{display:none;}
+.rules-compare-toggle summary::before{content:'›'; display:inline-block; font-size:15px; color:var(--text-2); transition:transform .2s ease;}
+.rules-compare-toggle[open] summary::before{transform:rotate(90deg);}
+.rules-compare-toggle summary:hover{color:var(--text-0);}
+
+/* ---------- ORDER BUILDER / CALCULATOR ----------
+   Two-panel layout: a left "configure a creative" builder that feeds
+   an explicit Add-to-Order action, and a right order panel holding the
+   cart (one row per creative type/tier/qty combination, editable and
+   removable in place) plus a single order-level discount + total. This
+   replaces the old single-package calculator, which had no way to
+   represent a client buying more than one creative type per order. */
 .field-row{display:flex; flex-direction:column; gap:6px; margin-bottom:18px;}
 .field-row label{font-size:12px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
 .field-row-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
@@ -623,15 +631,54 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .qtier-chip{padding:6px 12px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1); font-size:12.5px; color:var(--text-1); transition:background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;}
 .qtier-chip:hover{background:var(--surface-hover); transform:translateY(-1px);}
 .qtier-chip.active{background:var(--violet); color:var(--btn-ink); border-color:var(--violet); box-shadow:0 6px 14px -6px var(--violet-soft);}
-.calc-readout{display:flex; justify-content:space-between; align-items:center;}
 .summary-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line-soft); font-size:14px;}
 .summary-row span{color:var(--text-2);}
 .summary-row.total{border-bottom:none; padding-top:14px; font-size:19px; font-weight:700; font-family:var(--font-display);}
 .summary-row.total span{color:var(--text-1); font-family:var(--font-body); font-weight:600; font-size:14px;}
-.meta-pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;}
-.meta-pill{font-size:12px; padding:6px 12px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px; box-shadow:var(--inset-hi);}
-.meta-pill .dot{width:5px; height:5px; border-radius:50%; background:var(--teal);}
-.deliver-callout{margin-top:16px; padding:14px 16px; border-radius:var(--radius-sm); background:var(--violet-soft); font-size:13px; line-height:1.5; box-shadow:var(--inset-hi);}
+
+.order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:22px; align-items:start;}
+@media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
+
+.ob-panel,.oc-panel{padding:28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:20px;}
+.ob-facts{display:flex; flex-wrap:wrap; gap:8px; margin:-6px 0 20px;}
+.ob-fact{font-size:11.5px; padding:5px 11px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px;}
+.ob-fact .dot{width:5px; height:5px; border-radius:50%; background:var(--teal); flex:0 0 auto;}
+.ob-add-btn{width:100%; justify-content:center; margin-top:4px;}
+.ob-add-btn.flash{animation:obFlash .5s ease;}
+@keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
+
+.oc-panel{display:flex; flex-direction:column;}
+.oc-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px;}
+.oc-head-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
+.oc-count{font-size:12.5px; color:var(--text-1); font-weight:600;}
+.oc-panel.flash-warn{animation:input-shake .32s;}
+
+.order-cart-list{margin-top:14px; border-top:1px solid var(--line-soft);}
+.cart-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:38px 20px; color:var(--text-2);}
+.cart-empty svg{color:var(--text-2); opacity:.6;}
+.cart-empty p{font-size:13px; line-height:1.55; max-width:260px;}
+
+.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line-soft);}
+.cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
+.cart-item-facts{margin-top:4px; font-size:11.5px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:4px 8px;}
+.cart-item-qty{display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
+.ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
+.ci-qty-btn:hover{background:var(--surface-hover); color:var(--text-0);}
+.cart-item-qty span{min-width:14px; text-align:center;}
+.cart-item-price{font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap;}
+.cart-item-actions{display:flex; gap:4px;}
+.ci-edit,.ci-remove{width:28px; height:28px; border-radius:50%; border:1px solid transparent; background:none; color:var(--text-2); font-size:13px; transition:background .2s ease, color .2s ease, border-color .2s ease;}
+.ci-edit:hover{background:var(--violet-soft); color:var(--violet); border-color:var(--line-soft);}
+.ci-remove:hover{background:rgba(224,130,126,0.14); color:var(--danger); border-color:var(--line-soft);}
+@media (max-width:640px){
+  .cart-item{grid-template-columns:1fr; row-gap:10px;}
+  .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start;}
+  .cart-item-actions{margin-top:-4px;}
+}
+
+.order-summary{margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);}
+.order-summary .field-row{margin-bottom:16px;}
 
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
@@ -669,10 +716,6 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
 .copy-btn.copied{background:var(--teal); color:var(--btn-ink); border-color:transparent;}
 .copy-btn.copy-error{background:var(--danger); color:var(--btn-ink); border-color:transparent;}
 
-/* ---------- STEP STRIP ---------- */
-.step-strip{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:30px;}
-.step-chip{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-2); padding:6px 12px; border-radius:100px; background:var(--surface-1); border:1px solid var(--line-soft); box-shadow:var(--inset-hi);}
-.step-chip b{color:var(--violet); font-family:var(--font-mono);}
 
 /* ---------- FOOTER ---------- */
 footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
@@ -821,7 +864,26 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           </div>
         </div>
 
-        <div class="compare-label">Compare all 4 tiers at a glance</div>
+      </div>
+    </div>
+
+    <details class="rules-panel reveal-on-scroll">
+      <summary class="rules-panel-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        Good to know before you quote
+        <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="rules-current" id="rulesCurrent"></div>
+      <div class="rules-general">
+        <span class="rules-general-label">Worth knowing — not always obvious from the package details above</span>
+        <ul>
+          <li><b>Your turnaround timeline begins once we've received everything we need</b> — all required assets and details, not your payment date.</li>
+          <li><b>AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted</b> for platform policy or technical feasibility — we always aim for the closest match to your brief.</li>
+          <li><b>All prices shown are exclusive of GST.</b></li>
+        </ul>
+      </div>
+      <details class="rules-compare-toggle" id="rulesCompareToggle">
+        <summary>Compare all 4 AI Reel tiers at a glance</summary>
         <div class="compare-wrap">
           <table class="compare-table" id="reelCompareTable">
             <thead>
@@ -836,25 +898,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
-
-    <details class="rules-panel reveal-on-scroll">
-      <summary class="rules-panel-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        Good to know before you quote
-        <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="rules-current" id="rulesCurrent"></div>
-      <div class="rules-general">
-        <span class="rules-general-label">General terms — every package</span>
-        <ul>
-          <li><b>Your turnaround timeline begins once we've received everything we need</b> — all required assets and details, not your payment date.</li>
-          <li><b>New concepts, storylines, or major creative rework sit outside package scope</b> and are quoted as a new order, so your project stays clearly scoped.</li>
-          <li><b>AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted</b> for platform policy or technical feasibility — we always aim for the closest match to your brief.</li>
-          <li><b>All prices shown are exclusive of GST.</b></li>
-        </ul>
-      </div>
+      </details>
     </details>
   </div>
 </section>
@@ -863,26 +907,13 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">03 — Quote &amp; Price Calculator</span>
-      <h2>Quantity in, discount in, final number out.</h2>
-      <p>No submit button — every field recalculates live so you can quote a client in real time.</p>
+      <h2>Build the order, one creative at a time.</h2>
+      <p>Add every creative type the client needs — each with its own tier and quantity — and the order total updates live as you go.</p>
     </div>
 
-    <div class="step-strip reveal-on-scroll">
-      <div class="step-chip"><b>1</b> Select service</div>
-      <div class="step-chip"><b>2</b> Select package</div>
-      <div class="step-chip"><b>3</b> Enter quantity</div>
-      <div class="step-chip"><b>4</b> Auto price</div>
-      <div class="step-chip"><b>5</b> Add discount</div>
-      <div class="step-chip"><b>6</b> Final amount</div>
-      <div class="step-chip"><b>7</b> Deliverables</div>
-    </div>
-
-    <div class="calc-grid reveal-on-scroll">
-      <div class="calc-card">
-        <div class="calc-selection-bar">
-          <span class="calc-selection-label">Selected package</span>
-          <span class="calc-selection-value" id="qSelectionSummary">AI Reel · Tier 3</span>
-        </div>
+    <div class="order-builder reveal-on-scroll">
+      <div class="ob-panel">
+        <div class="ob-panel-label">Configure a creative</div>
 
         <div class="field-row">
           <label for="qServiceSelect">Creative Type</label>
@@ -898,36 +929,51 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           <div class="tier-mini-row">
             <button class="qtier-chip" data-tier="1">Tier 1</button>
             <button class="qtier-chip" data-tier="2">Tier 2</button>
-            <button class="qtier-chip" data-tier="3">Tier 3</button>
+            <button class="qtier-chip active" data-tier="3">Tier 3</button>
             <button class="qtier-chip" data-tier="4">Tier 4</button>
           </div>
         </div>
+
+        <div class="ob-facts" id="obFacts"></div>
+
         <div class="field-row-split">
           <div class="field-row">
             <label>Quantity</label>
             <div class="qty-row">
-              <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+              <button type="button" class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
               <input class="text-input" type="number" id="qQtyInput" min="1" value="1">
-              <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+              <button type="button" class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
             </div>
           </div>
           <div class="field-row">
-            <label>Discount (%)</label>
-            <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+            <label>Unit Price</label>
+            <div class="text-input" id="qUnitPrice" style="background:transparent; border-style:dashed;"></div>
           </div>
         </div>
-        <div class="field-row">
-          <label>Unit Price</label>
-          <div class="text-input" id="qUnitPrice" style="background:transparent; border-style:dashed;"></div>
-        </div>
+
+        <button type="button" class="btn btn-primary ob-add-btn" id="obAddBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span id="obAddBtnLabel">Add to Order</span>
+        </button>
       </div>
 
-      <div class="calc-card">
-        <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
-        <div class="summary-row"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
-        <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
-        <div class="meta-pill-row" id="qMetaPills"></div>
-        <div class="deliver-callout"><b style="display:block; margin-bottom:4px; color:var(--violet); font-family:var(--font-mono); font-size:11px; text-transform:uppercase;">Deliverables</b><span id="qDeliver"></span></div>
+      <div class="oc-panel" id="ocPanel">
+        <div class="oc-head">
+          <span class="oc-head-label">Order</span>
+          <span class="oc-count" id="ocCount">0 items</span>
+        </div>
+
+        <div class="order-cart-list" id="orderCartList"></div>
+
+        <div class="order-summary">
+          <div class="field-row">
+            <label for="qDiscountInput">Order Discount (%)</label>
+            <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+          </div>
+          <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
+          <div class="summary-row"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+          <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
+        </div>
       </div>
     </div>
   </div>
@@ -973,7 +1019,7 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
           <div class="text-input" id="packageDetailsVal" style="background:transparent; border-style:dashed; color:var(--text-1);"></div>
         </div>
       </div>
-      <p class="brand-fields-note">* Required — updates both generated messages below. Package Details follows your Service/Tier selection above.</p>
+      <p class="brand-fields-note">* Required — updates both generated messages below. Package Details follows the order you've built above.</p>
     </div>
 
     <div class="msg-grid reveal-on-scroll">
