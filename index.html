@@ -352,10 +352,6 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .work-card.ar-4x5 .wc-media-wrap{aspect-ratio:4/5;}
 .wc-media-wrap .wc-media{width:100%; height:100%; object-fit:cover; transition:transform .5s; will-change:transform;}
 .work-card:hover .wc-media{transform:scale(1.05);}
-.wc-badge{
-  position:absolute; top:10px; left:10px; background:rgba(8,9,12,0.6); color:#f4f5f7; font-size:11px;
-  font-family:var(--font-mono); padding:4px 9px; border-radius:100px; backdrop-filter:blur(6px);
-}
 .wc-mini-prev,.wc-mini-next{
   position:absolute; top:50%; transform:translateY(-50%); width:28px; height:28px; border-radius:50%;
   border:none; background:rgba(8,9,12,0.55); color:#fff; opacity:0; transition:opacity .25s;
@@ -367,8 +363,14 @@ html[data-theme="light"] .theme-toggle::after{transform:translateX(18px);}
 .wc-dot{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.45);}
 .wc-dot.active{background:#fff;}
 .wc-info{padding:13px 14px 15px;}
-.wc-cat{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--teal);}
-.wc-hook{margin-top:6px; font-size:13.5px; color:var(--text-1); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:calc(13.5px * 1.4 * 2);}
+.wc-title{
+  font-size:14px; font-weight:700; color:var(--text-0); line-height:1.35; letter-spacing:-0.005em;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.wc-meta{
+  margin-top:6px; display:block; font-family:var(--font-mono); font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--teal);
+}
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
 .nav-arrow{
@@ -1014,13 +1016,13 @@ footer{padding:60px 0; border-top:1px solid var(--line-soft); margin-top:40px;}
 
     <div class="msg-grid reveal-on-scroll">
       <div class="msg-card">
-        <h4>📦 Package Summary</h4>
+        <h4>Package Summary</h4>
         <textarea class="msg-box" id="clientMsg" readonly></textarea>
         <button class="copy-btn" id="copyClientBtn">Copy Package Summary</button>
       </div>
 
       <div class="msg-card">
-        <h4>📋 What We Need From You</h4>
+        <h4>What We Need From You</h4>
         <div class="msg-inputs">
           <input class="text-input" id="specialReqInput" placeholder="Special requirements (optional)" style="grid-column:1 / -1;">
         </div>

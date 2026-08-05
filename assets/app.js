@@ -658,7 +658,7 @@ Timeline: ${d.turnaround}${d.dimNote ? "\n" + d.dimNote : ""}`;
       })
       .join("\n\n");
 
-    const clientMsg = `📦 Package Summary — ${brandName}
+    const clientMsg = `Package Summary — ${brandName}
 
 Brand: ${brandName} (${brandCategory})
 Website: ${website}
@@ -956,6 +956,31 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     return "ar-square";
   }
 
+  // Canonical creative-type label per showcase tab — reused on every card
+  // and in the lightbox so "type" reads identically everywhere on the
+  // page instead of drifting into ad-hoc per-item wording.
+  const SHOWCASE_TYPE_LABEL = {
+    reels: "AI Reel",
+    catalogue: "360° Catalogue Video",
+    static: "Static Creative",
+    carousel: "Carousel Creative",
+  };
+
+  // Card face shows only what's genuinely useful to identify a creative at
+  // a glance — its name, category, and type — instead of a duration badge
+  // stamped over the media and a marketing-style "hook" tagline that read
+  // inconsistently from one creative to the next. Demo/placeholder items
+  // (not real delivered work) show their own explanatory label instead of
+  // a category, so they're never mistaken for one of the categories above.
+  function workCardMetaHTML(item) {
+    const typeLabel = SHOWCASE_TYPE_LABEL[activeShowcaseCat] || "";
+    const catText = item.cat === "demo" ? escapeHtml(item.catlabel) : `${escapeHtml(item.catlabel || item.cat)} · ${typeLabel}`;
+    return `<div class="wc-info">
+        <h5 class="wc-title">${escapeHtml(item.title)}</h5>
+        <span class="wc-meta">${catText}</span>
+      </div>`;
+  }
+
   function workCardHTML(item, idx) {
     const arClass = showcaseArClass(activeShowcaseCat);
     if (item.type === "carousel") {
@@ -968,25 +993,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           <img class="wc-media wc-slide-img" src="${item.slides[0]}" loading="lazy" alt="${escapeHtml(item.title)}">
           <button class="wc-mini-prev" aria-label="Previous slide">‹</button>
           <button class="wc-mini-next" aria-label="Next slide">›</button>
-          <span class="wc-badge">${item.cat === "demo" ? "Sample layout" : "Carousel"} · ${item.slides.length} Slides</span>
           <div class="wc-dots">${slideDots}</div>
         </div>
-        <div class="wc-info">
-          <span class="wc-cat">${escapeHtml(item.catlabel || item.cat)}</span>
-          <p class="wc-hook">${escapeHtml(item.hook)}</p>
-        </div>
+        ${workCardMetaHTML(item)}
       </article>`;
     }
     return `
       <article class="work-card ${arClass}" data-idx="${idx}" style="--i:${idx}">
         <div class="wc-media-wrap">
           ${mediaTagHTML(item, "wc-media")}
-          <span class="wc-badge">${item.dur ? item.dur : ""}</span>
         </div>
-        <div class="wc-info">
-          <span class="wc-cat">${escapeHtml(item.catlabel || item.cat)}</span>
-          <p class="wc-hook">${escapeHtml(item.hook)}</p>
-        </div>
+        ${workCardMetaHTML(item)}
       </article>`;
   }
 
@@ -1136,7 +1153,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           renderLightboxMedia();
         });
       });
-      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)} — Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
+      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)} · ${SHOWCASE_TYPE_LABEL[activeShowcaseCat] || ""}</span><h3>${escapeHtml(item.title)}</h3><p>Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
     } else {
       const isVertical = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
       const isFourFive = activeShowcaseCat === "static";
@@ -1147,9 +1164,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       lbMedia.innerHTML = `
         <div class="lb-frame ${lbFrameClass}">
           ${mediaEl}
-          ${isVertical && !item.video ? `<span class="lb-play-badge">▶ ${item.dur || ""}</span>` : ""}
+          ${isVertical && !item.video ? `<span class="lb-play-badge">▶</span>` : ""}
         </div>`;
-      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.hook)}</p>`;
+      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)} · ${SHOWCASE_TYPE_LABEL[activeShowcaseCat] || ""}</span><h3>${escapeHtml(item.title)}</h3>`;
     }
   }
 
