@@ -275,23 +275,18 @@
      state object and one render pass.
   ---------------------------------------------------------- */
   const state = {
-    service: "reels", // reels | catalogue | static | carousel — the order-builder's current selection
+    service: "reels", // reels | catalogue | static | carousel — also the order-builder's current selection
     tier: 3, // only relevant when service === 'reels'
     qty: 1, // builder quantity, for the item about to be added to the order
     cart: [], // order line items: { id, service, tier|null, qty }
     discountPct: 0, // order-level discount, applied once to the whole cart's subtotal
+    scopeTab: "inc", // inc | exc | need
     brandName: "",
     website: "",
     brandCategory: "",
     specialReq: "",
   };
   let cartIdSeq = 1;
-  // Which AI Reel tier the "02 — Services" pricing card is showing —
-  // local to that card only, independent of the order builder's own
-  // state.tier below (the two used to be the same value driven by one
-  // shared "current service" concept; the pricing grid shows every
-  // service at once now, so it needs its own small piece of state).
-  let svcCardReelTier = 3;
 
   function keyFor(service, tier) {
     return service === "reels" ? "reel" + tier : service;
@@ -384,13 +379,30 @@
   }
 
   /* ----------------------------------------------------------
-     3. RENDER: SERVICES PRICING GRID
-     All 4 services on screen at once as self-contained cards — price
-     and what's covered/not covered are the always-visible facts;
-     everything more operational (revisions, turnaround, script,
-     delivery, who provides what) sits behind one closed-by-default
-     <details> per card.
+     3. RENDER: SERVICE SELECTOR + SCOPE PANEL
+     One service selected at a time via the numbered tabs, one panel
+     below showing everything about it — not a grid of always-visible
+     cards. Included/Not Included/Client Provides are their own tab so
+     only one list is on screen at once; the Included tab additionally
+     carries the operational facts (plain bordered rows, not a second
+     boxed panel) plus who delivers it.
   ---------------------------------------------------------- */
+  const svcNav = document.getElementById("svcNav");
+  const tierRow = document.getElementById("tierRow");
+  const scopePanel = document.getElementById("scopePanel");
+
+  function renderServiceNav() {
+    svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.svc === state.service);
+    });
+    tierRow.classList.toggle("is-hidden", state.service !== "reels");
+    if (state.service === "reels") {
+      tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+        chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
+      });
+    }
+  }
+
   function scopeListHTML(items) {
     return items.map((i) => `<li>${i}</li>`).join("");
   }
@@ -402,9 +414,8 @@
     { key: "call", label: "Call Support &amp; Requirement Discussion" },
   ];
 
-  // One plain sentence instead of a 4-up icon grid — states only what's
-  // actually true for this exact service/tier, so it can't be read as a
-  // blanket promise that applies to every package.
+  // States only what's actually true for this exact service/tier, so it
+  // can't be read as a blanket promise that applies to every package.
   function supportSummaryValue(d) {
     const support = d.support || [];
     const included = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) !== -1).map((r) => r.label);
@@ -413,75 +424,66 @@
     return included.join(", ") + (excluded.length ? ` (${excluded.join(", ")} not included)` : "");
   }
 
-  function pkgCardHTML(service, tier) {
-    const d = dataFor(service, tier);
-    const isReel = service === "reels";
-    const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
-    const specRows = [
-      ["Revisions", d.revisions],
-      ["Duration", d.duration],
-      ["Format", d.format],
-      ["Turnaround", d.turnaround],
-      ["Script", notApplicable(d.scripting) ? null : d.scripting],
-      ["Language", notApplicable(d.language) ? null : d.language],
-      ["Support", supportSummaryValue(d)],
-      ["Client Provides", "Brand assets (once per order) + brief &amp; references for this creative — full checklist at quote step"],
-    ].filter(([, v]) => v);
-
-    const tierPickerHTML = isReel
-      ? `<div class="pkg-tier-picker">${[1, 2, 3, 4]
-          .map(
-            (t) =>
-              `<button type="button" class="pkg-tier-btn${t === tier ? " active" : ""}" data-tier="${t}">Tier ${t} · ${fmtINR(DATA["reel" + t].basePrice)}</button>`
-          )
-          .join("")}</div>`
-      : "";
-
-    return `<article class="pkg-card" data-svc="${service}">
-      <div class="pkg-card-accent"></div>
-      <div class="pkg-card-body">
-        <div class="pkg-card-top">
-          <span class="pkg-eyebrow">${escapeHtml(isReel ? `AI Reel — Tier ${tier}` : d.name)}</span>
-          <div class="pkg-price">${fmtINR(d.basePrice)}<span>/ ${escapeHtml(d.unit || "package")}</span></div>
-        </div>
-        <p class="pkg-short">${escapeHtml(d.short || "")}</p>
-        ${tierPickerHTML}
-        <div class="pkg-columns">
-          <div class="pkg-col pkg-col-covered">
-            <span class="pkg-col-label">Covered</span>
-            <ul>${scopeListHTML(d.included)}</ul>
-          </div>
-          <div class="pkg-col pkg-col-notcovered">
-            <span class="pkg-col-label">Not covered</span>
-            <ul>${scopeListHTML(d.excluded)}</ul>
-          </div>
-        </div>
-        <details class="pkg-more">
-          <summary>Revisions, turnaround &amp; delivery details</summary>
-          <div class="pkg-more-body">
-            <div class="pkg-spec-rows">${specRows.map(([k, v]) => `<div class="pkg-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
-            <div class="pkg-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
-          </div>
-        </details>
-      </div>
-    </article>`;
+  function renderServiceSummary() {
+    const d = currentData();
+    document.getElementById("svcName").textContent = d.name;
+    document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
+    document.getElementById("svcShort").textContent = d.short || "";
   }
 
-  function renderPkgGrid() {
-    const cards = [
-      pkgCardHTML("reels", svcCardReelTier),
-      pkgCardHTML("catalogue", null),
-      pkgCardHTML("static", null),
-      pkgCardHTML("carousel", null),
-    ];
-    document.getElementById("pkgGrid").innerHTML = cards.join("");
+  function renderScopePanel() {
+    const d = currentData();
+    scopePanel.querySelectorAll(".scope-tab-btn").forEach((b) =>
+      b.classList.toggle("active", b.dataset.tab === state.scopeTab)
+    );
 
-    // Reel tier comparison table nested in "Good to know" — highlight
-    // whichever tier the AI Reel pricing card above is currently showing.
+    let html = "";
+    if (state.scopeTab === "inc") {
+      const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
+      const specRows = [
+        ["Revisions", d.revisions],
+        ["Duration", d.duration],
+        ["Format", d.format],
+        ["Turnaround", d.turnaround],
+        ["Script", notApplicable(d.scripting) ? null : d.scripting],
+        ["Language", notApplicable(d.language) ? null : d.language],
+        ["Support", supportSummaryValue(d)],
+      ].filter(([, v]) => v);
+      html = `
+        <div class="scope-specs">${specRows.map(([k, v]) => `<div class="scope-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+        <ul class="scope-list">${scopeListHTML(d.included)}</ul>
+        <div class="scope-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
+      `;
+    } else if (state.scopeTab === "exc") {
+      html = `<ul class="scope-list scope-exc">${scopeListHTML(d.excluded)}</ul>`;
+    } else {
+      // Split into brand/product assets (identical for every package, so
+      // labeled as a one-time ask) vs. what's specific to this creative —
+      // same split the requirements message uses for a multi-item order,
+      // shown here for whoever's just browsing a single package.
+      html = `
+        <div class="scope-need-group">
+          <span class="scope-need-label">Brand &amp; product assets — once per order</span>
+          <ul class="scope-list scope-need">${scopeListHTML(COMMON_NEED)}</ul>
+        </div>
+        <div class="scope-need-group">
+          <span class="scope-need-label">Specific to this creative</span>
+          <ul class="scope-list scope-need">${scopeListHTML(d.need)}</ul>
+        </div>
+        ${d.dimNote ? `<p class="scope-note">${d.dimNote}</p>` : ""}
+      `;
+    }
+    document.getElementById("scopeBody").innerHTML = html;
+
+    // Reel comparison table (nested inside "Good to know") only makes
+    // sense for AI Reels — hide the whole toggle, not just the table,
+    // for tier-less services.
+    const compareToggle = document.getElementById("rulesCompareToggle");
+    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
     const table = document.getElementById("reelCompareTable");
     if (table) {
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
-        cell.classList.toggle("ct-sel", Number(cell.dataset.tierCol) === svcCardReelTier);
+        cell.classList.toggle("ct-sel", Number(cell.dataset.tierCol) === state.tier);
       });
     }
   }
@@ -927,7 +929,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      6. MASTER RENDER
   ---------------------------------------------------------- */
   function render() {
-    renderPkgGrid();
+    renderServiceNav();
+    renderServiceSummary();
+    renderScopePanel();
     renderCalculator();
     renderCart();
     renderMessages();
@@ -936,14 +940,26 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  // Delegated (not bound per-button) since the pricing grid's cards —
-  // including the AI Reel tier picker — are fully re-rendered on every
-  // renderPkgGrid() call.
-  document.getElementById("pkgGrid").addEventListener("click", (e) => {
-    const btn = e.target.closest(".pkg-tier-btn");
-    if (!btn) return;
-    svcCardReelTier = Number(btn.dataset.tier);
-    renderPkgGrid();
+  svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.service = btn.dataset.svc;
+      render();
+      switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+    });
+  });
+
+  tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      state.tier = Number(chip.dataset.tier);
+      render();
+    });
+  });
+
+  scopePanel.querySelectorAll(".scope-tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.scopeTab = btn.dataset.tab;
+      renderScopePanel();
+    });
   });
 
   const qQtyInput = document.getElementById("qQtyInput");
