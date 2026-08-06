@@ -21,7 +21,7 @@
       short: "AI-generated 360° product rotation, catalogue-ready.",
       benefit: "Fastest way to make a product page feel alive.",
       unit: "SKU",
-      basePrice: 1500,
+      basePrice: 1800,
       duration: "8–15 sec",
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
@@ -118,7 +118,7 @@
       support: ["editor", "call"],
     },
     reel1: {
-      name: "AI Reel — Tier 1", tier: 1, unit: "reel", basePrice: 2000,
+      name: "AI Reel — Tier 1", tier: 1, unit: "reel", basePrice: 2500,
       short: "Script from your brief, 1 minor revision included.",
       benefit: "The quickest, most affordable way into AI reels.",
       duration: "Max 20 sec", format: "9:16 (1 dimension)",
@@ -684,6 +684,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      PDF instead, built with the same cart/state data as the messages.
   ---------------------------------------------------------- */
   const PDF_TERMS = [
+    "Minimum order value is Rs. 10,000 — mix and match any services/tiers to reach it.",
     "Turnaround shown for each package is per single creative — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
     "Turnaround timeline begins once we've received everything we need — all required assets and details, not the payment date.",
     "New concepts, major creative rework, and any additions beyond what's included — extra dimensions, formats, slides, or aspect ratios — sit outside package scope and are quoted separately or as a new order.",
