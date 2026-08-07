@@ -167,39 +167,35 @@ footer .brand-logo{height:24px;}
   perspective:220px; transition:background .2s ease, color .2s ease;
 }
 .theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
-/* The stack is a self-contained idle animation: it continuously does a
-   quiet 3D flip (edge-on at the midpoint, like a coin turning over) so
-   the toggle reads as interactive/day-night even before anyone touches
-   it. Runs independently of the click-driven icon crossfade below,
-   since it's a separate element (the rotateY here composes with, and
-   doesn't fight, each icon's own translate/rotate/opacity transition). */
+/* A genuine two-sided coin flip, not a spin-in-place: the sun sits on the
+   stack's front face (rotateY 0) and the moon on its back face (rotateY
+   180), each with backface-visibility hidden. The stack itself rotates a
+   full 360deg every 2s — whichever icon's face is currently pointing
+   at the viewer is the one that's visible, so the two icons genuinely
+   swap places (sun for the first ~1s, moon for the next ~1s, on
+   loop) instead of one icon just visually rotating on top of the other.
+   Entirely decorative/ambient: it always alternates regardless of the
+   real active theme, which is what a click actually changes (via
+   data-theme + the whole-button spin below) — this is just the
+   "notice me, I'm the day/night switch" cue. */
 .theme-icon-stack{
   width:16px; height:16px; position:relative; display:block;
-  transform-style:preserve-3d; animation:theme-idle-flip .6s linear infinite;
+  transform-style:preserve-3d; animation:theme-idle-flip 2s linear infinite;
 }
 @keyframes theme-idle-flip{
   from{ transform:rotateY(0deg); }
   to{ transform:rotateY(360deg); }
 }
-/* Both icons sit stacked in the same spot; toggling data-theme cross-fades
-   and rotates one out as the other rotates in, instead of an instant
-   display:none/block swap — a 0.3s morph on click. display:block (not the
-   svg default inline) plus an explicit transform-origin keeps the rotate
-   centered instead of pivoting on an inline baseline box. */
 .theme-icon{
   width:16px; height:16px; display:block; position:absolute; top:50%; left:50%;
-  transform-origin:center; will-change:transform, opacity;
-  transition:transform .3s cubic-bezier(.34,1.4,.4,1), opacity .3s ease;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
 }
-.theme-icon-sun{transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;}
-.theme-icon-moon{transform:translate(-50%,-50%) rotate(110deg) scale(.35); opacity:0;}
-html[data-theme="dark"] .theme-icon-sun{transform:translate(-50%,-50%) rotate(-110deg) scale(.35); opacity:0;}
-html[data-theme="dark"] .theme-icon-moon{transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;}
+.theme-icon-sun{transform:translate(-50%,-50%) rotateY(0deg);}
+.theme-icon-moon{transform:translate(-50%,-50%) rotateY(180deg);}
 /* The site-wide prefers-reduced-motion rule above already forces every
-   transition-duration/animation-duration to ~0 with !important, so both
-   the idle flip and the icon swap become instant, non-animated state
-   changes for users who've asked for less motion — no separate override
-   needed here. */
+   transition-duration/animation-duration to ~0 with !important, so the
+   idle flip becomes a static (non-animated) state for users who've asked
+   for less motion — no separate override needed here. */
 /* Explicit @keyframes spin, restarted via a JS-added class on every click
    (see initTheme in app.js) — a large, unmistakable whole-button motion
    layered on top of the icon crossfade above, so the toggle reads as
