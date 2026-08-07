@@ -1487,12 +1487,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       // leads with the curated 360° catalogue video — both keep their
       // restrained gradient-glow accent. Every other column's tiles are
       // drawn from the pools so the whole wall stays a real mix of shots.
+      // Only these two curated slots ever render a real <video> — every
+      // other slot is a static thumbnail. Keeping the wall's total video
+      // count fixed at 2 (not one per column) avoids piling up dozens of
+      // simultaneous above-the-fold video decodes/downloads on load.
       const pattern =
         c === 0
-          ? [{ kind: "video", item: heroVideo, extraClass: "tile-hero" }, { kind: "img" }, { kind: "video" }, { kind: "img" }]
+          ? [{ kind: "video", item: heroVideo, extraClass: "tile-hero" }, { kind: "img" }, { kind: "img" }, { kind: "img" }]
           : c === 1
-          ? [{ kind: "video", item: catVideo, extraClass: "tile-secondary" }, { kind: "img" }, { kind: "video" }, { kind: "img" }]
-          : [{ kind: "video" }, { kind: "img" }, { kind: "video" }, { kind: "img" }];
+          ? [{ kind: "video", item: catVideo, extraClass: "tile-secondary" }, { kind: "img" }, { kind: "img" }, { kind: "img" }]
+          : [{ kind: "img" }, { kind: "img" }, { kind: "img" }, { kind: "img" }];
 
       let top = offsetTop;
       pattern.forEach((spec, i) => {
@@ -1638,8 +1642,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const rowA = [].concat(REELS, CATALOGUE); // video row: reels + catalogue only
     const rowB = STATICS.slice(); // static row: static ads only
 
+    // Cap how many distinct items in the row are ever eligible to render as
+    // a real <video> — the rest fall back to their thumb image. Without this
+    // cap, every REELS/CATALOGUE item has a .video, so all ~29 (58 once
+    // doubled for the seamless loop) would try to decode/play at once.
+    const VIDEO_TILE_CAP = 6;
+    const videoEnabled = new Set(
+      rowA.filter((it) => it.video).slice(0, VIDEO_TILE_CAP).map((it) => it.video)
+    );
+
     function videoTileHTML(item) {
-      if (item.video) {
+      if (item.video && videoEnabled.has(item.video)) {
         return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
       }
       return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
