@@ -167,21 +167,19 @@ footer .brand-logo{height:24px;}
   perspective:220px; transition:background .2s ease, color .2s ease;
 }
 .theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
-/* The stack is a self-contained idle animation: every ~9s it does one
+/* The stack is a self-contained idle animation: it continuously does a
    quiet 3D flip (edge-on at the midpoint, like a coin turning over) so
    the toggle reads as interactive/day-night even before anyone touches
-   it — the "so when the user notices it, they understand what it does"
-   ask. Runs independently of the click-driven icon crossfade below,
+   it. Runs independently of the click-driven icon crossfade below,
    since it's a separate element (the rotateY here composes with, and
    doesn't fight, each icon's own translate/rotate/opacity transition). */
 .theme-icon-stack{
   width:16px; height:16px; position:relative; display:block;
-  transform-style:preserve-3d; animation:theme-idle-flip 9s cubic-bezier(.45,0,.2,1) infinite;
+  transform-style:preserve-3d; animation:theme-idle-flip .6s linear infinite;
 }
 @keyframes theme-idle-flip{
-  0%, 84%{ transform:rotateY(0deg); }
-  92%{ transform:rotateY(180deg); }
-  100%{ transform:rotateY(360deg); }
+  from{ transform:rotateY(0deg); }
+  to{ transform:rotateY(360deg); }
 }
 /* Both icons sit stacked in the same spot; toggling data-theme cross-fades
    and rotates one out as the other rotates in, instead of an instant
