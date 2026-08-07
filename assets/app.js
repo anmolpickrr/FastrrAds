@@ -1499,17 +1499,27 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const offsetTop = c % 2 === 0 ? 0 : 36;
       // First column leads with the curated hero video; second column
       // leads with the curated 360° catalogue video — both keep their
-      // restrained gradient-glow accent. Every other column's tiles are
-      // drawn from the pools so the whole wall stays a real mix of shots.
-      // Only these two curated slots ever render a real <video> — every
-      // other slot is a static thumbnail. Keeping the wall's total video
-      // count fixed at 2 (not one per column) avoids piling up dozens of
-      // simultaneous above-the-fold video decodes/downloads on load.
+      // restrained gradient-glow accent. A handful of other columns each
+      // carry ONE real video (never two in the same column, and never
+      // every column) so the wall reads as a real mix of motion + stills
+      // instead of either "all video" or "video only on the far left."
+      // Column 4 stays all-static as a deliberate breathing-room beat.
+      // Total real videos stays capped at 6 — combined with the playback
+      // stagger below, that keeps the above-the-fold decode/download load
+      // bounded instead of bursting dozens of clips at once.
       const pattern =
         c === 0
           ? [{ kind: "video", item: heroVideo, extraClass: "tile-hero" }, { kind: "img" }, { kind: "img" }, { kind: "img" }]
           : c === 1
           ? [{ kind: "video", item: catVideo, extraClass: "tile-secondary" }, { kind: "img" }, { kind: "img" }, { kind: "img" }]
+          : c === 2
+          ? [{ kind: "img" }, { kind: "video" }, { kind: "img" }, { kind: "img" }]
+          : c === 3
+          ? [{ kind: "img" }, { kind: "img" }, { kind: "video" }, { kind: "img" }]
+          : c === 5
+          ? [{ kind: "img" }, { kind: "video" }, { kind: "img" }, { kind: "img" }]
+          : c === 6
+          ? [{ kind: "img" }, { kind: "img" }, { kind: "img" }, { kind: "video" }]
           : [{ kind: "img" }, { kind: "img" }, { kind: "img" }, { kind: "img" }];
 
       let top = offsetTop;
@@ -1565,7 +1575,14 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
     const tileEls = Array.from(orbit.querySelectorAll(".hero-tile"));
 
-    // Lazy-start real video tiles only once visible.
+    // Lazy-start real video tiles only once visible. Since every video
+    // tile sits above the fold, they'd all intersect within the same
+    // frame on load — staggering each tile's FIRST play by a small,
+    // index-based delay spreads out the initial fetches instead of
+    // bursting 6 multi-MB requests at once. Later re-intersections
+    // (scrolling back up) start immediately, no stagger.
+    const startedVideos = new WeakSet();
+    let videoStartOrder = 0;
     if ("IntersectionObserver" in window) {
       const vio = new IntersectionObserver(
         (entries) => {
@@ -1573,7 +1590,14 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
             const vid = entry.target.querySelector("video");
             if (!vid) return;
             if (entry.isIntersecting) {
-              vid.play && vid.play().catch(() => {});
+              if (!startedVideos.has(vid)) {
+                startedVideos.add(vid);
+                const delay = videoStartOrder * 180;
+                videoStartOrder++;
+                setTimeout(() => vid.play && vid.play().catch(() => {}), delay);
+              } else {
+                vid.play && vid.play().catch(() => {});
+              }
             } else {
               vid.pause && vid.pause();
             }
@@ -1688,6 +1712,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // Lazy-start real video tiles only once horizontally visible
     // within the filmstrip — keeps far more than a couple of the
     // ~44 real 9:16 clips from ever decoding/playing simultaneously.
+    // The filmstrip often sits right alongside the hero orbit within the
+    // same first viewport, so its own enabled tiles can all intersect in
+    // the same initial callback — stagger each tile's first play so those
+    // requests don't burst at once alongside the orbit's.
+    const startedFsVideos = new WeakSet();
+    let fsVideoStartOrder = 0;
     if ("IntersectionObserver" in window) {
       const vio = new IntersectionObserver(
         (entries) => {
@@ -1695,7 +1725,14 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
             const vid = entry.target.querySelector("video");
             if (!vid) return;
             if (entry.isIntersecting && !prefersReducedMotion) {
-              vid.play && vid.play().catch(() => {});
+              if (!startedFsVideos.has(vid)) {
+                startedFsVideos.add(vid);
+                const delay = fsVideoStartOrder * 180;
+                fsVideoStartOrder++;
+                setTimeout(() => vid.play && vid.play().catch(() => {}), delay);
+              } else {
+                vid.play && vid.play().catch(() => {});
+              }
             } else {
               vid.pause && vid.pause();
             }
