@@ -162,11 +162,27 @@ footer .brand-logo{height:24px;}
 .nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
 .nav-right{display:flex; align-items:center; gap:12px;}
 .theme-toggle{
-  position:relative; width:32px; height:32px; border-radius:50%; border:none; background:transparent;
+  width:32px; height:32px; border-radius:50%; border:none; background:transparent;
   display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--text-2);
-  transition:background .2s ease, color .2s ease;
+  perspective:220px; transition:background .2s ease, color .2s ease;
 }
 .theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
+/* The stack is a self-contained idle animation: every ~9s it does one
+   quiet 3D flip (edge-on at the midpoint, like a coin turning over) so
+   the toggle reads as interactive/day-night even before anyone touches
+   it — the "so when the user notices it, they understand what it does"
+   ask. Runs independently of the click-driven icon crossfade below,
+   since it's a separate element (the rotateY here composes with, and
+   doesn't fight, each icon's own translate/rotate/opacity transition). */
+.theme-icon-stack{
+  width:16px; height:16px; position:relative; display:block;
+  transform-style:preserve-3d; animation:theme-idle-flip 9s cubic-bezier(.45,0,.2,1) infinite;
+}
+@keyframes theme-idle-flip{
+  0%, 84%{ transform:rotateY(0deg); }
+  92%{ transform:rotateY(180deg); }
+  100%{ transform:rotateY(360deg); }
+}
 /* Both icons sit stacked in the same spot; toggling data-theme cross-fades
    and rotates one out as the other rotates in, instead of an instant
    display:none/block swap — a 0.3s morph on click. display:block (not the
@@ -182,9 +198,10 @@ footer .brand-logo{height:24px;}
 html[data-theme="dark"] .theme-icon-sun{transform:translate(-50%,-50%) rotate(-110deg) scale(.35); opacity:0;}
 html[data-theme="dark"] .theme-icon-moon{transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;}
 /* The site-wide prefers-reduced-motion rule above already forces every
-   transition-duration to ~0 with !important, so the icon swap becomes an
-   instant (non-animated) state change for users who've asked for less
-   motion — no separate override needed here. */
+   transition-duration/animation-duration to ~0 with !important, so both
+   the idle flip and the icon swap become instant, non-animated state
+   changes for users who've asked for less motion — no separate override
+   needed here. */
 /* Explicit @keyframes spin, restarted via a JS-added class on every click
    (see initTheme in app.js) — a large, unmistakable whole-button motion
    layered on top of the icon crossfade above, so the toggle reads as
@@ -766,8 +783,10 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
       </div>
       <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
-          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+          <span class="theme-icon-stack">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+          </span>
         </button>
         <a href="#quote" class="btn btn-primary" style="padding:9px 18px; font-size:13px;">Start a Quote</a>
       </div>
@@ -1122,7 +1141,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260807-4"></script>
-<script src="assets/app.js?v=20260807-4"></script>
+<script src="assets/creative-data.js?v=20260807-5"></script>
+<script src="assets/app.js?v=20260807-5"></script>
 </body>
 </html>
