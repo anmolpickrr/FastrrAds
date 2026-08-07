@@ -1680,17 +1680,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const rowA = [].concat(REELS, CATALOGUE); // video row: reels + catalogue only
     const rowB = STATICS.slice(); // static row: static ads only
 
-    // Cap how many distinct items in the row are ever eligible to render as
-    // a real <video> — the rest fall back to their thumb image. Without this
-    // cap, every REELS/CATALOGUE item has a .video, so all ~29 (58 once
-    // doubled for the seamless loop) would try to decode/play at once.
-    const VIDEO_TILE_CAP = 6;
-    const videoEnabled = new Set(
-      rowA.filter((it) => it.video).slice(0, VIDEO_TILE_CAP).map((it) => it.video)
-    );
-
+    // Every REELS/CATALOGUE item gets a real <video> tile — concurrency is
+    // bounded not by an arbitrary cap on which items are eligible, but by
+    // the IntersectionObserver below: only tiles actually scrolled into the
+    // filmstrip's horizontal viewport ever play, and they pause the moment
+    // they scroll back out. That keeps simultaneous decodes bounded by
+    // what's on screen (plus the initial-load stagger), while still
+    // letting every real clip play as it comes into view, not just a
+    // fixed handful.
     function videoTileHTML(item) {
-      if (item.video && videoEnabled.has(item.video)) {
+      if (item.video) {
         return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
       }
       return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
