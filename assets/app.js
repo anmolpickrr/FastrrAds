@@ -684,7 +684,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      PDF instead, built with the same cart/state data as the messages.
   ---------------------------------------------------------- */
   const PDF_TERMS = [
-    "Minimum order value is Rs. 10,000 — mix and match any services/tiers to reach it.",
     "Turnaround shown for each package is per single creative — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
     "Turnaround timeline begins once we've received everything we need — all required assets and details, not the payment date.",
     "New concepts, major creative rework, and any additions beyond what's included — extra dimensions, formats, slides, or aspect ratios — sit outside package scope and are quoted separately or as a new order.",
@@ -938,28 +937,89 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     renderMessages();
   }
 
+  // Re-rendering a panel (tabs, tiers, cart, showcase) can change the
+  // height of content anywhere on the page — including sections above
+  // the one the user is looking at (e.g. switching the service tab also
+  // re-renders the Creative Showcase higher up). Since scrollY is a fixed
+  // pixel offset, any such height change silently shifts the whole page
+  // under the user. Anchoring on the clicked/focused control and
+  // compensating scroll by however far it moved keeps the interaction
+  // visually anchored where the user is actually looking.
+  function withScrollAnchor(fn) {
+    const anchor = document.activeElement;
+    const canAnchor = anchor && anchor !== document.body && typeof anchor.getBoundingClientRect === "function";
+    const beforeTop = canAnchor ? anchor.getBoundingClientRect().top : null;
+    fn();
+    if (canAnchor && document.body.contains(anchor)) {
+      const delta = anchor.getBoundingClientRect().top - beforeTop;
+      // The page sets `scroll-behavior:smooth` globally, and this browser
+      // applies that even to a direct scrollTop assignment — not just
+      // scrollTo()/scrollBy() — turning what should be an invisible
+      // same-frame correction into a slow, visible catch-up scroll.
+      // Forcing scroll-behavior:auto on the root for the duration of this
+      // one assignment makes it truly instant, then restores whatever was
+      // there so normal smooth-scrolling (nav links, etc.) is unaffected.
+      if (delta) {
+        const root = document.documentElement;
+        const prevBehavior = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        const se = document.scrollingElement || root;
+        se.scrollTop = se.scrollTop + delta;
+        root.style.scrollBehavior = prevBehavior;
+      }
+    }
+  }
+
+  // Clicking a button also focuses it, and browsers scroll a newly-focused
+  // element into view by default — smoothly, since the page sets
+  // scroll-behavior:smooth globally. That native scroll is a second,
+  // independent source of the same "page jumps on click" problem
+  // withScrollAnchor addresses above, and it isn't something a delta
+  // correction after the fact can fully cancel out because it plays out
+  // as its own separate browser-driven animation. Heading it off at the
+  // source: suppress the default mousedown focus (which is what triggers
+  // it) and focus the button ourselves with preventScroll instead.
+  document.addEventListener(
+    "mousedown",
+    (e) => {
+      const el = e.target.closest(
+        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+      );
+      if (!el) return;
+      e.preventDefault();
+      el.focus({ preventScroll: true });
+    },
+    true
+  );
+
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
   svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
     btn.addEventListener("click", () => {
-      state.service = btn.dataset.svc;
-      render();
-      switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+      withScrollAnchor(() => {
+        state.service = btn.dataset.svc;
+        render();
+        switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+      });
     });
   });
 
   tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
-      state.tier = Number(chip.dataset.tier);
-      render();
+      withScrollAnchor(() => {
+        state.tier = Number(chip.dataset.tier);
+        render();
+      });
     });
   });
 
   scopePanel.querySelectorAll(".scope-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      state.scopeTab = btn.dataset.tab;
-      renderScopePanel();
+      withScrollAnchor(() => {
+        state.scopeTab = btn.dataset.tab;
+        renderScopePanel();
+      });
     });
   });
 
@@ -969,12 +1029,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     render();
   });
   document.getElementById("qtyMinus").addEventListener("click", () => {
-    state.qty = Math.max(1, state.qty - 1);
-    render();
+    withScrollAnchor(() => {
+      state.qty = Math.max(1, state.qty - 1);
+      render();
+    });
   });
   document.getElementById("qtyPlus").addEventListener("click", () => {
-    state.qty = state.qty + 1;
-    render();
+    withScrollAnchor(() => {
+      state.qty = state.qty + 1;
+      render();
+    });
   });
 
   // Order-level discount — applies once to the combined cart subtotal,
@@ -988,18 +1052,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   // order-builder service/tier controls
   document.getElementById("qServiceSelect").addEventListener("change", (e) => {
-    state.service = e.target.value;
-    render();
-    switchShowcaseCat(state.service);
+    withScrollAnchor(() => {
+      state.service = e.target.value;
+      render();
+      switchShowcaseCat(state.service);
+    });
   });
   document.querySelectorAll(".qtier-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
-      state.tier = Number(chip.dataset.tier);
-      render();
+      withScrollAnchor(() => {
+        state.tier = Number(chip.dataset.tier);
+        render();
+      });
     });
   });
 
-  document.getElementById("obAddBtn").addEventListener("click", addToOrder);
+  document.getElementById("obAddBtn").addEventListener("click", () => {
+    withScrollAnchor(addToOrder);
+  });
 
   // Delegated so it keeps working as cart rows are added/removed/re-rendered.
   document.getElementById("orderCartList").addEventListener("click", (e) => {
@@ -1007,10 +1077,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     if (!row) return;
     const id = Number(row.dataset.id);
     const action = e.target.closest("button")?.dataset.action;
-    if (action === "inc") changeCartQty(id, 1);
-    else if (action === "dec") changeCartQty(id, -1);
-    else if (action === "remove") removeCartItem(id);
-    else if (action === "edit") editCartItem(id);
+    if (!action) return;
+    withScrollAnchor(() => {
+      if (action === "inc") changeCartQty(id, 1);
+      else if (action === "dec") changeCartQty(id, -1);
+      else if (action === "remove") removeCartItem(id);
+      else if (action === "edit") editCartItem(id);
+    });
   });
 
   const brandNameInput = document.getElementById("brandNameInput");
@@ -1342,7 +1415,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
 
   showcaseTabs.forEach((tab) => {
-    tab.addEventListener("click", () => renderShowcase(tab.dataset.cat));
+    tab.addEventListener("click", () => withScrollAnchor(() => renderShowcase(tab.dataset.cat)));
   });
   function switchShowcaseCat(svc) {
     // 'reels' | 'catalogue' | 'static' | 'carousel'
