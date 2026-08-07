@@ -164,27 +164,52 @@ footer .brand-logo{height:24px;}
 .theme-toggle{
   width:32px; height:32px; border-radius:50%; border:none; background:transparent;
   display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--text-2);
-  perspective:220px; transition:background .2s ease, color .2s ease;
+  perspective:52px; transition:background .2s ease, color .2s ease;
 }
 .theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
-/* A genuine two-sided coin flip, not a spin-in-place: the sun sits on the
-   stack's front face (rotateY 0) and the moon on its back face (rotateY
-   180), each with backface-visibility hidden. The stack itself rotates a
-   full 360deg every 2s — whichever icon's face is currently pointing
-   at the viewer is the one that's visible, so the two icons genuinely
-   swap places (sun for the first ~1s, moon for the next ~1s, on
-   loop) instead of one icon just visually rotating on top of the other.
-   Entirely decorative/ambient: it always alternates regardless of the
-   real active theme, which is what a click actually changes (via
-   data-theme + the whole-button spin below) — this is just the
-   "notice me, I'm the day/night switch" cue. */
+/* A genuine two-sided coin flip — the sun sits on the stack's front face
+   (rotateY 0) and the moon on its back face (rotateY 180), each with
+   backface-visibility hidden, so the two icons truly swap places rather
+   than one visually rotating on top of the other. Two refinements make
+   it read as a smooth dimensional turn instead of a flat 2D flip:
+   1) a *tight* perspective (52px, ~3x the icon's own size) so the icon
+      visibly foreshortens/thins as it turns edge-on — the natural
+      depth cue a much larger perspective value would mostly wash out;
+      2) a brief blur right at the two edge-on midpoints, standing in
+      for the soft defocus a real macro camera would show on a thin
+      edge, smoothing over what would otherwise be an abrupt hand-off
+      between the two flat icons. ease-in-out timing (not linear) makes
+      the turn accelerate/decelerate like a real object rather than
+      spinning at a constant rate. Entirely decorative/ambient — it
+      always alternates regardless of the real active theme, which is
+      what a click actually changes (via data-theme + the whole-button
+      spin below); this is just the "notice me" cue.
+
+      The blur has to animate on its own wrapper span (.theme-icon-soften),
+      not on .theme-icon-stack alongside the rotateY animation and not on
+      .theme-toggle itself — pairing a filter animation with a preserve-3d
+      transform animation on the very same element breaks Chromium's
+      backface-visibility culling (the "back" face stops ever showing),
+      and .theme-toggle already gets its own animation swapped in via the
+      .theme-spin class on click (see below), which would silently cancel
+      this one since only one "animation" shorthand can apply per element.
+      A dedicated middle element sidesteps both problems; the visual
+      result — the whole icon area softening right as it turns edge-on —
+      is identical either way. */
+.theme-icon-soften{
+  display:block; animation:theme-idle-soften 2s cubic-bezier(.45,0,.55,1) infinite;
+}
+@keyframes theme-idle-soften{
+  0%, 46%, 54%, 96%, 100%{ filter:blur(0); }
+  25%, 75%{ filter:blur(.6px); }
+}
 .theme-icon-stack{
   width:16px; height:16px; position:relative; display:block;
-  transform-style:preserve-3d; animation:theme-idle-flip 2s linear infinite;
+  transform-style:preserve-3d; animation:theme-idle-flip 2s cubic-bezier(.45,0,.55,1) infinite;
 }
 @keyframes theme-idle-flip{
-  from{ transform:rotateY(0deg); }
-  to{ transform:rotateY(360deg); }
+  0%{ transform:rotateY(0deg); }
+  100%{ transform:rotateY(360deg); }
 }
 .theme-icon{
   width:16px; height:16px; display:block; position:absolute; top:50%; left:50%;
@@ -777,9 +802,11 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
       </div>
       <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <span class="theme-icon-stack">
-            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
-            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+          <span class="theme-icon-soften">
+            <span class="theme-icon-stack">
+              <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
+              <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+            </span>
           </span>
         </button>
         <a href="#quote" class="btn btn-primary" style="padding:9px 18px; font-size:13px;">Start a Quote</a>
