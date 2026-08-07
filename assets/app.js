@@ -1385,7 +1385,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const isFourFive = activeShowcaseCat === "static";
       const lbFrameClass = isVertical ? "lb-frame-vertical" : isFourFive ? "lb-frame-4x5" : "lb-frame-square";
       const mediaEl = item.video
-        ? `<video src="${item.video}" poster="${item.thumb || ""}" controls playsinline preload="metadata"></video>`
+        ? `<video src="${item.video}" poster="${item.thumb || ""}" controls autoplay playsinline preload="metadata"></video>`
         : `<img src="${item.thumb}" alt="${escapeHtml(item.title)}">`;
       lbMedia.innerHTML = `
         <div class="lb-frame ${lbFrameClass}">
@@ -1396,6 +1396,18 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
   }
 
+  // Fully stop (not just pause) any video currently in the lightbox —
+  // clearing src and calling load() drops the decoder/network buffer
+  // instead of leaving it paused-but-loaded in the background, so audio
+  // and decode work can't continue after the popup closes or navigates.
+  function stopLightboxVideo() {
+    const vid = lbMedia.querySelector("video");
+    if (!vid) return;
+    vid.pause();
+    vid.removeAttribute("src");
+    vid.load();
+  }
+
   function openLightbox(idx) {
     lbIndex = idx;
     lbSlideIndex = 0;
@@ -1404,12 +1416,14 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     document.body.classList.add("lb-locked");
   }
   function closeLightbox() {
+    stopLightboxVideo();
     lb.classList.remove("open");
     document.body.classList.remove("lb-locked");
   }
   function navLightbox(delta) {
     const total = activeShowcaseList.length;
     if (!total) return;
+    stopLightboxVideo();
     lbIndex = ((lbIndex + delta) % total + total) % total;
     lbSlideIndex = 0;
     renderLightboxMedia();
