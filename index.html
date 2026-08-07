@@ -185,6 +185,12 @@ html[data-theme="dark"] .theme-icon-moon{transform:translate(-50%,-50%) rotate(0
    transition-duration to ~0 with !important, so the icon swap becomes an
    instant (non-animated) state change for users who've asked for less
    motion — no separate override needed here. */
+/* Explicit @keyframes spin, restarted via a JS-added class on every click
+   (see initTheme in app.js) — a large, unmistakable whole-button motion
+   layered on top of the icon crossfade above, so the toggle reads as
+   animated even if the smaller icon-only transition is easy to miss. */
+.theme-toggle.theme-spin{animation:theme-toggle-spin .45s cubic-bezier(.34,1.56,.64,1);}
+@keyframes theme-toggle-spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
 @media (max-width:900px){.nav-links{display:none;}}
 @media (max-width:520px){.nav-pill{padding:0 8px 0 10px;}}
 
@@ -1116,7 +1122,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260807-3"></script>
-<script src="assets/app.js?v=20260807-3"></script>
+<script src="assets/creative-data.js?v=20260807-4"></script>
+<script src="assets/app.js?v=20260807-4"></script>
 </body>
 </html>

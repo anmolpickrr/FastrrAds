@@ -1137,6 +1137,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const next = isLight ? "dark" : "light";
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("fastrr-theme", next); } catch (e) {}
+      // Drive the spin with a JS-triggered class + explicit @keyframes
+      // instead of relying only on the attribute-selector transition —
+      // an unmissable whole-button spin every click, restarted cleanly
+      // via a forced reflow so rapid re-clicks always replay it.
+      btn.classList.remove("theme-spin");
+      void btn.offsetWidth;
+      btn.classList.add("theme-spin");
     });
   })();
 
