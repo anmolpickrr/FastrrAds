@@ -168,22 +168,23 @@ footer .brand-logo{height:24px;}
 }
 .theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
 /* Both icons sit stacked in the same spot; toggling data-theme cross-fades
-   and gently rotates one out as the other rotates in, instead of an
-   instant display:none/block swap — a quiet 0.3s morph on click. */
+   and rotates one out as the other rotates in, instead of an instant
+   display:none/block swap — a 0.3s morph on click. display:block (not the
+   svg default inline) plus an explicit transform-origin keeps the rotate
+   centered instead of pivoting on an inline baseline box. */
 .theme-icon{
-  width:16px; height:16px; position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;
-  transition:transform .3s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+  width:16px; height:16px; display:block; position:absolute; top:50%; left:50%;
+  transform-origin:center; will-change:transform, opacity;
+  transition:transform .3s cubic-bezier(.34,1.4,.4,1), opacity .3s ease;
 }
-.theme-icon-moon{transform:translate(-50%,-50%) rotate(-90deg) scale(.4); opacity:0;}
-html[data-theme="dark"] .theme-icon-sun{transform:translate(-50%,-50%) rotate(90deg) scale(.4); opacity:0;}
+.theme-icon-sun{transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;}
+.theme-icon-moon{transform:translate(-50%,-50%) rotate(110deg) scale(.35); opacity:0;}
+html[data-theme="dark"] .theme-icon-sun{transform:translate(-50%,-50%) rotate(-110deg) scale(.35); opacity:0;}
 html[data-theme="dark"] .theme-icon-moon{transform:translate(-50%,-50%) rotate(0deg) scale(1); opacity:1;}
-@media (prefers-reduced-motion:reduce){
-  .theme-icon{transition:opacity .3s ease;}
-  .theme-icon-moon{transform:translate(-50%,-50%);}
-  html[data-theme="dark"] .theme-icon-sun{transform:translate(-50%,-50%);}
-  html[data-theme="dark"] .theme-icon-moon{transform:translate(-50%,-50%);}
-}
+/* The site-wide prefers-reduced-motion rule above already forces every
+   transition-duration to ~0 with !important, so the icon swap becomes an
+   instant (non-animated) state change for users who've asked for less
+   motion — no separate override needed here. */
 @media (max-width:900px){.nav-links{display:none;}}
 @media (max-width:520px){.nav-pill{padding:0 8px 0 10px;}}
 
