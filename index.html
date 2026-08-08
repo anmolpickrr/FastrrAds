@@ -625,13 +625,25 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-panel-chevron{margin-left:auto; color:var(--text-2); transition:transform .25s ease;}
 .rules-panel[open] .rules-panel-chevron{transform:rotate(180deg);}
 
+/* Each fact gets a short bold headline plus one plain-language line
+   below it, instead of a single dense sentence chaining the two
+   together after an em-dash — the headline alone should be scannable
+   in a first pass, with the detail line there only if you need it. A
+   2-column card grid (1 column on narrow screens) keeps each fact its
+   own visually separate chunk rather than one long list bleeding
+   together. */
 .rules-general{margin-top:20px;}
-.rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
-.rules-general ul{margin:0;}
-.rules-general li{position:relative; padding-left:20px; margin-bottom:11px; font-size:13.7px; color:var(--text-1); line-height:1.55;}
-.rules-general li:last-child{margin-bottom:0;}
-.rules-general li::before{content:'—'; position:absolute; left:0; color:var(--text-2);}
-.rules-general li b{color:var(--text-0);}
+.rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:14px;}
+.rules-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px;}
+@media (max-width:640px){.rules-grid{grid-template-columns:1fr;}}
+.rule-card{display:flex; gap:12px; padding:14px 16px; border-radius:var(--radius-sm); background:var(--surface-hover); border:1px solid var(--line-soft);}
+.rule-card-icon{
+  flex:0 0 30px; width:30px; height:30px; border-radius:50%; background:var(--violet-soft);
+  color:var(--violet); display:flex; align-items:center; justify-content:center;
+}
+.rule-card-icon svg{width:15px; height:15px;}
+.rule-card b{display:block; font-size:13.5px; color:var(--text-0); line-height:1.35;}
+.rule-card p{margin-top:3px; font-size:12.5px; color:var(--text-2); line-height:1.5;}
 
 .rules-compare-toggle,.mini-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
 .rules-compare-toggle summary,.mini-toggle summary{
@@ -940,15 +952,57 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
       </summary>
       <div class="rules-general">
         <span class="rules-general-label">General terms — apply across every service &amp; package</span>
-        <ul>
-          <li><b>Minimum order value is ₹10,000</b> — mix and match any services/tiers to reach it; the calculator's final amount reflects your full order.</li>
-          <li><b>Turnaround shown for each package is per single creative</b> — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.</li>
-          <li><b>Your turnaround timeline begins once we've received everything we need</b> — all required assets and details, not your payment date.</li>
-          <li><b>New concepts, major creative rework, and any additions beyond what's included</b> — extra dimensions, formats, slides, or aspect ratios — sit outside package scope across every service, and are quoted separately or as a new order.</li>
-          <li><b>AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted</b> for platform policy or technical feasibility — we always aim for the closest match to your brief.</li>
-          <li><b>GST (18%) is calculated automatically in the calculator</b>, on the order total after any discount. Prices shown elsewhere on the page are base rates, before GST.</li>
-          <li><b>A single discount applies to the whole order</b>, not to each creative type individually.</li>
-        </ul>
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="7" cy="7" r="1"></circle></svg></div>
+            <div>
+              <b>₹10,000 minimum order</b>
+              <p>Mix and match any services or tiers to reach it — the calculator shows your full order total.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
+            <div>
+              <b>Turnaround is per creative</b>
+              <p>Bulk orders scale with quantity, creative type, tier, and complexity — not the single-creative number shown.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+            <div>
+              <b>Clock starts on handoff</b>
+              <p>Once we've received everything we need — assets and details — not your payment date.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+            <div>
+              <b>New concepts = new quote</b>
+              <p>Major creative rework or extras beyond what's included — new dimensions, formats, slides — are quoted separately.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
+            <div>
+              <b>AI output can vary slightly</b>
+              <p>Direction may shift a touch for platform policy or technical feasibility — we always match your brief as closely as possible.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg></div>
+            <div>
+              <b>GST added at checkout</b>
+              <p>18% on the order total after any discount, calculated automatically. Prices elsewhere on the page are pre-GST.</p>
+            </div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
+            <div>
+              <b>One discount, whole order</b>
+              <p>Applies to the combined total, not to each creative type individually.</p>
+            </div>
+          </div>
+        </div>
       </div>
       <details class="rules-compare-toggle" id="rulesCompareToggle">
         <summary>Compare all 4 AI Reel tiers at a glance</summary>
