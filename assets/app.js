@@ -541,22 +541,22 @@
           const name = item.d.name;
           const facts = keyFacts(item.d)
             .slice(0, 2)
-            .map(([l, v]) => `<span>${l}: ${v}</span>`)
-            .join("");
+            .map(([l, v]) => `${l}: ${v}`)
+            .join("   ");
           return `<div class="cart-item" data-id="${item.id}">
-            <div class="cart-item-row">
+            <div class="cart-item-info">
               <div class="cart-item-name">${name}</div>
-              <div class="cart-item-qty">
-                <button type="button" class="ci-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
-                <span>${item.qty}</span>
-                <button type="button" class="ci-qty-btn" data-action="inc" aria-label="Increase quantity">+</button>
-              </div>
-              <div class="cart-item-price">${fmtINR(item.lineSubtotal)}</div>
-              <div class="cart-item-actions">
-                <button type="button" class="ci-remove" data-action="remove" title="Remove" aria-label="Remove">✕</button>
-              </div>
+              <div class="cart-item-facts">${facts}</div>
             </div>
-            <div class="cart-item-facts">${facts}</div>
+            <div class="cart-item-qty">
+              <button type="button" class="ci-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
+              <span>${item.qty}</span>
+              <button type="button" class="ci-qty-btn" data-action="inc" aria-label="Increase quantity">+</button>
+            </div>
+            <div class="cart-item-price">${fmtINR(item.lineSubtotal)}</div>
+            <div class="cart-item-actions">
+              <button type="button" class="ci-remove" data-action="remove" title="Remove" aria-label="Remove">✕</button>
+            </div>
           </div>`;
         })
         .join("");
