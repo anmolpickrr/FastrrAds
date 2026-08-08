@@ -625,25 +625,17 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-panel-chevron{margin-left:auto; color:var(--text-2); transition:transform .25s ease;}
 .rules-panel[open] .rules-panel-chevron{transform:rotate(180deg);}
 
-/* Each fact gets a short bold headline plus one plain-language line
-   below it, instead of a single dense sentence chaining the two
-   together after an em-dash — the headline alone should be scannable
-   in a first pass, with the detail line there only if you need it. A
-   2-column card grid (1 column on narrow screens) keeps each fact its
-   own visually separate chunk rather than one long list bleeding
-   together. */
+/* Plain single-column list, no card boxes/backgrounds/icon badges —
+   just a bold lead-in a few words long so the point is scannable,
+   running straight into one short plain-text sentence after it. Thin
+   row dividers are the only structure, matching how the rest of the
+   page's own lists (e.g. .scope-list) are built rather than
+   introducing a separate "designed" component for this panel. */
 .rules-general{margin-top:20px;}
-.rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:14px;}
-.rules-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px;}
-@media (max-width:640px){.rules-grid{grid-template-columns:1fr;}}
-.rule-card{display:flex; gap:12px; padding:14px 16px; border-radius:var(--radius-sm); background:var(--surface-hover); border:1px solid var(--line-soft);}
-.rule-card-icon{
-  flex:0 0 30px; width:30px; height:30px; border-radius:50%; background:var(--violet-soft);
-  color:var(--violet); display:flex; align-items:center; justify-content:center;
-}
-.rule-card-icon svg{width:15px; height:15px;}
-.rule-card b{display:block; font-size:13.5px; color:var(--text-0); line-height:1.35;}
-.rule-card p{margin-top:3px; font-size:12.5px; color:var(--text-2); line-height:1.5;}
+.rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:8px;}
+.rules-list li{padding:11px 0; border-bottom:1px solid var(--line-soft); font-size:13.5px; color:var(--text-1); line-height:1.55;}
+.rules-list li:last-child{border-bottom:none; padding-bottom:0;}
+.rules-list li b{color:var(--text-0);}
 
 .rules-compare-toggle,.mini-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
 .rules-compare-toggle summary,.mini-toggle summary{
@@ -714,27 +706,44 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .cart-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
 .cart-empty p{font-size:12.5px; line-height:1.5; max-width:260px;}
 
-.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
+/* align-items:start (not center) is deliberate: cart-item-facts can wrap
+   to one or two lines depending on the item, which changes that row's
+   total height. Centering against the row's full height then put the
+   qty/price/remove controls in a different vertical spot per item —
+   top-aligning everything to the row, with a small nudge on the
+   controls to line up with the name text specifically, keeps their
+   position consistent regardless of how many fact lines follow. */
+.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:start; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
 .cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
 .cart-item-facts{margin-top:4px; font-size:11.5px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:4px 8px;}
-.cart-item-qty{display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
+.cart-item-qty{display:flex; align-items:center; gap:8px; margin-top:1px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
 .ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
 .ci-qty-btn:hover{background:var(--surface-hover); color:var(--text-0);}
 .cart-item-qty span{min-width:14px; text-align:center;}
-.cart-item-price{font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap;}
-.cart-item-actions{display:flex; gap:4px;}
-.ci-edit,.ci-remove{width:28px; height:28px; border-radius:50%; border:1px solid transparent; background:none; color:var(--text-2); font-size:13px; transition:background .2s ease, color .2s ease, border-color .2s ease;}
-.ci-edit:hover{background:var(--violet-soft); color:var(--violet); border-color:var(--line-soft);}
+.cart-item-price{margin-top:5px; font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap;}
+.cart-item-actions{display:flex; gap:4px; margin-top:-2px;}
+.ci-remove{width:28px; height:28px; border-radius:50%; border:1px solid transparent; background:none; color:var(--text-2); font-size:13px; transition:background .2s ease, color .2s ease, border-color .2s ease;}
 .ci-remove:hover{background:rgba(224,130,126,0.14); color:var(--danger); border-color:var(--line-soft);}
 @media (max-width:640px){
   .cart-item{grid-template-columns:1fr; row-gap:10px;}
-  .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start;}
+  .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start; margin-top:0;}
   .cart-item-actions{margin-top:-4px;}
 }
 
 .order-tat-note{margin:0; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
 .order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:12px;}
+.order-summary .field-row label{display:flex; align-items:center; gap:8px;}
+/* Quiet by default — a small teal "Applied" chip plus a soft tint on
+   the discount input and its line in the summary, shown only once a
+   discount is actually entered. Kept inside the existing row bounds
+   (no overlap with subtotal/GST/total above or below) so it reads as
+   this one line being highlighted, not a new element being inserted. */
+.discount-badge{display:none; padding:2px 7px; border-radius:100px; background:var(--teal-soft); color:var(--teal); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
+#discountFieldRow.is-active .discount-badge{display:inline-block;}
+#discountFieldRow.is-active .text-input{border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-soft);}
+#discountRow.is-active{background:var(--teal-soft); margin:0 -14px; padding:10px 14px; border-radius:8px; border-bottom-color:transparent;}
+#discountRow.is-active b{color:var(--teal);}
 
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
@@ -952,57 +961,15 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
       </summary>
       <div class="rules-general">
         <span class="rules-general-label">General terms — apply across every service &amp; package</span>
-        <div class="rules-grid">
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41L13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="7" cy="7" r="1"></circle></svg></div>
-            <div>
-              <b>₹10,000 minimum order</b>
-              <p>Mix and match any services or tiers to reach it — the calculator shows your full order total.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></div>
-            <div>
-              <b>Turnaround is per creative</b>
-              <p>Bulk orders scale with quantity, creative type, tier, and complexity — not the single-creative number shown.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-            <div>
-              <b>Clock starts on handoff</b>
-              <p>Once we've received everything we need — assets and details — not your payment date.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
-            <div>
-              <b>New concepts = new quote</b>
-              <p>Major creative rework or extras beyond what's included — new dimensions, formats, slides — are quoted separately.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
-            <div>
-              <b>AI output can vary slightly</b>
-              <p>Direction may shift a touch for platform policy or technical feasibility — we always match your brief as closely as possible.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg></div>
-            <div>
-              <b>GST added at checkout</b>
-              <p>18% on the order total after any discount, calculated automatically. Prices elsewhere on the page are pre-GST.</p>
-            </div>
-          </div>
-          <div class="rule-card">
-            <div class="rule-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></div>
-            <div>
-              <b>One discount, whole order</b>
-              <p>Applies to the combined total, not to each creative type individually.</p>
-            </div>
-          </div>
-        </div>
+        <ul class="rules-list">
+          <li><b>₹10,000 minimum order.</b> Mix and match any services or tiers to reach it — the calculator shows your full order total.</li>
+          <li><b>Turnaround is per creative.</b> Bulk orders scale with quantity, creative type, tier, and complexity — not the single-creative number shown.</li>
+          <li><b>Clock starts on handoff,</b> once we've received everything we need — assets and details — not your payment date.</li>
+          <li><b>New concepts mean a new quote.</b> Major creative rework or extras beyond what's included are quoted separately.</li>
+          <li><b>AI output can vary slightly</b> between runs — we always match your brief as closely as possible.</li>
+          <li><b>GST is added at checkout:</b> 18% on the order total after any discount. Prices elsewhere on the page are pre-GST.</li>
+          <li><b>One discount, whole order</b> — it applies to the combined total, not to each creative type individually.</li>
+        </ul>
       </div>
       <details class="rules-compare-toggle" id="rulesCompareToggle">
         <summary>Compare all 4 AI Reel tiers at a glance</summary>
@@ -1096,12 +1063,12 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         </details>
 
         <div class="order-summary">
-          <div class="field-row">
-            <label for="qDiscountInput">Order Discount (%)</label>
+          <div class="field-row" id="discountFieldRow">
+            <label for="qDiscountInput">Order Discount (%)<span class="discount-badge" id="discountBadge">Applied</span></label>
             <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
           </div>
           <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
-          <div class="summary-row"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+          <div class="summary-row" id="discountRow"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
           <div class="summary-row"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
         </div>
@@ -1216,7 +1183,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260807-6"></script>
-<script src="assets/app.js?v=20260807-6"></script>
+<script src="assets/creative-data.js?v=20260808-1"></script>
+<script src="assets/app.js?v=20260808-1"></script>
 </body>
 </html>
