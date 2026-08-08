@@ -706,28 +706,28 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .cart-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
 .cart-empty p{font-size:12.5px; line-height:1.5; max-width:260px;}
 
-/* align-items:start (not center) is deliberate: cart-item-facts can wrap
-   to one or two lines depending on the item, which changes that row's
-   total height. Centering against the row's full height then put the
-   qty/price/remove controls in a different vertical spot per item —
-   top-aligning everything to the row, with a small nudge on the
-   controls to line up with the name text specifically, keeps their
-   position consistent regardless of how many fact lines follow. */
-.cart-item{display:grid; grid-template-columns:1fr auto auto auto; align-items:start; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
-.cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
-.cart-item-facts{margin-top:4px; font-size:11.5px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:4px 8px;}
-.cart-item-qty{display:flex; align-items:center; gap:8px; margin-top:1px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
+/* The name sits in the same flex row as qty/price/remove, so they're
+   vertically centered against EACH OTHER directly — not against the
+   row's total height, which is what caused the previous drift (the
+   variable-height facts line, wrapping to 1 or 2 lines depending on
+   the item, was part of that height). Facts now live on their own
+   full-width line below the row, where their height can vary freely
+   without ever touching the controls' alignment above them. */
+.cart-item{padding:13px 0; border-bottom:1px solid var(--line-soft);}
+.cart-item-row{display:flex; align-items:center; gap:16px;}
+.cart-item-name{flex:1 1 auto; min-width:0; font-weight:700; font-size:14px; letter-spacing:-0.005em;}
+.cart-item-facts{margin-top:6px; font-size:11.5px; color:var(--text-2); display:flex; flex-wrap:wrap; gap:4px 8px;}
+.cart-item-qty{flex:0 0 auto; display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:13px; font-weight:600;}
 .ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
 .ci-qty-btn:hover{background:var(--surface-hover); color:var(--text-0);}
 .cart-item-qty span{min-width:14px; text-align:center;}
-.cart-item-price{margin-top:5px; font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap;}
-.cart-item-actions{display:flex; gap:4px; margin-top:-2px;}
+.cart-item-price{flex:0 0 auto; font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap;}
+.cart-item-actions{flex:0 0 auto; display:flex; gap:4px;}
 .ci-remove{width:28px; height:28px; border-radius:50%; border:1px solid transparent; background:none; color:var(--text-2); font-size:13px; transition:background .2s ease, color .2s ease, border-color .2s ease;}
 .ci-remove:hover{background:rgba(224,130,126,0.14); color:var(--danger); border-color:var(--line-soft);}
 @media (max-width:640px){
-  .cart-item{grid-template-columns:1fr; row-gap:10px;}
-  .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start; margin-top:0;}
-  .cart-item-actions{margin-top:-4px;}
+  .cart-item-row{flex-wrap:wrap; row-gap:10px;}
+  .cart-item-name{flex:1 1 100%;}
 }
 
 .order-tat-note{margin:0; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
@@ -1183,7 +1183,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260808-1"></script>
-<script src="assets/app.js?v=20260808-1"></script>
+<script src="assets/creative-data.js?v=20260808-2"></script>
+<script src="assets/app.js?v=20260808-2"></script>
 </body>
 </html>
