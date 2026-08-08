@@ -362,21 +362,6 @@
     render();
   }
 
-  // Loads a cart line back into the builder for reconfiguring (service,
-  // tier, qty) and removes it from the cart — re-adding is then just
-  // clicking "Add to Order" again, so editing a tier doesn't need its
-  // own inline tier-picker duplicated on every row.
-  function editCartItem(id) {
-    const item = state.cart.find((i) => i.id === id);
-    if (!item) return;
-    state.service = item.service;
-    if (item.tier) state.tier = item.tier;
-    state.qty = item.qty;
-    state.cart = state.cart.filter((i) => i.id !== id);
-    render();
-    switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
-    document.getElementById("qServiceSelect").scrollIntoView({ behavior: "smooth", block: "center" });
-  }
 
   /* ----------------------------------------------------------
      3. RENDER: SERVICE SELECTOR + SCOPE PANEL
@@ -509,9 +494,8 @@
     const isReel = state.service === "reels";
 
     // Keep the <select> itself in sync with state too — state.service can
-    // change from outside this control (e.g. editCartItem() re-loading a
-    // cart line for editing), and previously nothing here ever wrote back
-    // to qServiceSelect.value, so the dropdown could silently show a
+    // change from outside this control, and previously nothing here ever
+    // wrote back to qServiceSelect.value, so the dropdown could silently show a
     // different service than the one actually active/priced below it.
     const qServiceSelect = document.getElementById("qServiceSelect");
     if (qServiceSelect.value !== state.service) qServiceSelect.value = state.service;
@@ -571,7 +555,6 @@
             </div>
             <div class="cart-item-price">${fmtINR(item.lineSubtotal)}</div>
             <div class="cart-item-actions">
-              <button type="button" class="ci-edit" data-action="edit" title="Edit" aria-label="Edit">✎</button>
               <button type="button" class="ci-remove" data-action="remove" title="Remove" aria-label="Remove">✕</button>
             </div>
           </div>`;
@@ -584,6 +567,10 @@
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
     document.getElementById("qGstAmt").textContent = "+ " + fmtINR(cart.gstAmt);
     document.getElementById("qFinal").textContent = fmtINR(cart.final);
+
+    const discountActive = state.discountPct > 0 && cart.discountAmt > 0;
+    document.getElementById("discountFieldRow").classList.toggle("is-active", discountActive);
+    document.getElementById("discountRow").classList.toggle("is-active", discountActive);
   }
 
   /* ----------------------------------------------------------
@@ -1082,7 +1069,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       if (action === "inc") changeCartQty(id, 1);
       else if (action === "dec") changeCartQty(id, -1);
       else if (action === "remove") removeCartItem(id);
-      else if (action === "edit") editCartItem(id);
     });
   });
 
