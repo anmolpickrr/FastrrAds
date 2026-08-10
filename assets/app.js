@@ -1515,6 +1515,22 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      applied to an inner wrapper element so it never fights the
      CSS entrance animation running on the outer tile.
   ---------------------------------------------------------- */
+  /* ----------------------------------------------------------
+     9a. BRAND LOGOS STRIP — hidden entirely while BRAND_LOGOS is
+     empty (the common case until real logos are uploaded and wired
+     in), so there's never a broken-looking empty trust-bar on the
+     live site.
+  ---------------------------------------------------------- */
+  (function buildBrandLogos() {
+    const strip = document.getElementById("brandLogosStrip");
+    const track = document.getElementById("brandLogosTrack");
+    if (!strip || !track || !Array.isArray(BRAND_LOGOS) || !BRAND_LOGOS.length) return;
+    track.innerHTML = BRAND_LOGOS.map(
+      (b) => `<img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy">`
+    ).join("");
+    strip.style.display = "";
+  })();
+
   (function buildHeroOrbit() {
     const orbit = document.getElementById("heroOrbit");
     if (!orbit) return;

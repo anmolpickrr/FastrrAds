@@ -26,6 +26,12 @@ const CAROUSELS = [
     "slides": ["assets/carousel-creatives/carousel-03/S01 - How to use -1080X1080.jpg", "assets/carousel-creatives/carousel-03/S02 - How to use -1080X1080.jpg", "assets/carousel-creatives/carousel-03/S03 - How to use -1080X1080.jpg", "assets/carousel-creatives/carousel-03/S04 - How to use -1080X1080.jpg", "assets/carousel-creatives/carousel-03/S05 - How to use -1080X1080.jpg", "assets/carousel-creatives/carousel-03/S06 - How to use -1080X1080.jpg"]
   }
 ];
+
+// One entry per brand — used in the "Trusted by" logo strip near the
+// top of the page. Empty until real logos are uploaded to
+// assets/brand-logos/ and wired in here (see the README in that folder);
+// the strip hides itself entirely while this stays empty.
+const BRAND_LOGOS = [];
 const CATS = {
   reels:     {label:"AI Reels",               empty:"More AI reel samples are on the way — check back soon."},
   catalogue: {label:"360° Catalogue Videos",   empty:"More 360° catalogue samples are on the way — check back soon."},
