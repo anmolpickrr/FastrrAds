@@ -360,6 +360,26 @@ footer .brand-logo{height:24px;}
 .marquee-track span{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
+/* Static (no animation/motion) — this sits right below a hero that's
+   already doing a lot visually, so a quiet, still trust-bar reads as
+   more confident than another moving element competing for attention.
+   Every logo is forced to the exact same box (fixed height, capped
+   width, object-fit:contain) so uploaded files display consistently
+   regardless of their own aspect ratio or built-in padding, and the
+   grayscale+opacity filter is what makes this a "single-color"
+   treatment — full-color brand marks would fight each other and the
+   page's own violet/teal accents; muting them into one neutral tone
+   is what lets a dozen unrelated brand marks sit together quietly. */
+.brand-logos-strip{padding:36px 0; border-bottom:1px solid var(--line-soft);}
+.brand-logos-label{display:block; text-align:center; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2); margin-bottom:22px;}
+.brand-logos-track{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:36px 48px;}
+.brand-logos-track img{
+  height:28px; width:auto; max-width:120px; object-fit:contain;
+  filter:grayscale(1) opacity(0.55); transition:filter .25s ease;
+}
+.brand-logos-track img:hover{filter:grayscale(1) opacity(0.9);}
+@media (prefers-reduced-motion:reduce){.brand-logos-track img{transition:none;}}
+
 /* ---------- SECTION HEADER ---------- */
 .section{padding:72px 0; position:relative;}
 .section-head{max-width:640px; margin-bottom:40px;}
@@ -878,6 +898,16 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   </div>
 </section>
 
+<!-- Hidden by default (inline style) so nothing shows if JS fails to load
+     before BRAND_LOGOS is populated; app.js unhides it once there's at
+     least one real logo to display. -->
+<div class="brand-logos-strip" id="brandLogosStrip" style="display:none;">
+  <div class="wrap">
+    <span class="brand-logos-label">Trusted by brands we've worked with</span>
+    <div class="brand-logos-track" id="brandLogosTrack"></div>
+  </div>
+</div>
+
 <section class="section" id="showcase">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
@@ -1190,7 +1220,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260808-3"></script>
-<script src="assets/app.js?v=20260808-3"></script>
+<script src="assets/creative-data.js?v=20260808-4"></script>
+<script src="assets/app.js?v=20260808-4"></script>
 </body>
 </html>
