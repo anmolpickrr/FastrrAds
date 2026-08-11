@@ -579,13 +579,9 @@
 
     document.getElementById("qDiscountInput").value = state.discountValue;
     document.getElementById("qDiscountInput").max = cart.discountType === "pct" ? 100 : "";
-    document.querySelectorAll("#discountTypeToggle .seg-btn").forEach((btn) => {
+    document.querySelectorAll("#discountTypeToggle .unit-toggle-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.type === cart.discountType);
     });
-    document.getElementById("discountUnitAdorn").textContent = cart.discountType === "pct" ? "%" : "₹";
-    const discountUnitWrap = document.getElementById("discountUnitWrap");
-    discountUnitWrap.classList.toggle("unit-suffix", cart.discountType === "pct");
-    discountUnitWrap.classList.toggle("unit-prefix", cart.discountType !== "pct");
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
     document.getElementById("qDiscountLabel").textContent = discountLabel(cart);
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
@@ -593,14 +589,10 @@
     document.getElementById("qFinal").textContent = fmtINR(cart.final);
 
     const discountActive = cart.discountAmt > 0;
-    document.getElementById("discountFieldRow").classList.toggle("is-active", discountActive);
     document.getElementById("discountRow").classList.toggle("is-active", discountActive);
 
     document.getElementById("qGstToggle").checked = cart.gstEnabled;
     document.getElementById("gstRow").classList.toggle("is-muted", !cart.gstEnabled);
-    document.getElementById("gstHint").textContent = cart.gstEnabled
-      ? "Included — for GST invoices"
-      : "Excluded — for non-GST invoices";
   }
 
   /* ----------------------------------------------------------
@@ -1078,7 +1070,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   });
 
   document.getElementById("discountTypeToggle").addEventListener("click", (e) => {
-    const btn = e.target.closest(".seg-btn");
+    const btn = e.target.closest(".unit-toggle-btn");
     if (!btn || btn.dataset.type === state.discountType) return;
     state.discountType = btn.dataset.type;
     state.discountValue = 0; // a number under one type rarely means the same thing under the other
