@@ -1523,11 +1523,21 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   ---------------------------------------------------------- */
   (function buildBrandLogos() {
     const strip = document.getElementById("brandLogosStrip");
-    const track = document.getElementById("brandLogosTrack");
-    if (!strip || !track || !Array.isArray(BRAND_LOGOS) || !BRAND_LOGOS.length) return;
-    track.innerHTML = BRAND_LOGOS.map(
-      (b) => `<div class="brand-logo-chip"><img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy"></div>`
-    ).join("");
+    const trackA = document.getElementById("brandLogosTrackA");
+    const trackB = document.getElementById("brandLogosTrackB");
+    if (!strip || !trackA || !trackB || !Array.isArray(BRAND_LOGOS) || !BRAND_LOGOS.length) return;
+
+    const mid = Math.ceil(BRAND_LOGOS.length / 2);
+    const rows = [BRAND_LOGOS.slice(0, mid), BRAND_LOGOS.slice(mid)];
+    [trackA, trackB].forEach((track, i) => {
+      const row = rows[i].length ? rows[i] : BRAND_LOGOS;
+      // Each row's logos are duplicated so the marquee can loop
+      // seamlessly at translateX(-50%) with no visible jump/reset.
+      const imgs = row.map(
+        (b) => `<img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy">`
+      ).join("");
+      track.innerHTML = imgs + imgs;
+    });
     strip.style.display = "";
   })();
 

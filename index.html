@@ -360,34 +360,35 @@ footer .brand-logo{height:24px;}
 .marquee-track span{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-/* Static (no animation/motion) — this sits right below a hero that's
-   already doing a lot visually, so a quiet, still trust-bar reads as
-   more confident than another moving element competing for attention.
-   Every logo is forced to the exact same box (fixed height, capped
-   width, object-fit:contain) so uploaded files display consistently
-   regardless of their own aspect ratio or built-in padding, and the
-   grayscale+opacity filter is what makes this a "single-color"
-   treatment — full-color brand marks would fight each other and the
-   page's own violet/teal accents; muting them into one neutral tone
-   is what lets a dozen unrelated brand marks sit together quietly. */
-.brand-logos-strip{padding:36px 0; border-bottom:1px solid var(--line-soft);}
-.brand-logos-label{display:block; text-align:center; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2); margin-bottom:22px;}
-.brand-logos-track{display:flex; flex-wrap:wrap; align-items:stretch; justify-content:center; gap:14px;}
-/* Fixed-size white card behind every mark — several source logos are dark
-   line art on a transparent background, which vanishes on the dark theme
-   without a guaranteed-light backdrop. The card also normalizes wildly
-   different source aspect ratios into one consistent footprint. */
-.brand-logo-chip{
-  width:132px; height:64px; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,0.94); border:1px solid var(--line-soft); border-radius:10px;
-  transition:background .25s ease, border-color .25s ease;
+/* Fixed dark/monochrome treatment on purpose — independent of the site's
+   own light/dark toggle. Two rows of logos drift past each other (one each
+   direction) at a slow, quiet pace, masked to a soft fade at both edges so
+   the strip reads as an infinite belt rather than a hard-clipped marquee.
+   grayscale+invert is what turns every source file — regardless of its own
+   colors or baked-in white background — into one consistent light mark on
+   the dark strip: white backgrounds invert to near-black (and vanish into
+   the strip), while dark line art inverts to a light, legible tone. */
+.brand-logos-strip{
+  position:relative; z-index:2; overflow:hidden; padding:40px 0;
+  background:linear-gradient(180deg,#0a0b10,#111319 55%,#0a0b10);
+  border-top:1px solid rgba(255,255,255,0.08); border-bottom:1px solid rgba(255,255,255,0.08);
 }
+.brand-logos-label{display:block; text-align:center; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,0.4); margin-bottom:26px;}
+.brand-logos-rows{
+  display:flex; flex-direction:column; gap:24px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+}
+.brand-logos-row{overflow:hidden; width:100%;}
+.brand-logos-track{display:flex; align-items:center; gap:52px; width:max-content; animation:brandMarquee 42s linear infinite;}
+.brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:48s;}
+@keyframes brandMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 .brand-logos-track img{
-  max-height:32px; max-width:96px; width:auto; height:auto; object-fit:contain;
-  filter:grayscale(1) opacity(0.6); transition:filter .25s ease;
+  height:28px; width:auto; max-width:108px; object-fit:contain; flex:0 0 auto;
+  filter:grayscale(1) invert(1) opacity(.7); transition:filter .2s ease;
 }
-.brand-logo-chip:hover img{filter:grayscale(1) opacity(0.9);}
-@media (prefers-reduced-motion:reduce){.brand-logos-track img, .brand-logo-chip{transition:none;}}
+.brand-logos-track img:hover{filter:grayscale(1) invert(1) opacity(1);}
+@media (prefers-reduced-motion:reduce){.brand-logos-track{animation:none;}}
 
 /* ---------- SECTION HEADER ---------- */
 .section{padding:72px 0; position:relative;}
@@ -913,7 +914,14 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 <div class="brand-logos-strip" id="brandLogosStrip" style="display:none;">
   <div class="wrap">
     <span class="brand-logos-label">Trusted by brands we've worked with</span>
-    <div class="brand-logos-track" id="brandLogosTrack"></div>
+    <div class="brand-logos-rows">
+      <div class="brand-logos-row">
+        <div class="brand-logos-track" id="brandLogosTrackA"></div>
+      </div>
+      <div class="brand-logos-row reverse">
+        <div class="brand-logos-track" id="brandLogosTrackB"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1229,7 +1237,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-1"></script>
-<script src="assets/app.js?v=20260811-1"></script>
+<script src="assets/creative-data.js?v=20260811-2"></script>
+<script src="assets/app.js?v=20260811-2"></script>
 </body>
 </html>
