@@ -751,7 +751,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
       let logoDataUrl = null;
       try {
-        logoDataUrl = await loadLogoThumbnail("assets/logo/fastrr-ads-black.png", 500);
+        logoDataUrl = await loadLogoThumbnail("assets/logo/fastrr-ads-black.png?v=20260811-9", 500);
       } catch (e) {
         logoDataUrl = null;
       }
