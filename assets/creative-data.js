@@ -28,10 +28,41 @@ const CAROUSELS = [
 ];
 
 // One entry per brand — used in the "Trusted by" logo strip near the
-// top of the page. Empty until real logos are uploaded to
-// assets/brand-logos/ and wired in here (see the README in that folder);
-// the strip hides itself entirely while this stays empty.
-const BRAND_LOGOS = [];
+// top of the page.
+const BRAND_LOGOS = [
+  { "name": "Nooky", "src": "assets/brand-logos/nooky.png" },
+  { "name": "Juvia Jewellery", "src": "assets/brand-logos/juvia-jewellery.png" },
+  { "name": "Aarogya Nutri Mix", "src": "assets/brand-logos/aarogya-nutri-mix.png" },
+  { "name": "Limited Uniq", "src": "assets/brand-logos/limited-uniq.png" },
+  { "name": "Cink", "src": "assets/brand-logos/cink.jpg" },
+  { "name": "Deyga", "src": "assets/brand-logos/deyga.png" },
+  { "name": "Eye Sutra", "src": "assets/brand-logos/eye-sutra.png" },
+  { "name": "Easify", "src": "assets/brand-logos/easify.png" },
+  { "name": "EasyPick", "src": "assets/brand-logos/easypick.png" },
+  { "name": "Erweit", "src": "assets/brand-logos/erweit.png" },
+  { "name": "Estailo", "src": "assets/brand-logos/estailo.png" },
+  { "name": "Shesha Ayurveda", "src": "assets/brand-logos/shesha-ayurveda.png" },
+  { "name": "Goodomen", "src": "assets/brand-logos/goodomen.png" },
+  { "name": "S Health Stores", "src": "assets/brand-logos/health-stores.jpg" },
+  { "name": "Kamour", "src": "assets/brand-logos/kamour.png" },
+  { "name": "Rias", "src": "assets/brand-logos/rias.jpg" },
+  { "name": "Makezmia", "src": "assets/brand-logos/makezmia.jpg" },
+  { "name": "Dulha Ghar", "src": "assets/brand-logos/dulha-ghar.png" },
+  { "name": "Mindesa", "src": "assets/brand-logos/mindesa.png" },
+  { "name": "Reju Ayur", "src": "assets/brand-logos/reju-ayur.jpg" },
+  { "name": "TripT", "src": "assets/brand-logos/tript.png" },
+  { "name": "UNRLL", "src": "assets/brand-logos/unrll.jpg" },
+  { "name": "Label by Anuja", "src": "assets/brand-logos/label-by-anuja.jpg" },
+  { "name": "Veera Ki Rasi", "src": "assets/brand-logos/veera-ki-rasi.jpg" },
+  { "name": "Cheekee", "src": "assets/brand-logos/cheekee.png" },
+  { "name": "Kartelo India", "src": "assets/brand-logos/kartelo-india.png" },
+  { "name": "Diyaa Pure", "src": "assets/brand-logos/diyaa-pure.png" },
+  { "name": "Mysore Pattu Saree", "src": "assets/brand-logos/mysore-pattu-saree.png" },
+  { "name": "Kicky & Perky", "src": "assets/brand-logos/kicky-and-perky.png" },
+  { "name": "Avimee Herbal", "src": "assets/brand-logos/avimee-herbal.png" },
+  { "name": "Premvastra", "src": "assets/brand-logos/premvastra.png" },
+  { "name": "Krafted Millets", "src": "assets/brand-logos/krafted-millets.svg" }
+];
 const CATS = {
   reels:     {label:"AI Reels",               empty:"More AI reel samples are on the way — check back soon."},
   catalogue: {label:"360° Catalogue Videos",   empty:"More 360° catalogue samples are on the way — check back soon."},

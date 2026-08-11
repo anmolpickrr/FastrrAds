@@ -372,13 +372,22 @@ footer .brand-logo{height:24px;}
    is what lets a dozen unrelated brand marks sit together quietly. */
 .brand-logos-strip{padding:36px 0; border-bottom:1px solid var(--line-soft);}
 .brand-logos-label{display:block; text-align:center; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2); margin-bottom:22px;}
-.brand-logos-track{display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:36px 48px;}
-.brand-logos-track img{
-  height:28px; width:auto; max-width:120px; object-fit:contain;
-  filter:grayscale(1) opacity(0.55); transition:filter .25s ease;
+.brand-logos-track{display:flex; flex-wrap:wrap; align-items:stretch; justify-content:center; gap:14px;}
+/* Fixed-size white card behind every mark — several source logos are dark
+   line art on a transparent background, which vanishes on the dark theme
+   without a guaranteed-light backdrop. The card also normalizes wildly
+   different source aspect ratios into one consistent footprint. */
+.brand-logo-chip{
+  width:132px; height:64px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.94); border:1px solid var(--line-soft); border-radius:10px;
+  transition:background .25s ease, border-color .25s ease;
 }
-.brand-logos-track img:hover{filter:grayscale(1) opacity(0.9);}
-@media (prefers-reduced-motion:reduce){.brand-logos-track img{transition:none;}}
+.brand-logos-track img{
+  max-height:32px; max-width:96px; width:auto; height:auto; object-fit:contain;
+  filter:grayscale(1) opacity(0.6); transition:filter .25s ease;
+}
+.brand-logo-chip:hover img{filter:grayscale(1) opacity(0.9);}
+@media (prefers-reduced-motion:reduce){.brand-logos-track img, .brand-logo-chip{transition:none;}}
 
 /* ---------- SECTION HEADER ---------- */
 .section{padding:72px 0; position:relative;}
@@ -1220,7 +1229,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260808-4"></script>
-<script src="assets/app.js?v=20260808-4"></script>
+<script src="assets/creative-data.js?v=20260811-1"></script>
+<script src="assets/app.js?v=20260811-1"></script>
 </body>
 </html>
