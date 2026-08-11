@@ -356,7 +356,7 @@ footer .brand-logo{height:24px;}
 }
 
 .marquee-strip{position:relative; z-index:2; overflow:hidden; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); padding:14px 0;}
-.marquee-track{display:flex; gap:44px; white-space:nowrap; animation:marquee 26s linear infinite; width:max-content;}
+.marquee-track{display:flex; gap:44px; white-space:nowrap; animation:marquee 70s linear infinite; width:max-content;}
 .marquee-track span{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
@@ -371,18 +371,27 @@ footer .brand-logo{height:24px;}
    its original colors — filter just flips that one tone light/dark to
    match whichever theme is active. */
 .brand-logos-strip{
-  position:relative; z-index:2; overflow:hidden; padding:40px 0;
+  position:relative; z-index:2; overflow:hidden; padding:60px 0;
   border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
 }
-.brand-logos-label{display:block; text-align:center; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2); margin-bottom:26px;}
+/* A quiet rule flanking the label on both sides — the same minimal
+   "as seen in" convention used on most trust-bar strips — instead of
+   bare centered text, so it reads as a deliberate section label rather
+   than a stray caption floating above the logos. */
+.brand-logos-label{
+  display:flex; align-items:center; justify-content:center; gap:18px;
+  font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--text-2); margin-bottom:32px;
+}
+.brand-logos-label::before,.brand-logos-label::after{content:""; flex:1 1 auto; max-width:64px; height:1px; background:var(--line-soft);}
 .brand-logos-rows{
   display:flex; flex-direction:column; gap:22px;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
 }
 .brand-logos-row{overflow:hidden; width:100%;}
-.brand-logos-track{display:flex; align-items:center; gap:52px; width:max-content; animation:brandMarquee 42s linear infinite;}
-.brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:48s;}
+.brand-logos-track{display:flex; align-items:center; gap:52px; width:max-content; animation:brandMarquee 85s linear infinite;}
+.brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:95s;}
 @keyframes brandMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 /* Every mark shares the same rendered HEIGHT (not a fixed box) so visual
    weight stays consistent regardless of source aspect ratio — a square
@@ -992,23 +1001,6 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   </div>
 </section>
 
-<!-- Hidden by default (inline style) so nothing shows if JS fails to load
-     before BRAND_LOGOS is populated; app.js unhides it once there's at
-     least one real logo to display. -->
-<div class="brand-logos-strip" id="brandLogosStrip" style="display:none;">
-  <div class="wrap">
-    <span class="brand-logos-label">Trusted by brands we've worked with</span>
-    <div class="brand-logos-rows">
-      <div class="brand-logos-row">
-        <div class="brand-logos-track" id="brandLogosTrackA"></div>
-      </div>
-      <div class="brand-logos-row reverse">
-        <div class="brand-logos-track" id="brandLogosTrackB"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <section class="section" id="showcase">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
@@ -1031,6 +1023,26 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     </div>
   </div>
 </section>
+
+<!-- Sits after the showcase (not right under the hero's own scrolling
+     marquee) so two moving strips never run back-to-back — the work
+     gallery above gives it a static break first. Hidden by default
+     (inline style) so nothing shows if JS fails to load before
+     BRAND_LOGOS is populated; app.js unhides it once there's at least
+     one real logo to display. -->
+<div class="brand-logos-strip" id="brandLogosStrip" style="display:none;">
+  <div class="wrap">
+    <span class="brand-logos-label">Trusted by brands we've worked with</span>
+    <div class="brand-logos-rows">
+      <div class="brand-logos-row">
+        <div class="brand-logos-track" id="brandLogosTrackA"></div>
+      </div>
+      <div class="brand-logos-row reverse">
+        <div class="brand-logos-track" id="brandLogosTrackB"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="section" id="services" style="padding-top:0;">
   <div class="wrap">
@@ -1337,7 +1349,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-8"></script>
-<script src="assets/app.js?v=20260811-8"></script>
+<script src="assets/creative-data.js?v=20260811-9"></script>
+<script src="assets/app.js?v=20260811-9"></script>
 </body>
 </html>
