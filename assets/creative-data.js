@@ -29,38 +29,42 @@ const CAROUSELS = [
 
 // One entry per brand — used in the "Trusted by" logo strip near the
 // top of the page.
+// sizePct scales an individual logo relative to the shared row height
+// (see .brand-logos-track img in index.html) — omit it for the default
+// 100%. Used to correct marks that otherwise read visually larger or
+// smaller than the rest of the row despite sharing the same box height.
 const BRAND_LOGOS = [
-  { "name": "Nooky", "src": "assets/brand-logos/nooky.png" },
+  { "name": "Nooky", "src": "assets/brand-logos/nooky.png", "sizePct": 85 },
   { "name": "Juvia Jewellery", "src": "assets/brand-logos/juvia-jewellery.png" },
   { "name": "Aarogya Nutri Mix", "src": "assets/brand-logos/aarogya-nutri-mix.png" },
   { "name": "Limited Uniq", "src": "assets/brand-logos/limited-uniq.png" },
-  { "name": "Cink", "src": "assets/brand-logos/cink.png" },
+  { "name": "Cink", "src": "assets/brand-logos/cink.png", "sizePct": 85 },
   { "name": "Deyga", "src": "assets/brand-logos/deyga.png" },
   { "name": "Eye Sutra", "src": "assets/brand-logos/eye-sutra.png" },
   { "name": "Easify", "src": "assets/brand-logos/easify.png" },
-  { "name": "EasyPick", "src": "assets/brand-logos/easypick.png" },
-  { "name": "Erweit", "src": "assets/brand-logos/erweit.png" },
-  { "name": "Estailo", "src": "assets/brand-logos/estailo.png" },
-  { "name": "Shesha Ayurveda", "src": "assets/brand-logos/shesha-ayurveda.png" },
-  { "name": "Goodomen", "src": "assets/brand-logos/goodomen.png" },
-  { "name": "S Health Stores", "src": "assets/brand-logos/health-stores.png" },
+  { "name": "EasyPick", "src": "assets/brand-logos/easypick.png", "sizePct": 85 },
+  { "name": "Erweit", "src": "assets/brand-logos/erweit.png", "sizePct": 85 },
+  { "name": "Estailo", "src": "assets/brand-logos/estailo.png", "sizePct": 85 },
+  { "name": "Shesha Ayurveda", "src": "assets/brand-logos/shesha-ayurveda.png", "sizePct": 110 },
+  { "name": "Goodomen", "src": "assets/brand-logos/goodomen.png", "sizePct": 85 },
+  { "name": "S Health Stores", "src": "assets/brand-logos/health-stores.png", "sizePct": 110 },
   { "name": "Kamour", "src": "assets/brand-logos/kamour.png" },
   { "name": "Rias", "src": "assets/brand-logos/rias.png" },
-  { "name": "Makezmia", "src": "assets/brand-logos/makezmia.png" },
-  { "name": "Dulha Ghar", "src": "assets/brand-logos/dulha-ghar.png" },
+  { "name": "Makezmia", "src": "assets/brand-logos/makezmia.png", "sizePct": 85 },
+  { "name": "Dulha Ghar", "src": "assets/brand-logos/dulha-ghar.png", "sizePct": 110 },
   { "name": "Mindesa", "src": "assets/brand-logos/mindesa.png" },
-  { "name": "Reju Ayur", "src": "assets/brand-logos/reju-ayur.png" },
-  { "name": "TripT", "src": "assets/brand-logos/tript.png" },
-  { "name": "UNRLL", "src": "assets/brand-logos/unrll.png" },
-  { "name": "Label by Anuja", "src": "assets/brand-logos/label-by-anuja.png" },
+  { "name": "Reju Ayur", "src": "assets/brand-logos/reju-ayur.png", "sizePct": 85 },
+  { "name": "TripT", "src": "assets/brand-logos/tript.png", "sizePct": 85 },
+  { "name": "UNRLL", "src": "assets/brand-logos/unrll.png", "sizePct": 85 },
+  { "name": "Label by Anuja", "src": "assets/brand-logos/label-by-anuja.png", "sizePct": 110 },
   { "name": "Cheekee", "src": "assets/brand-logos/cheekee.png" },
   { "name": "Kartelo India", "src": "assets/brand-logos/kartelo-india.png" },
   { "name": "Diyaa Pure", "src": "assets/brand-logos/diyaa-pure.png" },
-  { "name": "Mysore Pattu Saree", "src": "assets/brand-logos/mysore-pattu-saree.png" },
+  { "name": "Mysore Pattu Saree", "src": "assets/brand-logos/mysore-pattu-saree.png", "sizePct": 110 },
   { "name": "Kicky & Perky", "src": "assets/brand-logos/kicky-and-perky.png" },
-  { "name": "Avimee Herbal", "src": "assets/brand-logos/avimee-herbal.png" },
+  { "name": "Avimee Herbal", "src": "assets/brand-logos/avimee-herbal.png", "sizePct": 110 },
   { "name": "Premvastra", "src": "assets/brand-logos/premvastra.png" },
-  { "name": "Krafted Millets", "src": "assets/brand-logos/krafted-millets.svg" }
+  { "name": "Krafted Millets", "src": "assets/brand-logos/krafted-millets.svg", "sizePct": 110 }
 ];
 const CATS = {
   reels:     {label:"AI Reels",               empty:"More AI reel samples are on the way — check back soon."},
