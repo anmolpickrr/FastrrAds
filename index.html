@@ -384,11 +384,15 @@ footer .brand-logo{height:24px;}
 .brand-logos-track{display:flex; align-items:center; gap:48px; width:max-content; animation:brandMarquee 42s linear infinite;}
 .brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:48s;}
 @keyframes brandMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-/* Fixed-footprint box (no background) around every mark so wildly
-   different source aspect ratios all read as the same size on the shelf. */
-.brand-logo-box{width:104px; height:30px; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+/* Every mark shares the same rendered HEIGHT (not a fixed box) so visual
+   weight stays consistent regardless of source aspect ratio — a square
+   badge and a wide wordmark both read at the same size. Capping width
+   too (the previous approach) was what made wide wordmarks shrink far
+   below square/icon marks; letting width follow naturally, with only a
+   generous safety cap for the one extreme-wide outlier, fixes that. */
+.brand-logo-box{height:34px; display:flex; align-items:center; flex:0 0 auto;}
 .brand-logos-track img{
-  max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
+  height:100%; width:auto; max-width:210px; object-fit:contain;
   filter:opacity(.62); transition:filter .2s ease;
 }
 .brand-logos-track img:hover{filter:opacity(.9);}
@@ -783,46 +787,58 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:12px;}
 .order-summary .field-row label{display:flex; align-items:center; gap:8px;}
-/* Quiet by default — a small teal "Applied" chip plus a soft tint on
-   the discount line in the summary, shown only once a discount is
-   actually entered. Kept inside the existing row bounds (no overlap
-   with subtotal/GST/total above or below) so it reads as this one line
-   being highlighted, not a new element being inserted. */
+/* Order Discount + GST — two clearly-bordered "settings" cards stacked
+   in their own group, structurally separate from the read-only
+   Subtotal/Discount/GST/Total rows below. Each card is self-contained
+   (label + control together) instead of a control welded onto a
+   giant input, which is what made this feel unstructured before. */
+.adjustments-group{display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
+.adj-card{border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface-1); padding:12px 14px; transition:border-color .15s ease, background .15s ease;}
+.adj-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
+.adj-card-head label{margin:0; display:flex; align-items:center; gap:8px;}
+
+/* Quiet by default — a small teal "Applied" chip plus a highlighted
+   card border, shown only once a discount is actually entered, plus a
+   matching tint on the discount line in the summary below. */
 .discount-badge{display:none; padding:2px 7px; border-radius:100px; background:var(--teal-soft); color:var(--teal); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
 #discountFieldRow.is-active .discount-badge{display:inline-block;}
-#discountFieldRow.is-active .discount-input-row{border-color:var(--teal);}
+#discountFieldRow.is-active{border-color:var(--teal);}
 #discountRow.is-active{background:var(--teal-soft); margin:0 -14px; padding:10px 14px; border-radius:8px; border-bottom-color:transparent;}
 #discountRow.is-active b{color:var(--teal);}
 
-/* Discount type (% / ₹) — one flat bordered group (toggle + amount, no
-   nested pills, no gloss/glow) so switching how the discount is
-   expressed never needs its own separate field or explanation. The
-   selected segment is a frosted teal-tinted chip (same glass language
-   as the rest of the page's panels — translucent + blurred, not a
-   solid fill) rather than a hard block of color. */
-.discount-input-row{
-  display:flex; align-items:stretch; border-radius:var(--radius-sm); border:1px solid var(--line);
-  background:var(--surface-1); overflow:hidden; transition:border-color .2s ease;
-}
-.seg-toggle{display:flex; flex:0 0 auto; border-right:1px solid var(--line);}
-.seg-btn{padding:0 14px; font-size:13px; font-weight:600; color:var(--text-2); background:transparent; transition:background .15s ease, color .15s ease;}
+/* Discount type (% / ₹) — a small pill toggle next to the label, not
+   welded onto the input. The selected segment is a frosted teal-tinted
+   chip (same glass language as the rest of the page's panels —
+   translucent + blurred, not a solid fill) rather than a hard block. */
+.seg-toggle{display:flex; flex:0 0 auto; border-radius:var(--radius-xs); border:1px solid var(--line); overflow:hidden;}
+.seg-btn{padding:5px 12px; font-size:12.5px; font-weight:600; color:var(--text-2); background:transparent; transition:background .15s ease, color .15s ease;}
 .seg-btn:not(:last-child){border-right:1px solid var(--line);}
 .seg-btn:hover{color:var(--text-0);}
 .seg-btn.active{
   background:var(--teal-soft); color:var(--teal);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
 }
-.discount-input-row .text-input{flex:1 1 auto; min-width:0; border:none; border-radius:0; background:transparent; box-shadow:none;}
-.discount-input-row .text-input:focus{box-shadow:none;}
 
-/* GST include/exclude — a compact switch inline with its own summary-
-   row label, so turning it off for a non-GST invoice is one click and
-   the row right below updates (or visibly mutes) in place. The "on"
-   track is the same frosted teal glass as the discount chip above,
-   not a solid fill, so it reads as part of the same glass panel. */
-.gst-field-row{flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; margin-bottom:14px;}
-.gst-field-row label{text-transform:none; letter-spacing:normal; font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--text-0);}
-.gst-switch-label{display:flex; align-items:center; gap:10px; cursor:pointer;}
+/* The amount input is a normal, full-width .text-input (same as every
+   other field on the page) with just a small unit glyph inset — % as a
+   trailing suffix, ₹ as a leading prefix, matching how each is
+   conventionally written — instead of a second control crammed inside. */
+.unit-input-wrap{position:relative; display:flex;}
+.unit-input-adorn{position:absolute; top:50%; transform:translateY(-50%); font-size:14px; font-weight:600; color:var(--text-2); pointer-events:none;}
+.unit-input-wrap.unit-suffix .unit-input-adorn{right:14px;}
+.unit-input-wrap.unit-prefix .unit-input-adorn{left:14px;}
+.unit-input-wrap.unit-suffix .unit-input{padding-right:30px;}
+.unit-input-wrap.unit-prefix .unit-input{padding-left:28px;}
+
+/* GST include/exclude — the whole card is the clickable <label> for the
+   switch (click anywhere on the row, not just the small thumb), styled
+   as the same bordered card as the discount one above so the two read
+   as one "Order Adjustments" group. The "on" track is the same frosted
+   teal glass used for the selected discount-type chip. */
+.adj-card-toggle{display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer;}
+.adj-card-toggle:hover{background:var(--surface-hover);}
+.adj-toggle-text{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.adj-toggle-title{font-size:13px; font-weight:600; color:var(--text-0);}
 .gst-switch{position:relative; display:inline-flex; width:32px; height:18px; flex:0 0 auto;}
 .gst-switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
 .gst-switch-track{
@@ -959,8 +975,22 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     </div>
   </div>
   <div class="hero-filmstrip" id="heroFilmstrip"></div>
+  <!-- The 50% keyframe loop is only seamless if a single half of the
+       track is already wider than the viewport can ever be — otherwise
+       the visible edge runs out of content before the loop wraps and
+       the page background shows through as a gap. Repeating the phrase
+       group several times per half (instead of once) keeps each half
+       comfortably wider than any real screen. -->
   <div class="marquee-strip">
     <div class="marquee-track">
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
       <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
       <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
     </div>
@@ -1176,25 +1206,31 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         </details>
 
         <div class="order-summary">
-          <div class="field-row" id="discountFieldRow">
-            <label for="qDiscountInput">Order Discount<span class="discount-badge" id="discountBadge">Applied</span></label>
-            <div class="discount-input-row">
-              <div class="seg-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
-                <button type="button" class="seg-btn active" data-type="pct">%</button>
-                <button type="button" class="seg-btn" data-type="flat">₹</button>
+          <div class="adjustments-group">
+            <div class="adj-card" id="discountFieldRow">
+              <div class="adj-card-head">
+                <label for="qDiscountInput">Order Discount<span class="discount-badge" id="discountBadge">Applied</span></label>
+                <div class="seg-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
+                  <button type="button" class="seg-btn active" data-type="pct">%</button>
+                  <button type="button" class="seg-btn" data-type="flat">₹</button>
+                </div>
               </div>
-              <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+              <div class="unit-input-wrap unit-suffix" id="discountUnitWrap">
+                <span class="unit-input-adorn" id="discountUnitAdorn">%</span>
+                <input class="text-input unit-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+              </div>
             </div>
-          </div>
-          <div class="field-row gst-field-row">
-            <label class="gst-switch-label" for="qGstToggle">
-              GST (18%)
+
+            <label class="adj-card adj-card-toggle" for="qGstToggle">
+              <span class="adj-toggle-text">
+                <span class="adj-toggle-title">GST (18%)</span>
+                <span class="field-hint" id="gstHint">Included — for GST invoices</span>
+              </span>
               <span class="gst-switch">
                 <input type="checkbox" id="qGstToggle" checked>
                 <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
               </span>
             </label>
-            <span class="field-hint" id="gstHint">Included — for GST invoices</span>
           </div>
           <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
           <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
@@ -1312,7 +1348,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-4"></script>
-<script src="assets/app.js?v=20260811-4"></script>
+<script src="assets/creative-data.js?v=20260811-5"></script>
+<script src="assets/app.js?v=20260811-5"></script>
 </body>
 </html>
