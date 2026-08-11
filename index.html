@@ -322,13 +322,13 @@ footer .brand-logo{height:24px;}
    quieter echo on tile-secondary (the catalogue video) ties the two video
    tiles together without repeating the effect on every tile. */
 .hero-tile.tile-hero::before,.hero-tile.tile-secondary::before{
-  content:''; position:absolute; inset:-14px; z-index:-1; border-radius:calc(var(--radius) + 12px);
-  background:conic-gradient(from 140deg,var(--violet),var(--teal),var(--gold),var(--violet));
-  filter:blur(18px); opacity:.32; transition:opacity .45s ease;
+  content:''; position:absolute; inset:-16px; z-index:-1; border-radius:calc(var(--radius) + 14px);
+  background:radial-gradient(60% 60% at 50% 42%, var(--violet-soft), transparent 72%);
+  filter:blur(20px); opacity:.5; transition:opacity .45s ease;
 }
-.hero-tile.tile-hero:hover::before{opacity:.68;}
-.hero-tile.tile-secondary::before{opacity:.14; filter:blur(14px);}
-.hero-tile.tile-secondary:hover::before{opacity:.4;}
+.hero-tile.tile-hero:hover::before{opacity:.8;}
+.hero-tile.tile-secondary::before{opacity:.24; filter:blur(16px);}
+.hero-tile.tile-secondary:hover::before{opacity:.45;}
 
 /* Kinetic filmstrip — real creative thumbnails, auto-scrolling rows */
 .hero-filmstrip{position:relative; z-index:1; margin-top:36px; padding-bottom:44px; display:flex; flex-direction:column; gap:8px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
@@ -389,8 +389,8 @@ footer .brand-logo{height:24px;}
    than a stray caption floating above the logos. */
 .brand-logos-label{
   display:flex; align-items:center; justify-content:center; gap:18px;
-  font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em;
-  color:var(--text-2); margin-bottom:32px;
+  font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--violet); margin-bottom:32px;
 }
 .brand-logos-label::before,.brand-logos-label::after{content:""; flex:1 1 auto; max-width:64px; height:1px; background:var(--line-soft);}
 .brand-logos-rows{
@@ -942,8 +942,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1330,8 +1330,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1363,7 +1363,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-10"></script>
-<script src="assets/app.js?v=20260811-10"></script>
+<script src="assets/creative-data.js?v=20260811-11"></script>
+<script src="assets/app.js?v=20260811-11"></script>
 </body>
 </html>
