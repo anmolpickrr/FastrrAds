@@ -371,16 +371,17 @@ footer .brand-logo{height:24px;}
    its original colors — filter just flips that one tone light/dark to
    match whichever theme is active. */
 /* Showcase (the section right before this) has its own bottom padding
-   zeroed via inline style so it doesn't stack with this strip's own
-   top padding — the same "previous section supplies the gap, this one
-   doesn't add a second one" convention every other section boundary on
-   the page already follows. The 64/40 split (not a plain 60/60) is
-   what actually lands even: Services right after this strip already
-   arrives with its own built-in ~24px header offset, so this strip's
-   bottom padding is trimmed by that same amount to match the visual
-   gap above the label on the way in. */
+   zeroed via inline style, and Services (right after) has its own top
+   padding zeroed the same way, so neither stacks a second gap on top
+   of this strip's own padding — the standard "one section supplies the
+   gap" convention every other section boundary on the page follows,
+   which otherwise keeps every major section-to-section gap at a
+   consistent 72px. The 54/72 split (not a plain 72/72) exists only to
+   cancel out .showcase-track's own built-in 18px bottom padding, so
+   the visual gap above the label still lands at the same 72px as the
+   gap below it instead of reading larger. */
 .brand-logos-strip{
-  position:relative; z-index:2; overflow:hidden; padding:80px 0 32px;
+  position:relative; z-index:2; overflow:hidden; padding:54px 0 72px;
   border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
 }
 /* A quiet rule flanking the label on both sides — the same minimal
@@ -633,23 +634,45 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   .tier-chip::after{display:none;}
 }
 
+/* At-a-glance strip — the handful of numbers someone actually scans
+   for (length, turnaround, revisions) surface immediately instead of
+   being buried inside the Included tab's spec grid, so understanding
+   a package doesn't require a click first. Row dividers only, no
+   card/box treatment, so it reads as one continuous fact strip. */
+.svc-glance{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  margin-top:26px; padding-top:22px; border-top:1px solid var(--line-soft);
+}
+.svc-glance-item{padding:0 22px; border-left:1px solid var(--line-soft);}
+.svc-glance-item:first-child{padding-left:0; border-left:none;}
+.svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
+.svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
+@media (max-width:760px){
+  .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
+  .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
+}
+@media (max-width:420px){
+  .svc-glance{grid-template-columns:1fr; row-gap:18px;}
+  .svc-glance-item{border-left:none !important; padding-left:0 !important;}
+}
+
 .scope-panel{margin-top:28px;}
-.scope-tab-bar{display:flex; gap:4px; margin-bottom:24px; padding:5px; border-radius:100px; background:var(--surface-1); border:1px solid var(--line-soft); max-width:560px;}
-.scope-tab-btn{flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 12px; border-radius:100px; border:1px solid transparent; background:transparent; font-size:12.5px; font-weight:600; color:var(--text-1); transition:background .2s ease, color .2s ease, box-shadow .2s ease;}
-.scope-tab-btn svg{width:13px; height:13px; flex:0 0 auto;}
-.scope-tab-btn:hover{color:var(--text-0);}
-.scope-tab-btn.active{background:var(--text-0); color:var(--bg-0); box-shadow:var(--shadow-sm);}
+/* Underline tabs, not a pill/box switch — one less filled shape
+   competing with the fact strip above it. */
+.scope-tab-bar{display:flex; gap:clamp(20px,3vw,34px); margin-bottom:24px; border-bottom:1px solid var(--line-soft);}
+.scope-tab-btn{display:flex; align-items:center; gap:6px; padding:0 0 12px; margin-bottom:-1px; background:none; border:none; border-bottom:2px solid transparent; font-size:13px; font-weight:600; color:var(--text-2); transition:color .2s ease, border-color .2s ease;}
+.scope-tab-btn svg{width:13px; height:13px; flex:0 0 auto; opacity:.7; transition:opacity .2s ease;}
+.scope-tab-btn:hover{color:var(--text-1);}
+.scope-tab-btn.active{color:var(--text-0); border-color:var(--violet);}
+.scope-tab-btn.active svg{opacity:1;}
 .scope-body{max-width:900px;}
 
-/* Plain bordered rows — the single place the operational facts
-   (revisions/duration/format/turnaround/script/support) live, inside
-   the Included tab only. A 2-column grid on wide panels (each row is
-   short — a label plus one line of value) instead of one long single
-   column trailing off into empty space beside it. Row dividers instead
-   of a boxed sub-panel: structured without stacking another card
-   inside the card. */
-.scope-specs{display:grid; grid-template-columns:1fr 1fr; gap:0 32px; margin-bottom:24px;}
-@media (max-width:640px){.scope-specs{grid-template-columns:1fr;}}
+/* Plain bordered rows — now just the secondary production facts
+   (script/language/support) that don't fit the at-a-glance strip
+   above, so this list stays short instead of repeating duration/
+   turnaround/revisions a second time. Single column: three rows at
+   most doesn't need a second column to avoid trailing empty space. */
+.scope-specs{margin-bottom:20px;}
 .scope-spec-row{display:flex; gap:16px; padding:8px 0; font-size:13px; border-bottom:1px solid var(--line-soft);}
 .scope-spec-row span{flex:0 0 110px; color:var(--text-2); font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding-top:2px;}
 .scope-spec-row b{color:var(--text-0); font-weight:600; line-height:1.5;}
@@ -668,8 +691,8 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .scope-need-group:last-of-type{margin-bottom:0;}
 .scope-need-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
 .scope-note{margin-top:14px; font-size:12.5px; color:var(--text-2); font-style:italic;}
-.scope-deliver-box{margin-top:22px; padding:16px 18px; border-radius:var(--radius-sm); background:var(--teal-soft); font-size:13px; color:var(--text-0); line-height:1.5;}
-.scope-deliver-box b{color:var(--teal); display:block; margin-bottom:4px; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-mono);}
+.scope-deliver-box{margin-top:20px; padding-top:16px; border-top:1px solid var(--line-soft); font-size:13px; color:var(--text-1); line-height:1.55;}
+.scope-deliver-box b{color:var(--text-2); display:block; margin-bottom:5px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-mono); font-weight:700;}
 
 .compare-wrap{overflow-x:auto; margin-top:16px;}
 table.compare-table{width:100%; border-collapse:collapse; font-size:13px; min-width:560px;}
@@ -942,8 +965,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-12" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-12" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1105,6 +1128,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
           <button class="tier-chip active" data-tier="3"><span>Tier 3</span><b>₹5,000</b></button>
           <button class="tier-chip" data-tier="4"><span>Tier 4</span><b>₹8,000</b></button>
         </div>
+
+        <div class="svc-glance" id="svcGlance"></div>
 
         <div class="scope-panel" id="scopePanel">
           <div class="scope-tab-bar">
@@ -1330,8 +1355,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-11" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-12" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-12" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1363,7 +1388,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-11"></script>
-<script src="assets/app.js?v=20260811-11"></script>
+<script src="assets/creative-data.js?v=20260811-12"></script>
+<script src="assets/app.js?v=20260811-12"></script>
 </body>
 </html>

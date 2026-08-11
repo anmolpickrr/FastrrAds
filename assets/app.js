@@ -431,6 +431,21 @@
     document.getElementById("svcShort").textContent = d.short || "";
   }
 
+  // The handful of facts worth scanning without a click: always visible,
+  // so understanding a package doesn't start by opening the Included tab.
+  function renderServiceGlance() {
+    const d = currentData();
+    const items = [
+      ["Length", d.duration],
+      ["Format", d.format],
+      ["Turnaround", d.turnaround],
+      ["Revisions", d.revisions],
+    ].filter(([, v]) => v);
+    document.getElementById("svcGlance").innerHTML = items
+      .map(([k, v]) => `<div class="svc-glance-item"><span>${k}</span><b>${v}</b></div>`)
+      .join("");
+  }
+
   function renderScopePanel() {
     const d = currentData();
     scopePanel.querySelectorAll(".scope-tab-btn").forEach((b) =>
@@ -441,10 +456,6 @@
     if (state.scopeTab === "inc") {
       const notApplicable = (v) => !v || /^(no scripting|not applicable)/i.test(v);
       const specRows = [
-        ["Revisions", d.revisions],
-        ["Duration", d.duration],
-        ["Format", d.format],
-        ["Turnaround", d.turnaround],
         ["Script", notApplicable(d.scripting) ? null : d.scripting],
         ["Language", notApplicable(d.language) ? null : d.language],
         ["Support", supportSummaryValue(d)],
@@ -947,6 +958,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   function render() {
     renderServiceNav();
     renderServiceSummary();
+    renderServiceGlance();
     renderScopePanel();
     renderCalculator();
     renderCart();
