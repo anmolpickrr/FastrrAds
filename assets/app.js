@@ -582,6 +582,10 @@
     document.querySelectorAll("#discountTypeToggle .seg-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.type === cart.discountType);
     });
+    document.getElementById("discountUnitAdorn").textContent = cart.discountType === "pct" ? "%" : "₹";
+    const discountUnitWrap = document.getElementById("discountUnitWrap");
+    discountUnitWrap.classList.toggle("unit-suffix", cart.discountType === "pct");
+    discountUnitWrap.classList.toggle("unit-prefix", cart.discountType !== "pct");
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
     document.getElementById("qDiscountLabel").textContent = discountLabel(cart);
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
