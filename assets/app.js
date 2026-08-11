@@ -261,6 +261,15 @@
     return "Rs. " + Math.round(n).toLocaleString("en-IN");
   }
 
+  // Shared "Discount" / "Discount (10%)" label used by the calculator
+  // summary, the WhatsApp messages, and the PDF — flat-amount discounts
+  // don't have a percentage to show, so they just read "Discount".
+  function discountLabel(cart) {
+    return cart.discountType === "pct" && cart.discountValue > 0
+      ? `Discount (${cart.discountValue}%)`
+      : "Discount";
+  }
+
   /* ----------------------------------------------------------
      2. SHARED APPLICATION STATE
      Single source of truth. Every dependent view (Services
@@ -279,7 +288,9 @@
     tier: 3, // only relevant when service === 'reels'
     qty: 1, // builder quantity, for the item about to be added to the order
     cart: [], // order line items: { id, service, tier|null, qty }
-    discountPct: 0, // order-level discount, applied once to the whole cart's subtotal
+    discountType: "pct", // pct | flat — how discountValue below is interpreted
+    discountValue: 0, // order-level discount, applied once to the whole cart's subtotal — a percent (0-100) or a flat ₹ amount depending on discountType
+    gstEnabled: true, // 18% GST toggle — off for clients billed without a GST invoice
     scopeTab: "inc", // inc | exc | need
     brandName: "",
     website: "",
@@ -322,12 +333,16 @@
       return { ...item, d, lineSubtotal };
     });
     const subtotal = items.reduce((sum, i) => sum + i.lineSubtotal, 0);
-    const pct = Math.min(100, Math.max(0, state.discountPct || 0));
-    const discountAmt = subtotal * (pct / 100);
+    const discountType = state.discountType === "flat" ? "flat" : "pct";
+    const rawDiscountValue = Math.max(0, state.discountValue || 0);
+    const discountValue = discountType === "pct" ? Math.min(100, rawDiscountValue) : rawDiscountValue;
+    const discountAmt =
+      discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
     const taxable = subtotal - discountAmt;
-    const gstAmt = taxable * GST_RATE;
+    const gstEnabled = state.gstEnabled !== false;
+    const gstAmt = gstEnabled ? taxable * GST_RATE : 0;
     const final = taxable + gstAmt;
-    return { items, subtotal, pct, discountAmt, taxable, gstAmt, final };
+    return { items, subtotal, discountType, discountValue, discountAmt, taxable, gstEnabled, gstAmt, final };
   }
 
   function addToOrder() {
@@ -562,15 +577,26 @@
         .join("");
     }
 
-    document.getElementById("qDiscountInput").value = state.discountPct;
+    document.getElementById("qDiscountInput").value = state.discountValue;
+    document.getElementById("qDiscountInput").max = cart.discountType === "pct" ? 100 : "";
+    document.querySelectorAll("#discountTypeToggle .seg-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.type === cart.discountType);
+    });
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
+    document.getElementById("qDiscountLabel").textContent = discountLabel(cart);
     document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
-    document.getElementById("qGstAmt").textContent = "+ " + fmtINR(cart.gstAmt);
+    document.getElementById("qGstAmt").textContent = cart.gstEnabled ? "+ " + fmtINR(cart.gstAmt) : "Not applied";
     document.getElementById("qFinal").textContent = fmtINR(cart.final);
 
-    const discountActive = state.discountPct > 0 && cart.discountAmt > 0;
+    const discountActive = cart.discountAmt > 0;
     document.getElementById("discountFieldRow").classList.toggle("is-active", discountActive);
     document.getElementById("discountRow").classList.toggle("is-active", discountActive);
+
+    document.getElementById("qGstToggle").checked = cart.gstEnabled;
+    document.getElementById("gstRow").classList.toggle("is-muted", !cart.gstEnabled);
+    document.getElementById("gstHint").textContent = cart.gstEnabled
+      ? "Included — for GST invoices"
+      : "Excluded — for non-GST invoices";
   }
 
   /* ----------------------------------------------------------
@@ -600,9 +626,9 @@
 
     const priceBlock = [
       `Subtotal: ${fmtINR(cart.subtotal)}`,
-      cart.pct > 0 ? `Discount (${cart.pct}%): − ${fmtINR(cart.discountAmt)}` : null,
-      `GST (18%): + ${fmtINR(cart.gstAmt)}`,
-      `Total: ${fmtINR(cart.final)} (incl. GST)`,
+      cart.discountAmt > 0 ? `${discountLabel(cart)}: − ${fmtINR(cart.discountAmt)}` : null,
+      cart.gstEnabled ? `GST (18%): + ${fmtINR(cart.gstAmt)}` : "GST: Not applied (non-GST invoice)",
+      `Total: ${fmtINR(cart.final)}${cart.gstEnabled ? " (incl. GST)" : ""}`,
     ]
       .filter(Boolean)
       .join("\n");
@@ -675,9 +701,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "Turnaround timeline begins once we've received everything we need — all required assets and details, not the payment date.",
     "New concepts, major creative rework, and any additions beyond what's included — extra dimensions, formats, slides, or aspect ratios — sit outside package scope and are quoted separately or as a new order.",
     "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
-    "GST (18%) is calculated on the order total after any discount. Prices elsewhere in this document are base rates before GST.",
-    "A single discount applies to the whole order, not to each creative type individually.",
+    "A single discount applies to the whole order, not to each creative type individually, as either a percentage or a flat ₹ amount.",
   ];
+
+  // Kept separate from PDF_TERMS since its wording depends on whether GST
+  // was switched on for this specific order (see cart.gstEnabled).
+  function gstTerm(cart) {
+    return cart.gstEnabled
+      ? "GST (18%) is calculated on the order total after any discount. Prices elsewhere in this document are base rates before GST."
+      : "This order is quoted without GST, as a non-GST invoice.";
+  }
 
   // The source logo PNG is full-resolution (3476×1404, for crisp use
   // anywhere on the page) — embedding it straight into the PDF at that
@@ -842,8 +875,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       doc.text("Pricing", marginX, y);
       y += 4;
       const priceRows = [["Subtotal", fmtINRPdf(cart.subtotal)]];
-      if (cart.pct > 0) priceRows.push([`Discount (${cart.pct}%)`, "− " + fmtINRPdf(cart.discountAmt)]);
-      priceRows.push(["GST (18%)", "+ " + fmtINRPdf(cart.gstAmt)]);
+      if (cart.discountAmt > 0) priceRows.push([discountLabel(cart), "− " + fmtINRPdf(cart.discountAmt)]);
+      priceRows.push(cart.gstEnabled ? ["GST (18%)", "+ " + fmtINRPdf(cart.gstAmt)] : ["GST", "Not applied (non-GST invoice)"]);
       doc.autoTable({
         startY: y,
         theme: "plain",
@@ -860,7 +893,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       doc.setFontSize(13);
       doc.setTextColor(20);
       doc.text("Final Amount", marginX, y);
-      doc.text(fmtINRPdf(cart.final) + " (incl. GST)", pageW - marginX, y, { align: "right" });
+      doc.text(fmtINRPdf(cart.final) + (cart.gstEnabled ? " (incl. GST)" : ""), pageW - marginX, y, { align: "right" });
       y += 12;
 
       if (y > pageH - 60) {
@@ -876,7 +909,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       doc.setFontSize(9);
       doc.setTextColor(70);
       const usableWidth = pageW - marginX * 2 - 5;
-      PDF_TERMS.forEach((term) => {
+      [...PDF_TERMS, gstTerm(cart)].forEach((term) => {
         const lines = doc.splitTextToSize("• " + term, usableWidth);
         const blockH = lines.length * 4.2 + 2;
         if (y + blockH > pageH - 20) {
@@ -1029,10 +1062,28 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   });
 
   // Order-level discount — applies once to the combined cart subtotal,
-  // not per line item.
+  // not per line item. Type (% vs flat ₹) and value are separate so
+  // switching type never has to guess what the existing number meant.
   const qDiscountInput = document.getElementById("qDiscountInput");
   qDiscountInput.addEventListener("input", () => {
-    state.discountPct = Math.min(100, Math.max(0, parseFloat(qDiscountInput.value) || 0));
+    let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
+    if (state.discountType === "pct") v = Math.min(100, v);
+    state.discountValue = v;
+    renderCart();
+    renderMessages();
+  });
+
+  document.getElementById("discountTypeToggle").addEventListener("click", (e) => {
+    const btn = e.target.closest(".seg-btn");
+    if (!btn || btn.dataset.type === state.discountType) return;
+    state.discountType = btn.dataset.type;
+    state.discountValue = 0; // a number under one type rarely means the same thing under the other
+    renderCart();
+    renderMessages();
+  });
+
+  document.getElementById("qGstToggle").addEventListener("change", (e) => {
+    state.gstEnabled = e.target.checked;
     renderCart();
     renderMessages();
   });
