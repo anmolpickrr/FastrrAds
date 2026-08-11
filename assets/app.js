@@ -1580,9 +1580,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const row = rows[i].length ? rows[i] : BRAND_LOGOS;
       // Each row's logos are duplicated so the marquee can loop
       // seamlessly at translateX(-50%) with no visible jump/reset.
-      const imgs = row.map(
-        (b) => `<div class="brand-logo-box"><img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy"></div>`
-      ).join("");
+      const imgs = row.map((b) => {
+        const scaleStyle = b.sizePct ? ` style="--logo-scale:${(b.sizePct / 100).toFixed(2)}"` : "";
+        return `<div class="brand-logo-box"><img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy"${scaleStyle}></div>`;
+      }).join("");
       track.innerHTML = imgs + imgs;
     });
     strip.style.display = "";

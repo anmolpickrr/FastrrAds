@@ -370,8 +370,17 @@ footer .brand-logo{height:24px;}
    only shape) so every mark reads at identical visual weight regardless of
    its original colors — filter just flips that one tone light/dark to
    match whichever theme is active. */
+/* Showcase (the section right before this) has its own bottom padding
+   zeroed via inline style so it doesn't stack with this strip's own
+   top padding — the same "previous section supplies the gap, this one
+   doesn't add a second one" convention every other section boundary on
+   the page already follows. The 64/40 split (not a plain 60/60) is
+   what actually lands even: Services right after this strip already
+   arrives with its own built-in ~24px header offset, so this strip's
+   bottom padding is trimmed by that same amount to match the visual
+   gap above the label on the way in. */
 .brand-logos-strip{
-  position:relative; z-index:2; overflow:hidden; padding:60px 0;
+  position:relative; z-index:2; overflow:hidden; padding:80px 0 32px;
   border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
 }
 /* A quiet rule flanking the label on both sides — the same minimal
@@ -401,8 +410,13 @@ footer .brand-logo{height:24px;}
    modest safety cap for the widest wordmarks, fixes that without letting
    any one mark dominate the row's horizontal space. */
 .brand-logo-box{height:28px; display:flex; align-items:center; flex:0 0 auto;}
+/* Per-logo size correction (see sizePct in creative-data.js) — a few
+   marks otherwise read visually larger/smaller than the row despite
+   sharing the same box height, so this scales the rendered height up
+   or down from that shared 28px baseline via a per-image CSS variable
+   instead of the fixed box, which would just center-crop/pad instead. */
 .brand-logos-track img{
-  height:100%; width:auto; max-width:150px; object-fit:contain;
+  height:calc(28px * var(--logo-scale, 1)); width:auto; max-width:150px; object-fit:contain;
   filter:opacity(.62); transition:filter .2s ease;
 }
 .brand-logos-track img:hover{filter:opacity(.9);}
@@ -928,8 +942,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-9" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-9" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1001,7 +1015,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   </div>
 </section>
 
-<section class="section" id="showcase">
+<section class="section" id="showcase" style="padding-bottom:0">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">01 — Creative Showcase</span>
@@ -1316,8 +1330,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-9" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-9" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-10" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1349,7 +1363,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-9"></script>
-<script src="assets/app.js?v=20260811-9"></script>
+<script src="assets/creative-data.js?v=20260811-10"></script>
+<script src="assets/app.js?v=20260811-10"></script>
 </body>
 </html>
