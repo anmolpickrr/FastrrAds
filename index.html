@@ -100,7 +100,13 @@ body{
     radial-gradient(820px circle at 88% 84%, var(--sky-soft), transparent 58%),
     radial-gradient(900px circle at 20% 96%, var(--teal-soft), transparent 60%);
 }
-:focus-visible{outline:2px solid var(--violet); outline-offset:2px; border-radius:4px;}
+/* No forced border-radius here — browsers already round the outline to
+   match whatever shape the focused element itself has (pill, panel,
+   sharp-cornered text button). Forcing a flat 4px radius on every
+   focus state was squaring off pills and boxing in text-only controls
+   that have no border of their own, which is what read as a cheap,
+   ill-fitted highlight. */
+:focus-visible{outline:2px solid var(--violet); outline-offset:2px;}
 body.lb-locked{overflow:hidden;}
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{
@@ -587,6 +593,9 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .svc-tab.active .svc-tab-index{color:var(--violet);}
 .svc-tab.active .svc-tab-price{color:var(--teal);}
 .svc-tab.active::after{transform:scaleX(1);}
+.svc-tab:focus-visible{outline:none;}
+.svc-tab:focus-visible .svc-tab-name{color:var(--text-0);}
+.svc-tab:focus-visible::after{transform:scaleX(1);}
 
 .svc-panel{
   position:relative; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
@@ -665,6 +674,11 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .scope-tab-btn:hover{color:var(--text-1);}
 .scope-tab-btn.active{color:var(--text-0); border-color:var(--violet);}
 .scope-tab-btn.active svg{opacity:1;}
+/* Keyboard focus reuses the active state's own underline instead of a
+   boxed outline — a flat-cornered text button has no shape of its own
+   for a ring to sit against, so a generic outline box just floats on
+   top of it looking bolted-on. */
+.scope-tab-btn:focus-visible{outline:none; color:var(--text-0); border-color:var(--violet);}
 .scope-body{max-width:900px;}
 
 /* Plain bordered rows — now just the secondary production facts
@@ -865,6 +879,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .unit-toggle-btn:active{transform:translateY(0) scale(.94);}
 .unit-toggle-btn.active{color:var(--text-0);}
 .unit-toggle-btn.active::after{transform:scaleX(1);}
+.unit-toggle-btn:focus-visible{outline:none; color:var(--text-0); background:var(--surface-hover);}
 .unit-toggle-sep{color:var(--line);}
 
 /* The amount input has no visible box at rest — just the number,
@@ -965,8 +980,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-13" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-13" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-14" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-14" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1355,8 +1370,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-13" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-13" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-14" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-14" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1388,7 +1403,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-13"></script>
-<script src="assets/app.js?v=20260811-13"></script>
+<script src="assets/creative-data.js?v=20260811-14"></script>
+<script src="assets/app.js?v=20260811-14"></script>
 </body>
 </html>
