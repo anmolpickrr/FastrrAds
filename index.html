@@ -794,6 +794,33 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 #discountRow.is-active{background:var(--teal-soft); margin:0 -14px; padding:10px 14px; border-radius:8px; border-bottom-color:transparent;}
 #discountRow.is-active b{color:var(--teal);}
 
+/* Discount type (% / ₹) — a small segmented control glued to the left of
+   the amount input, same pill language as .qtier-chip elsewhere on the
+   page, so switching how the discount is expressed never needs its own
+   separate field or explanation. */
+.discount-input-row{display:flex; gap:8px; align-items:stretch;}
+.discount-input-row .text-input{flex:1 1 auto; min-width:0;}
+.seg-toggle{display:flex; flex:0 0 auto; gap:2px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1); padding:3px; box-shadow:var(--inset-hi);}
+.seg-btn{padding:0 13px; border-radius:calc(var(--radius-sm) - 3px); font-size:13px; font-weight:700; color:var(--text-2); transition:background .2s ease, color .2s ease;}
+.seg-btn:hover{color:var(--text-0);}
+.seg-btn.active{background:var(--violet); color:var(--btn-ink);}
+
+/* GST include/exclude — a compact switch inline with its own summary
+   row label, so turning it off for a non-GST invoice is one click and
+   the row right below updates (or visibly mutes) in the same place. */
+.gst-field-row{flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; margin-bottom:14px;}
+.gst-field-row label{text-transform:none; letter-spacing:normal; font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--text-0);}
+.gst-switch-label{display:flex; align-items:center; gap:10px; cursor:pointer;}
+.gst-switch{position:relative; display:inline-flex; width:34px; height:20px; flex:0 0 auto;}
+.gst-switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
+.gst-switch-track{position:absolute; inset:0; border-radius:100px; background:var(--surface-2); border:1px solid var(--line); transition:background .2s ease, border-color .2s ease; pointer-events:none;}
+.gst-switch-thumb{position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--text-2); transition:transform .2s var(--ease), background .2s ease; pointer-events:none;}
+.gst-switch input:checked ~ .gst-switch-track{background:var(--teal); border-color:var(--teal);}
+.gst-switch input:checked ~ .gst-switch-thumb{transform:translateX(14px); background:#fff;}
+.gst-switch input:focus-visible ~ .gst-switch-track{box-shadow:0 0 0 3px var(--teal-soft);}
+.field-hint{font-size:11px; color:var(--text-2);}
+#gstRow.is-muted{opacity:.5;}
+
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .brand-fields-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
@@ -1033,8 +1060,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
           <li><b>Clock starts on handoff,</b> once we've received everything we need — assets and details — not your payment date.</li>
           <li><b>New concepts mean a new quote.</b> Major creative rework or extras beyond what's included are quoted separately.</li>
           <li><b>AI output can vary slightly</b> between runs — we always match your brief as closely as possible.</li>
-          <li><b>GST is added at checkout:</b> 18% on the order total after any discount. Prices elsewhere on the page are pre-GST.</li>
-          <li><b>One discount, whole order</b> — it applies to the combined total, not to each creative type individually.</li>
+          <li><b>GST is optional at checkout:</b> included by default at 18% on the order total after any discount, or switch it off in the calculator for a non-GST invoice. Prices elsewhere on the page are pre-GST.</li>
+          <li><b>One discount, whole order</b> — it applies to the combined total, not to each creative type individually, as either a percentage or a flat ₹ amount.</li>
         </ul>
       </div>
       <details class="rules-compare-toggle" id="rulesCompareToggle">
@@ -1130,12 +1157,28 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
         <div class="order-summary">
           <div class="field-row" id="discountFieldRow">
-            <label for="qDiscountInput">Order Discount (%)<span class="discount-badge" id="discountBadge">Applied</span></label>
-            <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+            <label for="qDiscountInput">Order Discount<span class="discount-badge" id="discountBadge">Applied</span></label>
+            <div class="discount-input-row">
+              <div class="seg-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
+                <button type="button" class="seg-btn active" data-type="pct">%</button>
+                <button type="button" class="seg-btn" data-type="flat">₹</button>
+              </div>
+              <input class="text-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+            </div>
+          </div>
+          <div class="field-row gst-field-row">
+            <label class="gst-switch-label" for="qGstToggle">
+              GST (18%)
+              <span class="gst-switch">
+                <input type="checkbox" id="qGstToggle" checked>
+                <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
+              </span>
+            </label>
+            <span class="field-hint" id="gstHint">Included — for GST invoices</span>
           </div>
           <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
-          <div class="summary-row" id="discountRow"><span>Discount</span><b id="qDiscountAmt">− ₹0</b></div>
-          <div class="summary-row"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+          <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+          <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
         </div>
       </div>
@@ -1231,7 +1274,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     </div>
     <div class="footer-bottom">
       <p>© <span id="footerYear"></span> Fastrr Ads. All rights reserved.</p>
-      <p>Listed prices are exclusive of GST; the calculator adds GST automatically when building an order.</p>
+      <p>Listed prices are exclusive of GST; the calculator adds 18% GST by default and can be switched off per order for a non-GST invoice.</p>
     </div>
   </div>
 </footer>
@@ -1249,7 +1292,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-3"></script>
-<script src="assets/app.js?v=20260811-3"></script>
+<script src="assets/creative-data.js?v=20260811-4"></script>
+<script src="assets/app.js?v=20260811-4"></script>
 </body>
 </html>
