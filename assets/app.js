@@ -414,18 +414,14 @@
     { key: "call", label: "Call Support &amp; Requirement Discussion" },
   ];
 
-  // Every role rendered every time, included or not — a chip list that
-  // visibly changes shape from package to package (which roles light up)
-  // reads as "this varies by what you pick" far more clearly than a
-  // single run-on sentence where the included/excluded halves look
-  // identical.
-  function supportChipsHTML(d) {
+  // Just the roles actually included, as plain text — same weight and
+  // treatment as every other spec row (Script, Language). Excluded
+  // roles aren't listed at all; what a package gives you is the point,
+  // not a running scorecard of what it doesn't.
+  function supportIncludedValue(d) {
     const support = d.support || [];
-    const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-    return SUPPORT_ROLES.map((r) => {
-      const included = support.indexOf(r.key) !== -1;
-      return `<span class="support-chip${included ? " included" : ""}">${included ? check : ""}${r.label}</span>`;
-    }).join("");
+    const included = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) !== -1).map((r) => r.label);
+    return included.length ? included.join(", ") : "—";
   }
 
   function renderServiceSummary() {
@@ -462,15 +458,20 @@
       const specRows = [
         ["Script", notApplicable(d.scripting) ? null : d.scripting],
         ["Language", notApplicable(d.language) ? null : d.language],
+        ["Support", supportIncludedValue(d)],
       ].filter(([, v]) => v);
+      // What's included leads — it's the one thing everyone opening this
+      // tab actually came to scan. Script/language/support and the exact
+      // delivery spec are real but secondary, so they're one click away
+      // in a closed-by-default toggle instead of pushing the checklist
+      // further down the page on every single visit.
       html = `
-        <div class="scope-specs">${specRows.map(([k, v]) => `<div class="scope-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
-        <div class="support-block">
-          <span class="scope-need-label">Support team for this package</span>
-          <div class="support-chips">${supportChipsHTML(d)}</div>
-        </div>
         <ul class="scope-list">${scopeListHTML(d.included)}</ul>
-        <div class="scope-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
+        <details class="mini-toggle">
+          <summary>Production &amp; delivery details</summary>
+          <div class="scope-specs">${specRows.map(([k, v]) => `<div class="scope-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+          <div class="scope-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
+        </details>
       `;
     } else if (state.scopeTab === "exc") {
       html = `<ul class="scope-list scope-exc">${scopeListHTML(d.excluded)}</ul>`;

@@ -613,6 +613,11 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .tier-chip.active{background:var(--violet-soft); color:var(--violet);}
 .tier-chip.active::before{transform:scaleX(1);}
 .tier-chip.active::after{content:'✓'; position:absolute; top:15px; right:14px; font-size:11px; font-weight:800; color:var(--violet);}
+/* A flat grid cell has no border/radius of its own for a ring to sit
+   against, so keyboard focus reuses the same tinted-background state
+   as .active instead of drawing a boxed outline on top of it. */
+.tier-chip:focus-visible{outline:none; background:var(--violet-soft); color:var(--violet);}
+.qtier-chip:focus-visible{outline:none; background:var(--surface-hover);}
 @media (max-width:640px){
   .tier-row{grid-template-columns:1fr;}
   .tier-chip{flex-direction:row; align-items:center; justify-content:space-between; border-right:none; border-bottom:1px solid var(--line-soft); padding:14px 2px;}
@@ -669,23 +674,6 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .scope-spec-row span{flex:0 0 110px; color:var(--text-2); font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding-top:2px;}
 .scope-spec-row b{color:var(--text-0); font-weight:600; line-height:1.5;}
 @media (max-width:480px){.scope-spec-row{flex-direction:column; gap:2px;} .scope-spec-row span{flex:none;}}
-
-/* Every support role shown every time, included or not, as its own
-   chip — the set that lights up changes shape from package to
-   package, so which roles you get reads at a glance instead of being
-   buried in a run-on sentence where included/excluded looked the
-   same. Included chips take the same teal "done" color used by the
-   Included list below; excluded ones stay outlined and muted rather
-   than disappearing, so the full team roster is still visible. */
-.support-block{margin-bottom:22px;}
-.support-chips{display:flex; flex-wrap:wrap; gap:8px;}
-.support-chip{
-  display:inline-flex; align-items:center; gap:6px; padding:7px 13px;
-  border-radius:100px; border:1px solid var(--line-soft); background:transparent;
-  font-size:12px; font-weight:600; color:var(--text-2); line-height:1;
-}
-.support-chip svg{width:11px; height:11px; flex:0 0 auto;}
-.support-chip.included{background:var(--teal-soft); border-color:transparent; color:var(--teal);}
 
 .scope-list li{position:relative; padding-left:28px; margin-bottom:14px; font-size:14.5px; color:var(--text-1); line-height:1.55;}
 .scope-list li:last-child{margin-bottom:0;}
@@ -975,8 +963,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-16" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-16" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-17" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-17" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1363,8 +1351,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-16" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-16" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-17" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-17" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1396,7 +1384,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-16"></script>
-<script src="assets/app.js?v=20260811-16"></script>
+<script src="assets/creative-data.js?v=20260811-17"></script>
+<script src="assets/app.js?v=20260811-17"></script>
 </body>
 </html>
