@@ -381,7 +381,7 @@ footer .brand-logo{height:24px;}
   mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
 }
 .brand-logos-row{overflow:hidden; width:100%;}
-.brand-logos-track{display:flex; align-items:center; gap:48px; width:max-content; animation:brandMarquee 42s linear infinite;}
+.brand-logos-track{display:flex; align-items:center; gap:52px; width:max-content; animation:brandMarquee 42s linear infinite;}
 .brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:48s;}
 @keyframes brandMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 /* Every mark shares the same rendered HEIGHT (not a fixed box) so visual
@@ -389,10 +389,11 @@ footer .brand-logo{height:24px;}
    badge and a wide wordmark both read at the same size. Capping width
    too (the previous approach) was what made wide wordmarks shrink far
    below square/icon marks; letting width follow naturally, with only a
-   generous safety cap for the one extreme-wide outlier, fixes that. */
-.brand-logo-box{height:34px; display:flex; align-items:center; flex:0 0 auto;}
+   modest safety cap for the widest wordmarks, fixes that without letting
+   any one mark dominate the row's horizontal space. */
+.brand-logo-box{height:28px; display:flex; align-items:center; flex:0 0 auto;}
 .brand-logos-track img{
-  height:100%; width:auto; max-width:210px; object-fit:contain;
+  height:100%; width:auto; max-width:150px; object-fit:contain;
   filter:opacity(.62); transition:filter .2s ease;
 }
 .brand-logos-track img:hover{filter:opacity(.9);}
@@ -1348,7 +1349,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-5"></script>
-<script src="assets/app.js?v=20260811-5"></script>
+<script src="assets/creative-data.js?v=20260811-6"></script>
+<script src="assets/app.js?v=20260811-6"></script>
 </body>
 </html>

@@ -53,7 +53,6 @@ const BRAND_LOGOS = [
   { "name": "TripT", "src": "assets/brand-logos/tript.png" },
   { "name": "UNRLL", "src": "assets/brand-logos/unrll.png" },
   { "name": "Label by Anuja", "src": "assets/brand-logos/label-by-anuja.png" },
-  { "name": "Veera Ki Rasi", "src": "assets/brand-logos/veera-ki-rasi.png" },
   { "name": "Cheekee", "src": "assets/brand-logos/cheekee.png" },
   { "name": "Kartelo India", "src": "assets/brand-logos/kartelo-india.png" },
   { "name": "Diyaa Pure", "src": "assets/brand-logos/diyaa-pure.png" },
