@@ -414,14 +414,18 @@
     { key: "call", label: "Call Support &amp; Requirement Discussion" },
   ];
 
-  // States only what's actually true for this exact service/tier, so it
-  // can't be read as a blanket promise that applies to every package.
-  function supportSummaryValue(d) {
+  // Every role rendered every time, included or not — a chip list that
+  // visibly changes shape from package to package (which roles light up)
+  // reads as "this varies by what you pick" far more clearly than a
+  // single run-on sentence where the included/excluded halves look
+  // identical.
+  function supportChipsHTML(d) {
     const support = d.support || [];
-    const included = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) !== -1).map((r) => r.label);
-    const excluded = SUPPORT_ROLES.filter((r) => support.indexOf(r.key) === -1).map((r) => r.label);
-    if (!included.length) return excluded.length ? `Not included at this tier: ${excluded.join(", ")}` : "—";
-    return included.join(", ") + (excluded.length ? ` (${excluded.join(", ")} not included)` : "");
+    const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    return SUPPORT_ROLES.map((r) => {
+      const included = support.indexOf(r.key) !== -1;
+      return `<span class="support-chip${included ? " included" : ""}">${included ? check : ""}${r.label}</span>`;
+    }).join("");
   }
 
   function renderServiceSummary() {
@@ -458,10 +462,13 @@
       const specRows = [
         ["Script", notApplicable(d.scripting) ? null : d.scripting],
         ["Language", notApplicable(d.language) ? null : d.language],
-        ["Support", supportSummaryValue(d)],
       ].filter(([, v]) => v);
       html = `
         <div class="scope-specs">${specRows.map(([k, v]) => `<div class="scope-spec-row"><span>${k}</span><b>${v}</b></div>`).join("")}</div>
+        <div class="support-block">
+          <span class="scope-need-label">Support team for this package</span>
+          <div class="support-chips">${supportChipsHTML(d)}</div>
+        </div>
         <ul class="scope-list">${scopeListHTML(d.included)}</ul>
         <div class="scope-deliver-box"><b>Creative Team Delivers</b><span>${d.deliver}</span></div>
       `;
