@@ -118,7 +118,7 @@
       support: ["editor", "call"],
     },
     reel1: {
-      name: "AI Reel — Tier 1", tier: 1, unit: "reel", basePrice: 2500,
+      name: "AI Reel — Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
       short: "Script from your brief, 1 minor revision included.",
       benefit: "The quickest, most affordable way into AI reels.",
       duration: "Max 20 sec", format: "9:16 (1 dimension)",
@@ -146,7 +146,7 @@
       support: ["writer", "editor", "call"],
     },
     reel2: {
-      name: "AI Reel — Tier 2", tier: 2, unit: "reel", basePrice: 3500,
+      name: "AI Reel — Story Cut", tier: 2, unit: "reel", basePrice: 3500,
       short: "Script from your brief, 1 limited-scope revision included.",
       benefit: "A safety net for wording & hook-length tweaks.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
@@ -172,7 +172,7 @@
       support: ["writer", "editor", "call"],
     },
     reel3: {
-      name: "AI Reel — Tier 3", tier: 3, unit: "reel", basePrice: 5000,
+      name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
       short: "1 script option shared for approval, room for small changes.",
       benefit: "Writer + Editor input for a stronger script direction.",
       duration: "Max 30 sec", format: "9:16 (1 dimension)",
@@ -201,7 +201,7 @@
       support: ["writer", "editor", "call"],
     },
     reel4: {
-      name: "AI Reel — Tier 4", tier: 4, unit: "reel", basePrice: 8000,
+      name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
       short: "1 script + 2 hook options, shared for approval.",
       benefit: "Full Creative Director involvement, top-tier polish.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
