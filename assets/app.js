@@ -1534,7 +1534,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       // Each row's logos are duplicated so the marquee can loop
       // seamlessly at translateX(-50%) with no visible jump/reset.
       const imgs = row.map(
-        (b) => `<img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy">`
+        (b) => `<div class="brand-logo-box"><img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy"></div>`
       ).join("");
       track.innerHTML = imgs + imgs;
     });
