@@ -1526,7 +1526,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const track = document.getElementById("brandLogosTrack");
     if (!strip || !track || !Array.isArray(BRAND_LOGOS) || !BRAND_LOGOS.length) return;
     track.innerHTML = BRAND_LOGOS.map(
-      (b) => `<img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy">`
+      (b) => `<div class="brand-logo-chip"><img src="${b.src}" alt="${escapeHtml(b.name)}" loading="lazy"></div>`
     ).join("");
     strip.style.display = "";
   })();
