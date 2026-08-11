@@ -784,40 +784,43 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .order-summary .field-row{margin-bottom:12px;}
 .order-summary .field-row label{display:flex; align-items:center; gap:8px;}
 /* Quiet by default — a small teal "Applied" chip plus a soft tint on
-   the discount input and its line in the summary, shown only once a
-   discount is actually entered. Kept inside the existing row bounds
-   (no overlap with subtotal/GST/total above or below) so it reads as
-   this one line being highlighted, not a new element being inserted. */
+   the discount line in the summary, shown only once a discount is
+   actually entered. Kept inside the existing row bounds (no overlap
+   with subtotal/GST/total above or below) so it reads as this one line
+   being highlighted, not a new element being inserted. */
 .discount-badge{display:none; padding:2px 7px; border-radius:100px; background:var(--teal-soft); color:var(--teal); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
 #discountFieldRow.is-active .discount-badge{display:inline-block;}
-#discountFieldRow.is-active .text-input{border-color:var(--teal); box-shadow:0 0 0 3px var(--teal-soft);}
+#discountFieldRow.is-active .discount-input-row{border-color:var(--teal);}
 #discountRow.is-active{background:var(--teal-soft); margin:0 -14px; padding:10px 14px; border-radius:8px; border-bottom-color:transparent;}
 #discountRow.is-active b{color:var(--teal);}
 
-/* Discount type (% / ₹) — a small segmented control glued to the left of
-   the amount input, same pill language as .qtier-chip elsewhere on the
-   page, so switching how the discount is expressed never needs its own
-   separate field or explanation. */
-.discount-input-row{display:flex; gap:8px; align-items:stretch;}
-.discount-input-row .text-input{flex:1 1 auto; min-width:0;}
-.seg-toggle{display:flex; flex:0 0 auto; gap:2px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1); padding:3px; box-shadow:var(--inset-hi);}
-.seg-btn{padding:0 13px; border-radius:calc(var(--radius-sm) - 3px); font-size:13px; font-weight:700; color:var(--text-2); transition:background .2s ease, color .2s ease;}
+/* Discount type (% / ₹) — one flat bordered group (toggle + amount, no
+   nested pills, no gloss/glow) so switching how the discount is
+   expressed never needs its own separate field or explanation. */
+.discount-input-row{
+  display:flex; align-items:stretch; border-radius:var(--radius-sm); border:1px solid var(--line);
+  background:var(--surface-1); overflow:hidden; transition:border-color .2s ease;
+}
+.seg-toggle{display:flex; flex:0 0 auto; border-right:1px solid var(--line);}
+.seg-btn{padding:0 14px; font-size:13px; font-weight:600; color:var(--text-2); background:transparent; transition:background .15s ease, color .15s ease;}
+.seg-btn:not(:last-child){border-right:1px solid var(--line);}
 .seg-btn:hover{color:var(--text-0);}
-.seg-btn.active{background:var(--violet); color:var(--btn-ink);}
+.seg-btn.active{background:var(--text-0); color:var(--bg-0);}
+.discount-input-row .text-input{flex:1 1 auto; min-width:0; border:none; border-radius:0; background:transparent; box-shadow:none;}
+.discount-input-row .text-input:focus{box-shadow:none;}
 
-/* GST include/exclude — a compact switch inline with its own summary
-   row label, so turning it off for a non-GST invoice is one click and
-   the row right below updates (or visibly mutes) in the same place. */
+/* GST include/exclude — a compact, flat switch inline with its own
+   summary-row label, so turning it off for a non-GST invoice is one
+   click and the row right below updates (or visibly mutes) in place. */
 .gst-field-row{flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; margin-bottom:14px;}
 .gst-field-row label{text-transform:none; letter-spacing:normal; font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--text-0);}
 .gst-switch-label{display:flex; align-items:center; gap:10px; cursor:pointer;}
-.gst-switch{position:relative; display:inline-flex; width:34px; height:20px; flex:0 0 auto;}
+.gst-switch{position:relative; display:inline-flex; width:32px; height:18px; flex:0 0 auto;}
 .gst-switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
-.gst-switch-track{position:absolute; inset:0; border-radius:100px; background:var(--surface-2); border:1px solid var(--line); transition:background .2s ease, border-color .2s ease; pointer-events:none;}
-.gst-switch-thumb{position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:var(--text-2); transition:transform .2s var(--ease), background .2s ease; pointer-events:none;}
-.gst-switch input:checked ~ .gst-switch-track{background:var(--teal); border-color:var(--teal);}
-.gst-switch input:checked ~ .gst-switch-thumb{transform:translateX(14px); background:#fff;}
-.gst-switch input:focus-visible ~ .gst-switch-track{box-shadow:0 0 0 3px var(--teal-soft);}
+.gst-switch-track{position:absolute; inset:0; border-radius:100px; background:var(--surface-2); border:1px solid var(--line); transition:background .15s ease, border-color .15s ease; pointer-events:none;}
+.gst-switch-thumb{position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--text-2); transition:transform .15s ease, background .15s ease; pointer-events:none;}
+.gst-switch input:checked ~ .gst-switch-track{background:var(--text-0); border-color:var(--text-0);}
+.gst-switch input:checked ~ .gst-switch-thumb{transform:translateX(14px); background:var(--bg-0);}
 .field-hint{font-size:11px; color:var(--text-2);}
 #gstRow.is-muted{opacity:.5;}
 
