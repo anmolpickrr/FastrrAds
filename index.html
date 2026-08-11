@@ -800,13 +800,25 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .adj-row > span:first-child{color:var(--text-2); font-size:14px;}
 .adj-control{display:flex; align-items:center; gap:10px;}
 
-/* % / ₹ — plain text toggle, not a button pair. The active unit is
-   just darker/bolder text; the inactive one is muted. A single hairline
-   divider between them is the only "chrome" at all. */
-.unit-toggle{display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:12.5px;}
-.unit-toggle-btn{padding:2px; color:var(--text-2); font-weight:600; background:none; border:none; transition:color .15s ease;}
-.unit-toggle-btn:hover{color:var(--text-0);}
+/* % / ₹ — plain text, not a button pair, but with enough affordance
+   that it doesn't read as static: the selected unit carries a small
+   underline (the same "this is a switchable tab" cue used everywhere
+   from browser tabs to segmented controls), and hovering *either*
+   option raises a soft rounded highlight + lifts it slightly — motion
+   and a hand cursor are what say "clickable" here, not a permanent box. */
+.unit-toggle{display:flex; align-items:center; gap:2px; font-family:var(--font-mono); font-size:12.5px;}
+.unit-toggle-btn{
+  padding:4px 7px; border-radius:6px; color:var(--text-2); font-weight:600; background:none; border:none;
+  cursor:pointer; position:relative; transition:color .15s ease, background-color .15s ease, transform .15s ease;
+}
+.unit-toggle-btn::after{
+  content:""; position:absolute; left:7px; right:7px; bottom:1px; height:2px; border-radius:2px;
+  background:var(--teal); transform:scaleX(0); transition:transform .18s ease;
+}
+.unit-toggle-btn:hover{color:var(--text-0); background:var(--surface-hover); transform:translateY(-1px);}
+.unit-toggle-btn:active{transform:translateY(0) scale(.94);}
 .unit-toggle-btn.active{color:var(--text-0);}
+.unit-toggle-btn.active::after{transform:scaleX(1);}
 .unit-toggle-sep{color:var(--line);}
 
 /* The amount input has no visible box at rest — just the number,
@@ -1325,7 +1337,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-7"></script>
-<script src="assets/app.js?v=20260811-7"></script>
+<script src="assets/creative-data.js?v=20260811-8"></script>
+<script src="assets/app.js?v=20260811-8"></script>
 </body>
 </html>
