@@ -788,74 +788,56 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:12px;}
 .order-summary .field-row label{display:flex; align-items:center; gap:8px;}
-/* Order Discount + GST — two clearly-bordered "settings" cards stacked
-   in their own group, structurally separate from the read-only
-   Subtotal/Discount/GST/Total rows below. Each card is self-contained
-   (label + control together) instead of a control welded onto a
-   giant input, which is what made this feel unstructured before. */
-.adjustments-group{display:flex; flex-direction:column; gap:10px; margin-bottom:16px;}
-.adj-card{border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface-1); padding:12px 14px; transition:border-color .15s ease, background .15s ease;}
-.adj-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
-.adj-card-head label{margin:0; display:flex; align-items:center; gap:8px;}
 
-/* Quiet by default — a small teal "Applied" chip plus a highlighted
-   card border, shown only once a discount is actually entered, plus a
-   matching tint on the discount line in the summary below. */
-.discount-badge{display:none; padding:2px 7px; border-radius:100px; background:var(--teal-soft); color:var(--teal); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em;}
-#discountFieldRow.is-active .discount-badge{display:inline-block;}
-#discountFieldRow.is-active{border-color:var(--teal);}
-#discountRow.is-active{background:var(--teal-soft); margin:0 -14px; padding:10px 14px; border-radius:8px; border-bottom-color:transparent;}
+/* Order Discount + GST — no cards, no button chrome. Both live as two
+   more rows in the same plain list as Subtotal/Discount/GST/Total
+   below (same row height, same hairline rule, label left / control
+   right), so the whole panel reads as one quiet list instead of
+   "controls" sitting on top of a "summary". Only the discount amount
+   once it's non-zero, and GST once switched off, actually change
+   color — everything else stays the same muted tone as static text. */
+.adj-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--line-soft);}
+.adj-row > span:first-child{color:var(--text-2); font-size:14px;}
+.adj-control{display:flex; align-items:center; gap:10px;}
+
+/* % / ₹ — plain text toggle, not a button pair. The active unit is
+   just darker/bolder text; the inactive one is muted. A single hairline
+   divider between them is the only "chrome" at all. */
+.unit-toggle{display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:12.5px;}
+.unit-toggle-btn{padding:2px; color:var(--text-2); font-weight:600; background:none; border:none; transition:color .15s ease;}
+.unit-toggle-btn:hover{color:var(--text-0);}
+.unit-toggle-btn.active{color:var(--text-0);}
+.unit-toggle-sep{color:var(--line);}
+
+/* The amount input has no visible box at rest — just the number,
+   right-aligned, with a hairline underline that only picks up color on
+   focus. This is the one place data is actually entered, so it earns a
+   touch more presence than plain text, but nothing close to a "field". */
+.summary-input{
+  width:56px; text-align:right; background:none; border:none; border-bottom:1px solid var(--line-soft);
+  padding:2px 0; font-size:14px; font-weight:600; color:var(--text-0); font-family:inherit;
+  -moz-appearance:textfield;
+}
+.summary-input:focus{outline:none; border-bottom-color:var(--teal);}
+.summary-input::-webkit-outer-spin-button,.summary-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
 #discountRow.is-active b{color:var(--teal);}
 
-/* Discount type (% / ₹) — a small pill toggle next to the label, not
-   welded onto the input. The selected segment is a frosted teal-tinted
-   chip (same glass language as the rest of the page's panels —
-   translucent + blurred, not a solid fill) rather than a hard block. */
-.seg-toggle{display:flex; flex:0 0 auto; border-radius:var(--radius-xs); border:1px solid var(--line); overflow:hidden;}
-.seg-btn{padding:5px 12px; font-size:12.5px; font-weight:600; color:var(--text-2); background:transparent; transition:background .15s ease, color .15s ease;}
-.seg-btn:not(:last-child){border-right:1px solid var(--line);}
-.seg-btn:hover{color:var(--text-0);}
-.seg-btn.active{
-  background:var(--teal-soft); color:var(--teal);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-}
-
-/* The amount input is a normal, full-width .text-input (same as every
-   other field on the page) with just a small unit glyph inset — % as a
-   trailing suffix, ₹ as a leading prefix, matching how each is
-   conventionally written — instead of a second control crammed inside. */
-.unit-input-wrap{position:relative; display:flex;}
-.unit-input-adorn{position:absolute; top:50%; transform:translateY(-50%); font-size:14px; font-weight:600; color:var(--text-2); pointer-events:none;}
-.unit-input-wrap.unit-suffix .unit-input-adorn{right:14px;}
-.unit-input-wrap.unit-prefix .unit-input-adorn{left:14px;}
-.unit-input-wrap.unit-suffix .unit-input{padding-right:30px;}
-.unit-input-wrap.unit-prefix .unit-input{padding-left:28px;}
-
-/* GST include/exclude — the whole card is the clickable <label> for the
-   switch (click anywhere on the row, not just the small thumb), styled
-   as the same bordered card as the discount one above so the two read
-   as one "Order Adjustments" group. The "on" track is the same frosted
-   teal glass used for the selected discount-type chip. */
-.adj-card-toggle{display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer;}
-.adj-card-toggle:hover{background:var(--surface-hover);}
-.adj-toggle-text{display:flex; flex-direction:column; gap:2px; min-width:0;}
-.adj-toggle-title{font-size:13px; font-weight:600; color:var(--text-0);}
-.gst-switch{position:relative; display:inline-flex; width:32px; height:18px; flex:0 0 auto;}
+/* GST — a bare switch, no surrounding card. Small and quiet since it's
+   binary and defaults to on; the row below already states the result
+   in words ("Not applied") once it's switched off, so no extra hint
+   text is needed here. */
+.gst-switch{position:relative; display:inline-flex; width:30px; height:17px; flex:0 0 auto;}
 .gst-switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
 .gst-switch-track{
   position:absolute; inset:0; border-radius:100px; background:var(--surface-2); border:1px solid var(--line);
   transition:background .15s ease, border-color .15s ease; pointer-events:none;
 }
 .gst-switch-thumb{
-  position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:var(--text-2);
+  position:absolute; top:2px; left:2px; width:11px; height:11px; border-radius:50%; background:var(--text-2);
   transition:transform .15s ease, background .15s ease; pointer-events:none;
 }
-.gst-switch input:checked ~ .gst-switch-track{
-  background:var(--teal-soft); border-color:var(--teal);
-  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-}
-.gst-switch input:checked ~ .gst-switch-thumb{transform:translateX(14px); background:var(--teal);}
-.field-hint{font-size:11px; color:var(--text-2);}
+.gst-switch input:checked ~ .gst-switch-track{background:var(--teal-soft); border-color:var(--teal);}
+.gst-switch input:checked ~ .gst-switch-thumb{transform:translateX(13px); background:var(--teal);}
 #gstRow.is-muted{opacity:.5;}
 
 /* ---------- MESSAGES ---------- */
@@ -1207,32 +1189,26 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         </details>
 
         <div class="order-summary">
-          <div class="adjustments-group">
-            <div class="adj-card" id="discountFieldRow">
-              <div class="adj-card-head">
-                <label for="qDiscountInput">Order Discount<span class="discount-badge" id="discountBadge">Applied</span></label>
-                <div class="seg-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
-                  <button type="button" class="seg-btn active" data-type="pct">%</button>
-                  <button type="button" class="seg-btn" data-type="flat">₹</button>
-                </div>
-              </div>
-              <div class="unit-input-wrap unit-suffix" id="discountUnitWrap">
-                <span class="unit-input-adorn" id="discountUnitAdorn">%</span>
-                <input class="text-input unit-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
-              </div>
-            </div>
-
-            <label class="adj-card adj-card-toggle" for="qGstToggle">
-              <span class="adj-toggle-text">
-                <span class="adj-toggle-title">GST (18%)</span>
-                <span class="field-hint" id="gstHint">Included — for GST invoices</span>
+          <div class="adj-row" id="discountFieldRow">
+            <span>Discount</span>
+            <span class="adj-control">
+              <span class="unit-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
+                <button type="button" class="unit-toggle-btn active" data-type="pct">%</button>
+                <span class="unit-toggle-sep">/</span>
+                <button type="button" class="unit-toggle-btn" data-type="flat">₹</button>
               </span>
-              <span class="gst-switch">
-                <input type="checkbox" id="qGstToggle" checked>
-                <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
-              </span>
-            </label>
+              <input class="summary-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+            </span>
           </div>
+
+          <label class="adj-row" for="qGstToggle">
+            <span>GST (18%)</span>
+            <span class="gst-switch">
+              <input type="checkbox" id="qGstToggle" checked>
+              <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
+            </span>
+          </label>
+
           <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
           <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
           <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
@@ -1349,7 +1325,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-6"></script>
-<script src="assets/app.js?v=20260811-6"></script>
+<script src="assets/creative-data.js?v=20260811-7"></script>
+<script src="assets/app.js?v=20260811-7"></script>
 </body>
 </html>
