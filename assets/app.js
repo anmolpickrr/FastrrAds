@@ -241,14 +241,21 @@
   // references, tone/key-message, voiceover language, SKU list) and
   // deliberately excludes these, so they're requested exactly once
   // instead of once per line item.
-  const COMMON_NEED = [
+  // Split in two: brand assets are a true one-time ask regardless of
+  // order size, but the page link and images are per selected product —
+  // an order covering 3 SKUs needs 3 of each, not 1. Grouping them
+  // together as "once per order" was the actual source of confusion.
+  const BRAND_NEED = [
     "Brand logo",
     "Brand colour palette (if available)",
     "Brand fonts (if available)",
     "Selected product(s) to be featured",
+  ];
+  const PER_PRODUCT_NEED = [
     "Product page / website link",
     "Product images — high-resolution with a clean background, or raw product images/footage, as available",
   ];
+  const COMMON_NEED = [...BRAND_NEED, ...PER_PRODUCT_NEED];
 
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
@@ -476,14 +483,19 @@
     } else if (state.scopeTab === "exc") {
       html = `<ul class="scope-list scope-exc">${scopeListHTML(d.excluded)}</ul>`;
     } else {
-      // Split into brand/product assets (identical for every package, so
-      // labeled as a one-time ask) vs. what's specific to this creative —
-      // same split the requirements message uses for a multi-item order,
-      // shown here for whoever's just browsing a single package.
+      // Three groups: brand assets (a true one-time ask), assets that
+      // scale with how many products the order actually covers, and
+      // whatever's specific to this creative type — so the "how many do
+      // you need" question has a different, correct answer per group
+      // instead of one flat list implying everything is asked for once.
       html = `
         <div class="scope-need-group">
-          <span class="scope-need-label">Brand &amp; product assets — once per order</span>
-          <ul class="scope-list scope-need">${scopeListHTML(COMMON_NEED)}</ul>
+          <span class="scope-need-label">Brand assets — once per order</span>
+          <ul class="scope-list scope-need">${scopeListHTML(BRAND_NEED)}</ul>
+        </div>
+        <div class="scope-need-group">
+          <span class="scope-need-label">Per selected product</span>
+          <ul class="scope-list scope-need">${scopeListHTML(PER_PRODUCT_NEED)}</ul>
         </div>
         <div class="scope-need-group">
           <span class="scope-need-label">Specific to this creative</span>
