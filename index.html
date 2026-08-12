@@ -350,18 +350,18 @@ footer .brand-logo{height:24px;}
    only shape) so every mark reads at identical visual weight regardless of
    its original colors — filter just flips that one tone light/dark to
    match whichever theme is active. */
-/* Showcase (the section right before this) has its own bottom padding
-   zeroed via inline style, and Services (right after) has its own top
-   padding zeroed the same way, so neither stacks a second gap on top
-   of this strip's own padding — the standard "one section supplies the
-   gap" convention every other section boundary on the page follows,
-   which otherwise keeps every major section-to-section gap at a
-   consistent 72px. The 54/72 split (not a plain 72/72) exists only to
-   cancel out .showcase-track's own built-in 18px bottom padding, so
-   the visual gap above the label still lands at the same 72px as the
-   gap below it instead of reading larger. */
+/* border-top/border-bottom sit at the OUTER edge of the box, outside
+   its own padding — so padding alone (the previous approach here)
+   only ever created space between the hairline and this strip's own
+   content (the label/logos), never between the hairline itself and
+   Showcase above / Services below. With Showcase's bottom padding and
+   Services' top padding both zeroed (see their inline style overrides),
+   that left each hairline sitting flush against the neighboring
+   section's content — exactly the "line touching the heading/images"
+   read from a screenshot. margin supplies the missing outer gap;
+   padding still handles the inner gap to the label/logos. */
 .brand-logos-strip{
-  position:relative; z-index:2; overflow:hidden; padding:54px 0 72px;
+  position:relative; z-index:2; overflow:hidden; margin:48px 0; padding:40px 0;
   border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
 }
 /* A quiet rule flanking the label on both sides — the same minimal
@@ -963,8 +963,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-19" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-19" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1351,8 +1351,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-19" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-19" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1384,7 +1384,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-19"></script>
-<script src="assets/app.js?v=20260811-19"></script>
+<script src="assets/creative-data.js?v=20260811-20"></script>
+<script src="assets/app.js?v=20260811-20"></script>
 </body>
 </html>
