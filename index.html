@@ -684,7 +684,12 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .scope-list.scope-exc li::before{content:'✕'; background:rgba(224,130,126,0.16); color:var(--danger);}
 .scope-list.scope-need li::before{content:'↑'; background:var(--violet-soft); color:var(--violet);}
-.scope-need-group{margin-bottom:20px;}
+/* Clearly larger than the 14px gap between items inside a single
+   group — at 20px the two rhythms were close enough that a new group
+   starting didn't read any differently from the next line in the same
+   list, which is what made "once per order" vs "per selected product"
+   still hard to tell apart at a glance. */
+.scope-need-group{margin-bottom:34px;}
 .scope-need-group:last-of-type{margin-bottom:0;}
 .scope-need-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
 .scope-note{margin-top:14px; font-size:12.5px; color:var(--text-2); font-style:italic;}
@@ -963,8 +968,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-21" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-21" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1351,8 +1356,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-20" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-21" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-21" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1384,7 +1389,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-20"></script>
-<script src="assets/app.js?v=20260811-20"></script>
+<script src="assets/creative-data.js?v=20260811-21"></script>
+<script src="assets/app.js?v=20260811-21"></script>
 </body>
 </html>
