@@ -335,7 +335,13 @@
   // more than one creative type at a time.
   function computeCart() {
     const items = state.cart.map((item) => {
-      const d = dataFor(item.service, item.tier);
+      const base = dataFor(item.service, item.tier);
+      // A per-line duration override, set by whoever's building the
+      // quote when a client has agreed a length that doesn't match any
+      // pre-packaged tier — never mutates the shared package data, just
+      // this one cart line's copy of it, so every other order still
+      // shows the standard duration.
+      const d = item.customDuration ? { ...base, duration: item.customDuration } : base;
       const lineSubtotal = d.basePrice * item.qty;
       return { ...item, d, lineSubtotal };
     });
@@ -381,6 +387,18 @@
     const item = state.cart.find((i) => i.id === id);
     if (!item) return;
     item.qty = Math.max(1, item.qty + delta);
+    render();
+  }
+
+  // Blank or unchanged-from-default clears the override, so a line item
+  // only carries customDuration when it's actually different from the
+  // package's own duration.
+  function setCartItemDuration(id, value) {
+    const item = state.cart.find((i) => i.id === id);
+    if (!item) return;
+    const trimmed = (value || "").trim();
+    const base = dataFor(item.service, item.tier);
+    item.customDuration = trimmed && trimmed !== base.duration ? trimmed : null;
     render();
   }
 
@@ -589,10 +607,24 @@
             .slice(0, 2)
             .map(([l, v]) => `${l}: ${v}`)
             .join("   ");
+          // Only offered where "duration" actually means seconds of video
+          // (AI Reels, 360° Catalogue) — Static/Carousel duration is
+          // frame/slide count, not something a client negotiates in
+          // seconds. Sales can override here, per line, without touching
+          // the package's own default for every other order.
+          const durationEditable = /sec/i.test(item.d.duration || "");
+          const durationField = durationEditable
+            ? `<div class="cart-item-duration${item.customDuration ? " custom" : ""}">
+                <label for="ciDuration${item.id}">Duration</label>
+                <input type="text" id="ciDuration${item.id}" class="ci-duration-input" data-id="${item.id}" value="${item.customDuration || item.d.duration}">
+                ${item.customDuration ? '<span class="cart-item-duration-tag">Custom</span>' : ""}
+              </div>`
+            : "";
           return `<div class="cart-item" data-id="${item.id}">
             <div class="cart-item-info">
               <div class="cart-item-name">${name}</div>
               <div class="cart-item-facts">${facts}</div>
+              ${durationField}
             </div>
             <div class="cart-item-qty">
               <button type="button" class="ci-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
@@ -665,9 +697,15 @@
     // readable dropped straight into a WhatsApp thread. The full
     // per-item breakdown (deliverables/duration/revisions/script/format/
     // language/timeline) plus general terms lives in the downloadable
-    // PDF only (see generatePackagePdf below), not duplicated here.
+    // PDF only (see generatePackagePdf below), not duplicated here. A
+    // custom duration IS called out here despite that, since it's a
+    // deviation from the standard package the client needs to see
+    // reflected in the summary they're actually reading.
     const orderBlock = cart.items
-      .map((item, idx) => `${idx + 1}. ${item.d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`)
+      .map((item, idx) => {
+        const durationNote = item.customDuration ? ` (custom duration: ${item.customDuration})` : "";
+        return `${idx + 1}. ${item.d.name}${durationNote} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`;
+      })
       .join("\n");
 
     const clientMsg = `Package Summary — ${brandName}
@@ -872,7 +910,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         y += 4;
         const rows = [
           ["Deliverables", d.deliver],
-          ["Duration / Format", `${d.duration} · ${d.format}`],
+          [
+            item.customDuration ? "Duration / Format (custom)" : "Duration / Format",
+            `${d.duration} · ${d.format}`,
+          ],
           ["Revisions", d.revisions],
         ];
         if (d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)) rows.push(["Script / Approval", d.scripting]);
@@ -1149,6 +1190,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       else if (action === "dec") changeCartQty(id, -1);
       else if (action === "remove") removeCartItem(id);
     });
+  });
+
+  // "change" (not "input") so the re-render on every keystroke doesn't
+  // steal focus mid-edit — it commits once the field is left or Enter
+  // is pressed.
+  document.getElementById("orderCartList").addEventListener("change", (e) => {
+    const input = e.target.closest(".ci-duration-input");
+    if (!input) return;
+    withScrollAnchor(() => setCartItemDuration(Number(input.dataset.id), input.value));
   });
 
   const brandNameInput = document.getElementById("brandNameInput");
