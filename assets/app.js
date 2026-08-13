@@ -333,6 +333,10 @@
   // this is the actual "order total" shown in the summary and used by
   // the message generator, and the only place quote math happens for
   // more than one creative type at a time.
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
   function computeCart() {
     const items = state.cart.map((item) => {
       const base = dataFor(item.service, item.tier);
@@ -340,8 +344,20 @@
       // quote when a client has agreed a length that doesn't match any
       // pre-packaged tier — never mutates the shared package data, just
       // this one cart line's copy of it, so every other order still
-      // shows the standard duration.
-      const d = item.customDuration ? { ...base, duration: item.customDuration } : base;
+      // shows the standard duration. The base package's duration text
+      // also appears inline inside `deliver` ("1 MP4, 9:16, up to 25
+      // sec, ...") — swapped there too (case-insensitive match on the
+      // original duration string) so every place this line item's
+      // duration is quoted, including the PDF's "Deliverables" row,
+      // agrees with the override instead of only the row explicitly
+      // labeled "(custom)".
+      const d = item.customDuration
+        ? {
+            ...base,
+            duration: item.customDuration,
+            deliver: base.deliver.replace(new RegExp(escapeRegExp(base.duration), "i"), item.customDuration),
+          }
+        : base;
       const lineSubtotal = d.basePrice * item.qty;
       return { ...item, d, lineSubtotal };
     });
@@ -766,7 +782,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "Turnaround timeline begins once we've received everything we need, meaning all required assets and details, not the payment date.",
     "New concepts, major creative rework, and any additions beyond what's included (extra dimensions, formats, slides, or aspect ratios) sit outside package scope and are quoted separately or as a new order.",
     "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
-    "A single discount applies to the whole order, not to each creative type individually, as either a percentage or a flat ₹ amount.",
+    "A single discount applies to the whole order, not to each creative type individually, as either a percentage or a flat Rs. amount.",
   ];
 
   // Kept separate from PDF_TERMS since its wording depends on whether GST
