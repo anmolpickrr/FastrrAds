@@ -819,6 +819,28 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
   margin-top:4px; font-size:11.5px; color:var(--text-2); line-height:1.5;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
+/* Inline editable duration — a dashed underline (not a boxed input)
+   so it reads as "click to edit this value" without adding another
+   bordered control to a panel that's already fairly dense. Only
+   rendered for services whose duration is actually seconds of video
+   (AI Reels, 360° Catalogue) — see the durationEditable check in
+   renderCart. Turns violet once a value differs from the package
+   default, with a small "Custom" tag, so an overridden line is
+   obvious at a glance rather than silently different. */
+.cart-item-duration{margin-top:7px; display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; color:var(--text-2);}
+.cart-item-duration label{flex:0 0 auto;}
+.cart-item-duration input{
+  flex:0 1 auto; min-width:0; width:9ch; background:none; border:none; border-bottom:1px dashed var(--line);
+  font-family:inherit; font-size:11.5px; color:var(--text-1); padding:1px 0;
+  transition:border-color .2s ease, color .2s ease;
+}
+.cart-item-duration input:hover{border-bottom-color:var(--text-2);}
+.cart-item-duration input:focus{outline:none; border-bottom:1px solid var(--violet); color:var(--text-0);}
+.cart-item-duration.custom input{color:var(--violet); font-weight:600; border-bottom-color:var(--violet);}
+.cart-item-duration-tag{
+  font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--violet);
+  background:var(--violet-soft); padding:2px 7px; border-radius:100px;
+}
 .cart-item-qty{width:78px; display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:13px; font-weight:600;}
 .ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
 .ci-qty-btn:hover{background:var(--surface-hover); color:var(--text-0);}
@@ -968,8 +990,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-22" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-22" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-23" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-23" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1356,8 +1378,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-22" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-22" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-23" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-23" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1389,7 +1411,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-22"></script>
-<script src="assets/app.js?v=20260811-22"></script>
+<script src="assets/creative-data.js?v=20260811-23"></script>
+<script src="assets/app.js?v=20260811-23"></script>
 </body>
 </html>
