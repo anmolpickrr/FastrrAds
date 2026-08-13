@@ -121,14 +121,14 @@
       name: "AI Reel — Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
       short: "Script from your brief, 1 minor revision included.",
       benefit: "The quickest, most affordable way into AI reels.",
-      duration: "Max 20 sec", format: "9:16 (1 dimension)",
+      duration: "Up to 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in-frame changes only)", scripting: "Script written from your brief — no separate approval step",
       language: "Hindi / English voiceover",
       turnaround: "1–2 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
         "Script written from the brief we discuss together — no separate approval step",
-        "Single 9:16 export, max 20 sec",
+        "Single 9:16 export, up to 25 sec",
         "1 revision — minor, in-frame changes (e.g. text or element placement)",
       ],
       excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
@@ -137,7 +137,7 @@
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 20 sec, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, up to 25 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // Script is now written internally from the brief at every reel tier — the
       // real differentiator between tiers is whether it's shared for approval
@@ -724,9 +724,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      PDF instead, built with the same cart/state data as the messages.
   ---------------------------------------------------------- */
   const PDF_TERMS = [
-    "Turnaround shown for each package is per single creative — for bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
-    "Turnaround timeline begins once we've received everything we need — all required assets and details, not the payment date.",
-    "New concepts, major creative rework, and any additions beyond what's included — extra dimensions, formats, slides, or aspect ratios — sit outside package scope and are quoted separately or as a new order.",
+    "Turnaround shown for each package is per single creative. For bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
+    "Turnaround timeline begins once we've received everything we need, meaning all required assets and details, not the payment date.",
+    "New concepts, major creative rework, and any additions beyond what's included (extra dimensions, formats, slides, or aspect ratios) sit outside package scope and are quoted separately or as a new order.",
     "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
     "A single discount applies to the whole order, not to each creative type individually, as either a percentage or a flat ₹ amount.",
   ];
@@ -902,7 +902,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       doc.text("Pricing", marginX, y);
       y += 4;
       const priceRows = [["Subtotal", fmtINRPdf(cart.subtotal)]];
-      if (cart.discountAmt > 0) priceRows.push([discountLabel(cart), "− " + fmtINRPdf(cart.discountAmt)]);
+      if (cart.discountAmt > 0) priceRows.push([discountLabel(cart), "- " + fmtINRPdf(cart.discountAmt)]);
       priceRows.push(cart.gstEnabled ? ["GST (18%)", "+ " + fmtINRPdf(cart.gstAmt)] : ["GST", "Not applied (non-GST invoice)"]);
       doc.autoTable({
         startY: y,
