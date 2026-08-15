@@ -1014,6 +1014,20 @@ async function boot() {
       : "This order is quoted without GST, as a non-GST invoice.";
   }
 
+  // jsPDF's built-in Helvetica font is WinAnsi/Latin-only and can't
+  // render "₹" — it silently falls back to an unrelated glyph (reads
+  // as a stray superscript "1"). Every currency string reaching this
+  // PDF was scraped from the page's own DOM, where "₹" displays fine,
+  // so it has to be converted to "Rs." before it ever reaches jsPDF —
+  // the same reason app.js's public Package Summary PDF uses
+  // fmtINRPdf() instead of the page's own fmtINR() everywhere.
+  function pdfMoney(s) {
+    return String(s || "").replace(/₹/g, "Rs. ").replace(/Rs\.\s+/g, "Rs. ");
+  }
+  function fmtINRPdf(n) {
+    return "Rs. " + Math.round(n).toLocaleString("en-IN");
+  }
+
   function generateInvoicePdf(order) {
     if (!window.jspdf || !window.jspdf.jsPDF) {
       window.alert("PDF export isn't available right now. Please reload the page and try again.");
@@ -1031,17 +1045,32 @@ async function boot() {
     doc.setTextColor(20);
     doc.text("Invoice", marginX, y);
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(110);
-    doc.text(order.orderNumber || "—", pageW - marginX, y, { align: "right" });
-    y += 6;
-    doc.setFontSize(9.5);
-    doc.text("Fastrr Ads", marginX, y);
-    doc.text(fmtDate(order.createdAt) || "—", pageW - marginX, y, { align: "right" });
-    y += 10;
+    doc.text("Fastrr Ads", pageW - marginX, y, { align: "right" });
+    y += 8;
     doc.setDrawColor(225);
     doc.line(marginX, y, pageW - marginX, y);
     y += 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Invoice Details", marginX, y);
+    y += 6;
+    doc.autoTable({
+      startY: y,
+      theme: "plain",
+      styles: { fontSize: 10, cellPadding: { top: 1, bottom: 1 } },
+      columnStyles: { 0: { fontStyle: "bold", cellWidth: 34 }, 1: { textColor: 60 } },
+      body: [
+        ["Order ID", order.orderNumber || "Not assigned"],
+        ["Date", fmtDate(order.createdAt) || "—"],
+        ["Status", STATUS_LABEL[order.status] || order.status],
+      ],
+      margin: { left: marginX, right: marginX },
+    });
+    y = doc.lastAutoTable.finalY + 8;
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
@@ -1068,14 +1097,14 @@ async function boot() {
     doc.setTextColor(20);
     doc.text("Order Items", marginX, y);
     y += 4;
-    const items = order.items && order.items.length ? order.items : [{ name: order.package || "Order", qty: "1", price: order.finalText || fmtINR(order.amount) }];
+    const items = order.items && order.items.length ? order.items : [{ name: order.package || "Order", qty: "1", price: order.finalText || fmtINRPdf(order.amount) }];
     doc.autoTable({
       startY: y,
       head: [["#", "Creative", "Qty", "Price"]],
-      body: items.map((it, i) => [String(i + 1), it.name, String(it.qty), it.price]),
+      body: items.map((it, i) => [String(i + 1), it.name, String(it.qty), pdfMoney(it.price)]),
       styles: { fontSize: 9.5, cellPadding: 4, valign: "middle" },
       headStyles: { fillColor: [26, 20, 46], textColor: 255, fontStyle: "bold" },
-      columnStyles: { 0: { cellWidth: 9 }, 2: { cellWidth: 20, halign: "center" }, 3: { cellWidth: 40, halign: "right" } },
+      columnStyles: { 0: { cellWidth: 9 }, 1: { cellWidth: pageW - marginX * 2 - 9 - 20 - 40 }, 2: { cellWidth: 20, halign: "center" }, 3: { cellWidth: 40, halign: "right" } },
       margin: { left: marginX, right: marginX },
     });
     y = doc.lastAutoTable.finalY + 8;
@@ -1124,9 +1153,9 @@ async function boot() {
     doc.text("Pricing", marginX, y);
     y += 4;
     const priceRows = [];
-    if (order.subtotalText) priceRows.push(["Subtotal", order.subtotalText]);
-    if (order.discountText) priceRows.push([order.discountLabelText || "Discount", order.discountText]);
-    priceRows.push(order.gstEnabled ? ["GST (18%)", order.gstText || "—"] : ["GST", "Not applied"]);
+    if (order.subtotalText) priceRows.push(["Subtotal", pdfMoney(order.subtotalText)]);
+    if (order.discountText) priceRows.push([order.discountLabelText || "Discount", pdfMoney(order.discountText)]);
+    priceRows.push(order.gstEnabled ? ["GST (18%)", order.gstText ? pdfMoney(order.gstText) : "—"] : ["GST", "Not applied"]);
     doc.autoTable({
       startY: y,
       theme: "plain",
@@ -1143,14 +1172,9 @@ async function boot() {
     doc.setFontSize(13);
     doc.setTextColor(20);
     doc.text("Total", marginX, y);
-    doc.text(order.finalText || fmtINR(order.amount), pageW - marginX, y, { align: "right" });
+    doc.text(order.finalText ? pdfMoney(order.finalText) : fmtINRPdf(order.amount), pageW - marginX, y, { align: "right" });
     y += 12;
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(20);
-    doc.text("Status: " + (STATUS_LABEL[order.status] || order.status), marginX, y);
-    y += 6;
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(120);
@@ -1209,8 +1233,12 @@ async function boot() {
       doc.text(`Page ${p} of ${pageCount}`, pageW - marginX, pageH - 10, { align: "right" });
     }
 
-    const filenameSafe = (order.orderNumber || "invoice").replace(/[^A-Za-z0-9-]/g, "");
-    doc.save(`Invoice-${filenameSafe}.pdf`);
+    const clientSafe =
+      (order.client || "Client")
+        .replace(/[^A-Za-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "Client";
+    const orderNumberSafe = order.orderNumber ? "-" + order.orderNumber.replace(/[^A-Za-z0-9-]/g, "") : "";
+    doc.save(`Invoice-${clientSafe}${orderNumberSafe}.pdf`);
   }
 
   orderList.addEventListener("click", (e) => {
