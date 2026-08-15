@@ -1527,6 +1527,25 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      Falls back to opening the visitor's own mail client if the POST
      fails outright (e.g. offline), so a submission is never silently
      lost.
+
+     KNOWN LANDMINE — Forms' own "Collect email addresses" setting
+     (Settings tab -> Responses in the Forms editor) must stay OFF.
+     When it's on, Google silently prepends its own hidden, required
+     email question ahead of every question below — usually in
+     "Verified" mode, which requires the respondent to be signed into
+     a Google account. This site's submissions are anonymous POSTs
+     from a hidden iframe, so that hidden field can never be
+     satisfied: Google rejects the whole submission, but the iframe
+     still "loads" *something* (a validation/sign-in page), so the
+     code below has no way to tell and reports success anyway. This
+     exact setting being on is what caused a real production incident
+     where every single public lead silently vanished — visitors saw
+     a normal success screen, nothing ever reached the sales team, and
+     it went unnoticed until someone checked the Form's Responses tab
+     directly and found it at zero. The form already has its own
+     visible "Email ID" question doing this job, so Google's automatic
+     version is pure redundancy with no upside — if it's ever back on,
+     turn it off rather than trying to work around it.
   ---------------------------------------------------------- */
   const LEAD_EMAIL = "design.tools@pickrr.com";
   const GOOGLE_FORM_ACTION =
