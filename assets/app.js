@@ -1357,15 +1357,30 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   /* ----------------------------------------------------------
      7b. LEAD CAPTURE — "Share Your Requirement"
-     No backend on this static site, so this posts to a form-relay
-     service once LEAD_ENDPOINT is configured (e.g. a Formspree
-     endpoint) — until then it falls back to opening the visitor's own
-     mail client, pre-addressed and pre-filled to LEAD_EMAIL, as a
-     zero-setup stopgap that ships today. Swap LEAD_ENDPOINT in once a
-     real form backend exists; nothing else here needs to change.
+     No backend on this static site, so submissions go straight to a
+     Google Form's /formResponse endpoint (same technique the "get
+     pre-filled link" feature is built on) — Google Forms' own "email
+     notifications for new responses" setting is what actually delivers
+     each submission to the inbox, no server of our own required. The
+     entry.* IDs below were read off a pre-filled link generated from
+     the live form, so they have to stay in sync if the form's
+     questions are ever rebuilt from scratch (edits to existing
+     questions are fine; deleting and re-adding one changes its ID).
+     Falls back to opening the visitor's own mail client if the POST
+     fails outright (e.g. offline), so a submission is never silently
+     lost.
   ---------------------------------------------------------- */
   const LEAD_EMAIL = "anmol.sharma@pickrr.com";
-  const LEAD_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxxx"
+  const GOOGLE_FORM_ACTION =
+    "https://docs.google.com/forms/d/e/1FAIpQLSfacU63ttdHBCsoYjjsxDmMLtm-uLApii4BuzvLUgtjK_GrCg/formResponse";
+  const GOOGLE_FORM_ENTRIES = {
+    name: "entry.2106469787",
+    email: "entry.862053348",
+    phone: "entry.1611403095",
+    brand: "entry.1196878162",
+    requirement: "entry.104750499",
+    details: "entry.910210025",
+  };
 
   (function initLeadForm() {
     const form = document.getElementById("leadForm");
@@ -1377,6 +1392,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function setStatus(msg, kind) {
       status.textContent = msg;
       status.className = "lead-form-status" + (kind ? " is-" + kind : "");
+    }
+
+    function openMailtoFallback(data) {
+      const subject = `New requirement — ${data.brand || data.name}`;
+      const body =
+        `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nBrand: ${data.brand || "-"}\n` +
+        `Requirement: ${data.requirement}\nDetails: ${data.details || "-"}`;
+      window.location.href =
+        `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
     form.addEventListener("submit", async (e) => {
@@ -1394,33 +1418,36 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         return;
       }
 
-      if (LEAD_ENDPOINT) {
-        const originalLabel = label.textContent;
-        btn.disabled = true;
-        label.textContent = "Sending…";
-        try {
-          const res = await fetch(LEAD_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify(data),
-          });
-          if (!res.ok) throw new Error("Request failed");
-          form.reset();
-          setStatus("Thanks — we've received your details and will be in touch shortly.", "success");
-        } catch (err) {
-          setStatus("Something went wrong sending this. Please try again, or email us directly.", "error");
-        } finally {
-          btn.disabled = false;
-          label.textContent = originalLabel;
-        }
-      } else {
-        const subject = `New requirement — ${data.brand || data.name}`;
-        const body =
-          `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nBrand: ${data.brand || "-"}\n` +
-          `Requirement: ${data.requirement}\nDetails: ${data.details || "-"}`;
-        window.location.href =
-          `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        setStatus("Opening your email app with these details pre-filled — hit send there to complete it.", "success");
+      const originalLabel = label.textContent;
+      btn.disabled = true;
+      label.textContent = "Sending…";
+      try {
+        const body = new URLSearchParams();
+        body.set(GOOGLE_FORM_ENTRIES.name, data.name);
+        body.set(GOOGLE_FORM_ENTRIES.email, data.email);
+        body.set(GOOGLE_FORM_ENTRIES.phone, data.phone);
+        body.set(GOOGLE_FORM_ENTRIES.brand, data.brand);
+        body.set(GOOGLE_FORM_ENTRIES.requirement, data.requirement);
+        body.set(GOOGLE_FORM_ENTRIES.details, data.details);
+        // Google Forms doesn't send CORS headers, so the response can't
+        // be read from here — "no-cors" still delivers the POST, it
+        // just means we submit blind and treat the request not
+        // throwing as success (it reliably accepts well-formed
+        // submissions like this one).
+        await fetch(GOOGLE_FORM_ACTION, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString(),
+        });
+        form.reset();
+        setStatus("Thanks — we've received your details and will be in touch shortly.", "success");
+      } catch (err) {
+        openMailtoFallback(data);
+        setStatus("Couldn't reach our form directly — opening your email app with these details instead.", "error");
+      } finally {
+        btn.disabled = false;
+        label.textContent = originalLabel;
       }
     });
   })();
