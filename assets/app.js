@@ -1408,7 +1408,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      fails outright (e.g. offline), so a submission is never silently
      lost.
   ---------------------------------------------------------- */
-  const LEAD_EMAIL = "anmol.sharma@pickrr.com";
+  const LEAD_EMAIL = "design.tools@pickrr.com";
   const GOOGLE_FORM_ACTION =
     "https://docs.google.com/forms/d/e/1FAIpQLSfacU63ttdHBCsoYjjsxDmMLtm-uLApii4BuzvLUgtjK_GrCg/formResponse";
   const GOOGLE_FORM_ENTRIES = {
