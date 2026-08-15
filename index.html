@@ -5,16 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fastrr Creative — Sales Quotation Platform</title>
 <meta name="description" content="Internal creative agency showcase, service scope, price calculator and message generator.">
-<!-- Defaults to the dark-theme (white) set, matching the site's own
-     dark-by-default theme — updateFavicon() in app.js rewrites every
-     href below to the light-theme (black) set as soon as the resolved
-     theme is actually light, and again on every toggle. -->
-<link rel="icon" id="faviconIco" href="assets/favicon/dark/favicon.ico?v=20260811-33" sizes="any">
-<link rel="icon" id="faviconSvg" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-33">
-<link rel="icon" id="favicon32" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-33">
-<link rel="icon" id="favicon16" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-33">
-<link rel="apple-touch-icon" id="faviconApple" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-33">
-<link rel="icon" id="favicon192" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-33">
+<!-- Matches the actual browser tab background, not the site's own
+     theme toggle — those are two different things (the site defaults
+     to dark regardless of OS preference, but a visitor's tab chrome
+     follows their OS/browser setting either way). The `media` attribute
+     is natively supported for favicons: the browser picks whichever
+     link matches its own color scheme, no JS needed, so there's no
+     flash and no dependency on our theme toggle at all. -->
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-34" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-34" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-34" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-34" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-34" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-34" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-34" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-34" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-34" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-34" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-34" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-34" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -832,51 +841,53 @@ html.is-internal .oc-offer{display:none !important;}
    discount field instead — see the html:not(.is-internal) rule
    further down — since they're pricing real negotiated orders, not
    shopping a public discount. */
-/* A coupon, not a notice bar — a bold "10% OFF" badge next to the
-   copy, so it reads as an actual offer at a glance instead of blending
-   in with the plain-text rows around it. Two distinct states: quiet
-   and outlined while the order is still short of the threshold (an
-   invitation, not an achievement yet), switching to a fully filled
-   gradient badge + bolder panel the moment it's unlocked. .just-
-   unlocked plays a one-shot pop + glow exactly on the crossing (see
-   offerWasUnlocked in renderCart) so the discount kicking in reads as
-   something that just happened, not a static label. */
+/* A ticket, not a badge — a code stub (dashed divider, monospace
+   code) split from the copy, reading as an actual coupon rather than
+   an abstract percentage shape. Two distinct states: outlined/muted
+   stub while short of the threshold (an invitation, not an achievement
+   yet), switching to a filled gradient stub once unlocked. The unlock
+   moment itself is a single quiet diagonal sheen sweeping across the
+   stub plus a soft fade-in — no bounce, no pulsing ring — "catchy but
+   professional" rather than a flashy pop. */
 .oc-offer{
-  display:flex; align-items:center; gap:14px; margin-bottom:16px; padding:14px;
+  position:relative; display:flex; align-items:stretch; margin-bottom:16px;
   border-radius:var(--radius); background:var(--surface-1); border:1px solid var(--line);
-  transition:background .3s ease, border-color .3s ease, box-shadow .3s ease;
+  overflow:hidden; transition:background .3s ease, border-color .3s ease;
 }
 .oc-offer:empty{display:none;}
-.oc-offer-badge{
-  flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  width:56px; height:56px; border-radius:14px; border:1.5px solid var(--violet);
-  color:var(--violet); font-family:var(--font-display); font-size:19px; font-weight:800; line-height:1;
-  transition:background .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
+.oc-offer-main{flex:1 1 auto; min-width:0; padding:13px 16px; display:flex; flex-direction:column; justify-content:center; gap:3px;}
+.oc-offer-kicker{font-family:var(--font-mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);}
+.oc-offer-title{font-size:13px; color:var(--text-1); line-height:1.4;}
+.oc-offer-title b{color:var(--text-0); font-weight:700;}
+.oc-offer-stub{
+  position:relative; flex:0 0 auto; width:112px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px; padding:10px;
+  border-left:1.5px dashed var(--line); background:var(--surface-2); overflow:hidden;
+  transition:background .3s ease;
 }
-.oc-offer-badge b{font-size:12px; font-weight:800; vertical-align:top;}
-.oc-offer-badge small{margin-top:2px; font-family:var(--font-mono); font-size:8.5px; font-weight:700; letter-spacing:.08em; color:inherit;}
-.oc-offer-copy{display:flex; flex-direction:column; gap:2px; min-width:0;}
-.oc-offer-copy b{font-size:13.5px; font-weight:700; color:var(--text-0);}
-.oc-offer-copy span{font-size:12px; color:var(--text-2); line-height:1.45;}
+.oc-offer-code{
+  font-family:var(--font-mono); font-size:14px; font-weight:800; letter-spacing:.05em;
+  color:var(--text-1); padding:4px 9px; border-radius:6px; border:1px dashed var(--line);
+  transition:color .3s ease, border-color .3s ease, background .3s ease;
+}
+.oc-offer-code-status{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); transition:color .3s ease;}
 
-.oc-offer.is-unlocked{background:var(--teal-soft); border-color:var(--teal);}
-.oc-offer.is-unlocked .oc-offer-badge{
-  background:linear-gradient(135deg,var(--violet),var(--teal)); border-color:transparent; color:#fff;
-}
+.oc-offer.is-unlocked .oc-offer-stub{background:linear-gradient(135deg,var(--violet),var(--teal));}
+.oc-offer.is-unlocked .oc-offer-code{background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.5); color:#fff;}
+.oc-offer.is-unlocked .oc-offer-code-status{color:rgba(255,255,255,.85);}
 
-@keyframes offerUnlockPop{
-  0%{transform:scale(1);}
-  35%{transform:scale(1.06);}
-  60%{transform:scale(0.99);}
-  100%{transform:scale(1);}
+@keyframes offerFadeIn{0%{opacity:.55;}100%{opacity:1;}}
+@keyframes offerSheen{
+  0%{transform:translateX(-140%) skewX(-18deg);}
+  100%{transform:translateX(240%) skewX(-18deg);}
 }
-@keyframes offerUnlockGlow{
-  0%{box-shadow:0 0 0 0 var(--teal-soft);}
-  40%{box-shadow:0 0 0 10px var(--teal-soft);}
-  100%{box-shadow:0 0 0 0 transparent;}
+.oc-offer.just-unlocked{animation:offerFadeIn .5s ease-out;}
+.oc-offer-stub::after{
+  content:''; position:absolute; top:0; bottom:0; width:36%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  opacity:0; pointer-events:none;
 }
-.oc-offer.just-unlocked{animation:offerUnlockGlow .9s ease-out;}
-.oc-offer.just-unlocked .oc-offer-badge{animation:offerUnlockPop .55s cubic-bezier(.34,1.56,.64,1);}
+.oc-offer.just-unlocked .oc-offer-stub::after{opacity:1; animation:offerSheen .75s ease-out;}
 
 /* Lead capture CTA — sits inside the Order panel itself, right after
    the Final Amount, so it reads as the order's own next step rather
@@ -952,28 +963,6 @@ html.is-internal .oc-offer{display:none !important;}
 .cart-item-facts{
   margin-top:4px; font-size:11.5px; color:var(--text-2); line-height:1.5;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-}
-/* Inline editable duration — a dashed underline (not a boxed input)
-   so it reads as "click to edit this value" without adding another
-   bordered control to a panel that's already fairly dense. Only
-   rendered for services whose duration is actually seconds of video
-   (AI Reels, 360° Catalogue) — see the durationEditable check in
-   renderCart. Turns violet once a value differs from the package
-   default, with a small "Custom" tag, so an overridden line is
-   obvious at a glance rather than silently different. */
-.cart-item-duration{margin-top:7px; display:flex; align-items:center; gap:7px; font-family:var(--font-mono); font-size:11px; color:var(--text-2);}
-.cart-item-duration label{flex:0 0 auto;}
-.cart-item-duration input{
-  flex:0 1 auto; min-width:0; width:9ch; background:none; border:none; border-bottom:1px dashed var(--line);
-  font-family:inherit; font-size:11.5px; color:var(--text-1); padding:1px 0;
-  transition:border-color .2s ease, color .2s ease;
-}
-.cart-item-duration input:hover{border-bottom-color:var(--text-2);}
-.cart-item-duration input:focus{outline:none; border-bottom:1px solid var(--violet); color:var(--text-0);}
-.cart-item-duration.custom input{color:var(--violet); font-weight:600; border-bottom-color:var(--violet);}
-.cart-item-duration-tag{
-  font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--violet);
-  background:var(--violet-soft); padding:2px 7px; border-radius:100px;
 }
 .cart-item-qty{width:78px; display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:13px; font-weight:600;}
 .ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
@@ -1116,18 +1105,33 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    the site's global prefers-reduced-motion rule like every other
    animation on the page. */
 footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px; overflow:hidden;}
+/* One centered statement, one button — not a text-left/button-right
+   bar, which read as just another promo strip. Generous vertical
+   space and a soft radial glow behind the heading make this feel like
+   a deliberate closing moment for the page rather than a component
+   repeated from elsewhere. */
 .footer-cta{
-  display:flex; align-items:center; justify-content:space-between; gap:28px; flex-wrap:wrap;
-  padding-bottom:40px; margin-bottom:40px; border-bottom:1px solid var(--line-soft);
+  position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px;
+  padding:12px 20px 44px; margin-bottom:44px; border-bottom:1px solid var(--line-soft);
 }
-.footer-cta h3{font-size:clamp(22px,2.6vw,32px); letter-spacing:-0.015em; line-height:1.15; margin-top:8px;}
-.footer-cta-btn{flex:0 0 auto;}
+.footer-cta::before{
+  content:''; position:absolute; top:-40px; left:50%; width:520px; height:260px; transform:translateX(-50%);
+  background:radial-gradient(closest-side, var(--violet-soft), transparent 70%);
+  pointer-events:none; z-index:-1;
+}
+.footer-cta h3{font-size:clamp(24px,3.2vw,38px); letter-spacing:-0.02em; line-height:1.14; max-width:600px;}
 
-.footer-top{display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; padding-bottom:36px;}
+/* Brand block anchors the left; nav sits centered against it (not
+   top-aligned) so a 3-line tagline on one side and a short link list
+   on the other still read as balanced rather than the links looking
+   like they're floating high and alone. Only "Explore" lives here now
+   — "Get in touch" was redundant with the CTA band directly above it,
+   two ways to reach the same modal competing for attention in the
+   same eyeful. */
+.footer-top{display:flex; justify-content:space-between; align-items:center; gap:40px; flex-wrap:wrap; padding-bottom:36px;}
 .footer-brand{max-width:360px;}
 .footer-brand .brand-logo{height:30px;}
 .footer-tagline{margin-top:16px; font-size:13.5px; line-height:1.65; color:var(--text-2);}
-.footer-nav-groups{display:flex; gap:56px; flex-wrap:wrap;}
 .footer-links{display:flex; flex-direction:column; gap:11px;}
 .footer-links-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:3px;}
 .footer-links a,.footer-links button{
@@ -1139,31 +1143,43 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 /* Full-bleed (outside .wrap) so it isn't constrained to the 1280px
    content column — reads as a backdrop element, not another line of
    copy. -webkit-text-stroke keeps every letter legibly outlined at
-   rest; the gradient fill (clipped to the text) is what animates. */
+   rest; the gradient fill (clipped to the text) is what animates.
+   Italic + heavy weight to echo the actual wordmark logo's own bold
+   italic style, instead of the page's plain upright display type.
+   Paused until .in-view is added (see the IntersectionObserver in
+   app.js) so the sweep visibly starts fresh the moment this section is
+   actually scrolled to, rather than having been running invisibly in
+   the background the whole time; a short 2.4s alternate loop (vs. the
+   original 10s one-way) reads as noticeably quicker and — because
+   alternate reverses smoothly at each end instead of snapping back —
+   more fluid too. */
 .footer-mark{width:100%; overflow:hidden; pointer-events:none; -webkit-user-select:none; user-select:none;}
 .footer-mark span{
   display:block; text-align:center; white-space:nowrap;
-  font-family:var(--font-display); font-weight:800; letter-spacing:-0.03em;
-  font-size:clamp(52px,10.5vw,168px); line-height:1.05;
+  font-family:var(--font-display); font-weight:800; font-style:italic; letter-spacing:-0.03em;
+  font-size:clamp(60px,12vw,192px); line-height:1.05;
   color:transparent; -webkit-text-stroke:1px var(--line);
+  /* Two flat offset copies behind the glyphs — a cheap stepped/
+     extruded look (no extra DOM) that reads as far more deliberate
+     than a single flat outline sitting on the page background. */
+  text-shadow:7px 7px 0 var(--surface-2), 14px 14px 0 var(--surface-1);
   background-image:linear-gradient(100deg, transparent 0%, transparent 38%, var(--violet) 48%, var(--teal) 54%, transparent 64%, transparent 100%);
   background-size:280% 100%; background-position:120% 0;
   background-clip:text; -webkit-background-clip:text;
-  animation:footerMarkShine 10s ease-in-out infinite;
+  animation:footerMarkShine 2.4s ease-in-out infinite alternate;
+  animation-play-state:paused;
 }
+.footer-mark.in-view span{animation-play-state:running;}
 @keyframes footerMarkShine{
-  0%, 8%{background-position:120% 0;}
-  55%, 65%{background-position:-20% 0;}
+  0%{background-position:120% 0;}
   100%{background-position:-20% 0;}
 }
 
 .footer-bottom{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:22px 0 32px;}
 .footer-bottom p{color:var(--text-2); font-size:12px; line-height:1.6;}
 @media (max-width:640px){
-  .footer-cta{flex-direction:column; align-items:flex-start;}
-  .footer-cta-btn{width:100%; justify-content:center;}
+  .footer-cta::before{width:340px; height:200px;}
   .footer-top{gap:28px;}
-  .footer-nav-groups{gap:32px;}
   .footer-bottom{flex-direction:column; align-items:flex-start;}
 }
 </style>
@@ -1174,8 +1190,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-34" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-34" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1572,33 +1588,25 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <footer>
   <div class="wrap">
     <div class="footer-cta reveal-on-scroll">
-      <div class="footer-cta-text">
-        <span class="eyebrow">Let's create something great</span>
-        <h3>Got a campaign to put<br>into production?</h3>
-      </div>
-      <button type="button" class="btn btn-primary footer-cta-btn js-open-lead-modal">Share Your Requirement</button>
+      <span class="eyebrow">Let's create something great</span>
+      <h3>Got a campaign to put into production?</h3>
+      <button type="button" class="btn btn-primary js-open-lead-modal">Share Your Requirement</button>
     </div>
 
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-34" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-34" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
-      <div class="footer-nav-groups">
-        <div class="footer-links">
-          <span class="footer-links-label">Explore</span>
-          <a href="#showcase">Work</a>
-          <a href="#services">Services</a>
-          <a href="#quote">Quote</a>
-          <a href="#messages">Messages</a>
-        </div>
-        <div class="footer-links">
-          <span class="footer-links-label">Get in touch</span>
-          <button type="button" class="js-open-lead-modal">Share a requirement</button>
-        </div>
+      <div class="footer-links">
+        <span class="footer-links-label">Explore</span>
+        <a href="#showcase">Work</a>
+        <a href="#services">Services</a>
+        <a href="#quote">Quote</a>
+        <a href="#messages">Messages</a>
       </div>
     </div>
   </div>
@@ -1680,7 +1688,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-33"></script>
-<script src="assets/app.js?v=20260811-33"></script>
+<script src="assets/creative-data.js?v=20260811-34"></script>
+<script src="assets/app.js?v=20260811-34"></script>
 </body>
 </html>

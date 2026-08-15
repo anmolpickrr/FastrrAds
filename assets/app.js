@@ -323,6 +323,7 @@
   }
   const PUBLIC_OFFER_THRESHOLD = 10000;
   const PUBLIC_OFFER_PCT = 10;
+  const PUBLIC_OFFER_CODE = "SAVE10";
 
   /* ----------------------------------------------------------
      2. SHARED APPLICATION STATE
@@ -384,31 +385,9 @@
   // this is the actual "order total" shown in the summary and used by
   // the message generator, and the only place quote math happens for
   // more than one creative type at a time.
-  function escapeRegExp(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
   function computeCart() {
     const items = state.cart.map((item) => {
-      const base = dataFor(item.service, item.tier);
-      // A per-line duration override, set by whoever's building the
-      // quote when a client has agreed a length that doesn't match any
-      // pre-packaged tier — never mutates the shared package data, just
-      // this one cart line's copy of it, so every other order still
-      // shows the standard duration. The base package's duration text
-      // also appears inline inside `deliver` ("1 MP4, 9:16, up to 25
-      // sec, ...") — swapped there too (case-insensitive match on the
-      // original duration string) so every place this line item's
-      // duration is quoted, including the PDF's "Deliverables" row,
-      // agrees with the override instead of only the row explicitly
-      // labeled "(custom)".
-      const d = item.customDuration
-        ? {
-            ...base,
-            duration: item.customDuration,
-            deliver: base.deliver.replace(new RegExp(escapeRegExp(base.duration), "i"), item.customDuration),
-          }
-        : base;
+      const d = dataFor(item.service, item.tier);
       const lineSubtotal = d.basePrice * item.qty;
       return { ...item, d, lineSubtotal };
     });
@@ -468,17 +447,6 @@
     render();
   }
 
-  // Blank or unchanged-from-default clears the override, so a line item
-  // only carries customDuration when it's actually different from the
-  // package's own duration.
-  function setCartItemDuration(id, value) {
-    const item = state.cart.find((i) => i.id === id);
-    if (!item) return;
-    const trimmed = (value || "").trim();
-    const base = dataFor(item.service, item.tier);
-    item.customDuration = trimmed && trimmed !== base.duration ? trimmed : null;
-    render();
-  }
 
 
   /* ----------------------------------------------------------
@@ -672,33 +640,35 @@
     document.getElementById("ocCount").textContent =
       cart.items.length === 0 ? "0 items" : cart.items.length === 1 ? "1 item" : `${cart.items.length} items`;
 
-    // A coupon-badge treatment (bold "10% OFF" badge + copy), not a
-    // plain notification bar — the badge itself changes from an
-    // outlined/muted "not yet" state to a filled gradient once
-    // unlocked, and the whole thing plays a one-shot pop the moment it
-    // actually crosses the threshold (see offerWasUnlocked above).
-    // Value-based, not quantity-based, so it's labeled as an order
-    // discount rather than a "bulk" offer. CSS hides this entirely for
-    // internal (see html.is-internal .oc-offer).
+    // A coupon ticket (code stub + copy), not a plain notification bar
+    // or an abstract percentage badge — the code itself is always
+    // shown, so this reads as an actual applied coupon rather than a
+    // generic "discount" line. Value-based, not quantity-based, so
+    // it's labeled as an order discount rather than a "bulk" offer.
+    // CSS hides this entirely for internal (see html.is-internal
+    // .oc-offer).
     const offerEl = document.getElementById("ocOffer");
     if (offerEl) {
       const thresholdStr = fmtINR(PUBLIC_OFFER_THRESHOLD);
       const unlocked = cart.subtotal >= PUBLIC_OFFER_THRESHOLD;
-      let title, sub;
+      let kicker, title, status;
       if (unlocked) {
-        title = "10% discount applied";
-        sub = `Your order qualifies for our ${thresholdStr}+ order discount.`;
+        kicker = "Coupon applied";
+        title = `Code <b>${PUBLIC_OFFER_CODE}</b> saved you ${PUBLIC_OFFER_PCT}% on this order.`;
+        status = "Applied";
       } else if (cart.items.length > 0) {
         const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
-        title = "Unlock 10% off this order";
-        sub = `Add ${remaining} more — orders above ${thresholdStr} get an automatic discount.`;
+        kicker = "Automatic coupon";
+        title = `Add ${remaining} more to auto-apply code <b>${PUBLIC_OFFER_CODE}</b> for ${PUBLIC_OFFER_PCT}% off.`;
+        status = "Locked";
       } else {
-        title = "Save 10% on this order";
-        sub = `Orders above ${thresholdStr} automatically get 10% off.`;
+        kicker = "Automatic coupon";
+        title = `Orders above ${thresholdStr} auto-apply code <b>${PUBLIC_OFFER_CODE}</b> for ${PUBLIC_OFFER_PCT}% off.`;
+        status = "Locked";
       }
       offerEl.innerHTML = `
-        <span class="oc-offer-badge"><span>10<b>%</b></span><small>OFF</small></span>
-        <span class="oc-offer-copy"><b>${title}</b><span>${sub}</span></span>
+        <span class="oc-offer-main"><span class="oc-offer-kicker">${kicker}</span><span class="oc-offer-title">${title}</span></span>
+        <span class="oc-offer-stub"><span class="oc-offer-code">${PUBLIC_OFFER_CODE}</span><span class="oc-offer-code-status">${status}</span></span>
       `;
       offerEl.classList.toggle("is-unlocked", unlocked);
       if (unlocked && !offerWasUnlocked) {
@@ -722,25 +692,10 @@
             .slice(0, 2)
             .map(([l, v]) => `${l}: ${v}`)
             .join("   ");
-          // Internal-only: negotiating a custom length is a sales
-          // conversation, not something a self-serve public visitor
-          // should be editing on their own order. Also only offered
-          // where "duration" actually means seconds of video (AI Reels,
-          // 360° Catalogue) — Static/Carousel duration is frame/slide
-          // count, not a negotiable length.
-          const durationEditable = isInternal() && /sec/i.test(item.d.duration || "");
-          const durationField = durationEditable
-            ? `<div class="cart-item-duration${item.customDuration ? " custom" : ""}">
-                <label for="ciDuration${item.id}">Duration</label>
-                <input type="text" id="ciDuration${item.id}" class="ci-duration-input" data-id="${item.id}" value="${item.customDuration || item.d.duration}">
-                ${item.customDuration ? '<span class="cart-item-duration-tag">Custom</span>' : ""}
-              </div>`
-            : "";
           return `<div class="cart-item" data-id="${item.id}">
             <div class="cart-item-info">
               <div class="cart-item-name">${name}</div>
               <div class="cart-item-facts">${facts}</div>
-              ${durationField}
             </div>
             <div class="cart-item-qty">
               <button type="button" class="ci-qty-btn" data-action="dec" aria-label="Decrease quantity">−</button>
@@ -813,15 +768,9 @@
     // readable dropped straight into a WhatsApp thread. The full
     // per-item breakdown (deliverables/duration/revisions/script/format/
     // language/timeline) plus general terms lives in the downloadable
-    // PDF only (see generatePackagePdf below), not duplicated here. A
-    // custom duration IS called out here despite that, since it's a
-    // deviation from the standard package the client needs to see
-    // reflected in the summary they're actually reading.
+    // PDF only (see generatePackagePdf below), not duplicated here.
     const orderBlock = cart.items
-      .map((item, idx) => {
-        const durationNote = item.customDuration ? ` (custom duration: ${item.customDuration})` : "";
-        return `${idx + 1}. ${item.d.name}${durationNote} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`;
-      })
+      .map((item, idx) => `${idx + 1}. ${item.d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`)
       .join("\n");
 
     const clientMsg = `Package Summary — ${brandName}
@@ -1026,10 +975,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         y += 4;
         const rows = [
           ["Deliverables", d.deliver],
-          [
-            item.customDuration ? "Duration / Format (custom)" : "Duration / Format",
-            `${d.duration} · ${d.format}`,
-          ],
+          ["Duration / Format", `${d.duration} · ${d.format}`],
           ["Revisions", d.revisions],
         ];
         if (d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)) rows.push(["Script / Approval", d.scripting]);
@@ -1308,15 +1254,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   });
 
-  // "change" (not "input") so the re-render on every keystroke doesn't
-  // steal focus mid-edit — it commits once the field is left or Enter
-  // is pressed.
-  document.getElementById("orderCartList").addEventListener("change", (e) => {
-    const input = e.target.closest(".ci-duration-input");
-    if (!input) return;
-    withScrollAnchor(() => setCartItemDuration(Number(input.dataset.id), input.value));
-  });
-
   const brandNameInput = document.getElementById("brandNameInput");
   const websiteInput = document.getElementById("websiteInput");
   const brandCategorySelect = document.getElementById("brandCategorySelect");
@@ -1565,24 +1502,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      8. THEME TOGGLE (persisted)
   ---------------------------------------------------------- */
-  // The favicon <link> tags default to the dark-theme (white) set in
-  // the HTML itself (matching the site's dark-by-default theme) — this
-  // rewrites every one of them to the light-theme (black) set instead
-  // whenever the resolved theme is actually light, and back again on
-  // toggle. Browsers don't apply page CSS to favicons, so swapping the
-  // href in JS is the only way to make the tab icon track the site's
-  // own theme rather than just the OS's.
-  function updateFavicon(theme) {
-    const dir = theme === "light" ? "light" : "dark";
-    const otherDir = dir === "light" ? "dark" : "light";
-    ["faviconIco", "favicon32", "favicon16", "faviconApple", "favicon192"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.href = el.href.replace("/favicon/" + otherDir + "/", "/favicon/" + dir + "/");
-    });
-    const svg = document.getElementById("faviconSvg");
-    if (svg) svg.href = svg.href.replace("favicon-" + otherDir + ".svg", "favicon-" + dir + ".svg");
-  }
-
+  // The favicon itself is handled entirely in <head> via `media`-scoped
+  // <link> tags matching prefers-color-scheme — the tab's actual
+  // background follows the visitor's OS/browser setting, not our own
+  // theme toggle, so there's nothing to drive from here.
   (function initTheme() {
     const root = document.documentElement;
     const btn = document.getElementById("themeToggle");
@@ -1595,13 +1518,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // on first visit. A saved choice (from the toggle) still always wins.
     const initial = saved || "dark";
     root.setAttribute("data-theme", initial);
-    updateFavicon(initial);
 
     btn.addEventListener("click", () => {
       const isLight = root.getAttribute("data-theme") === "light";
       const next = isLight ? "dark" : "light";
       root.setAttribute("data-theme", next);
-      updateFavicon(next);
       try { localStorage.setItem("fastrr-theme", next); } catch (e) {}
       // Drive the spin with a JS-triggered class + explicit @keyframes
       // instead of relying only on the attribute-selector transition —
@@ -2284,6 +2205,32 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
     );
     items.forEach((i) => io.observe(i));
+  })();
+
+  // Footer wordmark's shine loop starts on first scroll-into-view (see
+  // .footer-mark.in-view in the CSS, which flips animation-play-state
+  // from paused to running) rather than running the whole time it's
+  // off-screen — separate from the generic reveal-on-scroll above
+  // since this drives an animation trigger, not an opacity fade.
+  (function footerMarkReveal() {
+    const mark = document.querySelector(".footer-mark");
+    if (!mark) return;
+    if (!("IntersectionObserver" in window)) {
+      mark.classList.add("in-view");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            mark.classList.add("in-view");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(mark);
   })();
 
   /* ----------------------------------------------------------
