@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-47" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-47" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-47" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-47" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-47" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-47" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-47" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-47" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-47" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-47" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-47" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-47" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-48" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-48" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-48" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-48" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-48" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-48" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-48" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-48" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-48" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-48" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-48" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-48" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -778,7 +778,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
    removable in place) plus a single order-level discount + total. This
    replaces the old single-package calculator, which had no way to
    represent a client buying more than one creative type per order. */
-.field-row{display:flex; flex-direction:column; gap:6px; margin-bottom:18px;}
+.field-row:not([hidden]){display:flex; flex-direction:column; gap:6px; margin-bottom:18px;}
 .field-row label{font-size:12px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
 .field-row-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
 .field-row-split .field-row{margin-bottom:14px;}
@@ -1274,8 +1274,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-47" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-47" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1593,8 +1593,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-47" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-47" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1687,7 +1687,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-47"></script>
-<script src="assets/app.js?v=20260811-47"></script>
+<script src="assets/creative-data.js?v=20260811-48"></script>
+<script src="assets/app.js?v=20260811-48"></script>
 </body>
 </html>
