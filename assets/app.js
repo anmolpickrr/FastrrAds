@@ -845,6 +845,12 @@
     const qGstToggleEl = document.getElementById("qGstToggle");
     if (qGstToggleEl) qGstToggleEl.checked = cart.gstEnabled;
     document.getElementById("gstRow").classList.toggle("is-muted", !cart.gstEnabled);
+
+    const gstSwitchState = document.getElementById("gstSwitchState");
+    if (gstSwitchState) {
+      gstSwitchState.textContent = cart.gstEnabled ? "With GST" : "Without GST";
+      gstSwitchState.classList.toggle("is-on", cart.gstEnabled);
+    }
   }
 
   /* ----------------------------------------------------------
