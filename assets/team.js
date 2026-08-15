@@ -76,8 +76,8 @@ const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
 // the server-side rule is what Firestore actually checks.
 const ADMIN_EMAILS = ["design.tools@pickrr.com"];
 
-const STATUS_LABEL = { placed: "Placed", in_progress: "In Progress", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
-const STATUS_ORDER = ["placed", "in_progress", "completed", "failed", "cancelled"];
+const STATUS_LABEL = { placed: "Placed", completed: "Completed", cancelled: "Cancelled" };
+const STATUS_ORDER = ["placed", "completed", "cancelled"];
 
 const $ = (id) => document.getElementById(id);
 
@@ -410,11 +410,26 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
   // only through the DOM (ids, dispatched events).
   function readCartFromDom() {
     const rows = Array.from(document.querySelectorAll("#orderCartList .cart-item"));
-    const items = rows.map((row) => ({
-      name: row.querySelector(".cart-item-name")?.textContent.trim() || "",
-      qty: row.querySelector(".cart-item-qty span")?.textContent.trim() || "",
-      price: row.querySelector(".cart-item-price")?.textContent.trim() || "",
-    }));
+    const items = rows.map((row) => {
+      let spec = {};
+      try {
+        spec = JSON.parse(decodeURIComponent(row.dataset.spec || "")) || {};
+      } catch (e) {
+        spec = {};
+      }
+      return {
+        name: row.querySelector(".cart-item-name")?.textContent.trim() || "",
+        qty: row.querySelector(".cart-item-qty span")?.textContent.trim() || "",
+        price: row.querySelector(".cart-item-price")?.textContent.trim() || "",
+        deliver: spec.deliver || "",
+        duration: spec.duration || "",
+        format: spec.format || "",
+        revisions: spec.revisions || "",
+        scripting: spec.scripting || "",
+        language: spec.language || "",
+        turnaround: spec.turnaround || "",
+      };
+    });
     const finalText = $("qFinal")?.textContent.trim() || "₹0";
     const finalAmount = Number(finalText.replace(/[^0-9]/g, "")) || 0;
     const subtotalText = $("qSubtotal")?.textContent.trim() || "";
@@ -983,6 +998,22 @@ async function boot() {
       .join("");
   }
 
+  // Same wording as app.js's PDF_TERMS/gstTerm for the public "Package
+  // Summary" download — duplicated here rather than shared, since
+  // app.js and team.js are separate script closures with no access to
+  // each other's private constants.
+  const INVOICE_TERMS = [
+    "Turnaround shown for each item is per single creative. For bulk orders or multiple creative types, overall delivery depends on quantity, creative type, cut, complexity, and final requirements.",
+    "Turnaround timeline begins once we've received everything we need, meaning all required assets and details, not the payment date.",
+    "New concepts, major creative rework, and any additions beyond what's included sit outside package scope and are quoted separately or as a new order.",
+    "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
+  ];
+  function invoiceGstTerm(order) {
+    return order.gstEnabled
+      ? "GST (18%) is calculated on the order total after any discount. Prices elsewhere in this document are base rates before GST."
+      : "This order is quoted without GST, as a non-GST invoice.";
+  }
+
   function generateInvoicePdf(order) {
     if (!window.jspdf || !window.jspdf.jsPDF) {
       window.alert("PDF export isn't available right now. Please reload the page and try again.");
@@ -991,6 +1022,7 @@ async function boot() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: "mm", format: "a4" });
     const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
     const marginX = 16;
     let y = 18;
 
@@ -1048,6 +1080,44 @@ async function boot() {
     });
     y = doc.lastAutoTable.finalY + 8;
 
+    // Per-item deliverables/turnaround breakdown, same shape as the
+    // public "Package Summary" PDF — orders logged before this field
+    // existed just won't have it, and are skipped rather than shown
+    // with blank rows.
+    items.forEach((it) => {
+      const specRows = [
+        ["Deliverables", it.deliver],
+        ["Duration / Format", [it.duration, it.format].filter(Boolean).join(" · ")],
+        ["Revisions", it.revisions],
+        ["Script / Approval", it.scripting && !/^(no scripting|not applicable)/i.test(it.scripting) ? it.scripting : ""],
+        ["Language", it.language && !/^not applicable/i.test(it.language) ? it.language : ""],
+        ["Turnaround", it.turnaround],
+      ].filter(([, v]) => v);
+      if (!specRows.length) return;
+      if (y > pageH - 55) {
+        doc.addPage();
+        y = 18;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(20);
+      doc.text(`${it.name}${Number(it.qty) > 1 ? ` (×${it.qty})` : ""}`, marginX, y);
+      y += 4;
+      doc.autoTable({
+        startY: y,
+        theme: "grid",
+        styles: { fontSize: 8.5, cellPadding: 3.5, textColor: 50, lineColor: 225, lineWidth: 0.2 },
+        columnStyles: { 0: { fontStyle: "bold", cellWidth: 38, fillColor: [246, 245, 250] }, 1: { cellWidth: pageW - marginX * 2 - 38 } },
+        body: specRows,
+        margin: { left: marginX, right: marginX },
+      });
+      y = doc.lastAutoTable.finalY + 6;
+    });
+
+    if (y > pageH - 60) {
+      doc.addPage();
+      y = 18;
+    }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     doc.setTextColor(20);
@@ -1085,6 +1155,59 @@ async function boot() {
     doc.setFontSize(9);
     doc.setTextColor(120);
     doc.text("Placed by " + (order.email || "—"), marginX, y);
+    y += 10;
+
+    if (order.notes) {
+      if (y > pageH - 40) {
+        doc.addPage();
+        y = 18;
+      }
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(20);
+      doc.text("Notes", marginX, y);
+      y += 5;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(70);
+      const noteLines = doc.splitTextToSize(order.notes, pageW - marginX * 2);
+      doc.text(noteLines, marginX, y);
+      y += noteLines.length * 4.2 + 8;
+    }
+
+    if (y > pageH - 50) {
+      doc.addPage();
+      y = 18;
+    }
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Important Terms", marginX, y);
+    y += 5;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(70);
+    const usableWidth = pageW - marginX * 2 - 5;
+    [...INVOICE_TERMS, invoiceGstTerm(order)].forEach((term) => {
+      const lines = doc.splitTextToSize("• " + term, usableWidth);
+      const blockH = lines.length * 4.2 + 2;
+      if (y + blockH > pageH - 20) {
+        doc.addPage();
+        y = 18;
+      }
+      doc.text(lines, marginX, y);
+      y += blockH;
+    });
+
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= pageCount; p++) {
+      doc.setPage(p);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text("Fastrr Ads", marginX, pageH - 10);
+      doc.text(`Page ${p} of ${pageCount}`, pageW - marginX, pageH - 10, { align: "right" });
+    }
 
     const filenameSafe = (order.orderNumber || "invoice").replace(/[^A-Za-z0-9-]/g, "");
     doc.save(`Invoice-${filenameSafe}.pdf`);
@@ -1159,8 +1282,14 @@ async function boot() {
       },
       (err) => {
         console.error("[Fastrr] Order History failed to load.", err);
-        orderList.innerHTML =
-          '<div class="team-order-empty"><p>Couldn\'t load your order history right now. Try reopening this panel — if it keeps failing, check the browser console for details.</p></div>';
+        const isPermissionError = err && (err.code === "permission-denied" || /permission/i.test(err.message || ""));
+        const msg =
+          isPermissionError && wantAll
+            ? "Couldn't load All Orders. Your account may not be on the admin allowlist in the Firestore security rules yet, or those rules haven't been republished since it was added. Try My Orders instead, or check the browser console for the exact error."
+            : isPermissionError
+            ? "Couldn't load your order history. Your account doesn't have permission to read it right now, check the Firestore security rules."
+            : "Couldn't load your order history right now. Try reopening this panel, or check the browser console for details.";
+        orderList.innerHTML = `<div class="team-order-empty"><p>${msg}</p></div>`;
       }
     );
   }
