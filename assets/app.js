@@ -1434,8 +1434,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   (function initLeadModal() {
     const modal = document.getElementById("leadModal");
-    const ctaBtn = document.getElementById("leadCtaBtn");
-    if (!modal || !ctaBtn) return;
+    // Every trigger (the Order panel CTA, the footer CTA, etc.) shares
+    // this class rather than a single id, so adding another entry
+    // point anywhere on the page is just marking it up, no JS change.
+    const ctaBtns = document.querySelectorAll(".js-open-lead-modal");
+    if (!modal || !ctaBtns.length) return;
     const closeBtn = document.getElementById("leadModalClose");
     const backdrop = document.getElementById("leadModalBackdrop");
     const formView = document.getElementById("leadFormView");
@@ -1458,7 +1461,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       modal.classList.remove("open");
       document.body.classList.remove("lb-locked");
     }
-    ctaBtn.addEventListener("click", openModal);
+    ctaBtns.forEach((btn) => btn.addEventListener("click", openModal));
     closeBtn.addEventListener("click", closeModal);
     backdrop.addEventListener("click", closeModal);
     document.getElementById("leadSuccessCloseBtn").addEventListener("click", closeModal);
