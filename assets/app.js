@@ -722,8 +722,15 @@
         .join("");
     }
 
-    document.getElementById("qDiscountInput").value = state.discountValue;
-    document.getElementById("qDiscountInput").max = cart.discountType === "pct" ? 100 : "";
+    // qDiscountInput/discountTypeToggle/qGstToggle are the manual-edit
+    // controls inside #discountFieldRow/#gstToggleRow — internal-tools
+    // only, and entirely absent from the public build (not just
+    // CSS-hidden), so every reference to them here is null-guarded.
+    const qDiscountInputEl = document.getElementById("qDiscountInput");
+    if (qDiscountInputEl) {
+      qDiscountInputEl.value = state.discountValue;
+      qDiscountInputEl.max = cart.discountType === "pct" ? 100 : "";
+    }
     document.querySelectorAll("#discountTypeToggle .unit-toggle-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.type === cart.discountType);
     });
@@ -736,7 +743,8 @@
     const discountActive = cart.discountAmt > 0;
     document.getElementById("discountRow").classList.toggle("is-active", discountActive);
 
-    document.getElementById("qGstToggle").checked = cart.gstEnabled;
+    const qGstToggleEl = document.getElementById("qGstToggle");
+    if (qGstToggleEl) qGstToggleEl.checked = cart.gstEnabled;
     document.getElementById("gstRow").classList.toggle("is-muted", !cart.gstEnabled);
   }
 
@@ -744,6 +752,12 @@
      5. RENDER: MESSAGE TEMPLATES
   ---------------------------------------------------------- */
   function renderMessages() {
+    // The entire Message Generator (#messages) is internal-only and
+    // absent from the public build, not just CSS-hidden — but this
+    // function is still called from every cart-changing action (both
+    // builds share that code path), so it has to no-op cleanly rather
+    // than throw when its target elements don't exist.
+    if (!document.getElementById("clientMsg")) return;
     const cart = computeCart();
     const brandName = state.brandName.trim() || "[Client / Brand Name]";
     const clientName = brandName;
@@ -1206,29 +1220,34 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // Order-level discount — applies once to the combined cart subtotal,
   // not per line item. Type (% vs flat ₹) and value are separate so
   // switching type never has to guess what the existing number meant.
+  // These controls (manual discount/GST override) are internal-tools
+  // only and entirely absent from the public build, so this whole
+  // block is skipped there rather than throwing on missing elements.
   const qDiscountInput = document.getElementById("qDiscountInput");
-  qDiscountInput.addEventListener("input", () => {
-    let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
-    if (state.discountType === "pct") v = Math.min(100, v);
-    state.discountValue = v;
-    renderCart();
-    renderMessages();
-  });
+  if (qDiscountInput) {
+    qDiscountInput.addEventListener("input", () => {
+      let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
+      if (state.discountType === "pct") v = Math.min(100, v);
+      state.discountValue = v;
+      renderCart();
+      renderMessages();
+    });
 
-  document.getElementById("discountTypeToggle").addEventListener("click", (e) => {
-    const btn = e.target.closest(".unit-toggle-btn");
-    if (!btn || btn.dataset.type === state.discountType) return;
-    state.discountType = btn.dataset.type;
-    state.discountValue = 0; // a number under one type rarely means the same thing under the other
-    renderCart();
-    renderMessages();
-  });
+    document.getElementById("discountTypeToggle").addEventListener("click", (e) => {
+      const btn = e.target.closest(".unit-toggle-btn");
+      if (!btn || btn.dataset.type === state.discountType) return;
+      state.discountType = btn.dataset.type;
+      state.discountValue = 0; // a number under one type rarely means the same thing under the other
+      renderCart();
+      renderMessages();
+    });
 
-  document.getElementById("qGstToggle").addEventListener("change", (e) => {
-    state.gstEnabled = e.target.checked;
-    renderCart();
-    renderMessages();
-  });
+    document.getElementById("qGstToggle").addEventListener("change", (e) => {
+      state.gstEnabled = e.target.checked;
+      renderCart();
+      renderMessages();
+    });
+  }
 
   // order-builder service/tier controls
   document.getElementById("qServiceSelect").addEventListener("change", (e) => {
@@ -1273,25 +1292,38 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   function clearFieldError(el) {
     el.classList.remove("input-error");
   }
-  brandNameInput.addEventListener("input", (e) => {
-    state.brandName = e.target.value;
-    clearFieldError(brandNameInput);
-    renderMessages();
-  });
-  websiteInput.addEventListener("input", (e) => {
-    state.website = e.target.value;
-    clearFieldError(websiteInput);
-    renderMessages();
-  });
-  brandCategorySelect.addEventListener("change", (e) => {
-    state.brandCategory = e.target.value;
-    clearFieldError(brandCategorySelect);
-    renderMessages();
-  });
-  document.getElementById("specialReqInput").addEventListener("input", (e) => {
-    state.specialReq = e.target.value;
-    renderMessages();
-  });
+  // brandNameInput/websiteInput/brandCategorySelect/specialReqInput
+  // live inside the internal-only #messages section — entirely absent
+  // from the public build, not just CSS-hidden — so each listener is
+  // guarded individually rather than assuming the element exists.
+  if (brandNameInput) {
+    brandNameInput.addEventListener("input", (e) => {
+      state.brandName = e.target.value;
+      clearFieldError(brandNameInput);
+      renderMessages();
+    });
+  }
+  if (websiteInput) {
+    websiteInput.addEventListener("input", (e) => {
+      state.website = e.target.value;
+      clearFieldError(websiteInput);
+      renderMessages();
+    });
+  }
+  if (brandCategorySelect) {
+    brandCategorySelect.addEventListener("change", (e) => {
+      state.brandCategory = e.target.value;
+      clearFieldError(brandCategorySelect);
+      renderMessages();
+    });
+  }
+  const specialReqInputEl = document.getElementById("specialReqInput");
+  if (specialReqInputEl) {
+    specialReqInputEl.addEventListener("input", (e) => {
+      state.specialReq = e.target.value;
+      renderMessages();
+    });
+  }
 
   // Returns the first empty required field, or null if all are filled.
   // Highlights every empty required field with an inline error state
@@ -1330,6 +1362,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   function wireCopyButton(btnId, sourceId) {
     const btn = document.getElementById(btnId);
+    if (!btn) return; // internal-only button, absent from the public build
     btn.addEventListener("click", async () => {
       if (!validateCartNonEmpty()) return; // empty order — panel flashes, no copy
       if (validateRequiredFields()) return; // incomplete — inline error shown, no copy
@@ -1365,7 +1398,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   wireCopyButton("copyClientBtn", "clientMsg");
   wireCopyButton("copyInternalBtn", "internalMsg");
-  document.getElementById("downloadPdfBtn").addEventListener("click", generatePackagePdf);
+  const downloadPdfBtnEl = document.getElementById("downloadPdfBtn");
+  if (downloadPdfBtnEl) downloadPdfBtnEl.addEventListener("click", generatePackagePdf);
 
   const footerYearEl = document.getElementById("footerYear");
   if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
