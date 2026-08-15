@@ -1356,6 +1356,76 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
 
   /* ----------------------------------------------------------
+     7b. LEAD CAPTURE — "Share Your Requirement"
+     No backend on this static site, so this posts to a form-relay
+     service once LEAD_ENDPOINT is configured (e.g. a Formspree
+     endpoint) — until then it falls back to opening the visitor's own
+     mail client, pre-addressed and pre-filled to LEAD_EMAIL, as a
+     zero-setup stopgap that ships today. Swap LEAD_ENDPOINT in once a
+     real form backend exists; nothing else here needs to change.
+  ---------------------------------------------------------- */
+  const LEAD_EMAIL = "anmol.sharma@pickrr.com";
+  const LEAD_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxxx"
+
+  (function initLeadForm() {
+    const form = document.getElementById("leadForm");
+    if (!form) return;
+    const btn = document.getElementById("leadSubmitBtn");
+    const label = document.getElementById("leadSubmitBtnLabel");
+    const status = document.getElementById("leadFormStatus");
+
+    function setStatus(msg, kind) {
+      status.textContent = msg;
+      status.className = "lead-form-status" + (kind ? " is-" + kind : "");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById("leadName").value.trim(),
+        email: document.getElementById("leadEmail").value.trim(),
+        phone: document.getElementById("leadPhone").value.trim(),
+        brand: document.getElementById("leadBrand").value.trim(),
+        requirement: document.getElementById("leadRequirement").value.trim(),
+        details: document.getElementById("leadDetails").value.trim(),
+      };
+      if (!data.name || !data.email || !data.phone || !data.requirement) {
+        setStatus("Please fill in your name, email, phone, and requirement.", "error");
+        return;
+      }
+
+      if (LEAD_ENDPOINT) {
+        const originalLabel = label.textContent;
+        btn.disabled = true;
+        label.textContent = "Sending…";
+        try {
+          const res = await fetch(LEAD_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error("Request failed");
+          form.reset();
+          setStatus("Thanks — we've received your details and will be in touch shortly.", "success");
+        } catch (err) {
+          setStatus("Something went wrong sending this. Please try again, or email us directly.", "error");
+        } finally {
+          btn.disabled = false;
+          label.textContent = originalLabel;
+        }
+      } else {
+        const subject = `New requirement — ${data.brand || data.name}`;
+        const body =
+          `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nBrand: ${data.brand || "-"}\n` +
+          `Requirement: ${data.requirement}\nDetails: ${data.details || "-"}`;
+        window.location.href =
+          `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        setStatus("Opening your email app with these details pre-filled — hit send there to complete it.", "success");
+      }
+    });
+  })();
+
+  /* ----------------------------------------------------------
      8. THEME TOGGLE (persisted)
   ---------------------------------------------------------- */
   (function initTheme() {
