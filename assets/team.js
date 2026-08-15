@@ -41,12 +41,12 @@
    ============================================================ */
 
 const FIREBASE_CONFIG = {
-  apiKey: "REPLACE_WITH_YOUR_FIREBASE_API_KEY",
-  authDomain: "REPLACE_WITH_YOUR_PROJECT.firebaseapp.com",
-  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
-  storageBucket: "REPLACE_WITH_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
-  appId: "REPLACE_WITH_YOUR_APP_ID",
+  apiKey: "AIzaSyABUBoMfvcYdiUJQwI2rPBb8-GGnX-daTk",
+  authDomain: "fastrr-creative.firebaseapp.com",
+  projectId: "fastrr-creative",
+  storageBucket: "fastrr-creative.firebasestorage.app",
+  messagingSenderId: "210648202688",
+  appId: "1:210648202688:web:0335d98449f6610cacdc25",
 };
 const FIREBASE_IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("REPLACE_WITH_");
 const NOT_CONFIGURED_MSG = "Order History isn't connected yet — ask an admin to finish the setup.";
