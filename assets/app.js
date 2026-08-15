@@ -792,7 +792,7 @@
     if (cart.items.length === 0) {
       list.innerHTML = `<div class="cart-empty">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <p>No creatives added yet — configure one on the left and click "Add to Order."</p>
+        <p>No creatives added yet. Configure one on the left and click "Add to Order."</p>
       </div>`;
     } else {
       list.innerHTML = cart.items
@@ -802,7 +802,26 @@
             .slice(0, 2)
             .map(([l, v]) => `${l}: ${v}`)
             .join("   ");
-          return `<div class="cart-item" data-id="${item.id}">
+          // Full per-item scope, tucked into a data attribute so the
+          // internal order-confirm flow (team.js, a separate script
+          // with no access to this closure's DATA object) can pull the
+          // same deliverables/revisions/turnaround detail into the
+          // invoice PDF at the moment an order is placed — encoded via
+          // encodeURIComponent rather than raw JSON-in-an-attribute so
+          // apostrophes in names like "Director's Cut" never need
+          // HTML-attribute escaping.
+          const spec = encodeURIComponent(
+            JSON.stringify({
+              deliver: item.d.deliver || "",
+              duration: item.d.duration || "",
+              format: item.d.format || "",
+              revisions: item.d.revisions || "",
+              scripting: item.d.scripting || "",
+              language: item.d.language || "",
+              turnaround: item.d.turnaround || "",
+            })
+          );
+          return `<div class="cart-item" data-id="${item.id}" data-spec="${spec}">
             <div class="cart-item-info">
               <div class="cart-item-name">${name}</div>
               <div class="cart-item-facts">${facts}</div>
@@ -957,7 +976,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
      PDF instead, built with the same cart/state data as the messages.
   ---------------------------------------------------------- */
   const PDF_TERMS = [
-    "Turnaround shown for each package is per single creative. For bulk orders or multiple creative types, overall delivery depends on quantity, creative type, package/tier, complexity, and final requirements.",
+    "Turnaround shown for each package is per single creative. For bulk orders or multiple creative types, overall delivery depends on quantity, creative type, cut, complexity, and final requirements.",
     "Turnaround timeline begins once we've received everything we need, meaning all required assets and details, not the payment date.",
     "New concepts, major creative rework, and any additions beyond what's included (extra dimensions, formats, slides, or aspect ratios) sit outside package scope and are quoted separately or as a new order.",
     "AI-generated visuals can vary slightly between runs, and final creative direction may be adjusted for platform policy or technical feasibility.",
