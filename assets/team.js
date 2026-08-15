@@ -182,6 +182,7 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
     setSignedIn(signedIn, label) {
       trigger.dataset.signedIn = signedIn ? "1" : "0";
       trigger.textContent = signedIn ? label : "Team Sign In";
+      if (signedIn) trigger.dataset.initial = (label || "?").trim().charAt(0).toUpperCase();
       if (menu) menu.hidden = !signedIn;
       if (!signedIn) closeMenu();
     },
@@ -555,7 +556,7 @@ async function boot() {
   }
   const [{ initializeApp }, authMod, fsMod] = firebaseMods;
   const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } = authMod;
-  const { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } = fsMod;
+  const { getFirestore, collection, addDoc, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
 
   const app = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(app);
@@ -567,10 +568,21 @@ async function boot() {
   const orderStatusMsg = $("teamOrderStatusMsg");
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
+  const searchInput = $("teamOrderSearch");
+
+  // Soft cap, not a hard scale limit — keeps a single query from ever
+  // pulling a runaway number of documents. Comfortably covers a rep's
+  // realistic history; genuinely unbounded search across tens of
+  // thousands of orders per person would need a Firestore composite
+  // index (uid + createdAt) for cursor-based pagination and likely a
+  // dedicated search index (e.g. Algolia) for full-text search — real
+  // infrastructure additions, not something to silently half-build here.
+  const ORDER_FETCH_CAP = 500;
 
   let unsubscribeOrders = null;
   let allOrders = [];
   let activeFilter = "all";
+  let searchTerm = "";
   let hasAutoOpened = false;
 
   // updateProfile() (setting displayName right after sign-up) does not
@@ -651,6 +663,13 @@ async function boot() {
     renderOrders();
   });
 
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      searchTerm = searchInput.value.trim().toLowerCase();
+      renderOrders();
+    });
+  }
+
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
@@ -660,16 +679,28 @@ async function boot() {
     return ts.toDate().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   }
 
+  function tsMillis(ts) {
+    return ts && ts.toDate ? ts.toDate().getTime() : 0;
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
   function renderOrders() {
-    const rows = activeFilter === "all" ? allOrders : allOrders.filter((o) => o.status === activeFilter);
+    let rows = activeFilter === "all" ? allOrders : allOrders.filter((o) => o.status === activeFilter);
+    if (searchTerm) {
+      rows = rows.filter((o) => (o.client + " " + o.package).toLowerCase().includes(searchTerm));
+    }
     if (!rows.length) {
+      const msg = !allOrders.length
+        ? "No orders logged yet. Use the form above once you've confirmed one."
+        : searchTerm
+        ? "No orders match your search."
+        : "No orders with this status.";
       orderList.innerHTML =
         '<div class="team-order-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 15H9v6h6v-6Z"/></svg><p>' +
-        (allOrders.length ? "No orders with this status." : "No orders logged yet. Use the form above once you've confirmed one.") +
+        msg +
         "</p></div>";
       return;
     }
@@ -699,11 +730,26 @@ async function boot() {
       refreshWho(user);
       allOrders = [];
       renderOrders();
-      const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
-      unsubscribeOrders = onSnapshot(q, (snap) => {
-        allOrders = snap.docs.map((d) => d.data());
-        renderOrders();
-      });
+      // Deliberately NOT combined with orderBy("createdAt") here — a
+      // where()+orderBy() on different fields is a composite query
+      // that Firestore refuses to run without a manually-created
+      // index, and onSnapshot's error callback below was previously
+      // unwired, so that failure was silent: the write would succeed
+      // but the order would just never appear. Sorting client-side
+      // instead means this view never depends on any index existing.
+      const q = query(collection(db, "orders"), where("uid", "==", user.uid), limit(ORDER_FETCH_CAP));
+      unsubscribeOrders = onSnapshot(
+        q,
+        (snap) => {
+          allOrders = snap.docs.map((d) => d.data()).sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt));
+          renderOrders();
+        },
+        (err) => {
+          console.error("[Fastrr] Order History failed to load.", err);
+          orderList.innerHTML =
+            '<div class="team-order-empty"><p>Couldn\'t load your order history right now. Try reopening this panel — if it keeps failing, check the browser console for details.</p></div>';
+        }
+      );
       // "Place Your Order" was clicked signed-out, which opened the
       // sign-in popup instead with a note to resume here — now that
       // sign-in/signup just succeeded, pick that order right back up
