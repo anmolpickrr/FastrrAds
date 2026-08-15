@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-48" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-48" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-48" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-48" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-48" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-48" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-48" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-48" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-48" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-48" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-48" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-48" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-49" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-49" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-49" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-49" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-49" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-49" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-49" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-49" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-49" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-49" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-49" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-49" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1256,15 +1256,36 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   100%{background-position:115% 50%;}
 }
 
-.footer-bottom{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:22px 0 32px;}
-.footer-bottom p{color:var(--text-2); font-size:12px; line-height:1.6;}
+/* A slim running gradient line beneath the wordmark — same
+   background-position-driven technique as the glow above (smooth,
+   no custom-property interpolation issues), just a visible bar
+   instead of a text-clipped blur. background-size:300% gives the
+   gradient's colored band room to travel across the bar and loop
+   cleanly; a short 2.4s duration reads as a quick, continuous shimmer
+   rather than the wordmark glow's slow drift. Starts paused, same
+   scroll-triggered .in-view class as the wordmark itself. */
+.footer-mark-bar{
+  width:min(260px, 34%); height:2px; margin:18px auto 0; border-radius:100px;
+  background-image:linear-gradient(90deg, transparent 0%, var(--violet) 35%, var(--teal) 65%, transparent 100%);
+  background-size:300% 100%; background-position:100% 0;
+  opacity:.75;
+  animation:footerMarkBarRun 2.4s linear infinite;
+  animation-play-state:paused;
+}
+.footer-mark.in-view .footer-mark-bar{animation-play-state:running;}
+@keyframes footerMarkBarRun{
+  0%{background-position:100% 0;}
+  100%{background-position:-200% 0;}
+}
+
+.footer-bottom{display:flex; justify-content:center; align-items:center; padding:22px 0 32px;}
+.footer-bottom p{color:var(--text-2); font-size:12px; line-height:1.6; letter-spacing:.02em;}
 @media (max-width:640px){
   .footer-cta::before{width:340px; height:200px;}
   .footer-top{gap:28px; padding:4px 0 40px;}
   .footer-links{align-items:flex-start; text-align:left;}
   .footer-links a,.footer-links button{text-align:left;}
   .footer-links a:hover,.footer-links button:hover{transform:translateX(3px);}
-  .footer-bottom{flex-direction:column; align-items:flex-start;}
 }
 </style>
 </head>
@@ -1274,8 +1295,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1761,8 +1782,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-48" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1779,12 +1800,14 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     </div>
   </div>
 
-  <div class="footer-mark" aria-hidden="true"><span>Fastrr Ads</span></div>
+  <div class="footer-mark" aria-hidden="true">
+    <span>Fastrr Ads</span>
+    <div class="footer-mark-bar"></div>
+  </div>
 
   <div class="wrap">
     <div class="footer-bottom">
       <p>© <span id="footerYear"></span> Fastrr Ads. All rights reserved.</p>
-      <p>Listed prices are exclusive of GST; the calculator adds 18% GST by default and can be switched off per order for a non-GST invoice.</p>
     </div>
   </div>
 </footer>
@@ -1897,10 +1920,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-48"></script>
-<script src="assets/app.js?v=20260811-48"></script>
+<script src="assets/creative-data.js?v=20260811-49"></script>
+<script src="assets/app.js?v=20260811-49"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-48"></script>
+<script type="module" src="assets/team.js?v=20260811-49"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
