@@ -14,9 +14,11 @@
      This is a static site with no backend — nothing here is real
      security, just keeping the order-building/quoting tools out of a
      public visitor's way. Internal team opens the site once via
-     ?team=1, which is remembered on that device from then on; the
-     param is stripped from the URL immediately after so it doesn't
-     linger in the address bar or browser history. Everything else on
+     /teamfastrr (a static redirect stub that sets the flag below and
+     bounces to "/") or the legacy ?team=1 query param — either way it's
+     remembered on that device from then on; the query param is stripped
+     from the URL immediately after so it doesn't linger in the address
+     bar or browser history. Everything else on
      the page (showcase, service scope, the single-creative price
      calculator) stays visible to everyone — only the Order panel and
      the Message Generator section are gated, since those are the
