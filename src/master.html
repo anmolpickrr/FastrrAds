@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-67" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-67" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-67" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-67" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-67" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-67" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-67" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-67" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-67" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-67" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-67" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-67" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-68" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-68" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-68" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-68" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-68" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-68" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-68" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-68" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-68" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-68" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-68" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-68" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -269,9 +269,16 @@ footer .brand-logo{height:24px;}
 .btn-primary:hover{box-shadow:0 16px 34px -10px var(--violet-soft), 0 4px 10px -4px rgba(0,0,0,0.25), var(--inset-hi); transform:translateY(-2px);}
 .btn-ghost{background:var(--surface-1); border-color:var(--line); color:var(--text-0); box-shadow:var(--inset-hi);}
 .btn-ghost:hover{background:var(--surface-hover); border-color:var(--violet); transform:translateY(-2px); box-shadow:var(--shadow-sm), var(--inset-hi);}
-.hero-stats{display:flex; gap:26px; margin-top:26px; flex-wrap:wrap;}
-.hero-stat b{display:block; font-family:var(--font-display); font-size:21px;}
-.hero-stat span{font-size:11.5px; color:var(--text-2);}
+.hero-flow{display:flex; gap:28px; margin-top:28px; flex-wrap:wrap;}
+.hero-flow-step{display:flex; align-items:flex-start; gap:11px; max-width:200px;}
+.hero-flow-num{
+  flex:0 0 auto; width:23px; height:23px; margin-top:1px; border-radius:50%;
+  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff;
+  font-family:var(--font-display); font-size:11.5px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-flow-step b{display:block; font-size:13.5px; color:var(--text-0); font-weight:600; margin-bottom:2px;}
+.hero-flow-desc{font-size:11.5px; color:var(--text-2); line-height:1.45;}
 
 /* ---------- HERO ORBIT — explicitly-aligned 7-column creative cluster ----------
    .hero-visual is a single fixed-size composition box anchored to the
@@ -1036,24 +1043,32 @@ html.is-internal .oc-offer{display:none !important;}
 .team-profile{position:relative;}
 /* Signed-in styling only — signed-out keeps the plain ghost-button
    look (nothing to imply an account menu when there isn't one yet).
-   The avatar bubble shows the display name's first letter via a data
-   attribute (set in team.js) so the button stays a single element
-   with a dynamic label, rather than needing an innerHTML rebuild. */
-.team-profile-trigger[data-signed-in="1"]{display:inline-flex; align-items:center; gap:7px;}
+   Signed-in drops the outlined "ghost button" pill entirely — a
+   gradient-filled avatar plus name, transparent until hovered, reads
+   as a native app account switcher rather than a bordered form
+   control. The avatar bubble shows the display name's first letter
+   via a data attribute (set in team.js) so the button stays a single
+   element with a dynamic label, rather than needing an innerHTML
+   rebuild. */
+.team-profile-trigger[data-signed-in="1"]{
+  display:inline-flex; align-items:center; gap:9px; border-color:transparent; background:transparent;
+  padding:6px 10px 6px 6px !important; transition:background .18s ease, border-color .18s ease;
+}
+.team-profile-trigger[data-signed-in="1"]:hover{background:var(--surface-hover); border-color:var(--line-soft);}
 .team-profile-trigger[data-signed-in="1"]::before{
   content:attr(data-initial); display:flex; align-items:center; justify-content:center; flex:0 0 auto;
-  width:19px; height:19px; border-radius:50%; background:var(--violet-soft); color:var(--violet);
-  font-size:10px; font-weight:700;
+  width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, var(--violet), var(--teal));
+  color:#fff; font-family:var(--font-display); font-size:12.5px; font-weight:700; box-shadow:var(--shadow-sm, 0 2px 6px rgba(0,0,0,.2));
 }
 .team-profile-trigger[data-signed-in="1"]::after{
-  content:''; flex:0 0 auto; width:6px; height:6px; margin-left:1px;
-  border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor;
-  transform:rotate(45deg); opacity:.55; transition:transform .18s ease;
+  content:''; flex:0 0 auto; width:7px; height:7px; margin-left:1px;
+  border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor;
+  transform:rotate(45deg); opacity:.5; transition:transform .18s ease;
 }
 .team-profile.menu-open .team-profile-trigger[data-signed-in="1"]::after{transform:rotate(225deg); margin-top:3px;}
 .team-profile-menu{
-  position:absolute; top:calc(100% + 8px); right:0; min-width:180px; padding:6px;
-  background:var(--bg-1); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg), var(--inset-hi);
+  position:absolute; top:calc(100% + 10px); right:0; min-width:230px; padding:8px;
+  background:var(--bg-1); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-lg), var(--inset-hi);
   opacity:0; visibility:hidden; transform:translateY(-6px);
   transition:opacity .18s ease, transform .18s ease, visibility 0s linear .18s; z-index:60;
 }
@@ -1061,11 +1076,25 @@ html.is-internal .oc-offer{display:none !important;}
 .team-profile.menu-open .team-profile-menu:not([hidden]){
   opacity:1; visibility:visible; transform:translateY(0); transition-delay:0s;
 }
+.team-profile-menu-header{display:flex; align-items:center; gap:10px; padding:8px 10px 12px;}
+.team-profile-menu-avatar{
+  flex:0 0 auto; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff;
+  font-family:var(--font-display); font-size:15px; font-weight:700;
+}
+.team-profile-menu-who{min-width:0;}
+.team-profile-menu-name{font-size:13.5px; font-weight:600; color:var(--text-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-profile-menu-email{font-size:11.5px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-profile-menu-divider{height:1px; background:var(--line-soft); margin:0 2px 6px;}
 .team-profile-menu button{
-  display:block; width:100%; text-align:left; padding:9px 12px; border-radius:9px; font-size:13.5px; color:var(--text-1);
-  background:none; border:none; transition:background .15s ease, color .15s ease;
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:9px 10px; border-radius:10px;
+  font-size:13.5px; color:var(--text-1); background:none; border:none; transition:background .15s ease, color .15s ease;
 }
 .team-profile-menu button:hover{background:var(--surface-hover); color:var(--text-0);}
+.team-profile-menu button svg{flex:0 0 auto; width:16px; height:16px; color:var(--text-2); transition:color .15s ease;}
+.team-profile-menu button:hover svg{color:var(--text-0);}
+#teamProfileSignOutBtn:hover{color:var(--danger);}
+#teamProfileSignOutBtn:hover svg{color:var(--danger);}
 
 
 /* Admin-only "My Orders / All Orders" scope switch — hidden entirely
@@ -1116,11 +1145,18 @@ html.is-internal .oc-offer{display:none !important;}
 .team-order-item-chip{font-size:11.5px; color:var(--text-1); background:var(--surface-2); border:1px solid var(--line-soft); border-radius:100px; padding:4px 10px; white-space:nowrap;}
 .team-order-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
 .team-order-amount{font-size:14px; font-weight:600; font-family:var(--font-display); color:var(--text-1); white-space:nowrap;}
-.team-order-status{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px; border-radius:100px; white-space:nowrap; flex:0 0 auto;}
-.team-order-status.status-placed{background:rgba(124,109,255,.16); color:#9d8fff;}
-.team-order-status.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
-.team-order-status.status-failed{background:rgba(244,63,94,.14); color:var(--danger);}
-.team-order-status.status-cancelled{background:var(--surface-2); color:var(--text-2);}
+.team-order-status-select{
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px;
+  border-radius:100px; white-space:nowrap; flex:0 0 auto; border:1px solid transparent; cursor:pointer;
+  font-family:inherit; transition:background .2s ease, color .2s ease, opacity .2s ease;
+}
+.team-order-status-select:disabled{opacity:.6; cursor:default;}
+.team-order-status-select.status-placed{background:rgba(124,109,255,.16); color:#9d8fff;}
+.team-order-status-select.status-in_progress{background:rgba(240,180,60,.16); color:#e0ab3f;}
+.team-order-status-select.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
+.team-order-status-select.status-failed{background:rgba(244,63,94,.14); color:var(--danger);}
+.team-order-status-select.status-cancelled{background:var(--surface-2); color:var(--text-2);}
+.team-order-status-select option{background:var(--bg-1); color:var(--text-0);}
 .team-order-view-btn, .team-order-invoice-btn{
   display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
   border-radius:8px; border:1px solid var(--line-soft); background:var(--surface-2); color:var(--text-2);
@@ -1451,8 +1487,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-67" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-67" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-68" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-68" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1482,8 +1518,16 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         <div class="team-profile" id="teamProfile" style="display:none;">
           <button type="button" class="btn btn-ghost team-profile-trigger" id="teamNavBtn" style="padding:9px 16px; font-size:13px;"></button>
           <div class="team-profile-menu" id="teamProfileMenu" hidden>
-            <button type="button" id="teamProfileHistoryBtn">Order History</button>
-            <button type="button" id="teamProfileSignOutBtn">Sign out</button>
+            <div class="team-profile-menu-header" id="teamProfileMenuHeader"></div>
+            <div class="team-profile-menu-divider"></div>
+            <button type="button" id="teamProfileHistoryBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+              Order History
+            </button>
+            <button type="button" id="teamProfileSignOutBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
           </div>
         </div>
         <!-- PUBLIC:STRIP:END -->
@@ -1507,10 +1551,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
           <a href="#showcase" class="btn btn-primary">See the Work ↓</a>
           <a href="#quote" class="btn btn-ghost">Build a Quote</a>
         </div>
-        <div class="hero-stats">
-          <div class="hero-stat"><b>4</b><span>Creative Services</span></div>
-          <div class="hero-stat"><b>4</b><span>AI Reel Packages</span></div>
-          <div class="hero-stat"><b>1–5 Days</b><span>Turnaround, per creative</span></div>
+        <div class="hero-flow">
+          <div class="hero-flow-step"><span class="hero-flow-num">1</span><div><b>Browse the work</b><span class="hero-flow-desc">Real, delivered creatives across every format</span></div></div>
+          <div class="hero-flow-step"><span class="hero-flow-num">2</span><div><b>Build your quote</b><span class="hero-flow-desc">Pick packages, get itemized pricing instantly</span></div></div>
+          <div class="hero-flow-step"><span class="hero-flow-num">3</span><div><b>We deliver</b><span class="hero-flow-desc">Writer, editor, and creative team from brief to final export</span></div></div>
         </div>
       </div>
       <div class="hero-visual" id="heroVisual">
@@ -1896,8 +1940,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-67" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-67" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-68" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-68" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -2110,6 +2154,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="team-filter-row" id="teamFilterRow">
       <button type="button" class="team-filter-chip is-active" data-status="all">All</button>
       <button type="button" class="team-filter-chip" data-status="placed">Placed</button>
+      <button type="button" class="team-filter-chip" data-status="in_progress">In Progress</button>
       <button type="button" class="team-filter-chip" data-status="completed">Completed</button>
       <button type="button" class="team-filter-chip" data-status="failed">Failed</button>
       <button type="button" class="team-filter-chip" data-status="cancelled">Cancelled</button>
@@ -2186,10 +2231,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <!-- PUBLIC:STRIP:END -->
-<script src="assets/creative-data.js?v=20260811-67"></script>
-<script src="assets/app.js?v=20260811-67"></script>
+<script src="assets/creative-data.js?v=20260811-68"></script>
+<script src="assets/app.js?v=20260811-68"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-67"></script>
+<script type="module" src="assets/team.js?v=20260811-68"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
