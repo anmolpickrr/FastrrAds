@@ -781,19 +781,17 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 @media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
 
 /* Public/internal split — see initAccessMode() in app.js. Default (no
-   .is-internal on <html>) is the public view: the Order panel, the
-   "Add to Order" action, and the whole Message Generator section (plus
-   its two nav links) are hidden, so a public visitor can browse
-   services and price a single creative but can't build or export an
-   order. Nothing here is a real access boundary, just keeping sales
-   tooling out of a visitor's way. */
-html:not(.is-internal) #ocPanel,
-html:not(.is-internal) #obAddBtn,
+   .is-internal on <html>) is the public view: the Order panel/pricing
+   builder stays fully visible and usable to everyone (a public visitor
+   can add creatives and see the live order total) — only the Message
+   Generator section (the client-facing message text + PDF export,
+   which is a post-payment sales action) plus its two nav links are
+   hidden. Nothing here is a real access boundary, just keeping the
+   post-sale tooling out of a visitor's way. */
 html:not(.is-internal) #messages,
 html:not(.is-internal) a[href="#messages"]{
   display:none !important;
 }
-html:not(.is-internal) .order-builder{grid-template-columns:1fr; max-width:640px;}
 
 .ob-panel,.oc-panel{padding:22px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:14px;}
@@ -802,6 +800,28 @@ html:not(.is-internal) .order-builder{grid-template-columns:1fr; max-width:640px
 .ob-fact{font-size:11.5px; padding:5px 11px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px;}
 .ob-fact .dot{width:5px; height:5px; border-radius:50%; background:var(--teal); flex:0 0 auto;}
 .ob-add-btn{width:100%; justify-content:center; margin-top:4px;}
+
+/* Lead capture — sits below the order builder, same glass-panel
+   treatment as .ob-panel/.oc-panel but full width and visible to
+   every visitor (public or internal): the one path a public visitor
+   who wants something custom, or just wants a human to follow up, has
+   to reach the team without needing the internal-only Message
+   Generator. */
+.lead-panel{
+  margin-top:22px; padding:26px clamp(20px,4vw,32px); border-radius:var(--radius);
+  background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);
+}
+.lead-panel-head{margin-bottom:20px;}
+.lead-panel-sub{margin-top:8px; font-size:13.5px; color:var(--text-1); line-height:1.55; max-width:560px;}
+.lead-form .field-row{margin-bottom:16px;}
+.lead-form .field-row:last-of-type{margin-bottom:0;}
+.field-optional{font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-2);}
+.lead-textarea{min-height:76px; resize:vertical; font-family:var(--font-body); line-height:1.5; padding-top:10px;}
+.lead-submit-btn{margin-top:6px;}
+.lead-form-status{margin-top:12px; font-size:12.5px; line-height:1.5;}
+.lead-form-status:empty{display:none;}
+.lead-form-status.is-success{color:var(--teal);}
+.lead-form-status.is-error{color:var(--danger);}
 .ob-add-btn.flash{animation:obFlash .5s ease;}
 @keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
 
@@ -1005,8 +1025,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-27" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-27" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1317,6 +1337,47 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         </div>
       </div>
     </div>
+
+    <div class="lead-panel reveal-on-scroll" id="leadPanel">
+      <div class="lead-panel-head">
+        <div class="ob-panel-label">Share Your Requirement</div>
+        <p class="lead-panel-sub">Interested in working with us, or have a custom requirement that doesn't fit a standard package? Leave your details and our team will reach out.</p>
+      </div>
+      <form id="leadForm" class="lead-form" novalidate>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="leadName">Full Name</label>
+            <input class="text-input" type="text" id="leadName" name="name" autocomplete="name" required>
+          </div>
+          <div class="field-row">
+            <label for="leadEmail">Email ID</label>
+            <input class="text-input" type="email" id="leadEmail" name="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="leadPhone">Contact Number</label>
+            <input class="text-input" type="tel" id="leadPhone" name="phone" autocomplete="tel" required>
+          </div>
+          <div class="field-row">
+            <label for="leadBrand">Brand Name</label>
+            <input class="text-input" type="text" id="leadBrand" name="brand" autocomplete="organization">
+          </div>
+        </div>
+        <div class="field-row">
+          <label for="leadRequirement">Requirement / Service Required</label>
+          <input class="text-input" type="text" id="leadRequirement" name="requirement" placeholder="e.g. AI Reels, Static Creatives, a custom package…" required>
+        </div>
+        <div class="field-row">
+          <label for="leadDetails">Any Other Relevant Details <span class="field-optional">(optional)</span></label>
+          <textarea class="text-input lead-textarea" id="leadDetails" name="details" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary lead-submit-btn" id="leadSubmitBtn">
+          <span id="leadSubmitBtnLabel">Send Requirement</span>
+        </button>
+        <p class="lead-form-status" id="leadFormStatus" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -1393,8 +1454,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-27" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-27" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1426,7 +1487,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-26"></script>
-<script src="assets/app.js?v=20260811-26"></script>
+<script src="assets/creative-data.js?v=20260811-27"></script>
+<script src="assets/app.js?v=20260811-27"></script>
 </body>
 </html>
