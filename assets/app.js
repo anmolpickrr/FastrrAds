@@ -59,7 +59,7 @@
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
-      language: "Not applicable — silent, no voiceover",
+      language: "Not applicable (silent, no voiceover)",
       turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
@@ -77,10 +77,10 @@
         "Additional aspect ratios (quoted separately)",
       ],
       need: [
-        "SKU list with product names — which products need a rotation",
+        "SKU list with the product names that need a rotation",
         "Reference/inspiration for the rotation style (if any)",
       ],
-      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent — no text, voiceover, or music — delivered via shared drive folder",
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
       // Standard 360° rotation is deliberately silent/text-free/script-free (see
       // `excluded` above); the one exception is that a human CAN appear wearing or
       // using the product via lifestyle/product-use shots where relevant — that's
@@ -115,7 +115,7 @@
         "Key message/offer to highlight",
         "References/inspiration (if any)",
       ],
-      deliver: "2 files — 1:1 and 9:16, PNG/JPG, print-ready resolution, delivered via shared drive folder",
+      deliver: "2 files (1:1 and 9:16), PNG/JPG, print-ready resolution, delivered via shared drive folder",
       // Design-only, no scripting (`scripting: "Not applicable"`) — editor/designer
       // builds the creative, no dedicated writer or CD script oversight needed.
       support: ["editor", "call"],
@@ -292,7 +292,7 @@
   ];
   const PER_PRODUCT_NEED = [
     "Product page / website link",
-    "Product images — high-resolution with a clean background, or raw product images/footage, as available",
+    "Product images, high-resolution with a clean background, or raw product images/footage, as available",
   ];
   const COMMON_NEED = [...BRAND_NEED, ...PER_PRODUCT_NEED];
 
@@ -878,7 +878,7 @@
 
     if (cart.items.length === 0) {
       const emptyMsg =
-        "No creatives have been added to this order yet — add at least one under \"03 — Quote & Price Calculator\" above to generate this message.";
+        "No creatives have been added to this order yet. Add at least one under \"03 — Quote & Price Calculator\" above to generate this message.";
       document.getElementById("clientMsg").value = emptyMsg;
       document.getElementById("internalMsg").value = emptyMsg;
       return;
@@ -1497,7 +1497,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       }
       const original = btn.dataset.label || btn.textContent;
       btn.dataset.label = original;
-      btn.textContent = ok ? "Copied ✓" : "Copy failed — select & copy manually";
+      btn.textContent = ok ? "Copied ✓" : "Copy failed, select and copy manually";
       btn.classList.add(ok ? "copied" : "copy-error");
       setTimeout(() => {
         btn.textContent = original;
@@ -1706,7 +1706,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         showSuccess();
       } catch (err) {
         openMailtoFallback(data);
-        setStatus("Couldn't reach our form directly — opening your email app with these details instead.", "error");
+        setStatus("Couldn't reach our form directly. Opening your email app with these details instead.", "error");
       } finally {
         btn.disabled = false;
         label.textContent = originalLabel;
