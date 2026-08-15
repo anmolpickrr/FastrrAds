@@ -422,7 +422,11 @@
     const discountAmt =
       discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
     const taxable = subtotal - discountAmt;
-    const gstEnabled = state.gstEnabled !== false;
+    // GST is compulsory on every public order — only internal team can
+    // switch it off (e.g. to issue a non-GST invoice for a specific
+    // client arrangement), so state.gstEnabled is only ever respected
+    // in that mode.
+    const gstEnabled = isInternal() ? state.gstEnabled !== false : true;
     const gstAmt = gstEnabled ? taxable * GST_RATE : 0;
     const final = taxable + gstAmt;
     return { items, subtotal, discountType, discountValue, discountAmt, taxable, gstEnabled, gstAmt, final };
@@ -666,17 +670,26 @@
 
     // Progress before the threshold, confirmation after — CSS hides this
     // entirely for internal (see html.is-internal .oc-offer), so this
-    // only ever needs to make sense for a public visitor.
+    // only ever needs to make sense for a public visitor. The ₹10,000
+    // threshold is stated explicitly in every state (not just implied
+    // by "add ₹X more"), and the unlocked state gets its own bolder
+    // treatment (.is-unlocked) so it actually gets noticed rather than
+    // reading the same as the plain progress message.
     const offerEl = document.getElementById("ocOffer");
     if (offerEl) {
       const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      const thresholdStr = fmtINR(PUBLIC_OFFER_THRESHOLD);
       if (cart.subtotal >= PUBLIC_OFFER_THRESHOLD) {
-        offerEl.innerHTML = `${check} 10% bulk order offer applied to this order.`;
-      } else if (cart.items.length > 0) {
-        const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
-        offerEl.innerHTML = `${check} Add ${remaining} more to unlock 10% off.`;
+        offerEl.classList.add("is-unlocked");
+        offerEl.innerHTML = `${check} <b>10% off unlocked</b> — this order crossed the ${thresholdStr} bulk-order mark.`;
       } else {
-        offerEl.innerHTML = `${check} Orders above ${fmtINR(PUBLIC_OFFER_THRESHOLD)} get 10% off, automatically.`;
+        offerEl.classList.remove("is-unlocked");
+        if (cart.items.length > 0) {
+          const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
+          offerEl.innerHTML = `${check} Orders above ${thresholdStr} get 10% off — add ${remaining} more to unlock it.`;
+        } else {
+          offerEl.innerHTML = `${check} Orders above ${thresholdStr} get 10% off, automatically.`;
+        }
       }
     }
 
@@ -1532,6 +1545,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      8. THEME TOGGLE (persisted)
   ---------------------------------------------------------- */
+  // The favicon <link> tags default to the dark-theme (white) set in
+  // the HTML itself (matching the site's dark-by-default theme) — this
+  // rewrites every one of them to the light-theme (black) set instead
+  // whenever the resolved theme is actually light, and back again on
+  // toggle. Browsers don't apply page CSS to favicons, so swapping the
+  // href in JS is the only way to make the tab icon track the site's
+  // own theme rather than just the OS's.
+  function updateFavicon(theme) {
+    const dir = theme === "light" ? "light" : "dark";
+    const otherDir = dir === "light" ? "dark" : "light";
+    ["faviconIco", "favicon32", "favicon16", "faviconApple", "favicon192"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.href = el.href.replace("/favicon/" + otherDir + "/", "/favicon/" + dir + "/");
+    });
+    const svg = document.getElementById("faviconSvg");
+    if (svg) svg.href = svg.href.replace("favicon-" + otherDir + ".svg", "favicon-" + dir + ".svg");
+  }
+
   (function initTheme() {
     const root = document.documentElement;
     const btn = document.getElementById("themeToggle");
@@ -1544,11 +1575,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // on first visit. A saved choice (from the toggle) still always wins.
     const initial = saved || "dark";
     root.setAttribute("data-theme", initial);
+    updateFavicon(initial);
 
     btn.addEventListener("click", () => {
       const isLight = root.getAttribute("data-theme") === "light";
       const next = isLight ? "dark" : "light";
       root.setAttribute("data-theme", next);
+      updateFavicon(next);
       try { localStorage.setItem("fastrr-theme", next); } catch (e) {}
       // Drive the spin with a JS-triggered class + explicit @keyframes
       // instead of relying only on the attribute-selector transition —

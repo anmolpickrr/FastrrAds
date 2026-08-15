@@ -5,12 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fastrr Creative — Sales Quotation Platform</title>
 <meta name="description" content="Internal creative agency showcase, service scope, price calculator and message generator.">
-<link rel="icon" href="assets/favicon/favicon.ico?v=20260811-30" sizes="any">
-<link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=20260811-30">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32.png?v=20260811-30">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16.png?v=20260811-30">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png?v=20260811-30">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/favicon-192.png?v=20260811-30">
+<!-- Defaults to the dark-theme (white) set, matching the site's own
+     dark-by-default theme — updateFavicon() in app.js rewrites every
+     href below to the light-theme (black) set as soon as the resolved
+     theme is actually light, and again on every toggle. -->
+<link rel="icon" id="faviconIco" href="assets/favicon/dark/favicon.ico?v=20260811-31" sizes="any">
+<link rel="icon" id="faviconSvg" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-31">
+<link rel="icon" id="favicon32" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-31">
+<link rel="icon" id="favicon16" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-31">
+<link rel="apple-touch-icon" id="faviconApple" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-31">
+<link rel="icon" id="favicon192" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-31">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -800,8 +804,14 @@ html:not(.is-internal) a[href="#messages"]{
 }
 /* Manual discount entry is an internal sales tool for negotiated
    pricing — public visitors get the automatic bulk-order offer (see
-   .oc-offer) instead, not a raw editable percentage field. */
-html:not(.is-internal) #discountFieldRow{display:none !important;}
+   .oc-offer) instead, not a raw editable percentage field. GST is
+   compulsory on every public order, so the on/off switch (an internal
+   tool for occasionally issuing a non-GST invoice) is hidden too —
+   public just sees GST charged as a fixed line in the breakdown. */
+html:not(.is-internal) #discountFieldRow,
+html:not(.is-internal) #gstToggleRow{
+  display:none !important;
+}
 html.is-internal .oc-offer{display:none !important;}
 
 .ob-panel,.oc-panel{padding:22px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
@@ -822,13 +832,25 @@ html.is-internal .oc-offer{display:none !important;}
    discount field instead — see the html:not(.is-internal) rule
    further down — since they're pricing real negotiated orders, not
    shopping a public discount. */
+/* Two distinct states, not one style doing double duty: quiet violet
+   while the order is still short of the threshold (an invitation, not
+   an achievement yet), switching to a bolder teal treatment — border,
+   subtle glow — the moment it's actually unlocked, so crossing ₹10,000
+   visibly registers as something happening rather than reading as the
+   same message in a different color. */
 .oc-offer{
-  display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:10px 14px;
-  border-radius:var(--radius-sm); background:var(--teal-soft); color:var(--teal);
-  font-size:12.5px; font-weight:600; line-height:1.4;
+  display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:11px 14px;
+  border-radius:var(--radius-sm); background:var(--violet-soft); color:var(--violet);
+  border:1px solid transparent; font-size:12.5px; font-weight:600; line-height:1.4;
+  transition:background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
 .oc-offer:empty{display:none;}
 .oc-offer svg{width:14px; height:14px; flex:0 0 auto;}
+.oc-offer b{font-weight:700;}
+.oc-offer.is-unlocked{
+  background:var(--teal-soft); color:var(--teal); border-color:var(--teal);
+  box-shadow:0 0 0 3px var(--teal-soft);
+}
 
 /* Lead capture CTA — sits inside the Order panel itself, right after
    the Final Amount, so it reads as the order's own next step rather
@@ -944,6 +966,10 @@ html.is-internal .oc-offer{display:none !important;}
 .order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:12px;}
 .order-summary .field-row label{display:flex; align-items:center; gap:8px;}
+/* order-summary already supplies the top divider/gap above the Price
+   breakdown toggle — .mini-toggle's own margin/padding/border-top
+   would stack a second one directly beneath it. */
+#priceBreakdownToggle{margin-top:0; padding-top:0; border-top:none;}
 
 /* Order Discount + GST — no cards, no button chrome. Both live as two
    more rows in the same plain list as Subtotal/Discount/GST/Total
@@ -1076,8 +1102,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-31" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-31" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1363,29 +1389,34 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
         </details>
 
         <div class="order-summary">
-          <div class="adj-row" id="discountFieldRow">
-            <span>Discount</span>
-            <span class="adj-control">
-              <span class="unit-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
-                <button type="button" class="unit-toggle-btn active" data-type="pct">%</button>
-                <span class="unit-toggle-sep">/</span>
-                <button type="button" class="unit-toggle-btn" data-type="flat">₹</button>
+          <details class="mini-toggle" id="priceBreakdownToggle">
+            <summary>Price breakdown</summary>
+
+            <div class="adj-row" id="discountFieldRow">
+              <span>Discount</span>
+              <span class="adj-control">
+                <span class="unit-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
+                  <button type="button" class="unit-toggle-btn active" data-type="pct">%</button>
+                  <span class="unit-toggle-sep">/</span>
+                  <button type="button" class="unit-toggle-btn" data-type="flat">₹</button>
+                </span>
+                <input class="summary-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
               </span>
-              <input class="summary-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
-            </span>
-          </div>
+            </div>
 
-          <label class="adj-row" for="qGstToggle">
-            <span>GST (18%)</span>
-            <span class="gst-switch">
-              <input type="checkbox" id="qGstToggle" checked>
-              <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
-            </span>
-          </label>
+            <label class="adj-row" for="qGstToggle" id="gstToggleRow">
+              <span>GST (18%)</span>
+              <span class="gst-switch">
+                <input type="checkbox" id="qGstToggle" checked>
+                <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
+              </span>
+            </label>
 
-          <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
-          <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
-          <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+            <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
+            <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+            <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+          </details>
+
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
         </div>
 
@@ -1471,8 +1502,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-31" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-31" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1558,7 +1589,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-30"></script>
-<script src="assets/app.js?v=20260811-30"></script>
+<script src="assets/creative-data.js?v=20260811-31"></script>
+<script src="assets/app.js?v=20260811-31"></script>
 </body>
 </html>
