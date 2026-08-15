@@ -13,16 +13,20 @@
      0. ACCESS MODE (public vs internal team)
      This is a static site with no backend — nothing here is real
      security, just keeping the order-building/quoting tools out of a
-     public visitor's way. Internal team opens the site once via
-     /teamfastrr (a static redirect stub that sets the flag below and
-     bounces to "/") or the legacy ?team=1 query param — either way it's
-     remembered on that device from then on; the query param is stripped
-     from the URL immediately after so it doesn't linger in the address
-     bar or browser history. Everything else on
-     the page (showcase, service scope, the single-creative price
-     calculator) stays visible to everyone — only the Order panel and
-     the Message Generator section are gated, since those are the
-     sales workflow, not the public-facing preview.
+     public visitor's way. Two genuinely separate URLs, not one URL
+     redirecting into the other:
+       - creative.fastrr.com/           → public, always.
+       - creative.fastrr.com/teamfastrr → internal, always — the exact
+         same file is served at both paths (see the <base href="/">
+         note in index.html's <head>), so landing on /teamfastrr never
+         navigates anywhere; it just renders unlocked in place.
+     The legacy ?team=1 query param still works too (unlocks + strips
+     itself from the URL) for anyone with it bookmarked. Either path
+     remembers the unlock on that device from then on via localStorage.
+     Everything else on the page (showcase, service scope, the
+     single-creative price calculator) stays visible to everyone —
+     only the Order panel and the Message Generator section are gated,
+     since those are the sales workflow, not the public-facing preview.
   ---------------------------------------------------------- */
   (function initAccessMode() {
     const UNLOCK_PARAM = "team";
@@ -31,15 +35,20 @@
     try {
       unlocked = localStorage.getItem("fastrr-internal") === "1";
     } catch (e) {}
+    if (/^\/teamfastrr\/?$/.test(window.location.pathname)) {
+      unlocked = true;
+    }
     if (params.has(UNLOCK_PARAM)) {
       unlocked = true;
-      try {
-        localStorage.setItem("fastrr-internal", "1");
-      } catch (e) {}
       params.delete(UNLOCK_PARAM);
       const newSearch = params.toString();
       const newUrl = window.location.pathname + (newSearch ? "?" + newSearch : "") + window.location.hash;
       window.history.replaceState({}, "", newUrl);
+    }
+    if (unlocked) {
+      try {
+        localStorage.setItem("fastrr-internal", "1");
+      } catch (e) {}
     }
     document.documentElement.classList.toggle("is-internal", unlocked);
   })();
