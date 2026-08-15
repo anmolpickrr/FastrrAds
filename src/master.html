@@ -1281,9 +1281,11 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
         <a href="#quote">Quote</a>
-                <a href="#messages">Messages</a>
+        <!-- PUBLIC:STRIP:START -->
+        <a href="#messages">Messages</a>
         <a href="#history">History</a>
-              </div>
+        <!-- PUBLIC:STRIP:END -->
+      </div>
       <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
           <span class="theme-icon-stack">
@@ -1292,8 +1294,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
           </span>
         </button>
         <a href="#quote" class="btn btn-primary" style="padding:9px 18px; font-size:13px;">Start a Quote</a>
-                <button type="button" class="btn btn-ghost" id="teamNavBtn" style="display:none; padding:9px 16px; font-size:13px;"></button>
-              </div>
+        <!-- PUBLIC:STRIP:START -->
+        <button type="button" class="btn btn-ghost" id="teamNavBtn" style="display:none; padding:9px 16px; font-size:13px;"></button>
+        <!-- PUBLIC:STRIP:END -->
+      </div>
     </div>
   </div>
 </nav>
@@ -1566,7 +1570,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
           <details class="mini-toggle" id="priceBreakdownToggle">
             <summary>Price breakdown</summary>
 
-                        <div class="adj-row" id="discountFieldRow">
+            <!-- PUBLIC:STRIP:START -->
+            <div class="adj-row" id="discountFieldRow">
               <span>Discount</span>
               <span class="adj-control">
                 <span class="unit-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
@@ -1585,7 +1590,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
                 <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
               </span>
             </label>
-            
+            <!-- PUBLIC:STRIP:END -->
+
             <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
             <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
             <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
@@ -1603,6 +1609,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   </div>
 </section>
 
+<!-- PUBLIC:STRIP:START -->
 <section class="section" id="messages" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
@@ -1741,6 +1748,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     </div>
   </div>
 </section>
+<!-- PUBLIC:STRIP:END -->
 
 <footer>
   <div class="wrap">
@@ -1763,9 +1771,11 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
         <a href="#quote">Quote</a>
-                <a href="#messages">Messages</a>
+        <!-- PUBLIC:STRIP:START -->
+        <a href="#messages">Messages</a>
         <a href="#history">History</a>
-              </div>
+        <!-- PUBLIC:STRIP:END -->
+      </div>
     </div>
   </div>
 
@@ -1792,6 +1802,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <iframe name="leadHiddenFrame" id="leadHiddenFrame" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
 
+<!-- PUBLIC:STRIP:START -->
 <!-- Team sign-in/signup popup — opens automatically on arrival via
      /teamfastrr while signed out, and any time via the nav "Team Sign
      In" button. Reuses the .lead-modal component (same overlay,
@@ -1828,6 +1839,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     </div>
   </div>
 </div>
+<!-- PUBLIC:STRIP:END -->
 
 <div class="lead-modal" id="leadModal">
   <div class="lead-modal-backdrop" id="leadModalBackdrop"></div>
@@ -1887,6 +1899,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/creative-data.js?v=20260811-46"></script>
 <script src="assets/app.js?v=20260811-46"></script>
+<!-- PUBLIC:STRIP:START -->
 <script type="module" src="assets/team.js?v=20260811-46"></script>
+<!-- PUBLIC:STRIP:END -->
 </body>
 </html>
