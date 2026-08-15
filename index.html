@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-49" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-49" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-49" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-49" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-49" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-49" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-49" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-49" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-49" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-49" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-49" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-49" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-50" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-50" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-50" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-50" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-50" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-50" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-50" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-50" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-50" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-50" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-50" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-50" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -931,6 +931,30 @@ html.is-internal .oc-offer{display:none !important;}
 .lead-success:not([hidden]){display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; padding:20px 8px 8px;}
 .lead-success svg{color:var(--teal);}
 .lead-success p{font-size:15px; color:var(--text-1); line-height:1.55; max-width:400px;}
+.lead-success .btn{margin-top:2px;}
+
+/* Order-confirm success check — a quick, deliberate pop-and-settle
+   (scale past 100% then back) rather than a plain fade, so the
+   moment an order actually gets logged reads as a distinct
+   confirmation beat, not just another state swap. */
+.order-success-check{animation:orderCheckPop .5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes orderCheckPop{
+  0%{transform:scale(.4); opacity:0;}
+  60%{transform:scale(1.15); opacity:1;}
+  100%{transform:scale(1); opacity:1;}
+}
+
+/* Read-only cart preview inside the order-confirm modal — same
+   visual language as the live order-summary panel (surface-1 rows,
+   mono price) so it reads as "the order you already built," not a
+   separate re-entry step. */
+.oc-review{margin-bottom:20px; padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.oc-review-label{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:10px;}
+.oc-review-row{display:flex; align-items:baseline; justify-content:space-between; gap:12px; font-size:13px; padding:4px 0;}
+.oc-review-row span:first-child{color:var(--text-1);}
+.oc-review-row span:last-child{font-family:var(--font-mono); color:var(--text-2); white-space:nowrap;}
+.oc-review-total{display:flex; align-items:baseline; justify-content:space-between; margin-top:8px; padding-top:10px; border-top:1px solid var(--line-soft); font-weight:700;}
+.oc-review-total b{font-family:var(--font-display); font-size:16px; color:var(--text-0);}
 
 /* Order History — internal-team-only, gated behind real Firebase Auth
    (separate from the site-wide is-internal flag, which is just an
@@ -1295,8 +1319,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1595,7 +1619,13 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
         <div class="lead-cta">
           <p class="lead-cta-sub">Ready to move forward with this order? Place your order and our team will get in touch to confirm the details.</p>
-          <button type="button" class="btn btn-primary lead-cta-btn js-open-lead-modal">Place Your Order</button>
+          <!-- On the public build this opens the lead-capture popup
+               (js-open-lead-modal, wired in app.js). On the team build,
+               team.js intercepts this same click in the capture phase
+               (stopImmediatePropagation) and opens #orderConfirmModal
+               instead — the internal order-creation flow — rather than
+               needing two different buttons or a runtime branch here. -->
+          <button type="button" class="btn btn-primary lead-cta-btn js-open-lead-modal" id="placeOrderBtn">Place Your Order</button>
         </div>
       </div>
     </div>
@@ -1614,8 +1644,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-49" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1652,6 +1682,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 </div>
 
 <iframe name="leadHiddenFrame" id="leadHiddenFrame" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
+
 
 
 <div class="lead-modal" id="leadModal">
@@ -1710,7 +1741,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-49"></script>
-<script src="assets/app.js?v=20260811-49"></script>
+<script src="assets/creative-data.js?v=20260811-50"></script>
+<script src="assets/app.js?v=20260811-50"></script>
 </body>
 </html>
