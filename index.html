@@ -808,7 +808,9 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
    hidden. Nothing here is a real access boundary, just keeping the
    post-sale tooling out of a visitor's way. */
 html:not(.is-internal) #messages,
-html:not(.is-internal) a[href="#messages"]{
+html:not(.is-internal) a[href="#messages"],
+html:not(.is-internal) #history,
+html:not(.is-internal) a[href="#history"]{
   display:none !important;
 }
 /* Manual discount entry is an internal sales tool for negotiated
@@ -932,6 +934,67 @@ html.is-internal .oc-offer{display:none !important;}
 .lead-success{display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; padding:20px 8px 8px;}
 .lead-success svg{color:var(--teal);}
 .lead-success p{font-size:15px; color:var(--text-1); line-height:1.55; max-width:400px;}
+
+/* Order History — internal-team-only, gated behind real Firebase Auth
+   (separate from the site-wide is-internal flag, which is just an
+   obscurity toggle). See assets/team.js. Each signed-in team member
+   only ever queries/writes orders where uid == their own auth uid, so
+   the per-user isolation is enforced by Firestore security rules, not
+   just hidden in the UI. */
+.team-panel{max-width:520px; margin:0 auto;}
+.team-auth-card{padding:clamp(24px,4vw,32px); border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.team-auth-head{margin-bottom:20px;}
+.team-auth-head h4{font-size:17px; font-weight:600; margin-bottom:6px;}
+.team-auth-sub{font-size:13px; color:var(--text-2); line-height:1.5;}
+.team-form .field-row{margin-bottom:14px;}
+.team-form .field-row:last-of-type{margin-bottom:0;}
+.team-submit-btn{margin-top:6px; width:100%; justify-content:center;}
+.team-form-status{margin-top:12px; font-size:12.5px; line-height:1.5;}
+.team-form-status:empty{display:none;}
+.team-form-status.is-success{color:var(--teal);}
+.team-form-status.is-error{color:var(--danger);}
+.team-auth-switch{margin-top:18px; padding-top:16px; border-top:1px solid var(--line-soft); font-size:12.5px; color:var(--text-2); text-align:center;}
+.team-auth-switch button{color:var(--violet); font-weight:600; text-decoration:underline; text-underline-offset:2px;}
+.team-auth-switch button:hover{color:var(--text-0);}
+
+.team-dash{display:none;}
+.team-dash.is-active{display:block;}
+.team-auth-view.is-hidden{display:none;}
+
+.team-dash-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap;}
+.team-dash-who{font-size:13px; color:var(--text-2);}
+.team-dash-who strong{color:var(--text-1); font-weight:600;}
+.team-logout-btn{font-size:12.5px; color:var(--text-2); text-decoration:underline; text-underline-offset:2px;}
+.team-logout-btn:hover{color:var(--text-0);}
+
+.team-log-card{padding:20px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi); margin-bottom:22px;}
+.team-log-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
+.team-log-grid .field-row{margin-bottom:0;}
+.team-log-grid .field-row.span-2{grid-column:1 / -1;}
+@media (max-width:560px){.team-log-grid{grid-template-columns:1fr;}}
+
+.team-filter-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+.team-filter-chip{font-size:12.5px; padding:7px 14px; border-radius:100px; background:var(--surface-2); border:1px solid transparent; color:var(--text-2); transition:background .2s ease, color .2s ease, border-color .2s ease;}
+.team-filter-chip:hover{color:var(--text-1);}
+.team-filter-chip.is-active{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0);}
+
+.team-order-list{display:flex; flex-direction:column; gap:10px;}
+.team-order-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; padding:34px 20px; color:var(--text-2);}
+.team-order-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
+.team-order-empty p{font-size:12.5px; line-height:1.5; max-width:280px;}
+
+.team-order-card{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft); flex-wrap:wrap;}
+.team-order-main{min-width:0;}
+.team-order-client{font-size:14px; font-weight:600; color:var(--text-0);}
+.team-order-meta{font-size:12px; color:var(--text-2); margin-top:2px;}
+.team-order-right{display:flex; align-items:center; gap:12px;}
+.team-order-amount{font-size:14px; font-weight:600; font-family:var(--font-display); color:var(--text-1);}
+.team-order-status{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px; border-radius:100px; white-space:nowrap;}
+.team-order-status.status-placed{background:rgba(124,109,255,.16); color:#9d8fff;}
+.team-order-status.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
+.team-order-status.status-failed{background:rgba(244,63,94,.14); color:var(--danger);}
+.team-order-status.status-cancelled{background:var(--surface-2); color:var(--text-2);}
+
 .ob-add-btn.flash{animation:obFlash .5s ease;}
 @keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
 
@@ -1214,6 +1277,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         <a href="#services">Services</a>
         <a href="#quote">Quote</a>
         <a href="#messages">Messages</a>
+        <a href="#history">History</a>
       </div>
       <div class="nav-right">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -1601,6 +1665,102 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   </div>
 </section>
 
+<section class="section" id="history" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">05 — Order History</span>
+      <h2>Your orders. Just yours.</h2>
+      <p>Sign in with your work email to log new orders and track their status<br>each team member only ever sees the orders they've logged themselves.</p>
+    </div>
+
+    <div class="team-panel reveal-on-scroll">
+      <!-- Signed-out state: login / create-account card -->
+      <div class="team-auth-view" id="teamAuthView">
+        <div class="team-auth-card">
+          <div class="team-auth-head">
+            <h4 id="teamAuthTitle">Sign in</h4>
+            <p class="team-auth-sub" id="teamAuthSub">Use your Fastrr work email to access your order history.</p>
+          </div>
+          <form class="team-form" id="teamAuthForm">
+            <div class="field-row">
+              <label for="teamEmailInput">Work email</label>
+              <input class="text-input" id="teamEmailInput" type="email" placeholder="you@fastrr.com" required autocomplete="email">
+            </div>
+            <div class="field-row">
+              <label for="teamPasswordInput">Password</label>
+              <input class="text-input" id="teamPasswordInput" type="password" placeholder="••••••••" required autocomplete="current-password" minlength="6">
+            </div>
+            <button type="submit" class="btn btn-primary team-submit-btn" id="teamAuthSubmitBtn">
+              <span id="teamAuthSubmitBtnLabel">Sign in</span>
+            </button>
+            <p class="team-form-status" id="teamAuthStatus"></p>
+          </form>
+          <div class="team-auth-switch">
+            <span id="teamAuthSwitchText">New to the team?</span>
+            <button type="button" id="teamAuthSwitchBtn">Create an account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signed-in state: log order + filterable history -->
+      <div class="team-dash" id="teamDash">
+        <div class="team-dash-head">
+          <p class="team-dash-who">Signed in as <strong id="teamWhoEmail"></strong></p>
+          <button type="button" class="team-logout-btn" id="teamLogoutBtn">Sign out</button>
+        </div>
+
+        <div class="team-log-card">
+          <div class="ob-panel-label">Log a new order</div>
+          <form class="team-log-grid" id="teamOrderForm">
+            <div class="field-row span-2">
+              <label for="teamOrderClient">Client / Brand name</label>
+              <input class="text-input" id="teamOrderClient" type="text" placeholder="e.g. Aurex Living" required>
+            </div>
+            <div class="field-row span-2">
+              <label for="teamOrderPackage">Package / service</label>
+              <input class="text-input" id="teamOrderPackage" type="text" placeholder="e.g. 4 AI Reels — Story Cut" required>
+            </div>
+            <div class="field-row">
+              <label for="teamOrderAmount">Order value (₹)</label>
+              <input class="text-input" id="teamOrderAmount" type="number" min="0" step="1" placeholder="e.g. 25000" required>
+            </div>
+            <div class="field-row">
+              <label for="teamOrderStatus">Status</label>
+              <select class="select-input" id="teamOrderStatus" required>
+                <option value="placed">Placed</option>
+                <option value="completed">Completed</option>
+                <option value="failed">Failed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="field-row span-2">
+              <button type="submit" class="btn btn-primary team-submit-btn" id="teamOrderSubmitBtn">
+                <span id="teamOrderSubmitBtnLabel">Add order</span>
+              </button>
+              <p class="team-form-status" id="teamOrderStatusMsg"></p>
+            </div>
+          </form>
+        </div>
+
+        <div class="team-filter-row" id="teamFilterRow">
+          <button type="button" class="team-filter-chip is-active" data-status="all">All</button>
+          <button type="button" class="team-filter-chip" data-status="placed">Placed</button>
+          <button type="button" class="team-filter-chip" data-status="completed">Completed</button>
+          <button type="button" class="team-filter-chip" data-status="failed">Failed</button>
+          <button type="button" class="team-filter-chip" data-status="cancelled">Cancelled</button>
+        </div>
+
+        <div class="team-order-list" id="teamOrderList">
+          <div class="team-order-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 15H9v6h6v-6Z"/></svg>
+            <p>No orders logged yet. Use the form above once you've confirmed one.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="footer-cta reveal-on-scroll">
@@ -1623,6 +1783,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         <a href="#services">Services</a>
         <a href="#quote">Quote</a>
         <a href="#messages">Messages</a>
+        <a href="#history">History</a>
       </div>
     </div>
   </div>
@@ -1706,5 +1867,6 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/creative-data.js?v=20260811-36"></script>
 <script src="assets/app.js?v=20260811-36"></script>
+<script type="module" src="assets/team.js?v=20260811-36"></script>
 </body>
 </html>
