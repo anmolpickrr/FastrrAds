@@ -11,46 +11,35 @@
 
   /* ----------------------------------------------------------
      0. ACCESS MODE (public vs internal team)
-     This is a static site with no backend — nothing here is real
-     security, just keeping the order-building/quoting tools out of a
-     public visitor's way. Two genuinely separate URLs, not one URL
-     redirecting into the other:
+     Two genuinely separate URLs/files (see scripts/build_pages.py) —
+     internal markup doesn't even exist in the public build's HTML.
+     is-internal is purely a function of which URL loaded this script,
+     recomputed fresh on every page load:
        - creative.fastrr.com/           → public, always.
        - creative.fastrr.com/teamfastrr → internal, always — the exact
          same file is served at both paths (see the <base href="/">
          note in index.html's <head>), so landing on /teamfastrr never
          navigates anywhere; it just renders unlocked in place.
-     The legacy ?team=1 query param still works too (unlocks + strips
-     itself from the URL) for anyone with it bookmarked. Either path
-     remembers the unlock on that device from then on via localStorage.
-     Everything else on the page (showcase, service scope, the
-     single-creative price calculator) stays visible to everyone —
-     only the Order panel and the Message Generator section are gated,
-     since those are the sales workflow, not the public-facing preview.
+     Deliberately NOT persisted (no localStorage, no ?team=1 query
+     param) — an earlier version remembered the unlock across the
+     whole origin, which meant a device that had ever visited
+     /teamfastrr would then also render the PUBLIC page as internal
+     (hiding the public offer banner, among other things) purely
+     because of a stale flag from a previous visit to the other URL.
+     Since the two URLs are real, separate files now, there's nothing
+     to "remember" — visiting /teamfastrr again is exactly as easy as
+     following the link, so persistence was only a liability.
   ---------------------------------------------------------- */
   (function initAccessMode() {
-    const UNLOCK_PARAM = "team";
-    const params = new URLSearchParams(window.location.search);
-    let unlocked = false;
-    try {
-      unlocked = localStorage.getItem("fastrr-internal") === "1";
-    } catch (e) {}
-    if (/^\/teamfastrr\/?$/.test(window.location.pathname)) {
-      unlocked = true;
-    }
-    if (params.has(UNLOCK_PARAM)) {
-      unlocked = true;
-      params.delete(UNLOCK_PARAM);
-      const newSearch = params.toString();
-      const newUrl = window.location.pathname + (newSearch ? "?" + newSearch : "") + window.location.hash;
-      window.history.replaceState({}, "", newUrl);
-    }
-    if (unlocked) {
-      try {
-        localStorage.setItem("fastrr-internal", "1");
-      } catch (e) {}
-    }
+    const unlocked = /^\/teamfastrr\/?$/.test(window.location.pathname);
     document.documentElement.classList.toggle("is-internal", unlocked);
+    // One-time cleanup: clear the old persisted flag from any device
+    // that unlocked internal mode before this page stopped writing it,
+    // so a stale "internal" flag left over from a past /teamfastrr
+    // visit can't keep silently affecting this URL going forward.
+    try {
+      localStorage.removeItem("fastrr-internal");
+    } catch (e) {}
   })();
 
   /* ----------------------------------------------------------
