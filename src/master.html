@@ -1044,11 +1044,6 @@ html.is-internal .oc-offer{display:none !important;}
 }
 .team-profile-menu button:hover{background:var(--surface-hover); color:var(--text-0);}
 
-.team-log-card{padding:20px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi); margin-bottom:22px;}
-.team-log-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px 16px;}
-.team-log-grid .field-row{margin-bottom:0;}
-.team-log-grid .field-row.span-2{grid-column:1 / -1;}
-@media (max-width:560px){.team-log-grid{grid-template-columns:1fr;}}
 
 .team-filter-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
 .team-filter-chip{font-size:12.5px; padding:7px 14px; border-radius:100px; background:var(--surface-2); border:1px solid transparent; color:var(--text-2); transition:background .2s ease, color .2s ease, border-color .2s ease;}
@@ -1999,40 +1994,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <button class="lead-modal-close" id="orderHistoryModalClose" aria-label="Close">✕</button>
     <div class="lead-panel-head">
       <div class="ob-panel-label" id="orderHistoryTitle">Order History</div>
-      <p class="lead-panel-sub">Signed in as <strong id="teamWhoEmail"></strong> — each team member only ever sees the orders they've logged themselves.</p>
-    </div>
-
-    <div class="team-log-card">
-      <div class="ob-panel-label">Log a new order</div>
-      <form class="team-log-grid" id="teamOrderForm" novalidate>
-        <div class="field-row span-2">
-          <label for="teamOrderClient">Client / Brand name</label>
-          <input class="text-input" id="teamOrderClient" type="text" placeholder="e.g. Aurex Living" required>
-        </div>
-        <div class="field-row span-2">
-          <label for="teamOrderPackage">Package / service</label>
-          <input class="text-input" id="teamOrderPackage" type="text" placeholder="e.g. 4 AI Reels — Story Cut" required>
-        </div>
-        <div class="field-row">
-          <label for="teamOrderAmount">Order value (₹)</label>
-          <input class="text-input" id="teamOrderAmount" type="number" min="0" step="1" placeholder="e.g. 25000" required>
-        </div>
-        <div class="field-row">
-          <label for="teamOrderStatus">Status</label>
-          <select class="select-input" id="teamOrderStatus" required>
-            <option value="placed">Placed</option>
-            <option value="completed">Completed</option>
-            <option value="failed">Failed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
-        <div class="field-row span-2">
-          <button type="submit" class="btn btn-primary team-submit-btn" id="teamOrderSubmitBtn">
-            <span id="teamOrderSubmitBtnLabel">Add order</span>
-          </button>
-          <p class="team-form-status" id="teamOrderStatusMsg"></p>
-        </div>
-      </form>
+      <p class="lead-panel-sub">Signed in as <strong id="teamWhoEmail"></strong> — each team member only ever sees the orders they've placed themselves. New orders are added automatically when you place one from the homepage.</p>
     </div>
 
     <input class="text-input" id="teamOrderSearch" type="search" placeholder="Search by client or package…" style="margin-bottom:14px;">
@@ -2048,7 +2010,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="team-order-list" id="teamOrderList">
       <div class="team-order-empty">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 15H9v6h6v-6Z"/></svg>
-        <p>No orders logged yet. Use the form above once you've confirmed one.</p>
+        <p>No orders placed yet. Orders you place from the homepage will show up here.</p>
       </div>
     </div>
   </div>
