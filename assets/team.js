@@ -563,9 +563,6 @@ async function boot() {
   const db = getFirestore(app);
 
   const whoEmail = $("teamWhoEmail");
-  const orderForm = $("teamOrderForm");
-  const orderSubmitLabel = $("teamOrderSubmitBtnLabel");
-  const orderStatusMsg = $("teamOrderStatusMsg");
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
   const searchInput = $("teamOrderSearch");
@@ -622,38 +619,6 @@ async function boot() {
     });
   }
   orderApi = { logOrder };
-
-  function setOrderStatus(msg, isError) {
-    orderStatusMsg.textContent = msg || "";
-    orderStatusMsg.className = "team-form-status" + (msg ? (isError ? " is-error" : " is-success") : "");
-  }
-
-  orderForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!auth.currentUser) return;
-    const client = $("teamOrderClient").value.trim();
-    const pkg = $("teamOrderPackage").value.trim();
-    const amount = Number($("teamOrderAmount").value);
-    const status = $("teamOrderStatus").value;
-    if (!client || !pkg || !(amount >= 0)) {
-      setOrderStatus("Please fill in the client, package, and a valid amount.", true);
-      return;
-    }
-
-    const originalLabel = orderSubmitLabel.textContent;
-    orderSubmitLabel.textContent = "Adding…";
-    setOrderStatus("");
-    try {
-      await logOrder({ client, package: pkg, amount, status });
-      orderForm.reset();
-      $("teamOrderStatus").value = "placed";
-      setOrderStatus("Order added.", false);
-    } catch (err) {
-      setOrderStatus("Couldn't save the order — please try again.", true);
-    } finally {
-      orderSubmitLabel.textContent = originalLabel;
-    }
-  });
 
   filterRow.addEventListener("click", (e) => {
     const chip = e.target.closest(".team-filter-chip");
