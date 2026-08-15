@@ -353,6 +353,72 @@
     specialReq: "",
   };
   let cartIdSeq = 1;
+
+  /* ----------------------------------------------------------
+     0b. AUTOSAVE — the order builder (cart, discount, GST) and the
+     brand/message fields persist to localStorage on every change and
+     restore on load, so a refresh or accidental tab close mid-order
+     doesn't lose what's been built. Scoped per browser, not per
+     account — same trade-off as the rest of this static site.
+  ---------------------------------------------------------- */
+  const STATE_STORAGE_KEY = "fastrr-order-draft";
+  function persistState() {
+    try {
+      localStorage.setItem(
+        STATE_STORAGE_KEY,
+        JSON.stringify({
+          cart: state.cart,
+          cartIdSeq,
+          discountType: state.discountType,
+          discountValue: state.discountValue,
+          gstEnabled: state.gstEnabled,
+          brandName: state.brandName,
+          website: state.website,
+          brandCategory: state.brandCategory,
+          specialReq: state.specialReq,
+        })
+      );
+    } catch (e) {}
+  }
+  function clearPersistedState() {
+    try {
+      localStorage.removeItem(STATE_STORAGE_KEY);
+    } catch (e) {}
+  }
+  function restoreState() {
+    let saved;
+    try {
+      saved = JSON.parse(localStorage.getItem(STATE_STORAGE_KEY) || "null");
+    } catch (e) {
+      saved = null;
+    }
+    if (!saved) return;
+    if (Array.isArray(saved.cart)) state.cart = saved.cart;
+    if (typeof saved.cartIdSeq === "number") cartIdSeq = saved.cartIdSeq;
+    if (saved.discountType) state.discountType = saved.discountType;
+    if (typeof saved.discountValue === "number") state.discountValue = saved.discountValue;
+    if (typeof saved.gstEnabled === "boolean") state.gstEnabled = saved.gstEnabled;
+    if (typeof saved.brandName === "string") state.brandName = saved.brandName;
+    if (typeof saved.website === "string") state.website = saved.website;
+    if (typeof saved.brandCategory === "string") state.brandCategory = saved.brandCategory;
+    if (typeof saved.specialReq === "string") state.specialReq = saved.specialReq;
+
+    // Sync the restored values into the actual inputs — state alone
+    // doesn't drive these fields' displayed value, the user's typing
+    // does, so a restore has to set .value directly. Internal-only
+    // fields, no-op (null) on the public build.
+    const bn = document.getElementById("brandNameInput");
+    if (bn) bn.value = state.brandName;
+    const site = document.getElementById("websiteInput");
+    if (site) site.value = state.website;
+    const cat = document.getElementById("brandCategorySelect");
+    if (cat) cat.value = state.brandCategory;
+    const req = document.getElementById("specialReqInput");
+    if (req) req.value = state.specialReq;
+  }
+  function hasInProgressOrder() {
+    return state.cart.length > 0;
+  }
   // Tracks the previous render's unlocked/not state so the "just
   // unlocked" pop animation only plays on the actual crossing, not on
   // every re-render while the order stays above the threshold.
@@ -635,6 +701,7 @@
   }
 
   function renderCart() {
+    persistState();
     const cart = computeCart();
     const list = document.getElementById("orderCartList");
     document.getElementById("ocCount").textContent =
@@ -1289,6 +1356,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     brandNameInput.addEventListener("input", (e) => {
       state.brandName = e.target.value;
       clearFieldError(brandNameInput);
+      persistState();
       renderMessages();
     });
   }
@@ -1296,6 +1364,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     websiteInput.addEventListener("input", (e) => {
       state.website = e.target.value;
       clearFieldError(websiteInput);
+      persistState();
       renderMessages();
     });
   }
@@ -1303,6 +1372,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     brandCategorySelect.addEventListener("change", (e) => {
       state.brandCategory = e.target.value;
       clearFieldError(brandCategorySelect);
+      persistState();
       renderMessages();
     });
   }
@@ -1310,6 +1380,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   if (specialReqInputEl) {
     specialReqInputEl.addEventListener("input", (e) => {
       state.specialReq = e.target.value;
+      persistState();
       renderMessages();
     });
   }
@@ -2318,9 +2389,26 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   });
 
+  // Browsers deliberately don't allow a custom message or custom
+  // buttons here (a long-standing anti-abuse restriction — every
+  // browser shows its own generic "Leave site? Changes may not be
+  // saved" wording, Cancel/Leave only, regardless of what's set
+  // below) — so this can't offer "Save & Continue Later / Discard /
+  // Cancel" as distinct options. It doesn't need to, though: the
+  // order/brand-field state above is already autosaved to
+  // localStorage on every change, so nothing is actually lost
+  // whichever way someone leaves — this prompt is just an extra pause
+  // before an accidental close, not what makes the draft durable.
+  window.addEventListener("beforeunload", (e) => {
+    if (!hasInProgressOrder()) return;
+    e.preventDefault();
+    e.returnValue = "";
+  });
+
   /* ----------------------------------------------------------
      INIT
   ---------------------------------------------------------- */
+  restoreState();
   renderShowcase("reels");
   render();
 })();
