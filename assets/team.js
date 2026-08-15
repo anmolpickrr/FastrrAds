@@ -562,7 +562,6 @@ async function boot() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const whoEmail = $("teamWhoEmail");
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
   const searchInput = $("teamOrderSearch");
@@ -584,13 +583,11 @@ async function boot() {
 
   // updateProfile() (setting displayName right after sign-up) does not
   // itself re-fire onAuthStateChanged — true of real Firebase, not just
-  // this mock — so the "Signed in as …" text and nav label need an
-  // explicit refresh right after it resolves, not just on auth-state
-  // changes.
+  // this mock — so the profile menu's name label needs an explicit
+  // refresh right after it resolves, not just on auth-state changes.
   function refreshWho(user) {
     if (!user) return;
     const displayName = user.displayName || user.email.split("@")[0];
-    whoEmail.textContent = user.displayName ? `${user.displayName} (${user.email})` : user.email;
     if (profileMenu) profileMenu.setSignedIn(true, displayName);
   }
   authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, refreshDisplay: () => refreshWho(auth.currentUser) };
@@ -685,17 +682,19 @@ async function boot() {
         const notesRow = o.notes ? `<div class="team-order-detail-row span-2"><span>Notes</span><b>${escapeHtml(o.notes)}</b></div>` : "";
         return `
       <div class="team-order-card">
-        <div class="team-order-main">
-          <div class="team-order-client">${escapeHtml(o.client)}</div>
-          <div class="team-order-meta">${escapeHtml(o.package)} · ${fmtDate(o.createdAt)}</div>
+        <div class="team-order-card-top">
+          <div class="team-order-main">
+            <div class="team-order-client">${escapeHtml(o.client)}</div>
+          </div>
+          <div class="team-order-right">
+            <span class="team-order-amount">${fmtINR(o.amount)}</span>
+            <span class="team-order-status status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
+            <button type="button" class="team-order-view-btn" aria-label="View order details" aria-expanded="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="team-order-right">
-          <span class="team-order-amount">${fmtINR(o.amount)}</span>
-          <span class="team-order-status status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
-          <button type="button" class="team-order-view-btn" aria-label="View order details" aria-expanded="false">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
+        <div class="team-order-meta">${escapeHtml(o.package)} · ${fmtDate(o.createdAt)}</div>
         <div class="team-order-details">
           <div class="team-order-detail-row span-2"><span>Package</span><b>${escapeHtml(o.package)}</b></div>
           ${detailRows}
