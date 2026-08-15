@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-63" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-63" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-63" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-63" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-63" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-63" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-63" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-63" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-63" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-63" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-63" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-63" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-64" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-64" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-64" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-64" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-64" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-64" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-64" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-64" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-64" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-64" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-64" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-64" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1047,18 +1047,28 @@ html.is-internal .oc-offer{display:none !important;}
 .team-filter-chip:hover{color:var(--text-1);}
 .team-filter-chip.is-active{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0);}
 
-.team-order-list{display:flex; flex-direction:column; gap:10px; max-height:38vh; overflow-y:auto; padding-right:4px;}
-.team-order-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; padding:34px 20px; color:var(--text-2);}
-.team-order-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
+/* Fixed-height viewport regardless of how many results a filter/search
+   turns up, so switching between All/Placed/Completed/etc. only ever
+   changes the rows inside — the modal itself never grows, shrinks, or
+   re-centers as the result count changes. */
+.team-order-list{display:flex; flex-direction:column; gap:10px; height:38vh; overflow-y:auto; padding-right:4px;}
+.team-order-empty{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; height:100%; padding:20px; color:var(--text-2);}
+.team-order-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px; flex:0 0 auto;}
 .team-order-empty p{font-size:12.5px; line-height:1.5; max-width:280px;}
 
-.team-order-card{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft); flex-wrap:wrap;}
-.team-order-main{min-width:0;}
-.team-order-client{font-size:14px; font-weight:600; color:var(--text-0);}
-.team-order-meta{font-size:12px; color:var(--text-2); margin-top:2px;}
-.team-order-right{display:flex; align-items:center; gap:12px;}
-.team-order-amount{font-size:14px; font-weight:600; font-family:var(--font-display); color:var(--text-1);}
-.team-order-status{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px; border-radius:100px; white-space:nowrap;}
+/* Every card shares the same top-row layout (name left, amount/status/
+   view-button right) regardless of package-text length — that text
+   lives on its own full-width line below instead of competing for
+   space on the top row, which is what let cards wrap differently from
+   one another and throw the amount/status/icon out of alignment. */
+.team-order-card{padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.team-order-card-top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.team-order-main{min-width:0; flex:1 1 auto;}
+.team-order-client{font-size:14px; font-weight:600; color:var(--text-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-order-meta{font-size:12px; color:var(--text-2); margin-top:4px; line-height:1.5;}
+.team-order-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
+.team-order-amount{font-size:14px; font-weight:600; font-family:var(--font-display); color:var(--text-1); white-space:nowrap;}
+.team-order-status{font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px; border-radius:100px; white-space:nowrap; flex:0 0 auto;}
 .team-order-status.status-placed{background:rgba(124,109,255,.16); color:#9d8fff;}
 .team-order-status.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
 .team-order-status.status-failed{background:rgba(244,63,94,.14); color:var(--danger);}
@@ -1072,7 +1082,7 @@ html.is-internal .oc-offer{display:none !important;}
 .team-order-view-btn svg{width:15px; height:15px;}
 .team-order-card.is-open .team-order-view-btn{color:var(--violet); border-color:var(--violet);}
 .team-order-details{
-  flex-basis:100%; width:100%; margin-top:2px; padding-top:14px; border-top:1px dashed var(--line-soft);
+  margin-top:12px; padding-top:14px; border-top:1px dashed var(--line-soft);
   display:none; grid-template-columns:1fr 1fr; gap:12px 24px;
 }
 .team-order-card.is-open .team-order-details{display:grid;}
@@ -1080,7 +1090,10 @@ html.is-internal .oc-offer{display:none !important;}
 .team-order-detail-row span{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); margin-bottom:3px;}
 .team-order-detail-row.span-2{grid-column:1 / -1;}
 .team-order-detail-row a{color:inherit;}
-@media (max-width:480px){.team-order-details{grid-template-columns:1fr;}}
+@media (max-width:480px){
+  .team-order-details{grid-template-columns:1fr;}
+  .team-order-client{white-space:normal; overflow:visible; text-overflow:clip;}
+}
 
 .ob-add-btn.flash{animation:obFlash .5s ease;}
 @keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
@@ -1386,8 +1399,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-63" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-63" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-64" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-64" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1831,8 +1844,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-63" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-63" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-64" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-64" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -2009,7 +2022,6 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <button class="lead-modal-close" id="orderHistoryModalClose" aria-label="Close">✕</button>
     <div class="lead-panel-head">
       <div class="ob-panel-label" id="orderHistoryTitle">Order History</div>
-      <p class="lead-panel-sub">Signed in as <strong id="teamWhoEmail"></strong> — each team member only ever sees the orders they've placed themselves. New orders are added automatically when you place one from the homepage.</p>
     </div>
 
     <input class="text-input" id="teamOrderSearch" type="search" placeholder="Search by client or package…" style="margin-bottom:14px;">
@@ -2093,10 +2105,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <!-- PUBLIC:STRIP:END -->
-<script src="assets/creative-data.js?v=20260811-63"></script>
-<script src="assets/app.js?v=20260811-63"></script>
+<script src="assets/creative-data.js?v=20260811-64"></script>
+<script src="assets/app.js?v=20260811-64"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-63"></script>
+<script type="module" src="assets/team.js?v=20260811-64"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
