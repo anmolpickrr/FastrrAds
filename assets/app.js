@@ -419,6 +419,42 @@
   function hasInProgressOrder() {
     return state.cart.length > 0;
   }
+
+  /* ----------------------------------------------------------
+     0c. VIDEO PLAYBACK CONCURRENCY CAP — shared by the hero orbit and
+     the filmstrip below it (see their IntersectionObserver setup).
+     Both grids pack far more video tiles than fit in one screen, and
+     on a wide viewport most of them sit "visible" in the very first
+     frame — staggering each tile's start time (already in place)
+     spreads out *when* they begin, but every tile still eventually
+     starts downloading/playing, saturating bandwidth for several
+     seconds after load. Capping how many can be active at once (the
+     rest wait in a queue and take the next free slot as playing
+     tiles scroll out and pause) keeps initial load light regardless
+     of how many video tiles the page has.
+  ---------------------------------------------------------- */
+  const MAX_CONCURRENT_VIDEOS = 6;
+  let activeVideoCount = 0;
+  const pendingVideoQueue = [];
+  function requestVideoPlay(vid) {
+    if (pendingVideoQueue.includes(vid)) return;
+    if (activeVideoCount < MAX_CONCURRENT_VIDEOS) {
+      activeVideoCount++;
+      vid.play && vid.play().catch(() => {});
+    } else {
+      pendingVideoQueue.push(vid);
+    }
+  }
+  function releaseVideoSlot(vid) {
+    const wasQueued = pendingVideoQueue.indexOf(vid);
+    if (wasQueued !== -1) {
+      pendingVideoQueue.splice(wasQueued, 1);
+      return;
+    }
+    if (activeVideoCount > 0) activeVideoCount--;
+    const next = pendingVideoQueue.shift();
+    if (next) requestVideoPlay(next);
+  }
   // Tracks the previous render's unlocked/not state so the "just
   // unlocked" pop animation only plays on the actual crossing, not on
   // every re-render while the order stays above the threshold.
@@ -1491,6 +1527,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     details: "entry.910210025",
   };
 
+  // Shared by the lead modal's auto-prefill (on open) and its
+  // submission payload (on submit) — a short "Nx Name, Nx Name" line
+  // for the Requirement field, and a fuller itemised block (with
+  // pricing) for the Details field, so whatever's already been
+  // configured in the calculator always travels with the submission
+  // even if the visitor doesn't retype it themselves.
+  function packageSummaryLine() {
+    const cart = computeCart();
+    if (!cart.items.length) return "";
+    return cart.items.map((i) => `${i.qty}× ${i.d.name}`).join(", ");
+  }
+  function orderDetailsBlock() {
+    const cart = computeCart();
+    if (!cart.items.length) return "";
+    const lines = cart.items.map((i) => `- ${i.d.name} × ${i.qty} — ${fmtINR(i.lineSubtotal)}`);
+    return `Order configured on the site:\n${lines.join("\n")}\nEstimated total: ${fmtINR(cart.final)}`;
+  }
+
   (function initLeadModal() {
     const modal = document.getElementById("leadModal");
     // Every trigger (the Order panel CTA, the footer CTA, etc.) shares
@@ -1512,6 +1566,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       successView.hidden = true;
       form.reset();
       document.getElementById("leadFormStatus").textContent = "";
+      // Dynamically reflects whatever's currently configured in the
+      // calculator — still just a starting point, freely editable.
+      const reqInput = document.getElementById("leadRequirement");
+      if (reqInput) reqInput.value = packageSummaryLine();
       modal.classList.add("open");
       document.body.classList.add("lb-locked");
       document.getElementById("leadName").focus();
@@ -1555,19 +1613,56 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         `mailto:${LEAD_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
+    // Exactly +91 followed by 10 digits, whatever the visitor actually
+    // typed (spaces/dashes/an extra leading 91 or 0 are all normalized
+    // away first) — anything left that isn't a clean 10-digit number
+    // is rejected rather than silently mangled.
+    function normalizePhone(raw) {
+      let digits = raw.replace(/[^\d]/g, "");
+      if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+      else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+      if (digits.length !== 10) return null;
+      return "+91" + digits;
+    }
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const rawPhone = document.getElementById("leadPhone").value.trim();
+      const normalizedPhone = normalizePhone(rawPhone);
       const data = {
         name: document.getElementById("leadName").value.trim(),
         email: document.getElementById("leadEmail").value.trim(),
-        phone: document.getElementById("leadPhone").value.trim(),
+        phone: normalizedPhone || rawPhone,
         brand: document.getElementById("leadBrand").value.trim(),
         requirement: document.getElementById("leadRequirement").value.trim(),
         details: document.getElementById("leadDetails").value.trim(),
       };
-      if (!data.name || !data.email || !data.phone || !data.requirement) {
-        setStatus("Please fill in your name, email, phone, and requirement.", "error");
+
+      if (data.name.length < 2) {
+        setStatus("Please enter your full name.", "error");
         return;
+      }
+      if (!EMAIL_RE.test(data.email)) {
+        setStatus("Please enter a valid email address.", "error");
+        return;
+      }
+      if (!normalizedPhone) {
+        setStatus("Please enter a valid 10-digit contact number (e.g. +91 98765 43210).", "error");
+        return;
+      }
+      if (!data.requirement) {
+        setStatus("Please fill in your requirement, or add at least one creative to the order above.", "error");
+        return;
+      }
+
+      // Whatever's already configured in the calculator rides along
+      // automatically, ahead of anything the visitor typed themselves,
+      // so the team always sees the exact order even if the visitor
+      // never touched the Requirement/Details fields at all.
+      const orderBlock = orderDetailsBlock();
+      if (orderBlock) {
+        data.details = data.details ? `${orderBlock}\n\n${data.details}` : orderBlock;
       }
 
       const originalLabel = label.textContent;
@@ -2157,12 +2252,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
                 startedVideos.add(vid);
                 const delay = videoStartOrder * 180;
                 videoStartOrder++;
-                setTimeout(() => vid.play && vid.play().catch(() => {}), delay);
+                setTimeout(() => requestVideoPlay(vid), delay);
               } else {
-                vid.play && vid.play().catch(() => {});
+                requestVideoPlay(vid);
               }
             } else {
               vid.pause && vid.pause();
+              releaseVideoSlot(vid);
             }
           });
         },
@@ -2291,12 +2387,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
                 startedFsVideos.add(vid);
                 const delay = fsVideoStartOrder * 180;
                 fsVideoStartOrder++;
-                setTimeout(() => vid.play && vid.play().catch(() => {}), delay);
+                setTimeout(() => requestVideoPlay(vid), delay);
               } else {
-                vid.play && vid.play().catch(() => {});
+                requestVideoPlay(vid);
               }
             } else {
               vid.pause && vid.pause();
+              releaseVideoSlot(vid);
             }
           });
         },
