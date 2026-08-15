@@ -383,6 +383,19 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     status.className = "lead-form-status" + (msg ? (isError ? " is-error" : " is-success") : "");
   }
 
+  // The field is pre-filled with "+91 " (see the input's default value
+  // in the HTML, restored by form.reset() on every open) so the rep
+  // only ever types the 10-digit number. Strips everything down to
+  // digits and accepts the +91/0 prefix being retyped by accident, but
+  // always normalizes to a clean "+91XXXXXXXXXX" for storage.
+  function normalizePhone(raw) {
+    let digits = String(raw || "").replace(/[^\d]/g, "");
+    if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+    else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+    if (digits.length !== 10) return null;
+    return "+91" + digits;
+  }
+
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
@@ -440,6 +453,17 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     document.body.classList.add("lb-locked");
     $("ocClientName")?.focus();
   }
+
+  // Focusing the phone field (pre-filled with "+91 ") drops the cursor
+  // straight after the prefix, so typing the 10-digit number is all
+  // that's needed — no clicking past the prefix first.
+  const ocPhoneInput = $("ocClientPhone");
+  if (ocPhoneInput) {
+    ocPhoneInput.addEventListener("focus", () => {
+      const len = ocPhoneInput.value.length;
+      ocPhoneInput.setSelectionRange(len, len);
+    });
+  }
   function close() {
     modal.classList.remove("open");
     document.body.classList.remove("lb-locked");
@@ -489,12 +513,17 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     }
     const clientName = $("ocClientName").value.trim();
     const email = $("ocClientEmail").value.trim();
-    const phone = $("ocClientPhone").value.trim();
+    const phoneRaw = $("ocClientPhone").value.trim();
     const website = $("ocClientWebsite").value.trim();
     const category = $("ocClientCategory").value;
     const notes = $("ocClientNotes").value.trim();
-    if (!clientName || !email || !phone) {
+    if (!clientName || !email || !phoneRaw) {
       setStatus("Please fill in the client's name, email, and contact number.", true);
+      return;
+    }
+    const phone = normalizePhone(phoneRaw);
+    if (!phone) {
+      setStatus("Please enter a valid 10-digit contact number.", true);
       return;
     }
 
@@ -531,6 +560,7 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
       formView.hidden = true;
       successView.hidden = false;
     } catch (err) {
+      console.error("[Fastrr] Order placement failed.", err);
       setStatus("Couldn't save the order — please try again.", true);
     } finally {
       submitLabel.textContent = originalLabel;
@@ -633,17 +663,34 @@ async function boot() {
   // the same second. A gap in the sequence (transaction succeeds, the
   // follow-up addDoc fails) is a cosmetic, extremely rare edge case;
   // a genuine duplicate is not possible.
+  //
+  // Deliberately best-effort: this is a nice-to-have on top of order
+  // placement, not a precondition for it. If the Firestore rules for
+  // the "counters" collection haven't been (re)published yet — the
+  // exact failure mode that broke real order placement in production
+  // once this was added — this must NOT take the whole order down
+  // with it, so any failure here is caught and logged, and the order
+  // just saves without a number rather than failing outright.
   async function nextOrderNumber() {
-    const counterRef = doc(db, "counters", "orders");
-    const next = await runTransaction(db, async (tx) => {
-      const snap = await tx.get(counterRef);
-      const current = snap.exists() ? snap.data().next : 0;
-      const n = current + 1;
-      if (snap.exists()) tx.update(counterRef, { next: n });
-      else tx.set(counterRef, { next: n });
-      return n;
-    });
-    return "FA-" + String(next).padStart(6, "0");
+    try {
+      const counterRef = doc(db, "counters", "orders");
+      const next = await runTransaction(db, async (tx) => {
+        const snap = await tx.get(counterRef);
+        const current = snap.exists() ? snap.data().next : 0;
+        const n = current + 1;
+        if (snap.exists()) tx.update(counterRef, { next: n });
+        else tx.set(counterRef, { next: n });
+        return n;
+      });
+      return "FA-" + String(next).padStart(6, "0");
+    } catch (err) {
+      console.error(
+        "[Fastrr] Couldn't generate an order number — the order will still be saved without one. " +
+          "This usually means the Firestore rules haven't been republished to include the 'counters' collection (see the SETUP comment at the top of this file).",
+        err
+      );
+      return "";
+    }
   }
 
   // Soft cap, not a hard scale limit — keeps a single query from ever
