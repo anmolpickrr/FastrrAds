@@ -10,7 +10,7 @@
      site root regardless of which of the two URLs actually loaded it,
      since /teamfastrr/ is one directory deeper. -->
 <base href="/">
-<title>Fastrr Creative</title>
+<title>Fastrr Ads</title>
 <meta name="description" content="Internal creative agency showcase, service scope, price calculator and message generator.">
 <!-- Matches the actual browser tab background, not the site's own
      theme toggle — those are two different things (the site defaults
@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-50" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-50" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-50" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-50" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-50" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-50" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-50" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-50" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-50" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-50" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-50" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-50" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-51" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-51" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-51" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-51" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-51" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-51" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-51" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-51" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-51" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-51" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-51" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-51" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1220,16 +1220,16 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 .footer-brand{max-width:360px;}
 .footer-brand .brand-logo{height:30px;}
 .footer-tagline{margin-top:16px; font-size:13.5px; line-height:1.65; color:var(--text-2);}
-/* Right-aligned against the page edge — anchors the column to the
-   container boundary instead of it reading as floating text, and
-   mirrors the brand block's own left anchor on the opposite side. */
-.footer-links{display:flex; flex-direction:column; align-items:flex-end; gap:13px; text-align:right;}
+/* Left-aligned, same as the brand block beside it — one consistent
+   text edge across the footer instead of the two columns pulling in
+   opposite directions. */
+.footer-links{display:flex; flex-direction:column; align-items:flex-start; gap:13px; text-align:left;}
 .footer-links-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2); margin-bottom:8px;}
 .footer-links a,.footer-links button{
-  font-size:13.5px; color:var(--text-1); background:none; border:none; padding:0; text-align:right;
+  font-size:13.5px; color:var(--text-1); background:none; border:none; padding:0; text-align:left;
   transition:color .2s ease, transform .2s ease;
 }
-.footer-links a:hover,.footer-links button:hover{color:var(--violet); transform:translateX(-3px);}
+.footer-links a:hover,.footer-links button:hover{color:var(--violet); transform:translateX(3px);}
 
 /* Full-bleed (outside .wrap) so it isn't constrained to the 1280px
    content column — reads as a backdrop element, not another line of
@@ -1319,8 +1319,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-51" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-51" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1812,8 +1812,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-50" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-51" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-51" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -2030,10 +2030,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-50"></script>
-<script src="assets/app.js?v=20260811-50"></script>
+<script src="assets/creative-data.js?v=20260811-51"></script>
+<script src="assets/app.js?v=20260811-51"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-50"></script>
+<script type="module" src="assets/team.js?v=20260811-51"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
