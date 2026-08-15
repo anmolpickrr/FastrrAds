@@ -65,15 +65,14 @@ function isInternal() {
 }
 
 /* ----------------------------------------------------------
-   1. POPUP — open/close/nav-button wiring. Runs unconditionally so
-   the popup is interactive the instant the page loads, well before
-   (and even without) Firebase.
+   1. POPUP — open/close wiring. Runs unconditionally so the popup is
+   interactive the instant the page loads, well before (and even
+   without) Firebase.
 ---------------------------------------------------------- */
 function initAuthModal() {
   const modal = $("teamAuthModal");
   const backdrop = $("teamAuthModalBackdrop");
   const closeBtn = $("teamAuthModalClose");
-  const navBtn = $("teamNavBtn");
   if (!modal) return { open() {}, close() {} };
 
   function open() {
@@ -93,21 +92,100 @@ function initAuthModal() {
     if (e.key === "Escape" && modal.classList.contains("open")) close();
   });
 
-  // Nav button only ever shown on the internal build (CSS also
-  // enforces this for public visitors regardless of JS).
-  if (navBtn && isInternal()) {
-    navBtn.style.display = "";
-    navBtn.textContent = "Team Sign In";
-    navBtn.addEventListener("click", () => {
-      if (navBtn.dataset.signedIn === "1") {
-        document.getElementById("history").scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        open();
-      }
+  return { open, close };
+}
+
+/* ----------------------------------------------------------
+   1b. ORDER HISTORY MODAL — same open/close pattern. Only ever opened
+   from the profile dropdown below; there's no other entry point, so
+   unlike the other modals nothing needs to auto-open this one.
+---------------------------------------------------------- */
+function initOrderHistoryModal() {
+  const modal = $("orderHistoryModal");
+  const backdrop = $("orderHistoryModalBackdrop");
+  const closeBtn = $("orderHistoryModalClose");
+  if (!modal) return { open() {}, close() {} };
+
+  function open() {
+    modal.classList.add("open");
+    document.body.classList.add("lb-locked");
+  }
+  function close() {
+    modal.classList.remove("open");
+    document.body.classList.remove("lb-locked");
+  }
+
+  if (backdrop) backdrop.addEventListener("click", close);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) close();
+  });
+
+  return { open, close };
+}
+
+/* ----------------------------------------------------------
+   1c. PROFILE DROPDOWN (nav) — signed-out: a plain button that opens
+   the sign-in popup. Signed-in: a hover/click-revealed menu with
+   "Order History" and "Sign out" — the only way to reach either.
+   Wired unconditionally so hover/click behavior works immediately;
+   `getAuthApi()` (resolves once Firebase has loaded) is only needed
+   for the actual sign-out call.
+---------------------------------------------------------- */
+function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
+  const wrap = $("teamProfile");
+  const trigger = $("teamNavBtn");
+  const menu = $("teamProfileMenu");
+  const historyBtn = $("teamProfileHistoryBtn");
+  const signOutBtn = $("teamProfileSignOutBtn");
+  if (!wrap || !trigger) return;
+
+  if (isInternal()) {
+    wrap.style.display = "";
+    trigger.textContent = "Team Sign In";
+  }
+
+  function closeMenu() {
+    wrap.classList.remove("menu-open");
+  }
+
+  trigger.addEventListener("click", () => {
+    if (trigger.dataset.signedIn === "1") {
+      wrap.classList.toggle("menu-open");
+    } else {
+      authModal.open();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrap.contains(e.target)) closeMenu();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+
+  if (historyBtn) {
+    historyBtn.addEventListener("click", () => {
+      closeMenu();
+      orderHistoryModal.open();
+    });
+  }
+  if (signOutBtn) {
+    signOutBtn.addEventListener("click", () => {
+      closeMenu();
+      const api = getAuthApi();
+      if (api) api.signOut(api.auth);
     });
   }
 
-  return { open, close };
+  return {
+    setSignedIn(signedIn, label) {
+      trigger.dataset.signedIn = signedIn ? "1" : "0";
+      trigger.textContent = signedIn ? label : "Team Sign In";
+      if (menu) menu.hidden = !signedIn;
+      if (!signedIn) closeMenu();
+    },
+  };
 }
 
 /* ----------------------------------------------------------
@@ -123,6 +201,15 @@ function initAuthForm(authModal, getAuthApi) {
   const nameInput = $("teamNameInput");
   const emailInput = $("teamEmailInput");
   const passwordInput = $("teamPasswordInput");
+  const passwordToggle = $("teamPasswordToggle");
+  if (passwordToggle && passwordInput) {
+    passwordToggle.addEventListener("click", () => {
+      const showing = passwordInput.type === "text";
+      passwordInput.type = showing ? "password" : "text";
+      passwordToggle.setAttribute("aria-pressed", String(!showing));
+      passwordToggle.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+    });
+  }
   const title = $("teamAuthTitle");
   const sub = $("teamAuthSub");
   const submitLabel = $("teamAuthSubmitBtnLabel");
@@ -440,8 +527,10 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
 ---------------------------------------------------------- */
 async function boot() {
   const authModal = initAuthModal();
-  let authApi = null; // set once Firebase has loaded — { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword }
+  const orderHistoryModal = initOrderHistoryModal();
+  let authApi = null; // set once Firebase has loaded — { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut }
   const authFormCtl = initAuthForm(authModal, () => authApi);
+  const profileMenu = initProfileMenu(authModal, orderHistoryModal, () => authApi);
   let orderApi = null; // set once Firebase has loaded — { logOrder(data) }
   let pendingOrderOpen = null; // set when "Place Your Order" opened the auth modal instead (not signed in yet)
   initOrderConfirmModal(authModal, () => authApi, () => orderApi, (resumeFn) => {
@@ -472,15 +561,12 @@ async function boot() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const dash = $("teamDash");
   const whoEmail = $("teamWhoEmail");
-  const logoutBtn = $("teamLogoutBtn");
   const orderForm = $("teamOrderForm");
   const orderSubmitLabel = $("teamOrderSubmitBtnLabel");
   const orderStatusMsg = $("teamOrderStatusMsg");
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
-  const navBtn = $("teamNavBtn");
 
   let unsubscribeOrders = null;
   let allOrders = [];
@@ -496,12 +582,9 @@ async function boot() {
     if (!user) return;
     const displayName = user.displayName || user.email.split("@")[0];
     whoEmail.textContent = user.displayName ? `${user.displayName} (${user.email})` : user.email;
-    if (navBtn) {
-      navBtn.dataset.signedIn = "1";
-      navBtn.textContent = displayName;
-    }
+    if (profileMenu) profileMenu.setSignedIn(true, displayName);
   }
-  authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, refreshDisplay: () => refreshWho(auth.currentUser) };
+  authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, refreshDisplay: () => refreshWho(auth.currentUser) };
 
   // Shared by both order-entry points — the quick manual form below
   // and the order-confirm modal opened from "Place Your Order" — so
@@ -532,8 +615,6 @@ async function boot() {
     orderStatusMsg.textContent = msg || "";
     orderStatusMsg.className = "team-form-status" + (msg ? (isError ? " is-error" : " is-success") : "");
   }
-
-  logoutBtn.addEventListener("click", () => signOut(auth));
 
   orderForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -615,7 +696,6 @@ async function boot() {
       unsubscribeOrders = null;
     }
     if (user) {
-      dash.classList.add("is-active");
       refreshWho(user);
       allOrders = [];
       renderOrders();
@@ -634,12 +714,9 @@ async function boot() {
         resume();
       }
     } else {
-      dash.classList.remove("is-active");
       if (authFormCtl) authFormCtl.setMode("signin");
-      if (navBtn) {
-        navBtn.dataset.signedIn = "0";
-        navBtn.textContent = "Team Sign In";
-      }
+      if (profileMenu) profileMenu.setSignedIn(false);
+      orderHistoryModal.close();
       // Arriving at /teamfastrr (or any page load while the internal
       // flag is set) but not yet authenticated — surface the popup
       // immediately rather than leaving the visitor to find it. Fires
