@@ -28,15 +28,26 @@
       rules_version = '2';
       service cloud.firestore {
         match /databases/{database}/documents {
+          match /counters/{counterId} {
+            allow read: if request.auth != null;
+            allow create: if request.auth != null && request.resource.data.next == 1;
+            allow update: if request.auth != null
+              && request.resource.data.next == resource.data.next + 1;
+          }
           match /orders/{orderId} {
             allow read, update, delete: if request.auth != null
-              && resource.data.uid == request.auth.uid;
+              && (resource.data.uid == request.auth.uid
+                  || request.auth.token.email in ['design.tools@pickrr.com']);
             allow create: if request.auth != null
               && request.resource.data.uid == request.auth.uid
               && request.resource.data.email == request.auth.token.email;
           }
         }
       }
+
+      The admin email list inside the rule above must be kept in sync
+      by hand with ADMIN_EMAILS below — Firestore rules can't read a
+      JS constant, so this is the one place both actually enforce it.
 
    ============================================================ */
 
@@ -55,6 +66,15 @@ const NOT_CONFIGURED_MSG = "Order History isn't connected yet — ask an admin t
 // light client-side guard, not real security — Firestore rules are what
 // actually keep one member's orders private from another.
 const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
+
+// Accounts signed in with one of these emails see every rep's orders
+// (an "All Orders" view alongside their own), not just the ones they
+// placed. This list is just what decides whether the UI *offers* that
+// view — the real access boundary is the matching allowlist in the
+// Firestore security rules (see the SETUP comment above); a non-admin
+// can't see other reps' orders no matter what this array says, because
+// the server-side rule is what Firestore actually checks.
+const ADMIN_EMAILS = ["design.tools@pickrr.com"];
 
 const STATUS_LABEL = { placed: "Placed", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
 
@@ -366,7 +386,15 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     }));
     const finalText = $("qFinal")?.textContent.trim() || "₹0";
     const finalAmount = Number(finalText.replace(/[^0-9]/g, "")) || 0;
-    return { items, finalText, finalAmount };
+    const subtotalText = $("qSubtotal")?.textContent.trim() || "";
+    const discountRow = $("discountRow");
+    const discountActive = !!(discountRow && discountRow.classList.contains("is-active"));
+    const discountLabelText = discountActive ? $("qDiscountLabel")?.textContent.trim() || "" : "";
+    const discountText = discountActive ? $("qDiscountAmt")?.textContent.trim() || "" : "";
+    const gstToggleEl = $("qGstToggle");
+    const gstEnabled = gstToggleEl ? gstToggleEl.checked : true;
+    const gstText = $("qGstAmt")?.textContent.trim() || "";
+    return { items, finalText, finalAmount, subtotalText, discountLabelText, discountText, gstEnabled, gstText };
   }
 
   function renderSummary(cart) {
@@ -470,6 +498,13 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
       await orderApi.logOrder({
         client: clientName,
         package: packageSummary,
+        items: cart.items,
+        subtotalText: cart.subtotalText,
+        discountLabelText: cart.discountLabelText,
+        discountText: cart.discountText,
+        gstEnabled: cart.gstEnabled,
+        gstText: cart.gstText,
+        finalText: cart.finalText,
         amount: cart.finalAmount,
         status: "placed",
         clientEmail: email,
@@ -556,7 +591,7 @@ async function boot() {
   }
   const [{ initializeApp }, authMod, fsMod] = firebaseMods;
   const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } = authMod;
-  const { getFirestore, collection, addDoc, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
+  const { getFirestore, collection, addDoc, doc, runTransaction, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
 
   const app = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(app);
@@ -565,6 +600,37 @@ async function boot() {
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
   const searchInput = $("teamOrderSearch");
+  const scopeRow = $("teamScopeRow");
+  const dateFilterEl = $("teamDateFilter");
+  const sortFilterEl = $("teamSortFilter");
+  const memberFilterEl = $("teamMemberFilter");
+  const customRangeRow = $("teamCustomRangeRow");
+  const dateFromEl = $("teamDateFrom");
+  const dateToEl = $("teamDateTo");
+
+  function isAdmin(user) {
+    return !!user && ADMIN_EMAILS.indexOf((user.email || "").toLowerCase()) !== -1;
+  }
+
+  // Every order gets a short, sequential, human-readable number (e.g.
+  // FA-000123) generated from one shared Firestore counter document via
+  // a transaction — transactions are atomic and auto-retry on conflict,
+  // so this stays collision-free even with 20+ reps placing orders in
+  // the same second. A gap in the sequence (transaction succeeds, the
+  // follow-up addDoc fails) is a cosmetic, extremely rare edge case;
+  // a genuine duplicate is not possible.
+  async function nextOrderNumber() {
+    const counterRef = doc(db, "counters", "orders");
+    const next = await runTransaction(db, async (tx) => {
+      const snap = await tx.get(counterRef);
+      const current = snap.exists() ? snap.data().next : 0;
+      const n = current + 1;
+      if (snap.exists()) tx.update(counterRef, { next: n });
+      else tx.set(counterRef, { next: n });
+      return n;
+    });
+    return "FA-" + String(next).padStart(6, "0");
+  }
 
   // Soft cap, not a hard scale limit — keeps a single query from ever
   // pulling a runaway number of documents. Comfortably covers a rep's
@@ -577,8 +643,13 @@ async function boot() {
 
   let unsubscribeOrders = null;
   let allOrders = [];
+  let renderedRows = [];
   let activeFilter = "all";
   let searchTerm = "";
+  let scope = "mine"; // "mine" | "all" — "all" only ever takes effect for an admin
+  let sortOrder = "newest";
+  let dateRangeMode = "all";
+  let memberFilter = "all";
   let hasAutoOpened = false;
 
   // updateProfile() (setting displayName right after sign-up) does not
@@ -597,14 +668,27 @@ async function boot() {
   // every order lands in Firestore with the same shape regardless of
   // which flow created it. Optional fields default to "" rather than
   // being omitted, since Firestore rejects `undefined` field values.
-  function logOrder(data) {
+  // `items` and the pricing breakdown are stored alongside the flattened
+  // `package` string so Order History and the invoice PDF can render an
+  // itemised view without re-deriving it from text — `package` is kept
+  // for orders logged before this field existed.
+  async function logOrder(data) {
     const user = auth.currentUser;
     if (!user) return Promise.reject(new Error("not signed in"));
+    const orderNumber = await nextOrderNumber();
     return addDoc(collection(db, "orders"), {
+      orderNumber,
       uid: user.uid,
       email: user.email,
       client: data.client,
       package: data.package,
+      items: data.items || [],
+      subtotalText: data.subtotalText || "",
+      discountLabelText: data.discountLabelText || "",
+      discountText: data.discountText || "",
+      gstEnabled: data.gstEnabled !== false,
+      gstText: data.gstText || "",
+      finalText: data.finalText || "",
       amount: data.amount,
       status: data.status || "placed",
       clientEmail: data.clientEmail || "",
@@ -632,6 +716,45 @@ async function boot() {
     });
   }
 
+  if (sortFilterEl) {
+    sortFilterEl.addEventListener("change", () => {
+      sortOrder = sortFilterEl.value;
+      renderOrders();
+    });
+  }
+
+  if (dateFilterEl) {
+    dateFilterEl.addEventListener("change", () => {
+      dateRangeMode = dateFilterEl.value;
+      if (customRangeRow) customRangeRow.hidden = dateRangeMode !== "custom";
+      renderOrders();
+    });
+  }
+  if (dateFromEl) dateFromEl.addEventListener("change", renderOrders);
+  if (dateToEl) dateToEl.addEventListener("change", renderOrders);
+
+  if (memberFilterEl) {
+    memberFilterEl.addEventListener("change", () => {
+      memberFilter = memberFilterEl.value;
+      renderOrders();
+    });
+  }
+
+  if (scopeRow) {
+    scopeRow.addEventListener("click", (e) => {
+      const chip = e.target.closest(".team-scope-chip");
+      if (!chip || chip.dataset.scope === scope) return;
+      scope = chip.dataset.scope;
+      scopeRow.querySelectorAll(".team-scope-chip").forEach((c) => c.classList.toggle("is-active", c === chip));
+      if (memberFilterEl) {
+        memberFilterEl.hidden = scope !== "all";
+        memberFilter = "all";
+        memberFilterEl.value = "all";
+      }
+      subscribeOrders(auth.currentUser);
+    });
+  }
+
   function fmtINR(n) {
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
@@ -649,17 +772,92 @@ async function boot() {
     return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
-  function renderOrders() {
-    let rows = activeFilter === "all" ? allOrders : allOrders.filter((o) => o.status === activeFilter);
-    if (searchTerm) {
-      rows = rows.filter((o) => (o.client + " " + o.package).toLowerCase().includes(searchTerm));
+  // Populates the admin-only "team member" dropdown from whoever has
+  // actually placed an order in the currently loaded (All Orders) set,
+  // rather than a hardcoded roster — stays correct as reps join or leave
+  // without needing an edit here.
+  function populateMemberFilterOptions() {
+    if (!memberFilterEl || scope !== "all") return;
+    const emails = Array.from(new Set(allOrders.map((o) => o.email).filter(Boolean))).sort();
+    const current = memberFilterEl.value || "all";
+    memberFilterEl.innerHTML =
+      '<option value="all">All team members</option>' + emails.map((e) => `<option value="${escapeHtml(e)}">${escapeHtml(e)}</option>`).join("");
+    memberFilterEl.value = emails.indexOf(current) !== -1 ? current : "all";
+    memberFilter = memberFilterEl.value;
+  }
+
+  function dateRangeBounds() {
+    const now = new Date();
+    const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    if (dateRangeMode === "today") {
+      const start = startOfDay(now);
+      return [start.getTime(), start.getTime() + 24 * 60 * 60 * 1000];
     }
+    if (dateRangeMode === "week") {
+      const day = now.getDay(); // 0 = Sunday
+      const diffToMonday = day === 0 ? 6 : day - 1;
+      const start = startOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate() - diffToMonday));
+      return [start.getTime(), start.getTime() + 7 * 24 * 60 * 60 * 1000];
+    }
+    if (dateRangeMode === "month") {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      return [start.getTime(), end.getTime()];
+    }
+    if (dateRangeMode === "lastmonth") {
+      const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const end = new Date(now.getFullYear(), now.getMonth(), 1);
+      return [start.getTime(), end.getTime()];
+    }
+    if (dateRangeMode === "custom") {
+      const fromVal = dateFromEl && dateFromEl.value ? new Date(dateFromEl.value + "T00:00:00").getTime() : -Infinity;
+      const toVal = dateToEl && dateToEl.value ? new Date(dateToEl.value + "T23:59:59").getTime() : Infinity;
+      return [fromVal, toVal];
+    }
+    return null; // "all" — no bound
+  }
+
+  function renderOrders() {
+    let rows = activeFilter === "all" ? allOrders.slice() : allOrders.filter((o) => o.status === activeFilter);
+
+    const bounds = dateRangeBounds();
+    if (bounds) {
+      const [start, end] = bounds;
+      rows = rows.filter((o) => {
+        const t = tsMillis(o.createdAt);
+        return t >= start && t < end;
+      });
+    }
+
+    if (scope === "all" && memberFilter !== "all") {
+      rows = rows.filter((o) => o.email === memberFilter);
+    }
+
+    if (searchTerm) {
+      rows = rows.filter((o) => {
+        const haystack = [o.orderNumber, o.client, o.package, o.email, (o.items || []).map((i) => i.name).join(" ")]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(searchTerm);
+      });
+    }
+
+    rows.sort((a, b) => {
+      if (sortOrder === "oldest") return tsMillis(a.createdAt) - tsMillis(b.createdAt);
+      if (sortOrder === "amount-desc") return (b.amount || 0) - (a.amount || 0);
+      if (sortOrder === "amount-asc") return (a.amount || 0) - (b.amount || 0);
+      return tsMillis(b.createdAt) - tsMillis(a.createdAt); // newest (default)
+    });
+
+    renderedRows = rows;
+
     if (!rows.length) {
       const msg = !allOrders.length
         ? "No orders placed yet. Orders you place from the homepage will show up here."
         : searchTerm
         ? "No orders match your search."
-        : "No orders with this status.";
+        : "No orders match these filters.";
       orderList.innerHTML =
         '<div class="team-order-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 15H9v6h6v-6Z"/></svg><p>' +
         msg +
@@ -667,7 +865,7 @@ async function boot() {
       return;
     }
     orderList.innerHTML = rows
-      .map((o) => {
+      .map((o, idx) => {
         const detailRows = [
           ["Client email", o.clientEmail],
           ["Client phone", o.clientPhone],
@@ -680,21 +878,34 @@ async function boot() {
           .map(([label, v]) => `<div class="team-order-detail-row"><span>${escapeHtml(label)}</span><b>${escapeHtml(v)}</b></div>`)
           .join("");
         const notesRow = o.notes ? `<div class="team-order-detail-row span-2"><span>Notes</span><b>${escapeHtml(o.notes)}</b></div>` : "";
+        const items = o.items && o.items.length ? o.items : null;
+        const itemsHtml = items
+          ? `<div class="team-order-items">${items.map((i) => `<span class="team-order-item-chip">${escapeHtml(i.name)} ×${escapeHtml(i.qty)}</span>`).join("")}</div>`
+          : "";
+        const metaBase = items ? fmtDate(o.createdAt) : `${escapeHtml(o.package)} · ${fmtDate(o.createdAt)}`;
+        const placedByMeta = scope === "all" ? ` · Placed by ${escapeHtml(o.email || "—")}` : "";
         return `
-      <div class="team-order-card">
+      <div class="team-order-card" data-order-idx="${idx}">
         <div class="team-order-card-top">
           <div class="team-order-main">
-            <div class="team-order-client">${escapeHtml(o.client)}</div>
+            <div class="team-order-title-line">
+              <div class="team-order-client">${escapeHtml(o.client)}</div>
+              ${o.orderNumber ? `<span class="team-order-number">${escapeHtml(o.orderNumber)}</span>` : ""}
+            </div>
           </div>
           <div class="team-order-right">
             <span class="team-order-amount">${fmtINR(o.amount)}</span>
             <span class="team-order-status status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
+            <button type="button" class="team-order-invoice-btn" aria-label="Download invoice">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+            </button>
             <button type="button" class="team-order-view-btn" aria-label="View order details" aria-expanded="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
-        <div class="team-order-meta">${escapeHtml(o.package)} · ${fmtDate(o.createdAt)}</div>
+        <div class="team-order-meta">${metaBase}${placedByMeta}</div>
+        ${itemsHtml}
         <div class="team-order-details">
           <div class="team-order-detail-row span-2"><span>Package</span><b>${escapeHtml(o.package)}</b></div>
           ${detailRows}
@@ -705,7 +916,121 @@ async function boot() {
       .join("");
   }
 
+  function generateInvoicePdf(order) {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      window.alert("PDF export isn't available right now — please reload the page and try again.");
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    const marginX = 16;
+    let y = 18;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(20);
+    doc.text("Invoice", marginX, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(110);
+    doc.text(order.orderNumber || "—", pageW - marginX, y, { align: "right" });
+    y += 6;
+    doc.setFontSize(9.5);
+    doc.text("Fastrr Ads", marginX, y);
+    doc.text(fmtDate(order.createdAt) || "—", pageW - marginX, y, { align: "right" });
+    y += 10;
+    doc.setDrawColor(225);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Billed To", marginX, y);
+    y += 6;
+    doc.autoTable({
+      startY: y,
+      theme: "plain",
+      styles: { fontSize: 10, cellPadding: { top: 1, bottom: 1 } },
+      columnStyles: { 0: { fontStyle: "bold", cellWidth: 34 }, 1: { textColor: 60 } },
+      body: [
+        ["Client", order.client || "—"],
+        ["Email", order.clientEmail || "—"],
+        ["Phone", order.clientPhone || "—"],
+        ["Website", order.clientWebsite || "—"],
+      ],
+      margin: { left: marginX, right: marginX },
+    });
+    y = doc.lastAutoTable.finalY + 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Order Items", marginX, y);
+    y += 4;
+    const items = order.items && order.items.length ? order.items : [{ name: order.package || "Order", qty: "1", price: order.finalText || fmtINR(order.amount) }];
+    doc.autoTable({
+      startY: y,
+      head: [["#", "Creative", "Qty", "Price"]],
+      body: items.map((it, i) => [String(i + 1), it.name, String(it.qty), it.price]),
+      styles: { fontSize: 9.5, cellPadding: 4, valign: "middle" },
+      headStyles: { fillColor: [26, 20, 46], textColor: 255, fontStyle: "bold" },
+      columnStyles: { 0: { cellWidth: 9 }, 2: { cellWidth: 20, halign: "center" }, 3: { cellWidth: 40, halign: "right" } },
+      margin: { left: marginX, right: marginX },
+    });
+    y = doc.lastAutoTable.finalY + 8;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(20);
+    doc.text("Pricing", marginX, y);
+    y += 4;
+    const priceRows = [];
+    if (order.subtotalText) priceRows.push(["Subtotal", order.subtotalText]);
+    if (order.discountText) priceRows.push([order.discountLabelText || "Discount", order.discountText]);
+    priceRows.push(order.gstEnabled ? ["GST (18%)", order.gstText || "—"] : ["GST", "Not applied"]);
+    doc.autoTable({
+      startY: y,
+      theme: "plain",
+      styles: { fontSize: 10, cellPadding: 2.4 },
+      columnStyles: { 0: { textColor: 90 }, 1: { halign: "right", textColor: 40 } },
+      body: priceRows,
+      margin: { left: marginX, right: marginX },
+    });
+    y = doc.lastAutoTable.finalY + 2;
+    doc.setDrawColor(210);
+    doc.line(marginX, y, pageW - marginX, y);
+    y += 7;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.setTextColor(20);
+    doc.text("Total", marginX, y);
+    doc.text(order.finalText || fmtINR(order.amount), pageW - marginX, y, { align: "right" });
+    y += 12;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(20);
+    doc.text("Status: " + (STATUS_LABEL[order.status] || order.status), marginX, y);
+    y += 6;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text("Placed by " + (order.email || "—"), marginX, y);
+
+    const filenameSafe = (order.orderNumber || "invoice").replace(/[^A-Za-z0-9-]/g, "");
+    doc.save(`Invoice-${filenameSafe}.pdf`);
+  }
+
   orderList.addEventListener("click", (e) => {
+    const invoiceBtn = e.target.closest(".team-order-invoice-btn");
+    if (invoiceBtn) {
+      const card = invoiceBtn.closest(".team-order-card");
+      const order = renderedRows[Number(card.dataset.orderIdx)];
+      if (order) generateInvoicePdf(order);
+      return;
+    }
     const btn = e.target.closest(".team-order-view-btn");
     if (!btn) return;
     const card = btn.closest(".team-order-card");
@@ -714,35 +1039,51 @@ async function boot() {
     btn.setAttribute("aria-expanded", String(nowOpen));
   });
 
-  onAuthStateChanged(auth, (user) => {
+  // Deliberately NOT combined with orderBy("createdAt") here — a
+  // where()+orderBy() on different fields is a composite query that
+  // Firestore refuses to run without a manually-created index, and
+  // onSnapshot's error callback below was previously unwired, so that
+  // failure was silent: the write would succeed but the order would
+  // just never appear. Sorting client-side instead means this view
+  // never depends on any index existing — true for both the per-rep
+  // query and the admin's unfiltered "All Orders" query.
+  function subscribeOrders(user) {
     if (unsubscribeOrders) {
       unsubscribeOrders();
       unsubscribeOrders = null;
     }
+    if (!user) return;
+    const wantAll = scope === "all" && isAdmin(user);
+    const q = wantAll
+      ? query(collection(db, "orders"), limit(ORDER_FETCH_CAP))
+      : query(collection(db, "orders"), where("uid", "==", user.uid), limit(ORDER_FETCH_CAP));
+    unsubscribeOrders = onSnapshot(
+      q,
+      (snap) => {
+        allOrders = snap.docs.map((d) => d.data()).sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt));
+        populateMemberFilterOptions();
+        renderOrders();
+      },
+      (err) => {
+        console.error("[Fastrr] Order History failed to load.", err);
+        orderList.innerHTML =
+          '<div class="team-order-empty"><p>Couldn\'t load your order history right now. Try reopening this panel — if it keeps failing, check the browser console for details.</p></div>';
+      }
+    );
+  }
+
+  onAuthStateChanged(auth, (user) => {
     if (user) {
       refreshWho(user);
+      scope = "mine";
+      if (scopeRow) {
+        scopeRow.hidden = !isAdmin(user);
+        scopeRow.querySelectorAll(".team-scope-chip").forEach((c) => c.classList.toggle("is-active", c.dataset.scope === "mine"));
+      }
+      if (memberFilterEl) memberFilterEl.hidden = true;
       allOrders = [];
       renderOrders();
-      // Deliberately NOT combined with orderBy("createdAt") here — a
-      // where()+orderBy() on different fields is a composite query
-      // that Firestore refuses to run without a manually-created
-      // index, and onSnapshot's error callback below was previously
-      // unwired, so that failure was silent: the write would succeed
-      // but the order would just never appear. Sorting client-side
-      // instead means this view never depends on any index existing.
-      const q = query(collection(db, "orders"), where("uid", "==", user.uid), limit(ORDER_FETCH_CAP));
-      unsubscribeOrders = onSnapshot(
-        q,
-        (snap) => {
-          allOrders = snap.docs.map((d) => d.data()).sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt));
-          renderOrders();
-        },
-        (err) => {
-          console.error("[Fastrr] Order History failed to load.", err);
-          orderList.innerHTML =
-            '<div class="team-order-empty"><p>Couldn\'t load your order history right now. Try reopening this panel — if it keeps failing, check the browser console for details.</p></div>';
-        }
-      );
+      subscribeOrders(user);
       // "Place Your Order" was clicked signed-out, which opened the
       // sign-in popup instead with a note to resume here — now that
       // sign-in/signup just succeeded, pick that order right back up
@@ -753,6 +1094,10 @@ async function boot() {
         resume();
       }
     } else {
+      if (unsubscribeOrders) {
+        unsubscribeOrders();
+        unsubscribeOrders = null;
+      }
       if (authFormCtl) authFormCtl.setMode("signin");
       if (profileMenu) profileMenu.setSignedIn(false);
       orderHistoryModal.close();
