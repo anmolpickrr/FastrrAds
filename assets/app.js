@@ -1471,24 +1471,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       btn.disabled = true;
       label.textContent = "Sending…";
       try {
-        const body = new URLSearchParams();
-        body.set(GOOGLE_FORM_ENTRIES.name, data.name);
-        body.set(GOOGLE_FORM_ENTRIES.email, data.email);
-        body.set(GOOGLE_FORM_ENTRIES.phone, data.phone);
-        body.set(GOOGLE_FORM_ENTRIES.brand, data.brand);
-        body.set(GOOGLE_FORM_ENTRIES.requirement, data.requirement);
-        body.set(GOOGLE_FORM_ENTRIES.details, data.details);
-        // Google Forms doesn't send CORS headers, so the response can't
-        // be read from here — "no-cors" still delivers the POST, it
-        // just means we submit blind and treat the request not
-        // throwing as success (it reliably accepts well-formed
-        // submissions like this one).
-        await fetch(GOOGLE_FORM_ACTION, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body.toString(),
-        });
+        await submitToGoogleForm(data);
         form.reset();
         showSuccess();
       } catch (err) {
@@ -1499,6 +1482,60 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         label.textContent = originalLabel;
       }
     });
+
+    // Google Forms doesn't send CORS headers, so a fetch() response can
+    // never be read from here either way — but a real <form> POST into a
+    // hidden same-page iframe is the standard, most reliable way to
+    // deliver it: unlike fetch(), it isn't a background XHR-style
+    // request some ad/tracker blockers quietly drop, it's an ordinary
+    // browser form submission (just targeted at an invisible frame
+    // instead of navigating the page). We wait for the iframe's "load"
+    // event (with a timeout fallback in case it never fires) before
+    // treating the submission as sent.
+    function submitToGoogleForm(data) {
+      return new Promise((resolve, reject) => {
+        const iframe = document.getElementById("leadHiddenFrame");
+        if (!iframe) {
+          reject(new Error("missing hidden iframe"));
+          return;
+        }
+        const tempForm = document.createElement("form");
+        tempForm.action = GOOGLE_FORM_ACTION;
+        tempForm.method = "POST";
+        tempForm.target = "leadHiddenFrame";
+        tempForm.style.display = "none";
+
+        const fields = {
+          [GOOGLE_FORM_ENTRIES.name]: data.name,
+          [GOOGLE_FORM_ENTRIES.email]: data.email,
+          [GOOGLE_FORM_ENTRIES.phone]: data.phone,
+          [GOOGLE_FORM_ENTRIES.brand]: data.brand,
+          [GOOGLE_FORM_ENTRIES.requirement]: data.requirement,
+          [GOOGLE_FORM_ENTRIES.details]: data.details,
+        };
+        Object.keys(fields).forEach((entryId) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = entryId;
+          input.value = fields[entryId];
+          tempForm.appendChild(input);
+        });
+
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          iframe.removeEventListener("load", finish);
+          tempForm.remove();
+          resolve();
+        };
+        iframe.addEventListener("load", finish);
+        setTimeout(finish, 2500);
+
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+      });
+    }
   })();
 
   /* ----------------------------------------------------------
