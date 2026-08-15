@@ -824,12 +824,13 @@ html.is-internal .oc-offer{display:none !important;}
 .oc-offer:empty{display:none;}
 .oc-offer svg{width:14px; height:14px; flex:0 0 auto;}
 
-/* Lead capture CTA — a quiet prompt under the order builder rather
-   than a big always-open form, so it doesn't compete with the order
-   panel above it. Opens .lead-modal on click; see initLeadModal() in
-   app.js. */
-.lead-cta{margin-top:26px; padding-top:24px; border-top:1px solid var(--line-soft); text-align:center;}
-.lead-cta-sub{margin-bottom:14px; font-size:13.5px; color:var(--text-1);}
+/* Lead capture CTA — sits inside the Order panel itself, right after
+   the Final Amount, so it reads as the order's own next step rather
+   than an unrelated prompt floating below the whole builder. Opens
+   .lead-modal on click; see initLeadModal() in app.js. */
+.lead-cta{margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);}
+.lead-cta-sub{margin-bottom:14px; font-size:13px; color:var(--text-1); line-height:1.5;}
+.lead-cta-btn{width:100%; justify-content:center;}
 
 .lead-panel-head{margin-bottom:20px;}
 .lead-panel-sub{margin-top:8px; font-size:13.5px; color:var(--text-1); line-height:1.55; max-width:560px;}
@@ -1069,8 +1070,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-29" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-29" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1381,12 +1382,12 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
           <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
         </div>
-      </div>
-    </div>
 
-    <div class="lead-cta reveal-on-scroll">
-      <p class="lead-cta-sub">Have a custom requirement, or just want to talk to someone first?</p>
-      <button type="button" class="btn btn-primary lead-cta-btn" id="leadCtaBtn">Share Your Requirement</button>
+        <div class="lead-cta">
+          <p class="lead-cta-sub">Ready to move forward with this order? Share your requirement and our team will get in touch to confirm the details.</p>
+          <button type="button" class="btn btn-primary lead-cta-btn" id="leadCtaBtn">Share Your Requirement</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1464,8 +1465,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-29" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-29" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-30" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1551,7 +1552,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-29"></script>
-<script src="assets/app.js?v=20260811-29"></script>
+<script src="assets/creative-data.js?v=20260811-30"></script>
+<script src="assets/app.js?v=20260811-30"></script>
 </body>
 </html>
