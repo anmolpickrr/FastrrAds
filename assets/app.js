@@ -303,12 +303,26 @@
 
   // Shared "Discount" / "Discount (10%)" label used by the calculator
   // summary, the WhatsApp messages, and the PDF — flat-amount discounts
-  // don't have a percentage to show, so they just read "Discount".
+  // don't have a percentage to show, so they just read "Discount". Public
+  // visitors never set a discount manually, so their version reads as an
+  // offer they earned rather than a generic "Discount" line.
   function discountLabel(cart) {
-    return cart.discountType === "pct" && cart.discountValue > 0
-      ? `Discount (${cart.discountValue}%)`
-      : "Discount";
+    if (cart.discountType === "pct" && cart.discountValue > 0) {
+      return isInternal() ? `Discount (${cart.discountValue}%)` : `Bulk Order Offer (${cart.discountValue}%)`;
+    }
+    return "Discount";
   }
+
+  // Public visitors get an automatic offer instead of a manually
+  // editable discount field (see .oc-offer / #discountFieldRow) —
+  // internal team keeps full manual control for real negotiated
+  // pricing. Re-checked on every render rather than cached, since
+  // is-internal can only change via a full page load anyway.
+  function isInternal() {
+    return document.documentElement.classList.contains("is-internal");
+  }
+  const PUBLIC_OFFER_THRESHOLD = 10000;
+  const PUBLIC_OFFER_PCT = 10;
 
   /* ----------------------------------------------------------
      2. SHARED APPLICATION STATE
@@ -395,8 +409,15 @@
       return { ...item, d, lineSubtotal };
     });
     const subtotal = items.reduce((sum, i) => sum + i.lineSubtotal, 0);
-    const discountType = state.discountType === "flat" ? "flat" : "pct";
-    const rawDiscountValue = Math.max(0, state.discountValue || 0);
+    let discountType = state.discountType === "flat" ? "flat" : "pct";
+    let rawDiscountValue = Math.max(0, state.discountValue || 0);
+    if (!isInternal()) {
+      // Overrides whatever's in state — public visitors never edit this
+      // directly, so state.discountValue here is stale/irrelevant, not
+      // something to respect.
+      discountType = "pct";
+      rawDiscountValue = subtotal >= PUBLIC_OFFER_THRESHOLD ? PUBLIC_OFFER_PCT : 0;
+    }
     const discountValue = discountType === "pct" ? Math.min(100, rawDiscountValue) : rawDiscountValue;
     const discountAmt =
       discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
@@ -642,6 +663,22 @@
     const list = document.getElementById("orderCartList");
     document.getElementById("ocCount").textContent =
       cart.items.length === 0 ? "0 items" : cart.items.length === 1 ? "1 item" : `${cart.items.length} items`;
+
+    // Progress before the threshold, confirmation after — CSS hides this
+    // entirely for internal (see html.is-internal .oc-offer), so this
+    // only ever needs to make sense for a public visitor.
+    const offerEl = document.getElementById("ocOffer");
+    if (offerEl) {
+      const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      if (cart.subtotal >= PUBLIC_OFFER_THRESHOLD) {
+        offerEl.innerHTML = `${check} 10% bulk order offer applied to this order.`;
+      } else if (cart.items.length > 0) {
+        const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
+        offerEl.innerHTML = `${check} Add ${remaining} more to unlock 10% off.`;
+      } else {
+        offerEl.innerHTML = `${check} Orders above ${fmtINR(PUBLIC_OFFER_THRESHOLD)} get 10% off, automatically.`;
+      }
+    }
 
     if (cart.items.length === 0) {
       list.innerHTML = `<div class="cart-empty">
@@ -1382,6 +1419,41 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     details: "entry.910210025",
   };
 
+  (function initLeadModal() {
+    const modal = document.getElementById("leadModal");
+    const ctaBtn = document.getElementById("leadCtaBtn");
+    if (!modal || !ctaBtn) return;
+    const closeBtn = document.getElementById("leadModalClose");
+    const backdrop = document.getElementById("leadModalBackdrop");
+    const formView = document.getElementById("leadFormView");
+    const successView = document.getElementById("leadSuccessView");
+    const form = document.getElementById("leadForm");
+
+    function openModal() {
+      // Reused across visits within the same page load — always resets
+      // to a blank form rather than remembering a previous submission,
+      // in case the visitor wants to send a second, different one.
+      formView.hidden = false;
+      successView.hidden = true;
+      form.reset();
+      document.getElementById("leadFormStatus").textContent = "";
+      modal.classList.add("open");
+      document.body.classList.add("lb-locked");
+      document.getElementById("leadName").focus();
+    }
+    function closeModal() {
+      modal.classList.remove("open");
+      document.body.classList.remove("lb-locked");
+    }
+    ctaBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+    document.getElementById("leadSuccessCloseBtn").addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("open")) closeModal();
+    });
+  })();
+
   (function initLeadForm() {
     const form = document.getElementById("leadForm");
     if (!form) return;
@@ -1392,6 +1464,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function setStatus(msg, kind) {
       status.textContent = msg;
       status.className = "lead-form-status" + (kind ? " is-" + kind : "");
+    }
+
+    function showSuccess() {
+      document.getElementById("leadFormView").hidden = true;
+      document.getElementById("leadSuccessView").hidden = false;
     }
 
     function openMailtoFallback(data) {
@@ -1441,7 +1518,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           body: body.toString(),
         });
         form.reset();
-        setStatus("Thanks — we've received your details and will be in touch shortly.", "success");
+        showSuccess();
       } catch (err) {
         openMailtoFallback(data);
         setStatus("Couldn't reach our form directly — opening your email app with these details instead.", "error");
