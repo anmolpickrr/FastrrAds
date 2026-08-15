@@ -119,6 +119,8 @@ function initAuthModal() {
 function initAuthForm(authModal, getAuthApi) {
   const form = $("teamAuthForm");
   if (!form) return;
+  const nameRow = $("teamNameRow");
+  const nameInput = $("teamNameInput");
   const emailInput = $("teamEmailInput");
   const passwordInput = $("teamPasswordInput");
   const title = $("teamAuthTitle");
@@ -145,6 +147,8 @@ function initAuthForm(authModal, getAuthApi) {
       switchText.textContent = "Already have an account?";
       switchBtn.textContent = "Sign in";
       passwordInput.setAttribute("autocomplete", "new-password");
+      nameRow.hidden = false;
+      nameInput.setAttribute("required", "");
     } else {
       title.textContent = "Sign in";
       sub.textContent = "Use your work email to access your order history.";
@@ -152,6 +156,8 @@ function initAuthForm(authModal, getAuthApi) {
       switchText.textContent = "New to the team?";
       switchBtn.textContent = "Create an account";
       passwordInput.setAttribute("autocomplete", "current-password");
+      nameRow.hidden = true;
+      nameInput.removeAttribute("required");
     }
   }
   switchBtn.addEventListener("click", () => setMode(mode === "signin" ? "signup" : "signin"));
@@ -170,9 +176,14 @@ function initAuthForm(authModal, getAuthApi) {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
+    if (mode === "signup" && !name) {
+      setStatus("Please enter your name.", true);
+      return;
+    }
     if (!email || !password) {
       setStatus("Please enter your email and password.", true);
       return;
@@ -198,7 +209,9 @@ function initAuthForm(authModal, getAuthApi) {
     setStatus("");
     try {
       if (mode === "signup") {
-        await api.createUserWithEmailAndPassword(api.auth, email, password);
+        const cred = await api.createUserWithEmailAndPassword(api.auth, email, password);
+        await api.updateProfile(cred.user, { displayName: name });
+        api.refreshDisplay();
       } else {
         await api.signInWithEmailAndPassword(api.auth, email, password);
       }
@@ -240,13 +253,12 @@ async function boot() {
     return;
   }
   const [{ initializeApp }, authMod, fsMod] = firebaseMods;
-  const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } = authMod;
+  const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } = authMod;
   const { getFirestore, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } = fsMod;
 
   const app = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(app);
   const db = getFirestore(app);
-  authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword };
 
   const dash = $("teamDash");
   const whoEmail = $("teamWhoEmail");
@@ -262,6 +274,22 @@ async function boot() {
   let allOrders = [];
   let activeFilter = "all";
   let hasAutoOpened = false;
+
+  // updateProfile() (setting displayName right after sign-up) does not
+  // itself re-fire onAuthStateChanged — true of real Firebase, not just
+  // this mock — so the "Signed in as …" text and nav label need an
+  // explicit refresh right after it resolves, not just on auth-state
+  // changes.
+  function refreshWho(user) {
+    if (!user) return;
+    const displayName = user.displayName || user.email.split("@")[0];
+    whoEmail.textContent = user.displayName ? `${user.displayName} (${user.email})` : user.email;
+    if (navBtn) {
+      navBtn.dataset.signedIn = "1";
+      navBtn.textContent = displayName;
+    }
+  }
+  authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, refreshDisplay: () => refreshWho(auth.currentUser) };
 
   function setOrderStatus(msg, isError) {
     orderStatusMsg.textContent = msg || "";
@@ -360,13 +388,9 @@ async function boot() {
     }
     if (user) {
       dash.classList.add("is-active");
-      whoEmail.textContent = user.email;
+      refreshWho(user);
       allOrders = [];
       renderOrders();
-      if (navBtn) {
-        navBtn.dataset.signedIn = "1";
-        navBtn.textContent = user.email.split("@")[0];
-      }
       const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
       unsubscribeOrders = onSnapshot(q, (snap) => {
         allOrders = snap.docs.map((d) => d.data());
