@@ -123,7 +123,6 @@ async function boot() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const authView = $("teamAuthView");
   const dash = $("teamDash");
   const authForm = $("teamAuthForm");
   const emailInput = $("teamEmailInput");
@@ -305,7 +304,6 @@ async function boot() {
       unsubscribeOrders = null;
     }
     if (user) {
-      authView.classList.add("is-hidden");
       dash.classList.add("is-active");
       whoEmail.textContent = user.email;
       allOrders = [];
@@ -320,7 +318,6 @@ async function boot() {
         renderOrders();
       });
     } else {
-      authView.classList.remove("is-hidden");
       dash.classList.remove("is-active");
       setMode("signin");
       if (navBtn) {
