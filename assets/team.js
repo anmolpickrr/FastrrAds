@@ -207,7 +207,11 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
   return {
     setSignedIn(signedIn, label, email) {
       trigger.dataset.signedIn = signedIn ? "1" : "0";
-      trigger.textContent = signedIn ? label : "Team Sign In";
+      // The nav trigger stays concise (first name only) since it's
+      // competing for space with the rest of the nav bar — the full
+      // name still shows in the dropdown header, where there's room.
+      const firstName = (label || "").trim().split(/\s+/)[0];
+      trigger.textContent = signedIn ? firstName || label : "Team Sign In";
       const initial = (label || "?").trim().charAt(0).toUpperCase();
       if (signedIn) trigger.dataset.initial = initial;
       if (menu) menu.hidden = !signedIn;
