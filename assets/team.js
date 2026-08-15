@@ -659,7 +659,7 @@ async function boot() {
     }
     if (!rows.length) {
       const msg = !allOrders.length
-        ? "No orders logged yet. Use the form above once you've confirmed one."
+        ? "No orders placed yet. Orders you place from the homepage will show up here."
         : searchTerm
         ? "No orders match your search."
         : "No orders with this status.";
@@ -670,8 +670,20 @@ async function boot() {
       return;
     }
     orderList.innerHTML = rows
-      .map(
-        (o) => `
+      .map((o) => {
+        const detailRows = [
+          ["Client email", o.clientEmail],
+          ["Client phone", o.clientPhone],
+          ["Website", o.clientWebsite],
+          ["Category", o.clientCategory],
+          ["Placed by", o.email],
+          ["Placed on", fmtDate(o.createdAt)],
+        ]
+          .filter(([, v]) => v)
+          .map(([label, v]) => `<div class="team-order-detail-row"><span>${escapeHtml(label)}</span><b>${escapeHtml(v)}</b></div>`)
+          .join("");
+        const notesRow = o.notes ? `<div class="team-order-detail-row span-2"><span>Notes</span><b>${escapeHtml(o.notes)}</b></div>` : "";
+        return `
       <div class="team-order-card">
         <div class="team-order-main">
           <div class="team-order-client">${escapeHtml(o.client)}</div>
@@ -680,11 +692,28 @@ async function boot() {
         <div class="team-order-right">
           <span class="team-order-amount">${fmtINR(o.amount)}</span>
           <span class="team-order-status status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
+          <button type="button" class="team-order-view-btn" aria-label="View order details" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
-      </div>`
-      )
+        <div class="team-order-details">
+          <div class="team-order-detail-row span-2"><span>Package</span><b>${escapeHtml(o.package)}</b></div>
+          ${detailRows}
+          ${notesRow}
+        </div>
+      </div>`;
+      })
       .join("");
   }
+
+  orderList.addEventListener("click", (e) => {
+    const btn = e.target.closest(".team-order-view-btn");
+    if (!btn) return;
+    const card = btn.closest(".team-order-card");
+    const nowOpen = !card.classList.contains("is-open");
+    card.classList.toggle("is-open", nowOpen);
+    btn.setAttribute("aria-expanded", String(nowOpen));
+  });
 
   onAuthStateChanged(auth, (user) => {
     if (unsubscribeOrders) {
