@@ -308,7 +308,7 @@
   // offer they earned rather than a generic "Discount" line.
   function discountLabel(cart) {
     if (cart.discountType === "pct" && cart.discountValue > 0) {
-      return isInternal() ? `Discount (${cart.discountValue}%)` : `Bulk Order Offer (${cart.discountValue}%)`;
+      return isInternal() ? `Discount (${cart.discountValue}%)` : `Order Discount (${cart.discountValue}%)`;
     }
     return "Discount";
   }
@@ -352,6 +352,10 @@
     specialReq: "",
   };
   let cartIdSeq = 1;
+  // Tracks the previous render's unlocked/not state so the "just
+  // unlocked" pop animation only plays on the actual crossing, not on
+  // every re-render while the order stays above the threshold.
+  let offerWasUnlocked = false;
 
   function keyFor(service, tier) {
     return service === "reels" ? "reel" + tier : service;
@@ -668,29 +672,41 @@
     document.getElementById("ocCount").textContent =
       cart.items.length === 0 ? "0 items" : cart.items.length === 1 ? "1 item" : `${cart.items.length} items`;
 
-    // Progress before the threshold, confirmation after — CSS hides this
-    // entirely for internal (see html.is-internal .oc-offer), so this
-    // only ever needs to make sense for a public visitor. The ₹10,000
-    // threshold is stated explicitly in every state (not just implied
-    // by "add ₹X more"), and the unlocked state gets its own bolder
-    // treatment (.is-unlocked) so it actually gets noticed rather than
-    // reading the same as the plain progress message.
+    // A coupon-badge treatment (bold "10% OFF" badge + copy), not a
+    // plain notification bar — the badge itself changes from an
+    // outlined/muted "not yet" state to a filled gradient once
+    // unlocked, and the whole thing plays a one-shot pop the moment it
+    // actually crosses the threshold (see offerWasUnlocked above).
+    // Value-based, not quantity-based, so it's labeled as an order
+    // discount rather than a "bulk" offer. CSS hides this entirely for
+    // internal (see html.is-internal .oc-offer).
     const offerEl = document.getElementById("ocOffer");
     if (offerEl) {
-      const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
       const thresholdStr = fmtINR(PUBLIC_OFFER_THRESHOLD);
-      if (cart.subtotal >= PUBLIC_OFFER_THRESHOLD) {
-        offerEl.classList.add("is-unlocked");
-        offerEl.innerHTML = `${check} <b>10% off unlocked</b> — this order crossed the ${thresholdStr} bulk-order mark.`;
+      const unlocked = cart.subtotal >= PUBLIC_OFFER_THRESHOLD;
+      let title, sub;
+      if (unlocked) {
+        title = "10% discount applied";
+        sub = `Your order qualifies for our ${thresholdStr}+ order discount.`;
+      } else if (cart.items.length > 0) {
+        const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
+        title = "Unlock 10% off this order";
+        sub = `Add ${remaining} more — orders above ${thresholdStr} get an automatic discount.`;
       } else {
-        offerEl.classList.remove("is-unlocked");
-        if (cart.items.length > 0) {
-          const remaining = fmtINR(PUBLIC_OFFER_THRESHOLD - cart.subtotal);
-          offerEl.innerHTML = `${check} Orders above ${thresholdStr} get 10% off — add ${remaining} more to unlock it.`;
-        } else {
-          offerEl.innerHTML = `${check} Orders above ${thresholdStr} get 10% off, automatically.`;
-        }
+        title = "Save 10% on this order";
+        sub = `Orders above ${thresholdStr} automatically get 10% off.`;
       }
+      offerEl.innerHTML = `
+        <span class="oc-offer-badge"><span>10<b>%</b></span><small>OFF</small></span>
+        <span class="oc-offer-copy"><b>${title}</b><span>${sub}</span></span>
+      `;
+      offerEl.classList.toggle("is-unlocked", unlocked);
+      if (unlocked && !offerWasUnlocked) {
+        offerEl.classList.remove("just-unlocked");
+        void offerEl.offsetWidth;
+        offerEl.classList.add("just-unlocked");
+      }
+      offerWasUnlocked = unlocked;
     }
 
     if (cart.items.length === 0) {
@@ -706,12 +722,13 @@
             .slice(0, 2)
             .map(([l, v]) => `${l}: ${v}`)
             .join("   ");
-          // Only offered where "duration" actually means seconds of video
-          // (AI Reels, 360° Catalogue) — Static/Carousel duration is
-          // frame/slide count, not something a client negotiates in
-          // seconds. Sales can override here, per line, without touching
-          // the package's own default for every other order.
-          const durationEditable = /sec/i.test(item.d.duration || "");
+          // Internal-only: negotiating a custom length is a sales
+          // conversation, not something a self-serve public visitor
+          // should be editing on their own order. Also only offered
+          // where "duration" actually means seconds of video (AI Reels,
+          // 360° Catalogue) — Static/Carousel duration is frame/slide
+          // count, not a negotiable length.
+          const durationEditable = isInternal() && /sec/i.test(item.d.duration || "");
           const durationField = durationEditable
             ? `<div class="cart-item-duration${item.customDuration ? " custom" : ""}">
                 <label for="ciDuration${item.id}">Duration</label>

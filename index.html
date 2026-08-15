@@ -9,12 +9,12 @@
      dark-by-default theme — updateFavicon() in app.js rewrites every
      href below to the light-theme (black) set as soon as the resolved
      theme is actually light, and again on every toggle. -->
-<link rel="icon" id="faviconIco" href="assets/favicon/dark/favicon.ico?v=20260811-32" sizes="any">
-<link rel="icon" id="faviconSvg" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-32">
-<link rel="icon" id="favicon32" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-32">
-<link rel="icon" id="favicon16" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-32">
-<link rel="apple-touch-icon" id="faviconApple" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-32">
-<link rel="icon" id="favicon192" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-32">
+<link rel="icon" id="faviconIco" href="assets/favicon/dark/favicon.ico?v=20260811-33" sizes="any">
+<link rel="icon" id="faviconSvg" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-33">
+<link rel="icon" id="favicon32" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-33">
+<link rel="icon" id="favicon16" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-33">
+<link rel="apple-touch-icon" id="faviconApple" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-33">
+<link rel="icon" id="favicon192" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-33">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -832,25 +832,51 @@ html.is-internal .oc-offer{display:none !important;}
    discount field instead — see the html:not(.is-internal) rule
    further down — since they're pricing real negotiated orders, not
    shopping a public discount. */
-/* Two distinct states, not one style doing double duty: quiet violet
-   while the order is still short of the threshold (an invitation, not
-   an achievement yet), switching to a bolder teal treatment — border,
-   subtle glow — the moment it's actually unlocked, so crossing ₹10,000
-   visibly registers as something happening rather than reading as the
-   same message in a different color. */
+/* A coupon, not a notice bar — a bold "10% OFF" badge next to the
+   copy, so it reads as an actual offer at a glance instead of blending
+   in with the plain-text rows around it. Two distinct states: quiet
+   and outlined while the order is still short of the threshold (an
+   invitation, not an achievement yet), switching to a fully filled
+   gradient badge + bolder panel the moment it's unlocked. .just-
+   unlocked plays a one-shot pop + glow exactly on the crossing (see
+   offerWasUnlocked in renderCart) so the discount kicking in reads as
+   something that just happened, not a static label. */
 .oc-offer{
-  display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:11px 14px;
-  border-radius:var(--radius-sm); background:var(--violet-soft); color:var(--violet);
-  border:1px solid transparent; font-size:12.5px; font-weight:600; line-height:1.4;
-  transition:background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease;
+  display:flex; align-items:center; gap:14px; margin-bottom:16px; padding:14px;
+  border-radius:var(--radius); background:var(--surface-1); border:1px solid var(--line);
+  transition:background .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
 .oc-offer:empty{display:none;}
-.oc-offer svg{width:14px; height:14px; flex:0 0 auto;}
-.oc-offer b{font-weight:700;}
-.oc-offer.is-unlocked{
-  background:var(--teal-soft); color:var(--teal); border-color:var(--teal);
-  box-shadow:0 0 0 3px var(--teal-soft);
+.oc-offer-badge{
+  flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  width:56px; height:56px; border-radius:14px; border:1.5px solid var(--violet);
+  color:var(--violet); font-family:var(--font-display); font-size:19px; font-weight:800; line-height:1;
+  transition:background .3s ease, border-color .3s ease, color .3s ease, transform .3s ease;
 }
+.oc-offer-badge b{font-size:12px; font-weight:800; vertical-align:top;}
+.oc-offer-badge small{margin-top:2px; font-family:var(--font-mono); font-size:8.5px; font-weight:700; letter-spacing:.08em; color:inherit;}
+.oc-offer-copy{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.oc-offer-copy b{font-size:13.5px; font-weight:700; color:var(--text-0);}
+.oc-offer-copy span{font-size:12px; color:var(--text-2); line-height:1.45;}
+
+.oc-offer.is-unlocked{background:var(--teal-soft); border-color:var(--teal);}
+.oc-offer.is-unlocked .oc-offer-badge{
+  background:linear-gradient(135deg,var(--violet),var(--teal)); border-color:transparent; color:#fff;
+}
+
+@keyframes offerUnlockPop{
+  0%{transform:scale(1);}
+  35%{transform:scale(1.06);}
+  60%{transform:scale(0.99);}
+  100%{transform:scale(1);}
+}
+@keyframes offerUnlockGlow{
+  0%{box-shadow:0 0 0 0 var(--teal-soft);}
+  40%{box-shadow:0 0 0 10px var(--teal-soft);}
+  100%{box-shadow:0 0 0 0 transparent;}
+}
+.oc-offer.just-unlocked{animation:offerUnlockGlow .9s ease-out;}
+.oc-offer.just-unlocked .oc-offer-badge{animation:offerUnlockPop .55s cubic-bezier(.34,1.56,.64,1);}
 
 /* Lead capture CTA — sits inside the Order panel itself, right after
    the Final Amount, so it reads as the order's own next step rather
@@ -1148,8 +1174,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-32" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-32" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1467,8 +1493,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
         </div>
 
         <div class="lead-cta">
-          <p class="lead-cta-sub">Ready to move forward with this order? Share your requirement and our team will get in touch to confirm the details.</p>
-          <button type="button" class="btn btn-primary lead-cta-btn js-open-lead-modal">Share Your Requirement</button>
+          <p class="lead-cta-sub">Ready to move forward with this order? Place your order and our team will get in touch to confirm the details.</p>
+          <button type="button" class="btn btn-primary lead-cta-btn js-open-lead-modal">Place Your Order</button>
         </div>
       </div>
     </div>
@@ -1556,8 +1582,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-32" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-32" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-33" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1654,7 +1680,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-32"></script>
-<script src="assets/app.js?v=20260811-32"></script>
+<script src="assets/creative-data.js?v=20260811-33"></script>
+<script src="assets/app.js?v=20260811-33"></script>
 </body>
 </html>
