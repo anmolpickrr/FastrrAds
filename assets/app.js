@@ -1332,8 +1332,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     try {
       saved = localStorage.getItem("fastrr-theme");
     } catch (e) {}
-    const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
-    const initial = saved || (prefersLight ? "light" : "dark");
+    // Dark is the default regardless of the visitor's OS color-scheme
+    // preference — previously a light-mode OS would silently override it
+    // on first visit. A saved choice (from the toggle) still always wins.
+    const initial = saved || "dark";
     root.setAttribute("data-theme", initial);
 
     btn.addEventListener("click", () => {
