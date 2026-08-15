@@ -60,7 +60,7 @@ const FIREBASE_CONFIG = {
   appId: "1:210648202688:web:0335d98449f6610cacdc25",
 };
 const FIREBASE_IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.startsWith("REPLACE_WITH_");
-const NOT_CONFIGURED_MSG = "Order History isn't connected yet — ask an admin to finish the setup.";
+const NOT_CONFIGURED_MSG = "Order History isn't connected yet. Ask an admin to finish the setup.";
 
 // New accounts must sign up with one of these email domains. This is a
 // light client-side guard, not real security — Firestore rules are what
@@ -290,14 +290,14 @@ function initAuthForm(authModal, getAuthApi) {
 
   function friendlyAuthError(err) {
     const code = err && err.code ? err.code : "";
-    if (code.includes("email-already-in-use")) return "An account already exists for this email — try signing in instead.";
+    if (code.includes("email-already-in-use")) return "An account already exists for this email. Try signing in instead.";
     if (code.includes("wrong-password") || code.includes("invalid-credential")) return "Incorrect email or password.";
     if (code.includes("user-not-found")) return "No account found for this email.";
     if (code.includes("weak-password")) return "Password should be at least 6 characters.";
     if (code.includes("invalid-email")) return "Enter a valid email address.";
-    if (code.includes("network-request-failed")) return "Network error — check your connection and try again.";
-    if (code.includes("too-many-requests")) return "Too many attempts — please wait a moment and try again.";
-    return "Something went wrong — please try again.";
+    if (code.includes("network-request-failed")) return "Network error. Check your connection and try again.";
+    if (code.includes("too-many-requests")) return "Too many attempts. Please wait a moment and try again.";
+    return "Something went wrong. Please try again.";
   }
 
   form.addEventListener("submit", async (e) => {
@@ -565,7 +565,7 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
       successView.hidden = false;
     } catch (err) {
       console.error("[Fastrr] Order placement failed.", err);
-      setStatus("Couldn't save the order — please try again.", true);
+      setStatus("Couldn't save the order. Please try again.", true);
     } finally {
       submitLabel.textContent = originalLabel;
     }
@@ -985,7 +985,7 @@ async function boot() {
 
   function generateInvoicePdf(order) {
     if (!window.jspdf || !window.jspdf.jsPDF) {
-      window.alert("PDF export isn't available right now — please reload the page and try again.");
+      window.alert("PDF export isn't available right now. Please reload the page and try again.");
       return;
     }
     const { jsPDF } = window.jspdf;
@@ -1126,7 +1126,7 @@ async function boot() {
     } catch (err) {
       select.className = previousClass;
       select.value = order.status;
-      window.alert("Couldn't update the order's status — please try again.");
+      window.alert("Couldn't update the order's status. Please try again.");
     } finally {
       select.disabled = false;
     }
