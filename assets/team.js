@@ -47,7 +47,65 @@ const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
 
 const STATUS_LABEL = { placed: "Placed", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
 
+const $ = (id) => document.getElementById(id);
+
+function isInternal() {
+  return document.documentElement.classList.contains("is-internal");
+}
+
+/* ----------------------------------------------------------
+   Sign-in/signup popup — open/close wiring runs unconditionally
+   (doesn't need Firebase loaded) so the popup is interactive the
+   moment the page loads, from either the nav button, the in-section
+   prompt, or automatically on arrival at /teamfastrr while signed out.
+---------------------------------------------------------- */
+function initAuthModal() {
+  const modal = $("teamAuthModal");
+  const backdrop = $("teamAuthModalBackdrop");
+  const closeBtn = $("teamAuthModalClose");
+  const navBtn = $("teamNavBtn");
+  const openBtn = $("teamOpenAuthBtn");
+  if (!modal) return { open() {}, close() {} };
+
+  function open() {
+    modal.classList.add("open");
+    document.body.classList.add("lb-locked");
+    const emailInput = $("teamEmailInput");
+    if (emailInput) emailInput.focus();
+  }
+  function close() {
+    modal.classList.remove("open");
+    document.body.classList.remove("lb-locked");
+  }
+
+  if (backdrop) backdrop.addEventListener("click", close);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  if (openBtn) openBtn.addEventListener("click", open);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("open")) close();
+  });
+
+  // Nav button is only ever shown on the internal build (CSS also
+  // enforces this for public visitors regardless of JS); default state
+  // before auth resolves is a plain "Sign in" trigger.
+  if (navBtn && isInternal()) {
+    navBtn.style.display = "";
+    navBtn.textContent = "Team Sign In";
+    navBtn.addEventListener("click", () => {
+      if (navBtn.dataset.signedIn === "1") {
+        document.getElementById("history").scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        open();
+      }
+    });
+  }
+
+  return { open, close };
+}
+
 async function boot() {
+  const authModal = initAuthModal();
+
   if (FIREBASE_CONFIG.apiKey.startsWith("REPLACE_WITH_")) {
     console.warn("[Fastrr] Order History is not wired up yet — add your Firebase config to assets/team.js.");
     return;
@@ -65,7 +123,6 @@ async function boot() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const $ = (id) => document.getElementById(id);
   const authView = $("teamAuthView");
   const dash = $("teamDash");
   const authForm = $("teamAuthForm");
@@ -84,11 +141,13 @@ async function boot() {
   const orderStatusMsg = $("teamOrderStatusMsg");
   const filterRow = $("teamFilterRow");
   const orderList = $("teamOrderList");
+  const navBtn = $("teamNavBtn");
 
   let mode = "signin"; // or "signup"
   let unsubscribeOrders = null;
   let allOrders = [];
   let activeFilter = "all";
+  let hasAutoOpened = false;
 
   function setAuthStatus(msg, isError) {
     authStatus.textContent = msg || "";
@@ -141,6 +200,7 @@ async function boot() {
         await signInWithEmailAndPassword(auth, email, password);
       }
       authForm.reset();
+      authModal.close();
     } catch (err) {
       setAuthStatus(friendlyAuthError(err), true);
     } finally {
@@ -250,6 +310,10 @@ async function boot() {
       whoEmail.textContent = user.email;
       allOrders = [];
       renderOrders();
+      if (navBtn) {
+        navBtn.dataset.signedIn = "1";
+        navBtn.textContent = user.email.split("@")[0];
+      }
       const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
       unsubscribeOrders = onSnapshot(q, (snap) => {
         allOrders = snap.docs.map((d) => d.data());
@@ -259,6 +323,19 @@ async function boot() {
       authView.classList.remove("is-hidden");
       dash.classList.remove("is-active");
       setMode("signin");
+      if (navBtn) {
+        navBtn.dataset.signedIn = "0";
+        navBtn.textContent = "Team Sign In";
+      }
+      // Arriving at /teamfastrr (or any page load while the internal
+      // flag is set) but not yet authenticated — surface the popup
+      // immediately instead of leaving the visitor to find the
+      // sign-in prompt further down the page. Only fires once per
+      // page load so it doesn't reopen every time auth state settles.
+      if (isInternal() && !hasAutoOpened) {
+        hasAutoOpened = true;
+        authModal.open();
+      }
     }
   });
 }
