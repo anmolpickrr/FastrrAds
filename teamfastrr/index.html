@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-65" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-65" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-65" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-65" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-65" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-65" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-65" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-65" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-65" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-65" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-65" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-65" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-66" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-66" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-66" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-66" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-66" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-66" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-66" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-66" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-66" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-66" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-66" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-66" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -888,21 +888,26 @@ html.is-internal .oc-offer{display:none !important;}
 .oc-offer-code-status{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); transition:color .3s ease;}
 
 /* A slow, seamless drift across a soft violet → blue → teal wash —
-   the gradient never has a hard edge or a static bright band for text
-   to fight, and because the colour list starts and ends on the same
-   stop the animation loops with no visible jump. Base is still a dark
-   tint underneath so the white "SAVE10" text stays readable no matter
-   where the drift lands. */
+   the gradient never has a hard edge for text to fight, and because
+   the colour list starts and ends on the same stop the loop has no
+   visible jump. Two things matter for it to actually read as
+   "drifting" rather than "stuck": linear timing (ease-in-out bunches
+   motion around each keyframe, which reads as the gradient pausing
+   right where its brightest stop happens to be) and roughly even
+   alpha across every stop (an isolated brighter stop becomes a fixed
+   bright stripe once motion lingers near it). The code chip has its
+   own solid background regardless, so the stub itself can run bright
+   without ever risking the coupon text's readability. */
 .oc-offer.is-unlocked .oc-offer-stub{
-  background-color:#1b1533;
+  background-color:#2a2354;
   background-image:linear-gradient(120deg,
-    rgba(139,124,246,.78) 0%,
-    rgba(112,150,250,.68) 25%,
-    rgba(47,217,196,.74) 50%,
-    rgba(112,150,250,.68) 75%,
-    rgba(139,124,246,.78) 100%);
-  background-size:260% 260%;
-  animation:offerGradientFlow 9s ease-in-out infinite;
+    rgba(154,140,255,.82) 0%,
+    rgba(120,168,255,.8) 25%,
+    rgba(72,214,198,.82) 50%,
+    rgba(120,168,255,.8) 75%,
+    rgba(154,140,255,.82) 100%);
+  background-size:320% 320%;
+  animation:offerGradientFlow 10s linear infinite;
 }
 .oc-offer.is-unlocked .oc-offer-code{background:rgba(8,6,18,.55); border-color:rgba(255,255,255,.4); color:#fff;}
 .oc-offer.is-unlocked .oc-offer-code-status{color:rgba(255,255,255,.8);}
@@ -1420,8 +1425,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-65" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-65" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-66" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-66" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1839,8 +1844,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-65" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-65" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-66" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-66" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -2090,8 +2095,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
      no downloadPdfBtn for it to attach to anyway. -->
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-65"></script>
-<script src="assets/app.js?v=20260811-65"></script>
-<script type="module" src="assets/team.js?v=20260811-65"></script>
+<script src="assets/creative-data.js?v=20260811-66"></script>
+<script src="assets/app.js?v=20260811-66"></script>
+<script type="module" src="assets/team.js?v=20260811-66"></script>
 </body>
 </html>
