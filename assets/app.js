@@ -152,47 +152,19 @@
     },
     reel1: {
       name: "AI Reel — Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
-      short: "Script from your brief, 1 minor revision included.",
+      short: "Script from your brief, with one minor revision included.",
       benefit: "The quickest, most affordable way into AI reels.",
-      duration: "Up to 25 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (minor, in-frame changes only)", scripting: "Script written from your brief — no separate approval step",
-      language: "Hindi / English voiceover",
-      turnaround: "1–2 working days per reel after we receive everything needed from you",
-      included: [
-        "AI voiceover, in Hindi or English",
-        "Script written from the brief we discuss together — no separate approval step",
-        "Single 9:16 export, up to 25 sec",
-        "1 revision — minor, in-frame changes (e.g. text or element placement)",
-      ],
-      excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
-      need: [
-        "A clear, fully discussed brief before work starts",
-        "Key selling points & tone direction",
-        "Preferred voiceover language (Hindi/English)",
-      ],
-      deliver: "1 MP4, 9:16, up to 25 sec, delivered via shared drive folder",
-      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Script is now written internally from the brief at every reel tier — the
-      // real differentiator between tiers is whether it's shared for approval
-      // (Tier 3+) and how generous the revision scope is. Writer is involved from
-      // Tier 1 onward even though there's no client-facing script approval step.
-      support: ["writer", "editor", "call"],
-    },
-    reel2: {
-      name: "AI Reel — Story Cut", tier: 2, unit: "reel", basePrice: 3500,
-      short: "Script from your brief, 1 limited-scope revision included.",
-      benefit: "A safety net for wording & hook-length tweaks.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (limited scope — wording, hook length only)", scripting: "Script written from your brief — no separate approval step",
+      revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 3 working days per reel after we receive everything needed from you",
+      turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Script written from the brief we discuss together — no separate approval step",
+        "Script written from the brief we discuss together, with no separate approval step",
         "Single 9:16 export, max 25 sec",
-        "1 revision (limited scope — wording, hook length only)",
+        "1 revision for minor, in frame changes such as text or element placement",
       ],
-      excluded: ["Script shared for approval", "Major creative changes or new concepts (new order)", "Additional dimensions (quoted separately)"],
+      excluded: ["Script shared for approval", "Major creative changes or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
         "A clear, fully discussed brief before work starts",
         "Key selling points & tone direction",
@@ -200,66 +172,100 @@
       ],
       deliver: "1 MP4, 9:16, max 25 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Same brief-led scripting as Tier 1 (no separate approval step) — Tier 2's
-      // differentiator is a slightly wider revision scope, not the scripting process.
+      // Quick Cut is the only reel tier with no client-facing script approval
+      // step — every tier from Story Cut up shares the script for approval
+      // before the reel is built. Writer and Editor are still involved here,
+      // just working from the discussed brief rather than an approved script.
       support: ["writer", "editor", "call"],
     },
-    reel3: {
-      name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
-      short: "1 script option shared for approval, room for small changes.",
-      benefit: "Writer + Editor input for a stronger script direction.",
+    reel2: {
+      name: "AI Reel — Story Cut", tier: 2, unit: "reel", basePrice: 3500,
+      short: "Script shared for approval, with one small revision included.",
+      benefit: "A safety net to get the script and hook right before we build.",
       duration: "Max 30 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (small script/communication changes)", scripting: "1 script option shared for approval",
+      revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 4 working days per reel after we receive everything needed from you",
+      turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built with Writer + Editor input",
+        "Reel built with Writer and Editor input",
         "Single 9:16 export, max 30 sec",
-        "1 script option shared for approval",
-        "Small script/communication changes accommodated — e.g. hook, CTA, minor additions/removals",
+        "1 script shared for approval",
+        "1 revision for small script or communication changes, such as the hook, CTA, or minor additions and removals",
       ],
-      excluded: ["Additional hook options", "Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
+      excluded: ["Additional hook options", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
-        "A clear, discussed brief before work starts",
+        "A clear, fully discussed brief before work starts",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
       deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Script now goes through an actual approval step (not just review), with
-      // small script/communication changes accommodated as part of that approval —
-      // still no Creative Director oversight or multiple hook options, which is
-      // what separates this from Tier 4.
+      // First tier with an actual script approval step — the client sees
+      // and signs off on the script before the reel is built, with room for
+      // one small revision afterward. Still a single hook, not the 2 that
+      // Director's Cut and up include.
       support: ["writer", "editor", "call"],
     },
-    reel4: {
-      name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
-      short: "1 script + 2 hook options, shared for approval.",
-      benefit: "Full Creative Director involvement, top-tier polish.",
+    reel3: {
+      name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
+      short: "Script and 2 hook options shared for approval, with creative input throughout.",
+      benefit: "Creative guidance and content writer involvement for a stronger direction.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
-      revisions: "1 revision (small script/communication changes)", scripting: "1 script + 2 hook options shared for approval",
+      revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
-      turnaround: "Up to 5 working days per reel after we receive everything needed from you",
+      turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built with full Writer + Editor + Creative Director involvement",
+        "Reel built with content writer involvement and editor input",
+        "Creative guidance, suggestions, and input on the script and direction",
         "Single 9:16 export, max 35 sec",
-        "1 script + 2 hook options shared for approval",
-        "Small script/communication changes accommodated — e.g. hook selection, CTA, minor additions/removals",
+        "1 script plus 2 hook options shared for approval",
+        "1 revision for small script or communication changes",
       ],
-      excluded: ["Major creative rework or new concepts (new order)", "Additional dimensions (quoted separately)"],
+      excluded: ["Creative Director oversight", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
         "A clear, discussed brief before work starts",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 35 sec, plus 1 script + 2 hook options for approval, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 35 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Top tier: full Writer + Editor + Creative Director involvement, 2 hook
-      // options instead of Tier 3's 1, and the longest working-day window to match
-      // the deeper creative oversight.
-      support: ["writer", "editor", "director", "call"],
+      // Adds a second hook option and hands-on creative guidance on top of
+      // Story Cut's single script approval. Still short of Studio Cut's
+      // dedicated Creative Director oversight and custom music.
+      support: ["writer", "editor", "call"],
+    },
+    reel4: {
+      name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
+      short: "Script and 2 hook options shared for approval, with full Creative Director involvement.",
+      benefit: "Full creative oversight, custom brand music, and the most revision room.",
+      duration: "Max 45 sec", format: "9:16 (1 dimension)",
+      revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
+      language: "Hindi / English voiceover",
+      turnaround: "Up to 5 working days per reel after we receive everything needed from you",
+      included: [
+        "AI voiceover, in Hindi or English",
+        "Reel built with full Writer, Editor, and Creative Director involvement",
+        "Creative Director guidance, suggestions, and input throughout",
+        "Single 9:16 export, max 45 sec",
+        "1 script plus 2 hook options shared for approval",
+        "Custom music composed for your brand (music only, no lip sync with the model)",
+        "Call support for requirement discussions",
+        "2 revisions for small script or communication changes",
+      ],
+      excluded: ["Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately", "Lip sync of the model to the custom music"],
+      need: [
+        "A clear, discussed brief before work starts",
+        "Key selling points & tone direction",
+        "Preferred voiceover language (Hindi/English)",
+      ],
+      deliver: "1 MP4, 9:16, max 45 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
+      dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
+      // Top tier: full Writer, Editor, and Creative Director involvement, 2
+      // revisions instead of 1, and custom brand music alongside the longest
+      // duration and turnaround window of any reel tier.
+      support: ["writer", "editor", "director", "call", "music"],
     },
   };
 
@@ -585,6 +591,7 @@
     { key: "editor", label: "Dedicated Video Editor" },
     { key: "director", label: "Creative Director Oversight" },
     { key: "call", label: "Call Support &amp; Requirement Discussion" },
+    { key: "music", label: "Custom Brand Music" },
   ];
 
   // Just the roles actually included, as plain text — same weight and
