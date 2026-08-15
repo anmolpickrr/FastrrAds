@@ -76,7 +76,8 @@ const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
 // the server-side rule is what Firestore actually checks.
 const ADMIN_EMAILS = ["design.tools@pickrr.com"];
 
-const STATUS_LABEL = { placed: "Placed", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
+const STATUS_LABEL = { placed: "Placed", in_progress: "In Progress", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
+const STATUS_ORDER = ["placed", "in_progress", "completed", "failed", "cancelled"];
 
 const $ = (id) => document.getElementById(id);
 
@@ -156,9 +157,14 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
   const wrap = $("teamProfile");
   const trigger = $("teamNavBtn");
   const menu = $("teamProfileMenu");
+  const menuHeader = $("teamProfileMenuHeader");
   const historyBtn = $("teamProfileHistoryBtn");
   const signOutBtn = $("teamProfileSignOutBtn");
   if (!wrap || !trigger) return;
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
 
   if (isInternal()) {
     wrap.style.display = "";
@@ -199,11 +205,19 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
   }
 
   return {
-    setSignedIn(signedIn, label) {
+    setSignedIn(signedIn, label, email) {
       trigger.dataset.signedIn = signedIn ? "1" : "0";
       trigger.textContent = signedIn ? label : "Team Sign In";
-      if (signedIn) trigger.dataset.initial = (label || "?").trim().charAt(0).toUpperCase();
+      const initial = (label || "?").trim().charAt(0).toUpperCase();
+      if (signedIn) trigger.dataset.initial = initial;
       if (menu) menu.hidden = !signedIn;
+      if (signedIn && menuHeader) {
+        menuHeader.innerHTML =
+          `<div class="team-profile-menu-avatar">${escapeHtml(initial)}</div>` +
+          `<div class="team-profile-menu-who"><div class="team-profile-menu-name">${escapeHtml(label || "")}</div>` +
+          (email ? `<div class="team-profile-menu-email">${escapeHtml(email)}</div>` : "") +
+          `</div>`;
+      }
       if (!signedIn) closeMenu();
     },
   };
@@ -591,7 +605,7 @@ async function boot() {
   }
   const [{ initializeApp }, authMod, fsMod] = firebaseMods;
   const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } = authMod;
-  const { getFirestore, collection, addDoc, doc, runTransaction, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
+  const { getFirestore, collection, addDoc, updateDoc, doc, runTransaction, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
 
   const app = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(app);
@@ -659,7 +673,7 @@ async function boot() {
   function refreshWho(user) {
     if (!user) return;
     const displayName = user.displayName || user.email.split("@")[0];
-    if (profileMenu) profileMenu.setSignedIn(true, displayName);
+    if (profileMenu) profileMenu.setSignedIn(true, displayName, user.email);
   }
   authApi = { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, refreshDisplay: () => refreshWho(auth.currentUser) };
 
@@ -895,7 +909,9 @@ async function boot() {
           </div>
           <div class="team-order-right">
             <span class="team-order-amount">${fmtINR(o.amount)}</span>
-            <span class="team-order-status status-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
+            <select class="team-order-status-select status-${o.status}" aria-label="Order status">
+              ${STATUS_ORDER.map((s) => `<option value="${s}"${s === o.status ? " selected" : ""}>${STATUS_LABEL[s]}</option>`).join("")}
+            </select>
             <button type="button" class="team-order-invoice-btn" aria-label="Download invoice">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
             </button>
@@ -1039,6 +1055,32 @@ async function boot() {
     btn.setAttribute("aria-expanded", String(nowOpen));
   });
 
+  // Moving an order through its stages (Placed → In Progress →
+  // Completed, or Cancelled/Failed at any point) writes straight to
+  // its Firestore doc — the live onSnapshot listener above re-renders
+  // every signed-in view of that order automatically, so nobody needs
+  // to refresh to see a status a teammate just changed.
+  orderList.addEventListener("change", async (e) => {
+    const select = e.target.closest(".team-order-status-select");
+    if (!select) return;
+    const card = select.closest(".team-order-card");
+    const order = renderedRows[Number(card.dataset.orderIdx)];
+    if (!order || !order.id) return;
+    const newStatus = select.value;
+    const previousClass = select.className;
+    select.className = `team-order-status-select status-${newStatus}`;
+    select.disabled = true;
+    try {
+      await updateDoc(doc(db, "orders", order.id), { status: newStatus });
+    } catch (err) {
+      select.className = previousClass;
+      select.value = order.status;
+      window.alert("Couldn't update the order's status — please try again.");
+    } finally {
+      select.disabled = false;
+    }
+  });
+
   // Deliberately NOT combined with orderBy("createdAt") here — a
   // where()+orderBy() on different fields is a composite query that
   // Firestore refuses to run without a manually-created index, and
@@ -1060,7 +1102,7 @@ async function boot() {
     unsubscribeOrders = onSnapshot(
       q,
       (snap) => {
-        allOrders = snap.docs.map((d) => d.data()).sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt));
+        allOrders = snap.docs.map((d) => ({ ...d.data(), id: d.id })).sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt));
         populateMemberFilterOptions();
         renderOrders();
       },
