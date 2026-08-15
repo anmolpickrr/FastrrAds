@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-60" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-60" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-60" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-60" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-60" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-60" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-60" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-60" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-60" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-60" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-60" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-60" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-62" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-62" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-62" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-62" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-62" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-62" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-62" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-62" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-62" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-62" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-62" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-62" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -887,20 +887,17 @@ html.is-internal .oc-offer{display:none !important;}
 }
 .oc-offer-code-status{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); transition:color .3s ease;}
 
-/* Softer than a flat two-hue diagonal — a dark scrim UNDER the
-   gradient (via background-blend-mode) mutes the bright midpoint band
-   a hard violet→teal blend produces, which is exactly what was
-   fighting the white "SAVE10" text's readability. The code chip
-   itself is now a solid dark pill rather than a translucent one, so
-   it reads clearly regardless of what the gradient looks like behind
-   it — readability no longer depends on getting the gradient exactly
-   right. */
+/* Two soft off-center glows on a near-solid dark base, instead of a
+   flat two-hue diagonal band — there's no hard edge or bright
+   midpoint for text to fight, and the near-solid base means the white
+   "SAVE10" text stays readable no matter how the glows fall. */
 .oc-offer.is-unlocked .oc-offer-stub{
-  background-image:linear-gradient(135deg, var(--violet), var(--teal));
-  background-color:rgba(10,8,20,.4);
-  background-blend-mode:multiply;
+  background-color:#161029;
+  background-image:
+    radial-gradient(130% 170% at 15% -20%, rgba(139,124,246,.62), transparent 62%),
+    radial-gradient(130% 170% at 95% 120%, rgba(47,217,196,.55), transparent 62%);
 }
-.oc-offer.is-unlocked .oc-offer-code{background:rgba(10,8,20,.4); border-color:rgba(255,255,255,.4); color:#fff;}
+.oc-offer.is-unlocked .oc-offer-code{background:rgba(8,6,18,.55); border-color:rgba(255,255,255,.4); color:#fff;}
 .oc-offer.is-unlocked .oc-offer-code-status{color:rgba(255,255,255,.8);}
 
 @keyframes offerFadeIn{0%{opacity:.55;}100%{opacity:1;}}
@@ -1066,6 +1063,24 @@ html.is-internal .oc-offer{display:none !important;}
 .team-order-status.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
 .team-order-status.status-failed{background:rgba(244,63,94,.14); color:var(--danger);}
 .team-order-status.status-cancelled{background:var(--surface-2); color:var(--text-2);}
+.team-order-view-btn{
+  display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
+  border-radius:8px; border:1px solid var(--line-soft); background:var(--surface-2); color:var(--text-2);
+  cursor:pointer; transition:background .2s ease, color .2s ease, border-color .2s ease; flex:0 0 auto;
+}
+.team-order-view-btn:hover{color:var(--text-0); border-color:var(--line);}
+.team-order-view-btn svg{width:15px; height:15px;}
+.team-order-card.is-open .team-order-view-btn{color:var(--violet); border-color:var(--violet);}
+.team-order-details{
+  flex-basis:100%; width:100%; margin-top:2px; padding-top:14px; border-top:1px dashed var(--line-soft);
+  display:none; grid-template-columns:1fr 1fr; gap:12px 24px;
+}
+.team-order-card.is-open .team-order-details{display:grid;}
+.team-order-detail-row{font-size:13px; color:var(--text-0); min-width:0;}
+.team-order-detail-row span{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); margin-bottom:3px;}
+.team-order-detail-row.span-2{grid-column:1 / -1;}
+.team-order-detail-row a{color:inherit;}
+@media (max-width:480px){.team-order-details{grid-template-columns:1fr;}}
 
 .ob-add-btn.flash{animation:obFlash .5s ease;}
 @keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
@@ -1371,8 +1386,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-60" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-60" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-62" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-62" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1790,8 +1805,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-60" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-60" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-62" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-62" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -2042,8 +2057,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
      no downloadPdfBtn for it to attach to anyway. -->
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-60"></script>
-<script src="assets/app.js?v=20260811-60"></script>
-<script type="module" src="assets/team.js?v=20260811-60"></script>
+<script src="assets/creative-data.js?v=20260811-62"></script>
+<script src="assets/app.js?v=20260811-62"></script>
+<script type="module" src="assets/team.js?v=20260811-62"></script>
 </body>
 </html>
