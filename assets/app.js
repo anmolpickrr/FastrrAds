@@ -10,6 +10,39 @@
   "use strict";
 
   /* ----------------------------------------------------------
+     0. ACCESS MODE (public vs internal team)
+     This is a static site with no backend — nothing here is real
+     security, just keeping the order-building/quoting tools out of a
+     public visitor's way. Internal team opens the site once via
+     ?team=1, which is remembered on that device from then on; the
+     param is stripped from the URL immediately after so it doesn't
+     linger in the address bar or browser history. Everything else on
+     the page (showcase, service scope, the single-creative price
+     calculator) stays visible to everyone — only the Order panel and
+     the Message Generator section are gated, since those are the
+     sales workflow, not the public-facing preview.
+  ---------------------------------------------------------- */
+  (function initAccessMode() {
+    const UNLOCK_PARAM = "team";
+    const params = new URLSearchParams(window.location.search);
+    let unlocked = false;
+    try {
+      unlocked = localStorage.getItem("fastrr-internal") === "1";
+    } catch (e) {}
+    if (params.has(UNLOCK_PARAM)) {
+      unlocked = true;
+      try {
+        localStorage.setItem("fastrr-internal", "1");
+      } catch (e) {}
+      params.delete(UNLOCK_PARAM);
+      const newSearch = params.toString();
+      const newUrl = window.location.pathname + (newSearch ? "?" + newSearch : "") + window.location.hash;
+      window.history.replaceState({}, "", newUrl);
+    }
+    document.documentElement.classList.toggle("is-internal", unlocked);
+  })();
+
+  /* ----------------------------------------------------------
      1. SERVICE / PACKAGE DATA MODEL
      Static & Carousel pricing preserved verbatim from the
      source prototype. AI Reel + 360° Catalogue pricing/rules

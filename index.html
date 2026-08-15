@@ -780,6 +780,21 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:18px; align-items:start;}
 @media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
 
+/* Public/internal split — see initAccessMode() in app.js. Default (no
+   .is-internal on <html>) is the public view: the Order panel, the
+   "Add to Order" action, and the whole Message Generator section (plus
+   its two nav links) are hidden, so a public visitor can browse
+   services and price a single creative but can't build or export an
+   order. Nothing here is a real access boundary, just keeping sales
+   tooling out of a visitor's way. */
+html:not(.is-internal) #ocPanel,
+html:not(.is-internal) #obAddBtn,
+html:not(.is-internal) #messages,
+html:not(.is-internal) a[href="#messages"]{
+  display:none !important;
+}
+html:not(.is-internal) .order-builder{grid-template-columns:1fr; max-width:640px;}
+
 .ob-panel,.oc-panel{padding:22px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:14px;}
 .ob-panel .field-row{margin-bottom:14px;}
@@ -990,8 +1005,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-25" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-25" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1378,8 +1393,8 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-25" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-25" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-26" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing — reels, catalogue videos, statics &amp; carousels, delivered fast.</p>
       </div>
@@ -1411,7 +1426,7 @@ footer{padding:56px 0 32px; border-top:1px solid var(--line-soft); margin-top:40
 
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-25"></script>
-<script src="assets/app.js?v=20260811-25"></script>
+<script src="assets/creative-data.js?v=20260811-26"></script>
+<script src="assets/app.js?v=20260811-26"></script>
 </body>
 </html>
