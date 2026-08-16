@@ -2576,6 +2576,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const badge = document.getElementById("fastyToggleBadge");
     const panel = document.getElementById("fastyPanel");
     const panelCloseBtn = document.getElementById("fastyPanelClose");
+    const panelExpandBtn = document.getElementById("fastyPanelExpand");
     const messagesEl = document.getElementById("fastyMessages");
     const quickEl = document.getElementById("fastyQuick");
     const form = document.getElementById("fastyForm");
@@ -2832,6 +2833,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function sendUserMessage(text) {
       const trimmed = text.trim();
       if (!trimmed) return;
+      // The starter chips only earn their space before the conversation
+      // has actually started — once someone's asked anything (typed or
+      // tapped a starter itself), that row is just eating room the
+      // messages above it could use, so it's cleared for the rest of
+      // this session rather than staying pinned under every reply.
+      quickEl.innerHTML = "";
       addMessage("user", escapeHtml(trimmed));
       input.value = "";
       respond(trimmed);
@@ -2863,9 +2870,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       if (widget.classList.contains("open")) closePanel();
       else openPanel();
     }
+    function toggleExpand() {
+      const expanded = panel.classList.toggle("is-expanded");
+      panelExpandBtn.setAttribute("aria-pressed", String(expanded));
+      panelExpandBtn.setAttribute("aria-label", expanded ? "Shrink chat" : "Expand chat");
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
 
     toggle.addEventListener("click", togglePanel);
     if (panelCloseBtn) panelCloseBtn.addEventListener("click", closePanel);
+    if (panelExpandBtn) panelExpandBtn.addEventListener("click", toggleExpand);
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && widget.classList.contains("open")) closePanel();
     });

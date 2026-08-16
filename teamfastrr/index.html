@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-89" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-89" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-89" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-89" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-89" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-89" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-89" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-89" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-89" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-89" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-89" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-89" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-90" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-90" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-90" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-90" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-90" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-90" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-90" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-90" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-90" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-90" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-90" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-90" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1446,11 +1446,16 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   border-radius:var(--radius); background:var(--bg-1); border:1px solid var(--line);
   box-shadow:var(--shadow-md), var(--inset-hi); overflow:hidden;
   transform-origin:bottom right;
+  transition:width .25s cubic-bezier(.16,1,.3,1), height .25s cubic-bezier(.16,1,.3,1);
 }
 .fasty-widget.open .fasty-panel{display:flex; animation:fastyPop .28s cubic-bezier(.16,1,.3,1);}
 @keyframes fastyPop{0%{opacity:0; transform:scale(.92) translateY(10px);}100%{opacity:1; transform:scale(1) translateY(0);}}
+/* Expanded — a roomier read for a longer back-and-forth, toggled by
+   the header's expand button rather than a separate full-screen mode,
+   so it's still the same docked widget, just bigger. */
+.fasty-panel.is-expanded{width:min(460px, calc(100vw - 40px)); height:min(680px, calc(100vh - 80px));}
 
-.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 12px 13px 16px; border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
+.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 10px 13px 16px; border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
 .fasty-avatar{
   width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
   background:var(--violet); color:#fff;
@@ -1459,15 +1464,20 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 .fasty-head-name{font-family:var(--font-display); font-weight:700; font-size:14.5px; color:var(--text-0);}
 .fasty-head-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-2);}
 .fasty-status-dot{width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 3px var(--teal-soft); flex:0 0 auto;}
-/* Small and quiet on purpose — a plain icon button, not a bordered
-   chip competing with the avatar/name for attention right next to it. */
-.fasty-head-close{
+/* Small and quiet on purpose — plain icon buttons, not bordered chips
+   competing with the avatar/name for attention right next to them. */
+.fasty-head-expand,.fasty-head-close{
   width:24px; height:24px; border-radius:50%; border:none; background:none; color:var(--text-2);
-  display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto; position:relative;
   transition:background .2s ease, color .2s ease;
 }
-.fasty-head-close svg{width:13px; height:13px;}
-.fasty-head-close:hover{color:var(--text-0); background:var(--surface-2);}
+.fasty-head-expand svg,.fasty-head-close svg{width:13px; height:13px;}
+.fasty-head-expand:hover,.fasty-head-close:hover{color:var(--text-0); background:var(--surface-2);}
+.fasty-expand-icon{position:absolute; transition:opacity .15s ease, transform .15s ease;}
+.fasty-icon-shrink{opacity:0; transform:scale(.7);}
+.fasty-head-expand[aria-pressed="true"] .fasty-icon-grow{opacity:0; transform:scale(.7);}
+.fasty-head-expand[aria-pressed="true"] .fasty-icon-shrink{opacity:1; transform:scale(1);}
+@media (max-width:480px){.fasty-head-expand{display:none;}}
 
 .fasty-messages{flex:1 1 auto; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth;}
 .fasty-msg{display:flex; max-width:88%;}
@@ -1530,8 +1540,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-90" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-90" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1945,8 +1955,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-90" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-90" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2217,8 +2227,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
      no downloadPdfBtn for it to attach to anyway. -->
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-89"></script>
-<script src="assets/app.js?v=20260811-89"></script>
-<script type="module" src="assets/team.js?v=20260811-89"></script>
+<script src="assets/creative-data.js?v=20260811-90"></script>
+<script src="assets/app.js?v=20260811-90"></script>
+<script type="module" src="assets/team.js?v=20260811-90"></script>
 </body>
 </html>
