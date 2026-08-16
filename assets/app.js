@@ -2616,22 +2616,23 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const cut = d.name.replace("AI Reel — ", "");
       const deliveryRaw = d.turnaround.split(" after")[0];
       const delivery = deliveryRaw.charAt(0).toLowerCase() + deliveryRaw.slice(1);
-      return `<p><b>${escapeHtml(cut)}</b> — ${fmtINR(d.basePrice)}/reel. ${escapeHtml(d.short)}</p><p>${d.duration}, ${d.revisions}. Delivered in ${escapeHtml(delivery)}.</p>`;
+      return `<p>Good pick 🙂 Our <b>${escapeHtml(cut)}</b> is ${fmtINR(d.basePrice)} per reel. ${escapeHtml(d.short)}</p><p>You're looking at ${d.duration.toLowerCase()}, with ${d.revisions.toLowerCase()} included, and we'd usually have it delivered in ${escapeHtml(delivery)}.</p>`;
     }
 
     /* ---- knowledge base ----
-       Short, conversational replies — 1-2 short lines, not paragraphs —
-       and ordered most-specific first, so e.g. "director's cut price"
-       hits the exact-cut entry rather than the generic reel/pricing
-       ones. A couple of entries (which AI Reel, which service) ask a
-       quick clarifying question with option chips instead of dumping
-       every detail at once, closer to how a person would actually
-       help someone figure out what they need. */
+       Warm and conversational, like a helpful teammate talking someone
+       through their options — not a terse fact dump. Ordered most-
+       specific first, so e.g. "director's cut price" hits the exact-
+       cut entry rather than the generic reel/pricing ones. A couple of
+       entries (which AI Reel, which service) ask a quick clarifying
+       question with option chips instead of listing every detail at
+       once, closer to how a person would actually help someone figure
+       out what they need. */
     const KB = [
       {
         id: "greeting",
         test: /\b(hi|hii+|hello+|hey+|yo|namaste)\b/i,
-        reply: () => `<p>Hey! 👋 I'm Fasty. Ask me anything about our services, pricing, or how ordering works.</p>`,
+        reply: () => `<p>Hey there! 👋 Happy to help — feel free to ask me anything about our services, pricing, or how ordering works.</p>`,
       },
       {
         id: "reelSpecific",
@@ -2645,7 +2646,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       {
         id: "reelsGeneric",
         test: /\b(reel|reels|ai reel)\b/i,
-        reply: () => `<p>Sure 😊 Which AI Reel cut are you looking for?</p>`,
+        reply: () => `<p>Great choice — AI Reels are one of our most popular formats 😊 We've got a few cuts depending on how much creative input you'd like. Which one sounds right for you?</p>`,
         actions: () => REEL_TIERS.map((t) => ({ label: t.label, onClick: () => sendUserMessage(t.label) })),
       },
       {
@@ -2653,7 +2654,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\b(catalogue|catalog|360)\b/i,
         reply: () => {
           const d = DATA.catalogue;
-          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/SKU. ${escapeHtml(d.short)}</p><p>${d.duration}, ${d.revisions.toLowerCase()}. Delivered in 24–48 hrs.</p>`;
+          return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24–48 hours.</p>`;
         },
         actions: () => [ACTION_QUOTE],
       },
@@ -2662,7 +2663,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\bstatic\b/i,
         reply: () => {
           const d = DATA.static;
-          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/creative. ${escapeHtml(d.short)}</p><p>${escapeHtml(d.format)}, ${d.revisions.toLowerCase()}. Delivered in 24 hrs.</p>`;
+          return `<p>Of course! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per creative. ${escapeHtml(d.short)}</p><p>Comes in ${escapeHtml(d.format)}, with ${d.revisions.toLowerCase()} included, delivered within about 24 hours.</p>`;
         },
         actions: () => [ACTION_QUOTE],
       },
@@ -2671,14 +2672,14 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\bcarousel\b/i,
         reply: () => {
           const d = DATA.carousel;
-          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/carousel. ${escapeHtml(d.short)}</p><p>${d.duration}, ${d.revisions.toLowerCase()}. Delivered in 24–48 hrs.</p>`;
+          return `<p>Happy to help! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per carousel. ${escapeHtml(d.short)}</p><p>It's ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and usually takes 24–48 hours to deliver.</p>`;
         },
         actions: () => [ACTION_QUOTE],
       },
       {
         id: "services",
         test: /\b(service|services|what do you (offer|do)|options|packages)\b/i,
-        reply: () => `<p>We make 4 kinds of ad creative — AI Reels, 360° Catalogue Videos, Statics, and Carousels 🎬</p><p>Which one are you curious about?</p>`,
+        reply: () => `<p>We'd love to help you with that 🎬 We work across 4 formats — AI Reels, 360° Catalogue Videos, Statics, and Carousels — and I'm happy to walk you through any of them.</p><p>Which one would you like to know more about?</p>`,
         actions: () => [
           { label: "AI Reels", onClick: () => sendUserMessage("AI Reels") },
           { label: "Catalogue Video", onClick: () => sendUserMessage("Catalogue Video") },
@@ -2689,24 +2690,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       {
         id: "minOrder",
         test: /\b(minimum|min\.?\s?order)\b/i,
-        reply: () => `<p>Minimum order's ₹10,000 — mix and match anything to get there, the calculator keeps a running total for you.</p>`,
+        reply: () => `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there — the calculator will keep a running total for you as you go.</p>`,
         actions: () => [ACTION_QUOTE],
       },
       {
         id: "discount",
         test: /\b(discount|coupon|save10|offer|deal)\b/i,
-        reply: () => `<p>Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} auto-apply <b>${PUBLIC_OFFER_CODE}</b> for ${PUBLIC_OFFER_PCT}% off ✨ Nothing to enter, it just kicks in.</p>`,
+        reply: () => `<p>You're in luck ✨ Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically get <b>${PUBLIC_OFFER_CODE}</b> applied for ${PUBLIC_OFFER_PCT}% off — nothing you need to do, it just kicks in for you.</p>`,
         actions: () => [ACTION_QUOTE],
       },
       {
         id: "gst",
         test: /\b(gst|tax|taxes)\b/i,
-        reply: () => `<p>GST (18%) is already baked into your total — what you see at checkout is what you pay.</p>`,
+        reply: () => `<p>No surprises there — GST (18%) is already included in your total, so what you see at checkout is exactly what you'll pay.</p>`,
       },
       {
         id: "pricing",
         test: /\b(price|pricing|cost|how much|rate|rates|charges)\b/i,
-        reply: () => `<p>Starting from: Reels ${fmtINR(START_PRICE.reels)}, Catalogue ${fmtINR(START_PRICE.catalogue)}, Static ${fmtINR(START_PRICE.static)}, Carousel ${fmtINR(START_PRICE.carousel)}.</p><p>Which one do you want the exact price for?</p>`,
+        reply: () => `<p>Happy to break that down for you 🙂 Roughly, we start from ${fmtINR(START_PRICE.reels)} for Reels, ${fmtINR(START_PRICE.catalogue)} for Catalogue Videos, ${fmtINR(START_PRICE.static)} for Statics, and ${fmtINR(START_PRICE.carousel)} for Carousels.</p><p>Would you like the exact price for one of these?</p>`,
         actions: () => [
           { label: "AI Reels", onClick: () => sendUserMessage("AI Reels") },
           { label: "Catalogue Video", onClick: () => sendUserMessage("Catalogue Video") },
@@ -2717,35 +2718,35 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       {
         id: "orderProcess",
         test: /\b(order process|how (do|to) (i|you) order|place (an|my) order|how does ordering work|how to buy|how do i buy)\b/i,
-        reply: () => `<p>Pretty simple 🙂</p><p>Pick a service below, set your quantity, and add it to your order — do that for anything else you need, then hit Place Your Order and share your details. We take it from there.</p>`,
+        reply: () => `<p>It's pretty straightforward, happy to walk you through it 🙂</p><p>You'd start by picking a service and setting your quantity below, then add it to your order — feel free to do that for anything else you need too. Once you're ready, just hit Place Your Order and share a few details, and we'll take it from there.</p>`,
         actions: () => [ACTION_QUOTE, ACTION_SERVICES],
       },
       {
         id: "turnaround",
         test: /\b(turnaround|delivery time|how long|how fast|when will|days? to deliver)\b/i,
-        reply: () => `<p>Depends on the creative — Reels take 1–5 working days depending on cut, everything else is 24–48 hrs. Clock starts once we've got everything we need from you, not on payment.</p>`,
+        reply: () => `<p>That really depends on what you're going for — Reels usually take 1–5 working days depending on the cut, while everything else is typically 24–48 hours. Just to note, the clock starts once we've received everything we need from you, not from the payment date.</p>`,
       },
       {
         id: "revisions",
         test: /\b(revision|revisions|edits?|changes)\b/i,
-        reply: () => `<p>Varies by service — anywhere from none on Catalogue Video to 2 on our Studio Cut reel. Which one did you have in mind?</p>`,
+        reply: () => `<p>That varies a bit by service — anywhere from no revisions on Catalogue Video up to 2 on our Studio Cut reel. Which one did you have in mind? I can give you the exact number.</p>`,
         actions: () => [ACTION_SERVICES],
       },
       {
         id: "contact",
         test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to)\b/i,
-        reply: () => `<p>Sure thing 🙂 Let's get you connected.</p>`,
+        reply: () => `<p>Of course, happy to connect you 🙂 Let me open our contact form so you can share a bit about what you need — our team will take it from there.</p>`,
         actions: () => [ACTION_TALK],
       },
       {
         id: "thanks",
         test: /\b(thank|thanks|thx|thankyou)\b/i,
-        reply: () => `<p>Anytime! Let me know if anything else comes up 🙂</p>`,
+        reply: () => `<p>You're very welcome! Happy to help anytime — just let me know if anything else comes to mind 🙂</p>`,
       },
       {
         id: "bye",
         test: /\b(bye|goodbye|see ya|cya)\b/i,
-        reply: () => `<p>Take care 👋</p>`,
+        reply: () => `<p>Take care, and thanks for stopping by! 👋 I'll be right here if you need anything else.</p>`,
       },
     ];
 
@@ -2804,7 +2805,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         } else {
           addMessage(
             "bot",
-            `<p>Hmm, not quite sure I follow 🤔</p><p>Try asking about services, pricing, or how ordering works — or I can connect you with the team.</p>`,
+            `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works — happy to help if you'd like to try again, or I can connect you with the team directly.</p>`,
             [ACTION_SERVICES, ACTION_TALK]
           );
         }
@@ -2850,7 +2851,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       seeded = true;
       addMessage(
         "bot",
-        `<p>Hi, I'm Fasty 👋 I can help you understand our services, pricing, and how ordering works. What would you like to know?</p>`
+        `<p>Hi there, I'm Fasty 👋 I'm here to help you find your way around our services, pricing, and the ordering process. What can I help you with today?</p>`
       );
       renderQuickChips();
     }
