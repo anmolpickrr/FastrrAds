@@ -2885,7 +2885,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
     document.addEventListener("click", (e) => {
       if (!widget.classList.contains("open")) return;
-      if (widget.contains(e.target)) return;
+      // composedPath() is captured at dispatch time, so it still lists
+      // the widget as an ancestor even when a click handler earlier in
+      // the same bubble phase detaches the clicked element from the DOM
+      // (e.g. a quick-reply chip that clears its own parent's innerHTML
+      // on click) — a live widget.contains(e.target) check would miss
+      // that case, since the now-detached node no longer has the widget
+      // anywhere in its (empty) ancestor chain, and incorrectly close
+      // the panel out from under the very click that was inside it.
+      const path = typeof e.composedPath === "function" ? e.composedPath() : [];
+      if (path.includes(widget) || widget.contains(e.target)) return;
       closePanel();
     });
 
