@@ -2503,32 +2503,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     items.forEach((i) => io.observe(i));
   })();
 
-  // Footer wordmark's shine loop starts on first scroll-into-view (see
-  // .footer-mark.in-view in the CSS, which flips animation-play-state
-  // from paused to running) rather than running the whole time it's
-  // off-screen — separate from the generic reveal-on-scroll above
-  // since this drives an animation trigger, not an opacity fade.
-  (function footerMarkReveal() {
-    const mark = document.querySelector(".footer-mark");
-    if (!mark) return;
-    if (!("IntersectionObserver" in window)) {
-      mark.classList.add("in-view");
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            mark.classList.add("in-view");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-    io.observe(mark);
-  })();
-
   /* ----------------------------------------------------------
      12. NAV: smooth scroll + active link highlight
   ---------------------------------------------------------- */
@@ -2583,9 +2557,323 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   };
 
   /* ----------------------------------------------------------
+     FASTY — public-only FAQ assistant. Entirely client-side pattern
+     matching against a small knowledge base built from this file's
+     own DATA/pricing constants (not a hard-coded copy of them), so an
+     answer can never quote a price that's out of sync with what the
+     calculator itself shows. No network calls, nothing to configure —
+     this is deliberately a fast, predictable FAQ layer, not a general
+     LLM chat. The DOM guard below is what actually keeps this off the
+     team build: the markup itself is stripped out at build time (see
+     TEAM:STRIP in src/master.html), so #fastyWidget simply doesn't
+     exist there and this whole function becomes a no-op.
+  ---------------------------------------------------------- */
+  function initFasty() {
+    const widget = document.getElementById("fastyWidget");
+    if (!widget) return;
+
+    const toggle = document.getElementById("fastyToggle");
+    const badge = document.getElementById("fastyToggleBadge");
+    const panel = document.getElementById("fastyPanel");
+    const panelCloseBtn = document.getElementById("fastyPanelClose");
+    const messagesEl = document.getElementById("fastyMessages");
+    const quickEl = document.getElementById("fastyQuick");
+    const form = document.getElementById("fastyForm");
+    const input = document.getElementById("fastyInput");
+    if (!toggle || !panel || !messagesEl || !form || !input) return;
+
+    const START_PRICE = { catalogue: DATA.catalogue.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
+
+    function scrollToSelector(sel) {
+      const el = document.querySelector(sel);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      closePanel();
+    }
+    function openLead() {
+      const btn = document.querySelector(".js-open-lead-modal");
+      if (btn) btn.click();
+    }
+    const ACTION_QUOTE = { label: "Open quote builder", onClick: () => scrollToSelector("#quote") };
+    const ACTION_SERVICES = { label: "See Services", onClick: () => scrollToSelector("#services") };
+    const ACTION_TALK = { label: "Talk to the team", onClick: () => openLead() };
+
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    /* ---- knowledge base ----
+       Ordered most-specific first: a message like "reel pricing" should
+       hit the AI Reel entry, not the generic pricing one, so specific
+       service/topic entries are tested before their broader fallbacks. */
+    const KB = [
+      {
+        id: "greeting",
+        test: /\b(hi|hii+|hello+|hey+|yo|namaste)\b/i,
+        reply: () =>
+          `<p>Hey there 👋 I'm Fasty. Ask me about our services, pricing, turnaround times, or how ordering works, or tap one of the options below.</p>`,
+      },
+      {
+        id: "reels",
+        test: /\b(reel|reels|quick cut|story cut|director'?s cut|studio cut|ai reel)\b/i,
+        reply: () => {
+          const tiers = [DATA.reel1, DATA.reel2, DATA.reel3, DATA.reel4];
+          const rows = tiers.map((d) => `<li><b>${escapeHtml(d.name.replace("AI Reel — ", ""))}</b> — ${fmtINR(d.basePrice)}/reel, ${d.duration}, ${d.revisions}.</li>`).join("");
+          return `<p>We offer 4 AI Reel cuts, all 9:16 vertical:</p><ul>${rows}</ul><p>Every cut includes AI voiceover in Hindi or English. Higher cuts add script/hook approval, more revisions, and creative input.</p>`;
+        },
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "catalogue",
+        test: /\b(catalogue|catalog|360)\b/i,
+        reply: () => {
+          const d = DATA.catalogue;
+          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/SKU.</p><p>${escapeHtml(d.short)} ${d.duration}, ${escapeHtml(d.format)}. Turnaround: ${escapeHtml(d.turnaround)}</p>`;
+        },
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "static",
+        test: /\bstatic\b/i,
+        reply: () => {
+          const d = DATA.static;
+          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/creative.</p><p>${escapeHtml(d.short)} ${escapeHtml(d.format)}, ${d.revisions}. Turnaround: ${escapeHtml(d.turnaround)}</p>`;
+        },
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "carousel",
+        test: /\bcarousel\b/i,
+        reply: () => {
+          const d = DATA.carousel;
+          return `<p><b>${escapeHtml(d.name)}</b> — ${fmtINR(d.basePrice)}/carousel.</p><p>${escapeHtml(d.short)} ${d.duration}, ${escapeHtml(d.format)}. Turnaround: ${escapeHtml(d.turnaround)}</p>`;
+        },
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "services",
+        test: /\b(service|services|what do you (offer|do)|options|packages)\b/i,
+        reply: () =>
+          `<p>We produce 4 types of ad creative:</p><ul>` +
+          `<li><b>AI Reels</b> — from ${fmtINR(START_PRICE.reels)}/reel, 4 cuts to choose from</li>` +
+          `<li><b>360° Catalogue Video</b> — from ${fmtINR(START_PRICE.catalogue)}/SKU</li>` +
+          `<li><b>Static Creative</b> — from ${fmtINR(START_PRICE.static)}/creative</li>` +
+          `<li><b>Carousel Creative</b> — from ${fmtINR(START_PRICE.carousel)}/carousel</li>` +
+          `</ul><p>Ask me about any of these for the full details, or jump straight into building a quote.</p>`,
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "minOrder",
+        test: /\b(minimum|min\.?\s?order)\b/i,
+        reply: () => `<p>There's a ₹10,000 minimum per order. You can mix and match any services or cuts to reach it — the calculator always shows your running total as you build.</p>`,
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "discount",
+        test: /\b(discount|coupon|save10|offer|deal)\b/i,
+        reply: () =>
+          `<p>Orders above ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically apply code <b>${PUBLIC_OFFER_CODE}</b> for ${PUBLIC_OFFER_PCT}% off — no code to enter, it unlocks itself in your order summary once you cross the threshold.</p>`,
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "gst",
+        test: /\b(gst|tax|taxes)\b/i,
+        reply: () => `<p>GST (18%) is included automatically in your final total at checkout. Prices shown elsewhere on the page are pre-GST, per-unit prices.</p>`,
+      },
+      {
+        id: "pricing",
+        test: /\b(price|pricing|cost|how much|rate|rates|charges)\b/i,
+        reply: () =>
+          `<p>Starting prices: AI Reels from ${fmtINR(START_PRICE.reels)}/reel, Catalogue Video from ${fmtINR(START_PRICE.catalogue)}/SKU, Static from ${fmtINR(START_PRICE.static)}/creative, Carousel from ${fmtINR(START_PRICE.carousel)}/carousel.</p><p>Minimum order value is ₹10,000, and orders above ${fmtINR(PUBLIC_OFFER_THRESHOLD)} auto-apply ${PUBLIC_OFFER_PCT}% off. Build a quote below to see your exact total.</p>`,
+        actions: () => [ACTION_QUOTE],
+      },
+      {
+        id: "orderProcess",
+        test: /\b(order process|how (do|to) (i|you) order|place (an|my) order|how does ordering work|how to buy|how do i buy)\b/i,
+        reply: () =>
+          `<p>Placing an order takes 4 steps:</p><ul>` +
+          `<li>Pick a service and cut in the Services section — you'll see exactly what's included</li>` +
+          `<li>Configure quantity in the Quote &amp; Price Calculator and add it to your order</li>` +
+          `<li>Repeat for any other creatives you need — your total updates live</li>` +
+          `<li>Click Place Your Order and share your details — our team reaches out to confirm everything</li>` +
+          `</ul>`,
+        actions: () => [ACTION_QUOTE, ACTION_SERVICES],
+      },
+      {
+        id: "turnaround",
+        test: /\b(turnaround|delivery time|how long|how fast|when will|days? to deliver)\b/i,
+        reply: () =>
+          `<p>Turnaround is per creative and starts once we've received everything we need from you (assets and details), not your payment date. Typical ranges: AI Reels 1–5 working days depending on cut, Catalogue Video 24–48 hours/SKU, Static 24 hours, Carousel 24–48 hours.</p><p>For bulk orders or multiple creative types, actual delivery depends on quantity, creative type, and complexity — not just the single-creative number.</p>`,
+      },
+      {
+        id: "revisions",
+        test: /\b(revision|revisions|edits?|changes)\b/i,
+        reply: () =>
+          `<p>Revisions vary by service and cut — from no revisions on Catalogue Video up to 2 on our Studio Cut reel. Tell me which service you're asking about and I'll give you the exact number, or check the Included tab on the Services section.</p>`,
+        actions: () => [ACTION_SERVICES],
+      },
+      {
+        id: "contact",
+        test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to)\b/i,
+        reply: () => `<p>I'll open our contact form so you can share your requirement directly with the team — they'll get back to you.</p>`,
+        actions: () => [ACTION_TALK],
+      },
+      {
+        id: "thanks",
+        test: /\b(thank|thanks|thx|thankyou)\b/i,
+        reply: () => `<p>Anytime! Let me know if anything else comes up.</p>`,
+      },
+      {
+        id: "bye",
+        test: /\b(bye|goodbye|see ya|cya)\b/i,
+        reply: () => `<p>Take care 👋 — I'll be right here if you need anything else.</p>`,
+      },
+    ];
+
+    function findAnswer(text) {
+      for (const entry of KB) {
+        if (entry.test.test(text)) return entry;
+      }
+      return null;
+    }
+
+    function addMessage(role, html, actions) {
+      const row = document.createElement("div");
+      row.className = "fasty-msg " + role;
+      const bubble = document.createElement("div");
+      bubble.className = "fasty-msg-bubble";
+      bubble.innerHTML = html;
+      if (actions && actions.length) {
+        const actWrap = document.createElement("div");
+        actWrap.className = "fasty-msg-actions";
+        actions.forEach((a) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "fasty-msg-action";
+          b.textContent = a.label;
+          b.addEventListener("click", a.onClick);
+          actWrap.appendChild(b);
+        });
+        bubble.appendChild(actWrap);
+      }
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function showTyping() {
+      const row = document.createElement("div");
+      row.className = "fasty-msg bot";
+      row.id = "fastyTypingRow";
+      row.innerHTML = '<div class="fasty-msg-bubble"><div class="fasty-typing"><span></span><span></span><span></span></div></div>';
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    function hideTyping() {
+      const row = document.getElementById("fastyTypingRow");
+      if (row) row.remove();
+    }
+
+    function respond(text) {
+      showTyping();
+      const delay = 380 + Math.random() * 340;
+      setTimeout(() => {
+        hideTyping();
+        const match = findAnswer(text);
+        if (match) {
+          addMessage("bot", match.reply(), match.actions ? match.actions() : null);
+        } else {
+          addMessage(
+            "bot",
+            `<p>I couldn't quite catch that. Try asking about services, pricing, turnaround, discounts, or how ordering works — or tap "Talk to the team" and we'll take it from there.</p>`,
+            [ACTION_SERVICES, ACTION_TALK]
+          );
+        }
+      }, delay);
+    }
+
+    const QUICK_STARTERS = [
+      { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
+      { label: "How does ordering work?", text: "How does the order process work?" },
+      { label: "Turnaround time", text: "What's the turnaround time?" },
+      { label: "Discounts & GST", text: "Tell me about discounts and GST" },
+      { label: "Talk to the team", text: "I'd like to talk to the team" },
+    ];
+    function renderQuickChips() {
+      quickEl.innerHTML = "";
+      QUICK_STARTERS.forEach((q) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "fasty-quick-chip";
+        b.textContent = q.label;
+        b.addEventListener("click", () => sendUserMessage(q.text));
+        quickEl.appendChild(b);
+      });
+    }
+
+    function sendUserMessage(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      addMessage("user", escapeHtml(trimmed));
+      input.value = "";
+      respond(trimmed);
+    }
+
+    let seeded = false;
+    function seedGreeting() {
+      if (seeded) return;
+      seeded = true;
+      addMessage(
+        "bot",
+        `<p>Hi, I'm Fasty 👋 I can help you understand our services, pricing, and how ordering works. What would you like to know?</p>`
+      );
+      renderQuickChips();
+    }
+
+    function openPanel() {
+      widget.classList.add("open");
+      toggle.setAttribute("aria-expanded", "true");
+      if (badge) badge.hidden = true;
+      seedGreeting();
+      setTimeout(() => input.focus(), 150);
+    }
+    function closePanel() {
+      widget.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+    function togglePanel() {
+      if (widget.classList.contains("open")) closePanel();
+      else openPanel();
+    }
+
+    toggle.addEventListener("click", togglePanel);
+    if (panelCloseBtn) panelCloseBtn.addEventListener("click", closePanel);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && widget.classList.contains("open")) closePanel();
+    });
+    document.addEventListener("click", (e) => {
+      if (!widget.classList.contains("open")) return;
+      if (widget.contains(e.target)) return;
+      closePanel();
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      sendUserMessage(input.value);
+    });
+
+    // A one-time attention badge — appears a few seconds after load if
+    // the visitor hasn't opened the chat yet, quietly inviting a first
+    // look rather than auto-opening the panel and interrupting them.
+    setTimeout(() => {
+      if (!widget.classList.contains("open") && badge) badge.hidden = false;
+    }, 4000);
+  }
+
+  /* ----------------------------------------------------------
      INIT
   ---------------------------------------------------------- */
   restoreState();
   renderShowcase("reels");
   render();
+  initFasty();
 })();
