@@ -600,22 +600,28 @@
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
   const svcPanelHost = document.getElementById("svcPanelHost");
+  const svcPanelInner = document.getElementById("svcPanelInner");
   const tierRow = document.getElementById("tierRow");
   const scopePanel = document.getElementById("scopePanel");
+  let lastNavService = null;
 
   function renderServiceNav() {
-    svcNav.querySelectorAll(".svc-item-header").forEach((btn) => {
+    svcNav.querySelectorAll(".svc-tab-btn").forEach((btn) => {
       const isActive = btn.dataset.svc === state.service;
-      btn.setAttribute("aria-expanded", String(isActive));
-      const item = btn.closest(".svc-item");
-      if (item) item.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", String(isActive));
+      btn.classList.toggle("active", isActive);
     });
-    // Docks the one shared detail panel inside whichever card is
-    // currently selected, so the panel physically lives inside the
-    // active .svc-item rather than in a separate box below the row —
-    // picking a service visibly expands that exact card.
-    const slot = svcNav.querySelector(`.svc-item-slot[data-slot="${state.service}"]`);
-    if (slot && svcPanelHost.parentElement !== slot) slot.appendChild(svcPanelHost);
+    // The panel is a fixed, permanent card — nothing above or below it
+    // ever moves. What communicates "you switched services" is a short
+    // re-triggered cross-fade of its content, only when the service
+    // actually changed (render() runs on plenty of unrelated state
+    // changes too, e.g. cart edits, which shouldn't replay this).
+    if (state.service !== lastNavService) {
+      lastNavService = state.service;
+      svcPanelInner.classList.remove("is-entering");
+      void svcPanelInner.offsetWidth;
+      svcPanelInner.classList.add("is-entering");
+    }
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
@@ -1337,7 +1343,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-item-header, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+        ".svc-tab-btn, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
       );
       if (!el) return;
       e.preventDefault();
@@ -1349,7 +1355,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".svc-item-header").forEach((btn) => {
+  svcNav.querySelectorAll(".svc-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.service = btn.dataset.svc;
