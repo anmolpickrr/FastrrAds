@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-96" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-96" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-96" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-96" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-96" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-96" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-96" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-96" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-96" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-96" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-96" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-96" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-98" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-98" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-98" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-98" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-98" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-98" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-98" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-98" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-98" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-98" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-98" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-98" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -561,53 +561,58 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 @media (max-width:700px){.lb-prev,.lb-next{width:38px; height:38px;} .lb-prev{left:8px;} .lb-next{right:8px;} .lb-close{top:10px; right:10px;}}
 
 /* ---------- SERVICES ----------
-   One service selected at a time via the numbered index tabs, one
-   bounded panel below holding everything about it — functional flow,
-   not a grid of always-visible pricing cards. The panel itself gets a
-   subtle boundary + top accent so it reads as a defined, structured
-   piece of the page rather than open-ended text, while the tab bar
-   inside (Included/Not Included/Client Provides) keeps only one list
-   on screen at a time so the panel never has to carry everything at
-   once. */
-.svc-nav{
-  display:flex; flex-wrap:wrap; gap:10px;
-  margin-bottom:12px;
+   A true accordion, not a row of tabs sitting above an unrelated
+   panel: each service is its own card (.svc-item) with a header row
+   that's always visible, and the one shared detail panel physically
+   docks inside whichever card is currently active (moved by JS, see
+   renderServiceNav() in app.js) — so selecting a service visibly
+   expands that exact card open, and the other three stay collapsed,
+   muted rows beside it. No gradient anywhere here; the active state
+   is carried by a solid violet border + fill tint plus a rotated
+   chevron, nothing else. */
+.svc-accordion{display:flex; flex-direction:column; gap:10px; margin-bottom:24px;}
+.svc-item{
+  border-radius:var(--radius-sm); background:var(--surface-1); border:1px solid var(--line);
+  opacity:.6; overflow:hidden;
+  transition:opacity .3s ease, background .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
-.svc-tab{
-  display:flex; align-items:center; gap:13px; padding:14px 18px; flex:1 1 200px;
-  background:var(--surface-1); border:1px solid var(--line); border-radius:var(--radius-sm);
-  text-align:left; position:relative; opacity:.55;
-  transition:opacity .3s ease, background .3s ease, border-color .3s ease, box-shadow .3s ease, transform .2s ease;
+.svc-item:hover{opacity:.85;}
+.svc-item.active{
+  opacity:1; background:var(--glass); border-color:var(--violet);
+  box-shadow:0 10px 26px -14px var(--violet-soft), var(--inset-hi);
 }
-.svc-tab-index{font-family:var(--font-mono); font-size:12px; color:var(--text-2); transition:color .3s ease;}
-.svc-tab-body{display:flex; flex-direction:column; gap:5px;}
-.svc-tab-name{
-  font-family:var(--font-display); font-size:clamp(15px,1.6vw,17px); font-weight:700; letter-spacing:-0.01em;
-  color:var(--text-1); transition:color .3s ease;
+.svc-item-header{
+  width:100%; display:flex; align-items:center; gap:16px; padding:17px 20px;
+  background:none; border:none; text-align:left; cursor:pointer; color:inherit;
 }
-.svc-tab-price{font-family:var(--font-mono); font-size:11.5px; color:var(--text-2); transition:color .3s ease;}
-.svc-tab:hover{opacity:.85; background:var(--surface-hover);}
-.svc-tab.active{
-  opacity:1; background:linear-gradient(135deg,var(--violet-soft),var(--surface-1)); border-color:var(--violet);
-  box-shadow:0 10px 24px -12px var(--violet-soft), var(--inset-hi); transform:translateY(-1px);
+.svc-item-index{font-family:var(--font-mono); font-size:12px; color:var(--text-2); flex:0 0 auto; transition:color .3s ease;}
+.svc-item.active .svc-item-index{color:var(--violet); font-weight:700;}
+.svc-item-name{
+  flex:1 1 auto; min-width:0; font-family:var(--font-display); font-size:clamp(15px,1.6vw,17px); font-weight:700;
+  letter-spacing:-0.01em; color:var(--text-1); transition:color .3s ease;
 }
-.svc-tab.active .svc-tab-name{color:var(--text-0);}
-.svc-tab.active .svc-tab-index{color:var(--violet); font-weight:700;}
-.svc-tab.active .svc-tab-price{color:var(--teal);}
-.svc-tab:focus-visible{outline:none; opacity:.85; border-color:var(--violet);}
-@media (max-width:640px){.svc-tab{flex:1 1 100%;}}
+.svc-item.active .svc-item-name{color:var(--text-0);}
+.svc-item-price{font-family:var(--font-mono); font-size:11.5px; color:var(--text-2); flex:0 0 auto; transition:color .3s ease;}
+.svc-item.active .svc-item-price{color:var(--teal);}
+.svc-item-chevron{width:15px; height:15px; flex:0 0 auto; color:var(--text-2); transition:transform .3s var(--ease), color .3s ease;}
+.svc-item.active .svc-item-chevron{color:var(--violet); transform:rotate(180deg);}
+.svc-item-header:focus-visible{outline:none;}
+.svc-item-header:focus-visible .svc-item-chevron{color:var(--violet);}
+@media (max-width:480px){
+  .svc-item-header{gap:10px; padding:15px 16px;}
+  .svc-item-price{display:none;}
+}
 
-/* A solid violet top edge, not a gradient bar — reads as "this panel
-   belongs to the active card above it" (same accent color as the
-   active .svc-tab's border) without a second decorative stripe. The
-   nav sits close above with the gap tightened (see .svc-nav) so the
-   two visually read as one connected unit — the active card opening
-   straight down into this panel — rather than two separate boxes. */
-.svc-panel{
-  position:relative; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
-  border-top:2px solid var(--violet); box-shadow:var(--shadow-sm); overflow:hidden;
-}
-.svc-panel-inner{padding:28px clamp(20px,4vw,40px) 36px;}
+.svc-item-slot:empty{display:none;}
+
+/* The shared panel now lives inside whichever card is active (a
+   direct child of .svc-item-slot), so it only needs a top divider
+   and its own fade/slide-in on open, not a card shell of its own —
+   the parent .svc-item already supplies the border, fill, and
+   shadow. */
+.svc-panel{border-top:1px solid var(--line-soft); animation:svcPanelOpen .32s cubic-bezier(.16,1,.3,1);}
+@keyframes svcPanelOpen{0%{opacity:0; transform:translateY(-8px);}100%{opacity:1; transform:translateY(0);}}
+.svc-panel-inner{padding:24px clamp(20px,4vw,40px) 32px;}
 .svc-panel-head{
   display:flex; justify-content:space-between; align-items:flex-end; gap:28px; flex-wrap:wrap;
   padding-bottom:26px; border-bottom:1px solid var(--line-soft);
@@ -1450,9 +1455,16 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
    surface. Stays up (see initFasty() in app.js) until the visitor
    either opens the chat or dismisses it directly, gently breathing
    in and out on a slow loop the whole time so it stays noticeable
-   without ever feeling like it's flashing or demanding attention. */
+   without ever feeling like it's flashing or demanding attention.
+   Right-anchored to the toggle's own right edge (the same edge the
+   badge sits against), not centered over it — the bubble is wider
+   than the 48px button, and centering it can push its far edge past
+   the viewport's right border when the widget sits close to that
+   edge (e.g. narrower windows). Anchoring right and growing left
+   keeps the whole bubble on-screen regardless of width or viewport
+   size. */
 .fasty-hint{
-  position:absolute; bottom:calc(100% + 12px); right:50%; transform:translateX(50%) translateY(6px);
+  position:absolute; bottom:calc(100% + 12px); right:0; transform:translateY(6px);
   display:flex; align-items:center; gap:6px; padding:8px 8px 8px 14px; border-radius:100px;
   background:var(--bg-1); border:1px solid var(--line); box-shadow:var(--shadow-md);
   font-size:13px; font-weight:600; color:var(--text-0); white-space:nowrap;
@@ -1460,7 +1472,7 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   transition:transform .3s ease, visibility 0s linear .3s;
 }
 .fasty-hint.visible{
-  visibility:visible; transform:translateX(50%) translateY(0); z-index:1;
+  visibility:visible; transform:translateY(0); z-index:1;
   transition:transform .3s ease;
   animation:fastyHintBreathe 5s ease-in-out infinite;
 }
@@ -1586,8 +1598,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-96" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-96" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-98" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-98" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1727,26 +1739,54 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
       <p>Pick a service below, and a cut too if it's an AI Reel. Price, scope, and delivery details update instantly, everywhere on this page.</p>
     </div>
 
-    <div class="svc-nav reveal-on-scroll" id="svcNav">
-      <button class="svc-tab active" data-svc="reels">
-        <span class="svc-tab-index">01</span>
-        <span class="svc-tab-body"><span class="svc-tab-name">AI Reels</span><span class="svc-tab-price">From ₹2,500</span></span>
-      </button>
-      <button class="svc-tab" data-svc="catalogue">
-        <span class="svc-tab-index">02</span>
-        <span class="svc-tab-body"><span class="svc-tab-name">360° Catalogue Video</span><span class="svc-tab-price">From ₹1,800</span></span>
-      </button>
-      <button class="svc-tab" data-svc="static">
-        <span class="svc-tab-index">03</span>
-        <span class="svc-tab-body"><span class="svc-tab-name">Static Creative</span><span class="svc-tab-price">From ₹499</span></span>
-      </button>
-      <button class="svc-tab" data-svc="carousel">
-        <span class="svc-tab-index">04</span>
-        <span class="svc-tab-body"><span class="svc-tab-name">Carousel Creative</span><span class="svc-tab-price">From ₹1,499</span></span>
-      </button>
+    <!-- A true accordion: each service is its own card with a header
+         row (index/name/price/chevron) that's always visible, and a
+         slot directly beneath it that the one shared detail panel
+         (#svcPanelHost, moved via JS in renderServiceNav()) docks into
+         when that service is active. The panel physically lives
+         inside the selected card, not in a separate box below the
+         row, so picking a service visibly expands that exact card
+         rather than just updating an unrelated panel elsewhere. -->
+    <div class="svc-accordion reveal-on-scroll" id="svcNav">
+      <div class="svc-item active" data-svc="reels">
+        <button type="button" class="svc-item-header" data-svc="reels" aria-expanded="true">
+          <span class="svc-item-index">01</span>
+          <span class="svc-item-name">AI Reels</span>
+          <span class="svc-item-price">From ₹2,500</span>
+          <svg class="svc-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="svc-item-slot" data-slot="reels"></div>
+      </div>
+      <div class="svc-item" data-svc="catalogue">
+        <button type="button" class="svc-item-header" data-svc="catalogue" aria-expanded="false">
+          <span class="svc-item-index">02</span>
+          <span class="svc-item-name">360° Catalogue Video</span>
+          <span class="svc-item-price">From ₹1,800</span>
+          <svg class="svc-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="svc-item-slot" data-slot="catalogue"></div>
+      </div>
+      <div class="svc-item" data-svc="static">
+        <button type="button" class="svc-item-header" data-svc="static" aria-expanded="false">
+          <span class="svc-item-index">03</span>
+          <span class="svc-item-name">Static Creative</span>
+          <span class="svc-item-price">From ₹499</span>
+          <svg class="svc-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="svc-item-slot" data-slot="static"></div>
+      </div>
+      <div class="svc-item" data-svc="carousel">
+        <button type="button" class="svc-item-header" data-svc="carousel" aria-expanded="false">
+          <span class="svc-item-index">04</span>
+          <span class="svc-item-name">Carousel Creative</span>
+          <span class="svc-item-price">From ₹1,499</span>
+          <svg class="svc-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="svc-item-slot" data-slot="carousel"></div>
+      </div>
     </div>
 
-    <div class="svc-panel reveal-on-scroll">
+    <div class="svc-panel" id="svcPanelHost">
       <div class="svc-panel-inner">
         <div class="svc-panel-head">
           <div>
@@ -2023,8 +2063,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-96" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-96" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-98" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-98" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2368,10 +2408,10 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <!-- PUBLIC:STRIP:END -->
-<script src="assets/creative-data.js?v=20260811-96"></script>
-<script src="assets/app.js?v=20260811-96"></script>
+<script src="assets/creative-data.js?v=20260811-98"></script>
+<script src="assets/app.js?v=20260811-98"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-96"></script>
+<script type="module" src="assets/team.js?v=20260811-98"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>

@@ -567,13 +567,23 @@
      boxed panel) plus who delivers it.
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
+  const svcPanelHost = document.getElementById("svcPanelHost");
   const tierRow = document.getElementById("tierRow");
   const scopePanel = document.getElementById("scopePanel");
 
   function renderServiceNav() {
-    svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.svc === state.service);
+    svcNav.querySelectorAll(".svc-item-header").forEach((btn) => {
+      const isActive = btn.dataset.svc === state.service;
+      btn.setAttribute("aria-expanded", String(isActive));
+      const item = btn.closest(".svc-item");
+      if (item) item.classList.toggle("active", isActive);
     });
+    // Docks the one shared detail panel inside whichever card is
+    // currently selected, so the panel physically lives inside the
+    // active .svc-item rather than in a separate box below the row —
+    // picking a service visibly expands that exact card.
+    const slot = svcNav.querySelector(`.svc-item-slot[data-slot="${state.service}"]`);
+    if (slot && svcPanelHost.parentElement !== slot) slot.appendChild(svcPanelHost);
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
@@ -1294,7 +1304,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+        ".svc-item-header, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
       );
       if (!el) return;
       e.preventDefault();
@@ -1306,7 +1316,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
+  svcNav.querySelectorAll(".svc-item-header").forEach((btn) => {
     btn.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.service = btn.dataset.svc;
