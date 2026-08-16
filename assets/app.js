@@ -603,24 +603,34 @@
   const svcPanelInner = document.getElementById("svcPanelInner");
   const tierRow = document.getElementById("tierRow");
   const scopePanel = document.getElementById("scopePanel");
+  const SERVICE_ORDER = ["reels", "catalogue", "static", "carousel"];
   let lastNavService = null;
 
   function renderServiceNav() {
-    svcNav.querySelectorAll(".svc-tab-btn").forEach((btn) => {
-      const isActive = btn.dataset.svc === state.service;
-      btn.setAttribute("aria-selected", String(isActive));
-      btn.classList.toggle("active", isActive);
+    svcNav.querySelectorAll(".svc-card").forEach((card) => {
+      const isActive = card.dataset.svc === state.service;
+      card.classList.toggle("active", isActive);
+      const head = card.querySelector(".svc-card-head");
+      if (head) head.setAttribute("aria-selected", String(isActive));
     });
-    // The panel is a fixed, permanent card — nothing above or below it
-    // ever moves. What communicates "you switched services" is a short
-    // re-triggered cross-fade of its content, only when the service
-    // actually changed (render() runs on plenty of unrelated state
-    // changes too, e.g. cart edits, which shouldn't replay this).
+    // The one shared panel docks inside whichever card is active, so
+    // that card visibly grows to hold it while the other three shrink
+    // together — a single coordinated motion across the whole row
+    // (each card's own flex-grow transition runs in parallel), not an
+    // independent per-card toggle. Only re-dock/re-animate when the
+    // service actually changed (render() runs on plenty of unrelated
+    // state changes too, e.g. cart edits, which shouldn't replay this).
     if (state.service !== lastNavService) {
+      const fromIdx = SERVICE_ORDER.indexOf(lastNavService);
+      const toIdx = SERVICE_ORDER.indexOf(state.service);
+      const goingLeft = lastNavService !== null && toIdx < fromIdx;
       lastNavService = state.service;
-      svcPanelInner.classList.remove("is-entering");
+      const slot = svcNav.querySelector(`.svc-card-slot[data-slot="${state.service}"]`);
+      if (slot && svcPanelHost.parentElement !== slot) slot.appendChild(svcPanelHost);
+      svcPanelInner.classList.remove("is-entering", "dir-left");
       void svcPanelInner.offsetWidth;
       svcPanelInner.classList.add("is-entering");
+      if (goingLeft) svcPanelInner.classList.add("dir-left");
     }
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
@@ -1343,7 +1353,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-tab-btn, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+        ".svc-card-head, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
       );
       if (!el) return;
       e.preventDefault();
@@ -1355,7 +1365,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".svc-tab-btn").forEach((btn) => {
+  svcNav.querySelectorAll(".svc-card-head").forEach((btn) => {
     btn.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.service = btn.dataset.svc;
