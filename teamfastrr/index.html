@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-82" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-82" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-82" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-82" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-82" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-82" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-82" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-82" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-82" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-82" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-82" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-82" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-83" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-83" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-83" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-83" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-83" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-83" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-83" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-83" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-83" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-83" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-83" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-83" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1149,16 +1149,31 @@ html.is-internal .oc-offer{display:none !important;}
 .team-order-status-select.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
 .team-order-status-select.status-cancelled{background:var(--surface-2); color:var(--text-2);}
 .team-order-status-select option{background:var(--bg-1); color:var(--text-0);}
-.team-order-view-btn, .team-order-invoice-btn, .team-order-delete-btn{
+.team-order-view-btn, .team-order-invoice-btn, .team-order-delete-btn, .team-order-edit-btn{
   display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
   border-radius:8px; border:1px solid var(--line-soft); background:var(--surface-2); color:var(--text-2);
   cursor:pointer; transition:background .2s ease, color .2s ease, border-color .2s ease; flex:0 0 auto;
 }
 .team-order-view-btn:hover, .team-order-invoice-btn:hover{color:var(--text-0); border-color:var(--line);}
-.team-order-view-btn svg, .team-order-invoice-btn svg, .team-order-delete-btn svg{width:15px; height:15px;}
+.team-order-view-btn svg, .team-order-invoice-btn svg, .team-order-delete-btn svg, .team-order-edit-btn svg{width:15px; height:15px;}
 .team-order-card.is-open .team-order-view-btn{color:var(--violet); border-color:var(--violet);}
 .team-order-invoice-btn:disabled, .team-order-delete-btn:disabled{opacity:.5; cursor:default;}
 .team-order-delete-btn:hover{color:var(--btn-ink); background:var(--danger); border-color:var(--danger);}
+.team-order-edit-btn:hover{color:var(--violet); background:var(--violet-soft); border-color:var(--violet);}
+
+/* Edit Order banner — injected above the order builder only while a
+   rep is editing an already-placed order, so it's unmistakable that
+   the cart below is a loaded-in order rather than a fresh build, and
+   that clicking Place Your Order will update that order in place. */
+.edit-order-banner{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  margin-bottom:18px; padding:14px 20px; border-radius:var(--radius-sm);
+  background:var(--violet-soft); border:1px solid var(--violet);
+  scroll-margin-top:100px; /* clears the sticky nav when scrolled to */
+}
+.edit-order-banner p{margin:0; font-size:13.5px; color:var(--text-0); line-height:1.5;}
+.edit-order-banner b{color:var(--violet);}
+.edit-order-banner button{flex:0 0 auto;}
 .team-order-details{
   margin-top:12px; padding-top:14px; border-top:1px dashed var(--line-soft);
   display:none; grid-template-columns:1fr 1fr; gap:12px 24px;
@@ -1493,8 +1508,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-82" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-82" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1915,8 +1930,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-82" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-82" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2013,7 +2028,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div id="orderConfirmFormView">
       <div class="lead-panel-head">
         <div class="ob-panel-label" id="orderConfirmTitle">Confirm Order</div>
-        <p class="lead-panel-sub">Review the order and add the client's details. This logs the order under your account in Order History.</p>
+        <p class="lead-panel-sub" id="orderConfirmSub">Review the order and add the client's details. This logs the order under your account in Order History.</p>
       </div>
 
       <div class="oc-review" id="orderConfirmSummary"></div>
@@ -2069,7 +2084,7 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
     <div id="orderConfirmSuccessView" class="lead-success" hidden>
       <svg class="order-success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><circle cx="12" cy="12" r="10"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
-      <p><strong>Order placed successfully.</strong><br>Saved to your Order History. Continue to the Message Generator to send the client their package summary and next steps.</p>
+      <p id="orderConfirmSuccessText"><strong>Order placed successfully.</strong><br>Saved to your Order History. Continue to the Message Generator to send the client their package summary and next steps.</p>
       <button type="button" class="btn btn-primary" id="orderConfirmContinueBtn" style="width:100%; justify-content:center;">Continue to Message Generator</button>
       <button type="button" class="btn btn-ghost" id="orderConfirmCloseBtn" style="width:100%; justify-content:center;">Close</button>
     </div>
@@ -2194,8 +2209,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
      no downloadPdfBtn for it to attach to anyway. -->
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
-<script src="assets/creative-data.js?v=20260811-82"></script>
-<script src="assets/app.js?v=20260811-82"></script>
-<script type="module" src="assets/team.js?v=20260811-82"></script>
+<script src="assets/creative-data.js?v=20260811-83"></script>
+<script src="assets/app.js?v=20260811-83"></script>
+<script type="module" src="assets/team.js?v=20260811-83"></script>
 </body>
 </html>
