@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-83" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-83" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-83" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-83" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-83" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-83" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-83" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-83" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-83" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-83" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-83" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-83" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-84" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-84" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-84" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-84" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-84" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-84" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-84" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-84" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-84" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-84" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-84" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-84" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -888,36 +888,15 @@ html.is-internal .oc-offer{display:none !important;}
 }
 .oc-offer-code-status{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); transition:color .3s ease;}
 
-/* A slow, seamless drift across a soft violet → blue → teal wash —
-   the gradient never has a hard edge for text to fight, and because
-   the colour list starts and ends on the same stop the loop has no
-   visible jump. Two things matter for it to actually read as
-   "drifting" rather than "stuck": linear timing (ease-in-out bunches
-   motion around each keyframe, which reads as the gradient pausing
-   right where its brightest stop happens to be) and roughly even
-   alpha across every stop (an isolated brighter stop becomes a fixed
-   bright stripe once motion lingers near it). The code chip has its
-   own solid background regardless, so the stub itself can run bright
-   without ever risking the coupon text's readability. */
-.oc-offer.is-unlocked .oc-offer-stub{
-  background-color:#2a2354;
-  background-image:linear-gradient(120deg,
-    rgba(154,140,255,.82) 0%,
-    rgba(120,168,255,.8) 25%,
-    rgba(72,214,198,.82) 50%,
-    rgba(120,168,255,.8) 75%,
-    rgba(154,140,255,.82) 100%);
-  background-size:320% 320%;
-  animation:offerGradientFlow 10s linear infinite;
-}
+/* Flat teal fill once unlocked — a solid, confident "this is applied"
+   color rather than a moving gradient, so the coupon reads as settled
+   state instead of a still-loading/decorative effect. The code chip
+   keeps its own solid dark background regardless, so the coupon text
+   stays readable against the flat fill either way. */
+.oc-offer.is-unlocked .oc-offer-stub{background:var(--teal);}
 .oc-offer.is-unlocked .oc-offer-code{background:rgba(8,6,18,.55); border-color:rgba(255,255,255,.4); color:#fff;}
 .oc-offer.is-unlocked .oc-offer-code-status{color:rgba(255,255,255,.8);}
 
-@keyframes offerGradientFlow{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
 @keyframes offerFadeIn{0%{opacity:.55;}100%{opacity:1;}}
 @keyframes offerSheen{
   0%{transform:translateX(-140%) skewX(-18deg);}
@@ -1256,16 +1235,18 @@ html.is-internal .oc-offer{display:none !important;}
 
 /* A standalone, always-visible control (not tucked inside the
    collapsed "Price breakdown" toggle) — this is where a rep actually
-   negotiates pricing live on a call, so it gets its own bordered card
-   and larger type instead of blending into a muted settings row. */
+   negotiates pricing live on a call, so it stays bold and out in the
+   open. Styled as a plain row rather than its own bordered/shadowed
+   card, though, so it reads as part of the Order panel's own summary
+   rows (matching .summary-row's divider language) instead of a boxed
+   component competing with the panel around it. */
 .discount-standalone{
   display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px 18px; margin-bottom:14px; border-radius:var(--radius-sm);
-  background:var(--surface-1); border:1px solid var(--line); box-shadow:var(--inset-hi);
+  padding:12px 0; margin-bottom:2px; border-bottom:1px solid var(--line-soft);
 }
-.discount-standalone > span:first-child{color:var(--text-0); font-size:15px; font-weight:600;}
-.discount-standalone .unit-toggle-btn{font-size:14px; padding:5px 10px;}
-.discount-standalone .summary-input{width:68px; font-size:17px; font-weight:700; text-align:right; padding:8px 10px;}
+.discount-standalone > span:first-child{color:var(--text-0); font-size:14px; font-weight:600;}
+.discount-standalone .unit-toggle-btn{font-size:13px; padding:4px 9px;}
+.discount-standalone .summary-input{width:60px; font-size:15px; font-weight:700; text-align:right; padding:6px 8px;}
 .gst-switch-state{display:inline-block; margin-left:8px; font-style:normal; font-size:11px; font-weight:600; padding:3px 8px; border-radius:100px; background:var(--surface-2); color:var(--text-2); vertical-align:middle;}
 .gst-switch-state.is-on{background:var(--teal-soft); color:var(--teal);}
 
@@ -1508,8 +1489,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-84" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-84" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1955,8 +1936,8 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-83" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-84" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-84" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2244,10 +2225,10 @@ footer{padding:64px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <!-- PUBLIC:STRIP:END -->
-<script src="assets/creative-data.js?v=20260811-83"></script>
-<script src="assets/app.js?v=20260811-83"></script>
+<script src="assets/creative-data.js?v=20260811-84"></script>
+<script src="assets/app.js?v=20260811-84"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-83"></script>
+<script type="module" src="assets/team.js?v=20260811-84"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
