@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-92" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-92" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-92" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-92" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-92" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-92" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-92" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-92" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-92" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-92" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-92" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-92" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-93" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-93" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-93" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-93" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-93" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-93" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-93" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-93" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-93" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-93" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-93" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-93" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -571,7 +571,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    once. */
 .svc-nav{
   display:flex; flex-wrap:wrap; gap:10px;
-  margin-bottom:28px;
+  margin-bottom:12px;
 }
 .svc-tab{
   display:flex; align-items:center; gap:13px; padding:14px 18px; flex:1 1 200px;
@@ -597,12 +597,17 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .svc-tab:focus-visible{outline:none; opacity:.85; border-color:var(--violet);}
 @media (max-width:640px){.svc-tab{flex:1 1 100%;}}
 
+/* A solid violet top edge, not a gradient bar — reads as "this panel
+   belongs to the active card above it" (same accent color as the
+   active .svc-tab's border) without a second decorative stripe. The
+   nav sits close above with the gap tightened (see .svc-nav) so the
+   two visually read as one connected unit — the active card opening
+   straight down into this panel — rather than two separate boxes. */
 .svc-panel{
   position:relative; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
-  box-shadow:var(--shadow-sm); overflow:hidden;
+  border-top:2px solid var(--violet); box-shadow:var(--shadow-sm); overflow:hidden;
 }
-.svc-panel-accent{height:3px; background:linear-gradient(90deg,var(--violet),var(--sky));}
-.svc-panel-inner{padding:32px clamp(20px,4vw,40px) 36px;}
+.svc-panel-inner{padding:28px clamp(20px,4vw,40px) 36px;}
 .svc-panel-head{
   display:flex; justify-content:space-between; align-items:flex-end; gap:28px; flex-wrap:wrap;
   padding-bottom:26px; border-bottom:1px solid var(--line-soft);
@@ -1540,8 +1545,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-92" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-92" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-93" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-93" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1675,7 +1680,6 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     </div>
 
     <div class="svc-panel reveal-on-scroll">
-      <div class="svc-panel-accent"></div>
       <div class="svc-panel-inner">
         <div class="svc-panel-head">
           <div>
@@ -1856,8 +1860,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-92" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-92" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-93" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-93" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -1995,7 +1999,7 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   </div>
 </div>
 
-<script src="assets/creative-data.js?v=20260811-92"></script>
-<script src="assets/app.js?v=20260811-92"></script>
+<script src="assets/creative-data.js?v=20260811-93"></script>
+<script src="assets/app.js?v=20260811-93"></script>
 </body>
 </html>

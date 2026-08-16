@@ -606,7 +606,12 @@
 
   function renderServiceSummary() {
     const d = currentData();
-    document.getElementById("svcName").textContent = d.name;
+    // The active service tab right above this panel already says "AI
+    // Reels" — repeating "AI Reel —" in the heading here just to name
+    // the cut ("AI Reel — Quick Cut") restated something the reader
+    // already sees a few pixels up. Dropping that prefix leaves just
+    // the cut name, which is the actually new information.
+    document.getElementById("svcName").textContent = d.name.replace(/^AI Reel — /, "");
     document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
     document.getElementById("svcShort").textContent = d.short || "";
   }
