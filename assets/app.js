@@ -2579,6 +2579,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
     const toggle = document.getElementById("fastyToggle");
     const badge = document.getElementById("fastyToggleBadge");
+    const hint = document.getElementById("fastyHint");
+    const hintClose = document.getElementById("fastyHintClose");
     const panel = document.getElementById("fastyPanel");
     const panelCloseBtn = document.getElementById("fastyPanelClose");
     const panelExpandBtn = document.getElementById("fastyPanelExpand");
@@ -2861,10 +2863,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       renderQuickChips();
     }
 
+    function hideHint() {
+      if (hint) hint.classList.remove("visible");
+    }
+
     function openPanel() {
       widget.classList.add("open");
       toggle.setAttribute("aria-expanded", "true");
       if (badge) badge.hidden = true;
+      hideHint();
       seedGreeting();
       setTimeout(() => input.focus(), 150);
     }
@@ -2909,11 +2916,26 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       sendUserMessage(input.value);
     });
 
-    // A one-time attention badge — appears a few seconds after load if
-    // the visitor hasn't opened the chat yet, quietly inviting a first
-    // look rather than auto-opening the panel and interrupting them.
+    if (hintClose) {
+      hintClose.addEventListener("click", (e) => {
+        e.stopPropagation();
+        hideHint();
+      });
+    }
+
+    // A one-time nudge — badge dot + a small "Need help?" label — a
+    // few seconds after load, if the visitor hasn't opened the chat
+    // yet. Quietly invites a first look rather than auto-opening the
+    // panel and interrupting them; the hint clears itself a few
+    // seconds later (or immediately on any interaction) so it never
+    // lingers as a second thing competing with the page.
     setTimeout(() => {
-      if (!widget.classList.contains("open") && badge) badge.hidden = false;
+      if (widget.classList.contains("open")) return;
+      if (badge) badge.hidden = false;
+      if (hint) {
+        hint.classList.add("visible");
+        setTimeout(hideHint, 6000);
+      }
     }, 4000);
   }
 
