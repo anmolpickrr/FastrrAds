@@ -368,7 +368,7 @@ function initAuthForm(authModal, getAuthApi) {
 function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPending) {
   const placeBtn = $("placeOrderBtn");
   const modal = $("orderConfirmModal");
-  if (!placeBtn || !modal) return;
+  if (!placeBtn || !modal) return { beginEdit() {} };
 
   const backdrop = $("orderConfirmModalBackdrop");
   const closeBtn = $("orderConfirmModalClose");
@@ -376,11 +376,59 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
   const successView = $("orderConfirmSuccessView");
   const summaryEl = $("orderConfirmSummary");
   const form = $("orderConfirmForm");
+  const titleEl = $("orderConfirmTitle");
+  const subEl = $("orderConfirmSub");
   const submitLabel = $("orderConfirmSubmitBtnLabel");
+  const successTextEl = $("orderConfirmSuccessText");
   const status = $("orderConfirmStatus");
   const continueBtn = $("orderConfirmContinueBtn");
   const closeSuccessBtn = $("orderConfirmCloseBtn");
   const ocPanel = $("ocPanel");
+
+  const DEFAULT_TITLE = titleEl ? titleEl.textContent : "Confirm Order";
+  const DEFAULT_SUB = subEl ? subEl.textContent : "";
+  const DEFAULT_SUBMIT_LABEL = submitLabel ? submitLabel.textContent : "Confirm & Place Order";
+  const DEFAULT_SUCCESS_HTML = successTextEl ? successTextEl.innerHTML : "";
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  // Set while a rep is mid-edit of an already-placed order (see
+  // beginEdit() below, called from team.js's startEditOrder()). Non-
+  // null here is what tells open()/submit() to prefill the client
+  // fields from that order and update it in place instead of creating
+  // a new one.
+  let editingOrder = null;
+  let editBanner = null;
+
+  function showEditBanner(order) {
+    hideEditBanner();
+    const builderEl = document.querySelector(".order-builder");
+    if (!builderEl || !builderEl.parentNode) return;
+    editBanner = document.createElement("div");
+    editBanner.className = "edit-order-banner";
+    editBanner.innerHTML =
+      `<p>Editing order <b>${escapeHtml(order.orderNumber || "")}</b> for <b>${escapeHtml(order.client || "this client")}</b> — adjust the creatives below, then click "Update Order" to save your changes.</p>` +
+      `<button type="button" class="btn btn-ghost">Cancel edit</button>`;
+    editBanner.querySelector("button").addEventListener("click", cancelEdit);
+    builderEl.parentNode.insertBefore(editBanner, builderEl);
+  }
+  function hideEditBanner() {
+    if (editBanner) {
+      editBanner.remove();
+      editBanner = null;
+    }
+  }
+  function cancelEdit() {
+    editingOrder = null;
+    hideEditBanner();
+    if (window.FastrrOrderBuilder) window.FastrrOrderBuilder.clearCart();
+  }
+  function beginEdit(order) {
+    editingOrder = order;
+    showEditBanner(order);
+  }
 
   function setStatus(msg, isError) {
     status.textContent = msg || "";
@@ -428,6 +476,12 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
         scripting: spec.scripting || "",
         language: spec.language || "",
         turnaround: spec.turnaround || "",
+        // Raw selector keys (not display text) — carried along so an
+        // already-placed order can be reloaded back into the real
+        // builder later via window.FastrrOrderBuilder for the Edit
+        // Order flow. Absent on orders placed before this existed.
+        service: spec.service || "",
+        tier: spec.tier || null,
       };
     });
     const finalText = $("qFinal")?.textContent.trim() || "₹0";
@@ -468,6 +522,21 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     form.reset();
     setStatus("");
     renderSummary(readCartFromDom());
+    if (editingOrder) {
+      if (titleEl) titleEl.textContent = "Update Order";
+      if (subEl) subEl.textContent = `Editing ${editingOrder.orderNumber || "this order"} for ${editingOrder.client || "this client"}. Review the changes below and update the order.`;
+      if (submitLabel) submitLabel.textContent = "Update Order";
+      $("ocClientName").value = editingOrder.client || "";
+      $("ocClientEmail").value = editingOrder.clientEmail || "";
+      if (editingOrder.clientPhone) $("ocClientPhone").value = editingOrder.clientPhone;
+      $("ocClientWebsite").value = editingOrder.clientWebsite || "";
+      $("ocClientCategory").value = editingOrder.clientCategory || "";
+      $("ocClientNotes").value = editingOrder.notes || "";
+    } else {
+      if (titleEl) titleEl.textContent = DEFAULT_TITLE;
+      if (subEl) subEl.textContent = DEFAULT_SUB;
+      if (submitLabel) submitLabel.textContent = DEFAULT_SUBMIT_LABEL;
+    }
     modal.classList.add("open");
     document.body.classList.add("lb-locked");
     $("ocClientName")?.focus();
@@ -557,7 +626,7 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     setStatus("");
     try {
       const packageSummary = cart.items.map((i) => `${i.name} ×${i.qty}`).join(", ");
-      await orderApi.logOrder({
+      const payload = {
         client: clientName,
         package: packageSummary,
         items: cart.items,
@@ -568,19 +637,27 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
         gstText: cart.gstText,
         finalText: cart.finalText,
         amount: cart.finalAmount,
-        status: "placed",
         clientEmail: email,
         clientPhone: phone,
         clientWebsite: website,
         clientCategory: category,
         notes,
-      });
+      };
+      if (editingOrder) {
+        await orderApi.updateOrder(editingOrder.id, payload);
+        if (successTextEl) successTextEl.innerHTML = "<strong>Order updated successfully.</strong><br>Your changes are saved to Order History.";
+        hideEditBanner();
+        editingOrder = null;
+      } else {
+        await orderApi.logOrder({ ...payload, status: "placed" });
+        if (successTextEl) successTextEl.innerHTML = DEFAULT_SUCCESS_HTML;
+      }
       lastClientDetails = { clientName, email, phone, website, category };
       formView.hidden = true;
       successView.hidden = false;
     } catch (err) {
       console.error("[Fastrr] Order placement failed.", err);
-      setStatus("Couldn't save the order. Please try again.", true);
+      setStatus(editingOrder ? "Couldn't update the order. Please try again." : "Couldn't save the order. Please try again.", true);
     } finally {
       submitLabel.textContent = originalLabel;
     }
@@ -618,6 +695,8 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
       if (messages) messages.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
+
+  return { beginEdit };
 }
 
 /* ----------------------------------------------------------
@@ -630,11 +709,44 @@ async function boot() {
   let authApi = null; // set once Firebase has loaded — { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut }
   const authFormCtl = initAuthForm(authModal, () => authApi);
   const profileMenu = initProfileMenu(authModal, orderHistoryModal, () => authApi);
-  let orderApi = null; // set once Firebase has loaded — { logOrder(data) }
+  let orderApi = null; // set once Firebase has loaded — { logOrder(data), updateOrder(id, data) }
   let pendingOrderOpen = null; // set when "Place Your Order" opened the auth modal instead (not signed in yet)
-  initOrderConfirmModal(authModal, () => authApi, () => orderApi, (resumeFn) => {
+  const orderConfirmApi = initOrderConfirmModal(authModal, () => authApi, () => orderApi, (resumeFn) => {
     pendingOrderOpen = resumeFn;
   });
+
+  // Loads an already-placed order back into the real order builder
+  // (same panel every order is originally configured in) so a rep can
+  // adjust quantities/tiers/creatives, then click "Place Your Order"
+  // again to update it in place. Restricted to "placed" orders only —
+  // the edit button itself is only rendered for that status (see
+  // renderOrders()) — and to orders that actually carry service/tier
+  // data, since orders logged before that field existed have no way
+  // to be rebuilt into builder state.
+  function startEditOrder(order) {
+    if (!window.FastrrOrderBuilder) {
+      window.alert("Couldn't open the order builder to edit this order. Please refresh the page and try again.");
+      return;
+    }
+    const items = (order.items || [])
+      .filter((i) => i.service)
+      .map((i) => ({ service: i.service, tier: i.tier || null, qty: Number(i.qty) || 1 }));
+    if (!items.length) {
+      window.alert(
+        "This order was placed before item-level editing was available, so it can't be reloaded into the builder. Cancel it instead and place a fresh order with the corrected details."
+      );
+      return;
+    }
+    orderHistoryModal.close();
+    window.FastrrOrderBuilder.setCart(items);
+    orderConfirmApi.beginEdit(order);
+    // Scroll to the banner itself, not the builder below it — the
+    // builder is tall enough that block:"start" on it alone would
+    // push the banner (which sits just above it) off the top of the
+    // viewport, hiding the one thing that says an edit is in progress.
+    const scrollTarget = document.querySelector(".edit-order-banner") || document.querySelector(".order-builder");
+    if (scrollTarget) scrollTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   if (!FIREBASE_IS_CONFIGURED) {
     console.warn("[Fastrr] " + NOT_CONFIGURED_MSG + " (assets/team.js FIREBASE_CONFIG is still a placeholder)");
@@ -779,7 +891,32 @@ async function boot() {
       createdAt: serverTimestamp(),
     });
   }
-  orderApi = { logOrder };
+  // Updates an already-placed order in place (Edit Order flow) —
+  // deliberately touches only the fields a rep can actually change
+  // through the builder + client-details form. orderNumber, uid,
+  // email (who originally placed it), status, and createdAt are left
+  // untouched so editing an order never reassigns it to someone else,
+  // changes its position in the sequence, or bumps it out of Placed.
+  async function updateOrder(orderId, data) {
+    return updateDoc(doc(db, "orders", orderId), {
+      client: data.client,
+      package: data.package,
+      items: data.items || [],
+      subtotalText: data.subtotalText || "",
+      discountLabelText: data.discountLabelText || "",
+      discountText: data.discountText || "",
+      gstEnabled: data.gstEnabled !== false,
+      gstText: data.gstText || "",
+      finalText: data.finalText || "",
+      amount: data.amount,
+      clientEmail: data.clientEmail || "",
+      clientPhone: data.clientPhone || "",
+      clientWebsite: data.clientWebsite || "",
+      clientCategory: data.clientCategory || "",
+      notes: data.notes || "",
+    });
+  }
+  orderApi = { logOrder, updateOrder };
 
   filterRow.addEventListener("click", (e) => {
     const chip = e.target.closest(".team-filter-chip");
@@ -985,8 +1122,11 @@ async function boot() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
             ${
-              o.status !== "completed"
-                ? `<button type="button" class="team-order-delete-btn" aria-label="Delete order">
+              o.status === "placed"
+                ? `<button type="button" class="team-order-edit-btn" aria-label="Edit order">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+            </button>
+            <button type="button" class="team-order-delete-btn" aria-label="Delete order">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>
             </button>`
                 : ""
@@ -1254,6 +1394,13 @@ async function boot() {
       const card = invoiceBtn.closest(".team-order-card");
       const order = renderedRows[Number(card.dataset.orderIdx)];
       if (order) generateInvoicePdf(order);
+      return;
+    }
+    const editBtn = e.target.closest(".team-order-edit-btn");
+    if (editBtn) {
+      const card = editBtn.closest(".team-order-card");
+      const order = renderedRows[Number(card.dataset.orderIdx)];
+      if (order) startEditOrder(order);
       return;
     }
     const deleteBtn = e.target.closest(".team-order-delete-btn");

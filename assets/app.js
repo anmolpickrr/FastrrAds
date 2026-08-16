@@ -819,6 +819,12 @@
               scripting: item.d.scripting || "",
               language: item.d.language || "",
               turnaround: item.d.turnaround || "",
+              // service/tier (the raw selector keys, not display text) let
+              // the internal Edit Order flow (team.js) rebuild this exact
+              // line item back into the builder via FastrrOrderBuilder
+              // .setCart() below, rather than just displaying it read-only.
+              service: item.service,
+              tier: item.tier || null,
             })
           );
           return `<div class="cart-item" data-id="${item.id}" data-spec="${spec}">
@@ -2552,6 +2558,29 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     e.preventDefault();
     e.returnValue = "";
   });
+
+  // Minimal cart-replacement hook so team.js (a separate script/
+  // closure with no access to this file's private `state`) can drive
+  // the order builder from outside — used by Order History's "Edit
+  // Order" flow to load an already-placed order's items back into the
+  // real builder and reuse this exact same render path (renderCart,
+  // persistState, etc.) that every normal add/remove/qty change goes
+  // through, instead of building a second parallel cart UI.
+  window.FastrrOrderBuilder = {
+    setCart(items) {
+      state.cart = (items || []).map((it) => ({
+        id: cartIdSeq++,
+        service: it.service,
+        tier: it.tier || null,
+        qty: Math.max(1, Number(it.qty) || 1),
+      }));
+      render();
+    },
+    clearCart() {
+      state.cart = [];
+      render();
+    },
+  };
 
   /* ----------------------------------------------------------
      INIT
