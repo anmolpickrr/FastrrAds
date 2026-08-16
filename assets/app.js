@@ -2923,19 +2923,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     }
 
-    // A one-time nudge — badge dot + a small "Need help?" label — a
-    // few seconds after load, if the visitor hasn't opened the chat
-    // yet. Quietly invites a first look rather than auto-opening the
-    // panel and interrupting them; the hint clears itself a few
-    // seconds later (or immediately on any interaction) so it never
-    // lingers as a second thing competing with the page.
+    // A one-time nudge — badge dot + a small "Need help?" label above
+    // the toggle — a few seconds after load, if the visitor hasn't
+    // opened the chat yet. Quietly invites a first look rather than
+    // auto-opening the panel and interrupting them. Unlike the badge,
+    // the hint itself doesn't auto-dismiss on a timer — it stays up
+    // (gently fading in and out) until the visitor actually opens the
+    // chat or dismisses it directly.
     setTimeout(() => {
       if (widget.classList.contains("open")) return;
       if (badge) badge.hidden = false;
-      if (hint) {
-        hint.classList.add("visible");
-        setTimeout(hideHint, 6000);
-      }
+      if (hint) hint.classList.add("visible");
     }, 4000);
   }
 
