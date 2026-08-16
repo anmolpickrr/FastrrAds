@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-86" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-86" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-86" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-86" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-86" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-86" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-86" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-86" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-86" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-86" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-86" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-86" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-89" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-89" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-89" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-89" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-89" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-89" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-89" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-89" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-89" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-89" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-89" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-89" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1213,14 +1213,25 @@ html.is-internal .oc-offer{display:none !important;}
   .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start; width:auto;}
 }
 
-.order-tat-note{margin:0; font-size:11.5px; line-height:1.5; color:var(--text-2); font-style:italic;}
+/* Caption, not a dropdown — this used to be its own collapsible
+   "Turnaround note" section between the cart and the pricing rows,
+   which (with Price breakdown right below it) made the panel read as
+   two stacked toggles before you even reached the total. Folded down
+   into one quiet line under Final Amount instead: still there for
+   whoever wants the bulk-order caveat, gone for everyone just scanning
+   the total. */
+.order-tat-note{margin:10px 0 0; font-size:11.5px; line-height:1.5; color:var(--text-2);}
 .order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
 .order-summary .field-row{margin-bottom:12px;}
 .order-summary .field-row label{display:flex; align-items:center; gap:8px;}
-/* order-summary already supplies the top divider/gap above the Price
-   breakdown toggle — .mini-toggle's own margin/padding/border-top
-   would stack a second one directly beneath it. */
-#priceBreakdownToggle{margin-top:0; padding-top:0; border-top:none;}
+/* Subtotal/Discount/GST always visible now, not a second collapsed
+   section — three short rows didn't earn their own disclosure toggle,
+   and hiding them by default meant the Final Amount below looked
+   unexplained until you clicked something. Slightly smaller and
+   more muted than Final Amount so the hierarchy (detail → total)
+   still reads at a glance. */
+.order-breakdown .summary-row{font-size:13px; padding:8px 0;}
+.order-breakdown .summary-row b{font-weight:600; color:var(--text-1);}
 
 /* Order Discount + GST — no cards, no button chrome. Both live as two
    more rows in the same plain list as Subtotal/Discount/GST/Total
@@ -1410,10 +1421,10 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
    engine; this file only owns how it looks. */
 .fasty-widget{position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;}
 .fasty-toggle{
-  position:relative; width:58px; height:58px; border-radius:50%; border:none; cursor:pointer;
+  position:relative; width:56px; height:56px; border-radius:50%; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; color:#fff;
-  background:linear-gradient(135deg, var(--violet), var(--teal));
-  box-shadow:0 10px 28px -8px rgba(139,124,246,.55), 0 2px 8px rgba(0,0,0,.25);
+  background:var(--violet);
+  box-shadow:0 10px 24px -8px rgba(139,124,246,.5), 0 2px 8px rgba(0,0,0,.25);
   transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
 }
 .fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 14px 32px -8px rgba(139,124,246,.65), 0 2px 8px rgba(0,0,0,.3);}
@@ -1439,40 +1450,41 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 .fasty-widget.open .fasty-panel{display:flex; animation:fastyPop .28s cubic-bezier(.16,1,.3,1);}
 @keyframes fastyPop{0%{opacity:0; transform:scale(.92) translateY(10px);}100%{opacity:1; transform:scale(1) translateY(0);}}
 
-.fasty-head{display:flex; align-items:center; gap:11px; padding:14px 14px 14px 16px; border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
+.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 12px 13px 16px; border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
 .fasty-avatar{
-  width:34px; height:34px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff; font-family:var(--font-display); font-weight:800; font-size:15px;
+  width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:var(--violet); color:#fff;
 }
 .fasty-head-text{flex:1 1 auto; min-width:0;}
 .fasty-head-name{font-family:var(--font-display); font-weight:700; font-size:14.5px; color:var(--text-0);}
 .fasty-head-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-2);}
 .fasty-status-dot{width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 3px var(--teal-soft); flex:0 0 auto;}
+/* Small and quiet on purpose — a plain icon button, not a bordered
+   chip competing with the avatar/name for attention right next to it. */
 .fasty-head-close{
-  width:28px; height:28px; border-radius:8px; border:1px solid var(--line-soft); background:var(--surface-2); color:var(--text-2);
-  display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; flex:0 0 auto;
-  transition:background .2s ease, color .2s ease, border-color .2s ease;
+  width:24px; height:24px; border-radius:50%; border:none; background:none; color:var(--text-2);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
+  transition:background .2s ease, color .2s ease;
 }
-.fasty-head-close:hover{color:var(--text-0); border-color:var(--line);}
+.fasty-head-close svg{width:13px; height:13px;}
+.fasty-head-close:hover{color:var(--text-0); background:var(--surface-2);}
 
-.fasty-messages{flex:1 1 auto; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth;}
+.fasty-messages{flex:1 1 auto; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth;}
 .fasty-msg{display:flex; max-width:88%;}
-.fasty-msg-bubble{padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.55;}
-.fasty-msg-bubble p{margin:0 0 8px;}
+.fasty-msg-bubble{padding:9px 12px; border-radius:14px; font-size:13.5px; line-height:1.5;}
+.fasty-msg-bubble p{margin:0 0 6px;}
 .fasty-msg-bubble p:last-child{margin-bottom:0;}
-.fasty-msg-bubble ul{margin:6px 0 8px; padding-left:18px;}
-.fasty-msg-bubble li{margin-bottom:3px;}
 .fasty-msg-bubble b{color:inherit; font-weight:700;}
 .fasty-msg.bot{align-self:flex-start;}
 .fasty-msg.bot .fasty-msg-bubble{background:var(--surface-1); border:1px solid var(--line-soft); color:var(--text-1); border-bottom-left-radius:4px;}
 .fasty-msg.user{align-self:flex-end;}
-.fasty-msg.user .fasty-msg-bubble{background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff; border-bottom-right-radius:4px;}
-.fasty-msg-actions{display:flex; flex-wrap:wrap; gap:7px; margin-top:9px;}
+.fasty-msg.user .fasty-msg-bubble{background:var(--violet); color:#fff; border-bottom-right-radius:4px;}
+.fasty-msg-actions{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
 .fasty-msg-action{
-  font-size:12px; font-weight:600; padding:6px 12px; border-radius:100px; border:1px solid var(--violet); color:var(--violet);
-  background:var(--violet-soft); cursor:pointer; transition:background .2s ease, transform .2s ease;
+  font-size:12px; font-weight:600; padding:6px 12px; border-radius:100px; border:1px solid var(--line); color:var(--text-1);
+  background:var(--surface-2); cursor:pointer; transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
 }
-.fasty-msg-action:hover{background:var(--violet); color:#fff; transform:translateY(-1px);}
+.fasty-msg-action:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
 
 /* Three-dot "thinking" indicator — a brief, deliberate pause before
    Fasty's reply lands reads as considered rather than an instant
@@ -1498,8 +1510,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 }
 .fasty-input:focus{outline:none; border-color:var(--violet); box-shadow:0 0 0 3px var(--violet-soft);}
 .fasty-send{
-  width:38px; height:38px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer; color:#fff;
-  display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, var(--violet), var(--teal));
+  width:36px; height:36px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer; color:#fff;
+  display:flex; align-items:center; justify-content:center; background:var(--violet);
   transition:transform .2s ease;
 }
 .fasty-send svg{width:16px; height:16px;}
@@ -1518,8 +1530,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-86" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-86" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1818,11 +1830,6 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 
         <div class="order-cart-list" id="orderCartList"></div>
 
-        <details class="mini-toggle">
-          <summary>Turnaround note</summary>
-          <p class="order-tat-note">The turnaround shown per item is for a single creative. Total delivery time for bulk orders or multiple creative types depends on quantity, creative type, cut, complexity, and your final requirements.</p>
-        </details>
-
         <div class="order-summary">
           <!-- PUBLIC:STRIP:START -->
           <div class="discount-standalone" id="discountFieldRow">
@@ -1836,27 +1843,23 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
               <input class="summary-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
             </span>
           </div>
+          <label class="adj-row" for="qGstToggle" id="gstToggleRow">
+            <span>GST (18%) <em class="gst-switch-state" id="gstSwitchState">With GST</em></span>
+            <span class="gst-switch">
+              <input type="checkbox" id="qGstToggle" checked>
+              <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
+            </span>
+          </label>
           <!-- PUBLIC:STRIP:END -->
 
-          <details class="mini-toggle" id="priceBreakdownToggle">
-            <summary>Price breakdown</summary>
-
-            <!-- PUBLIC:STRIP:START -->
-            <label class="adj-row" for="qGstToggle" id="gstToggleRow">
-              <span>GST (18%) <em class="gst-switch-state" id="gstSwitchState">With GST</em></span>
-              <span class="gst-switch">
-                <input type="checkbox" id="qGstToggle" checked>
-                <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
-              </span>
-            </label>
-            <!-- PUBLIC:STRIP:END -->
-
+          <div class="order-breakdown">
             <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
             <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
             <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
-          </details>
+          </div>
 
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
+          <p class="order-tat-note">Turnaround shown per item above is for a single creative — bulk orders or multiple creative types may take longer depending on quantity, creative type, cut, and complexity.</p>
         </div>
 
         <div class="lead-cta">
@@ -1965,8 +1968,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-86" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-86" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-89" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2009,19 +2012,21 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
      is stripped from the team build. -->
 <div class="fasty-widget" id="fastyWidget">
   <button type="button" class="fasty-toggle" id="fastyToggle" aria-label="Chat with Fasty, the Fastrr Ads assistant" aria-expanded="false">
-    <svg class="fasty-toggle-icon fasty-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg>
+    <svg class="fasty-toggle-icon fasty-icon-chat" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4.5 13.5H11l-1.2 8.5L19 10H12.2L13 2Z"/></svg>
     <svg class="fasty-toggle-icon fasty-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     <span class="fasty-toggle-badge" id="fastyToggleBadge" hidden>1</span>
   </button>
 
   <div class="fasty-panel" id="fastyPanel">
     <div class="fasty-head">
-      <span class="fasty-avatar" aria-hidden="true">F</span>
+      <span class="fasty-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M13 2 4.5 13.5H11l-1.2 8.5L19 10H12.2L13 2Z"/></svg></span>
       <div class="fasty-head-text">
         <div class="fasty-head-name">Fasty</div>
         <div class="fasty-head-status"><span class="fasty-status-dot"></span>Fastrr Ads Assistant</div>
       </div>
-      <button type="button" class="fasty-head-close" id="fastyPanelClose" aria-label="Close chat">✕</button>
+      <button type="button" class="fasty-head-close" id="fastyPanelClose" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
 
     <div class="fasty-messages" id="fastyMessages" aria-live="polite"></div>
@@ -2285,10 +2290,10 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 <script src="assets/vendor/jspdf.umd.min.js"></script>
 <script src="assets/vendor/jspdf.plugin.autotable.min.js"></script>
 <!-- PUBLIC:STRIP:END -->
-<script src="assets/creative-data.js?v=20260811-86"></script>
-<script src="assets/app.js?v=20260811-86"></script>
+<script src="assets/creative-data.js?v=20260811-89"></script>
+<script src="assets/app.js?v=20260811-89"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-86"></script>
+<script type="module" src="assets/team.js?v=20260811-89"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
