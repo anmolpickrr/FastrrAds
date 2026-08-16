@@ -76,7 +76,7 @@ const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
 // the server-side rule is what Firestore actually checks.
 const ADMIN_EMAILS = ["design.tools@pickrr.com"];
 
-const STATUS_LABEL = { placed: "Placed", completed: "Completed", cancelled: "Cancelled" };
+const STATUS_LABEL = { placed: "Placed", completed: "Confirmed", cancelled: "Cancelled" };
 const STATUS_ORDER = ["placed", "completed", "cancelled"];
 
 const $ = (id) => document.getElementById(id);
@@ -654,7 +654,7 @@ async function boot() {
   }
   const [{ initializeApp }, authMod, fsMod] = firebaseMods;
   const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } = authMod;
-  const { getFirestore, collection, addDoc, updateDoc, doc, runTransaction, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
+  const { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, runTransaction, query, where, limit, onSnapshot, serverTimestamp } = fsMod;
 
   const app = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(app);
@@ -984,6 +984,13 @@ async function boot() {
             <button type="button" class="team-order-view-btn" aria-label="View order details" aria-expanded="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
+            ${
+              o.status !== "completed"
+                ? `<button type="button" class="team-order-delete-btn" aria-label="Delete order">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13"/></svg>
+            </button>`
+                : ""
+            }
           </div>
         </div>
         <div class="team-order-meta">${metaBase}${placedByMeta}</div>
@@ -1249,6 +1256,20 @@ async function boot() {
       if (order) generateInvoicePdf(order);
       return;
     }
+    const deleteBtn = e.target.closest(".team-order-delete-btn");
+    if (deleteBtn) {
+      const card = deleteBtn.closest(".team-order-card");
+      const order = renderedRows[Number(card.dataset.orderIdx)];
+      if (!order || !order.id) return;
+      const label = order.orderNumber ? `order ${order.orderNumber}` : `this order for ${order.client || "this client"}`;
+      if (!window.confirm(`Delete ${label}? This can't be undone.`)) return;
+      deleteBtn.disabled = true;
+      deleteDoc(doc(db, "orders", order.id)).catch(() => {
+        window.alert("Couldn't delete the order. Please try again.");
+        deleteBtn.disabled = false;
+      });
+      return;
+    }
     const btn = e.target.closest(".team-order-view-btn");
     if (!btn) return;
     const card = btn.closest(".team-order-card");
@@ -1257,9 +1278,9 @@ async function boot() {
     btn.setAttribute("aria-expanded", String(nowOpen));
   });
 
-  // Moving an order through its stages (Placed → In Progress →
-  // Completed, or Cancelled/Failed at any point) writes straight to
-  // its Firestore doc — the live onSnapshot listener above re-renders
+  // Moving an order through its stages (Placed → Confirmed, or
+  // Cancelled at any point) writes straight to its Firestore doc —
+  // the live onSnapshot listener above re-renders
   // every signed-in view of that order automatically, so nobody needs
   // to refresh to see a status a teammate just changed.
   orderList.addEventListener("change", async (e) => {
