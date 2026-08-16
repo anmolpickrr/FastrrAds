@@ -1175,9 +1175,18 @@ async function boot() {
     return "Rs. " + Math.round(n).toLocaleString("en-IN");
   }
 
-  function generateInvoicePdf(order) {
-    if (!window.jspdf || !window.jspdf.jsPDF) {
+  // jsPDF loads on demand (see window.__ensureJsPDF in app.js) rather
+  // than as an unconditional <script> tag on every page view, so this
+  // now has to wait for it before touching window.jspdf.
+  async function generateInvoicePdf(order) {
+    if (!window.__ensureJsPDF) {
       window.alert("PDF export isn't available right now. Please reload the page and try again.");
+      return;
+    }
+    try {
+      await window.__ensureJsPDF();
+    } catch (e) {
+      window.alert("Couldn't load the PDF generator. Please check your connection and try again.");
       return;
     }
     const { jsPDF } = window.jspdf;

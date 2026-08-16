@@ -10,6 +10,38 @@
   "use strict";
 
   /* ----------------------------------------------------------
+     -1. LAZY jsPDF LOADER
+     jsPDF + its autotable plugin (~400KB combined) used to load as
+     two unconditional <script> tags on every single page view, even
+     though PDF export is a rarely-clicked action (Package Summary
+     here, the internal Invoice download in team.js). Fetching and
+     parsing that on every load was pure dead weight for the other
+     ~95% of visits. Both PDF features now call this on demand
+     instead — first call kicks off the fetch, every call (including
+     concurrent ones) shares the same promise so the scripts are only
+     ever requested once per page. Exposed on window since team.js is
+     a separate module script with no access to this closure.
+  ---------------------------------------------------------- */
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error("Failed to load " + src));
+      document.head.appendChild(s);
+    });
+  }
+  window.__ensureJsPDF = function () {
+    if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+    if (!window.__jspdfLoadPromise) {
+      window.__jspdfLoadPromise = loadScriptOnce("assets/vendor/jspdf.umd.min.js").then(() =>
+        loadScriptOnce("assets/vendor/jspdf.plugin.autotable.min.js")
+      );
+    }
+    return window.__jspdfLoadPromise;
+  };
+
+  /* ----------------------------------------------------------
      0. ACCESS MODE (public vs internal team)
      Two genuinely separate URLs/files (see scripts/build_pages.py) —
      internal markup doesn't even exist in the public build's HTML.
@@ -1046,6 +1078,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     label.textContent = "Preparing PDF…";
 
     try {
+      await window.__ensureJsPDF();
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ unit: "mm", format: "a4" });
       const pageW = doc.internal.pageSize.getWidth();
