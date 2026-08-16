@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-94" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-94" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-94" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-94" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-94" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-94" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-94" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-94" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-94" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-94" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-94" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-94" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-95" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-95" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-95" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-95" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-95" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-95" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-95" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-95" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-95" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-95" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-95" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-95" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1445,19 +1445,38 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
 }
 @keyframes fastyBadgePop{0%{transform:scale(0);}100%{transform:scale(1);}}
 
-/* A small nudge, not a callout — sits level with the toggle button and
-   just clear of it, compact enough to read as a label rather than a
-   second UI surface. Auto-dismisses itself (see initFasty() in
-   app.js) so it never lingers and competes with the page. */
+/* A small nudge, not a callout — sits directly above the toggle
+   button, compact enough to read as a label rather than a second UI
+   surface. Stays up (see initFasty() in app.js) until the visitor
+   either opens the chat or dismisses it directly, gently breathing
+   in and out on a slow loop the whole time so it stays noticeable
+   without ever feeling like it's flashing or demanding attention. */
 .fasty-hint{
-  position:absolute; right:calc(100% + 12px); top:50%; z-index:-1;
+  position:absolute; bottom:calc(100% + 12px); right:50%; transform:translateX(50%) translateY(6px);
   display:flex; align-items:center; gap:6px; padding:8px 8px 8px 14px; border-radius:100px;
   background:var(--bg-1); border:1px solid var(--line); box-shadow:var(--shadow-md);
   font-size:13px; font-weight:600; color:var(--text-0); white-space:nowrap;
-  opacity:0; visibility:hidden; transform:translateY(-50%) translateX(6px);
-  transition:opacity .3s ease, transform .3s ease, visibility 0s linear .3s;
+  opacity:0; visibility:hidden; z-index:-1;
+  transition:transform .3s ease, visibility 0s linear .3s;
 }
-.fasty-hint.visible{opacity:1; visibility:visible; transform:translateY(-50%) translateX(0); z-index:1; transition:opacity .3s ease, transform .3s ease;}
+.fasty-hint.visible{
+  visibility:visible; transform:translateX(50%) translateY(0); z-index:1;
+  transition:transform .3s ease;
+  animation:fastyHintBreathe 5s ease-in-out infinite;
+}
+@keyframes fastyHintBreathe{
+  0%{opacity:0;}
+  10%{opacity:1;}
+  70%{opacity:1;}
+  80%{opacity:0;}
+  100%{opacity:0;}
+}
+/* The global reduced-motion override forces every animation to a
+   single near-instant run — for a loop that spends its last stretch
+   at opacity:0, that would freeze the hint invisible rather than
+   just skip its motion. Overriding back to a static, fully visible
+   state here keeps the hint legible without animating it. */
+@media (prefers-reduced-motion: reduce){.fasty-hint.visible{animation:none; opacity:1;}}
 .fasty-hint-close{
   width:18px; height:18px; border-radius:50%; border:none; background:var(--surface-2); color:var(--text-2);
   display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto; padding:0;
@@ -1567,8 +1586,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-94" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-94" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-95" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-95" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1882,8 +1901,8 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-94" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-94" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-95" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-95" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2026,7 +2045,7 @@ footer{padding:56px 0 0; border-top:1px solid var(--line-soft); margin-top:40px;
   </div>
 </div>
 
-<script src="assets/creative-data.js?v=20260811-94"></script>
-<script src="assets/app.js?v=20260811-94"></script>
+<script src="assets/creative-data.js?v=20260811-95"></script>
+<script src="assets/app.js?v=20260811-95"></script>
 </body>
 </html>
