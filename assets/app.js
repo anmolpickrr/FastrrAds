@@ -599,38 +599,63 @@
      boxed panel) plus who delivers it.
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
-  const svcPanelHost = document.getElementById("svcPanelHost");
+  const svcExpand = document.getElementById("svcExpand");
   const svcPanelInner = document.getElementById("svcPanelInner");
   const tierRow = document.getElementById("tierRow");
   const scopePanel = document.getElementById("scopePanel");
   const SERVICE_ORDER = ["reels", "catalogue", "static", "carousel"];
   let lastNavService = null;
 
-  function renderServiceNav() {
-    svcNav.querySelectorAll(".svc-card").forEach((card) => {
-      const isActive = card.dataset.svc === state.service;
-      card.classList.toggle("active", isActive);
-      const head = card.querySelector(".svc-card-head");
-      if (head) head.setAttribute("aria-selected", String(isActive));
+  // The tab row never resizes — only the window below it does. This
+  // pins #svcExpand to its pre-switch pixel height, lets the new
+  // service's content render (already done by the time this runs,
+  // since it's only ever called after the synchronous render() pass
+  // that updates it), then transitions to the real new height and
+  // clears the inline height once settled so future organic reflows
+  // (e.g. a browser resize) aren't left pinned to a stale value.
+  function animateExpandHeight(startH) {
+    if (!startH) return;
+    requestAnimationFrame(() => {
+      const endH = svcExpand.scrollHeight;
+      if (Math.abs(endH - startH) < 1) return;
+      svcExpand.style.height = startH + "px";
+      void svcExpand.offsetHeight;
+      svcExpand.style.transition = "height .45s cubic-bezier(.16,1,.3,1)";
+      svcExpand.style.height = endH + "px";
+      const onEnd = (e) => {
+        if (e.target !== svcExpand || e.propertyName !== "height") return;
+        svcExpand.style.transition = "";
+        svcExpand.style.height = "";
+        svcExpand.removeEventListener("transitionend", onEnd);
+      };
+      svcExpand.addEventListener("transitionend", onEnd);
     });
-    // The one shared panel docks inside whichever card is active, so
-    // that card visibly grows to hold it while the other three shrink
-    // together — a single coordinated motion across the whole row
-    // (each card's own flex-grow transition runs in parallel), not an
-    // independent per-card toggle. Only re-dock/re-animate when the
-    // service actually changed (render() runs on plenty of unrelated
-    // state changes too, e.g. cart edits, which shouldn't replay this).
+  }
+
+  function renderServiceNav() {
+    svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
+      const isActive = btn.dataset.svc === state.service;
+      btn.setAttribute("aria-selected", String(isActive));
+      btn.classList.toggle("active", isActive);
+    });
+    // The tab row's own size never changes on selection — only the
+    // window below it (#svcExpand) does, morphing height and sliding
+    // its content in from whichever direction the clicked tab sits
+    // relative to the previous one. Only re-animate when the service
+    // actually changed (render() runs on plenty of unrelated state
+    // changes too, e.g. cart edits, which shouldn't replay this).
     if (state.service !== lastNavService) {
+      const isFirst = lastNavService === null;
       const fromIdx = SERVICE_ORDER.indexOf(lastNavService);
       const toIdx = SERVICE_ORDER.indexOf(state.service);
-      const goingLeft = lastNavService !== null && toIdx < fromIdx;
+      const goingLeft = !isFirst && toIdx < fromIdx;
+      const startH = svcExpand.offsetHeight;
       lastNavService = state.service;
-      const slot = svcNav.querySelector(`.svc-card-slot[data-slot="${state.service}"]`);
-      if (slot && svcPanelHost.parentElement !== slot) slot.appendChild(svcPanelHost);
       svcPanelInner.classList.remove("is-entering", "dir-left");
       void svcPanelInner.offsetWidth;
       svcPanelInner.classList.add("is-entering");
       if (goingLeft) svcPanelInner.classList.add("dir-left");
+      if (!isFirst) animateExpandHeight(startH);
     }
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
@@ -1353,7 +1378,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-card-head, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
       );
       if (!el) return;
       e.preventDefault();
@@ -1365,7 +1390,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".svc-card-head").forEach((btn) => {
+  svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
     btn.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.service = btn.dataset.svc;
