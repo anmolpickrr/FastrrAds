@@ -599,6 +599,7 @@
      boxed panel) plus who delivers it.
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
+  const svcStage = document.getElementById("svcStage");
   const svcExpand = document.getElementById("svcExpand");
   const svcPanelInner = document.getElementById("svcPanelInner");
   const tierRow = document.getElementById("tierRow");
@@ -651,6 +652,7 @@
       const goingLeft = !isFirst && toIdx < fromIdx;
       const startH = svcExpand.offsetHeight;
       lastNavService = state.service;
+      svcStage.className = "svc-stage accent-" + state.service;
       svcPanelInner.classList.remove("is-entering", "dir-left");
       void svcPanelInner.offsetWidth;
       svcPanelInner.classList.add("is-entering");
