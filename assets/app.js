@@ -454,10 +454,6 @@
     const req = document.getElementById("specialReqInput");
     if (req) req.value = state.specialReq;
   }
-  function hasInProgressOrder() {
-    return state.cart.length > 0;
-  }
-
   /* ----------------------------------------------------------
      0c. VIDEO PLAYBACK CONCURRENCY CAP — shared by the hero orbit and
      the filmstrip below it (see their IntersectionObserver setup).
@@ -577,6 +573,11 @@
 
   function removeCartItem(id) {
     state.cart = state.cart.filter((i) => i.id !== id);
+    render();
+  }
+
+  function clearCart() {
+    state.cart = [];
     render();
   }
 
@@ -839,6 +840,8 @@
     const list = document.getElementById("orderCartList");
     document.getElementById("ocCount").textContent =
       cart.items.length === 0 ? "0 items" : cart.items.length === 1 ? "1 item" : `${cart.items.length} items`;
+    const clearBtn = document.getElementById("orderCartClearBtn");
+    if (clearBtn) clearBtn.hidden = cart.items.length === 0;
 
     // A coupon ticket (code stub + copy), not a plain notification bar
     // or an abstract percentage badge — the code itself is always
@@ -1380,7 +1383,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button"
+        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button, #orderCartClearBtn"
       );
       if (!el) return;
       e.preventDefault();
@@ -1504,6 +1507,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       else if (action === "remove") removeCartItem(id);
     });
   });
+
+  const orderCartClearBtn = document.getElementById("orderCartClearBtn");
+  if (orderCartClearBtn) {
+    orderCartClearBtn.addEventListener("click", () => {
+      withScrollAnchor(clearCart);
+    });
+  }
 
   const brandNameInput = document.getElementById("brandNameInput");
   const websiteInput = document.getElementById("websiteInput");
@@ -2608,21 +2618,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   });
 
-  // Browsers deliberately don't allow a custom message or custom
-  // buttons here (a long-standing anti-abuse restriction — every
-  // browser shows its own generic "Leave site? Changes may not be
-  // saved" wording, Cancel/Leave only, regardless of what's set
-  // below) — so this can't offer "Save & Continue Later / Discard /
-  // Cancel" as distinct options. It doesn't need to, though: the
-  // order/brand-field state above is already autosaved to
-  // localStorage on every change, so nothing is actually lost
-  // whichever way someone leaves — this prompt is just an extra pause
-  // before an accidental close, not what makes the draft durable.
-  window.addEventListener("beforeunload", (e) => {
-    if (!hasInProgressOrder()) return;
-    e.preventDefault();
-    e.returnValue = "";
-  });
+  // No beforeunload confirmation here on purpose: browsers don't allow
+  // a custom message or custom buttons on that prompt (every browser
+  // shows its own generic "Leave site? Changes may not be saved"
+  // wording, Cancel/Leave only) so it can only ever appear as a jarring
+  // system dialog, not a page-native one — and it's redundant besides,
+  // since the order/brand-field state is already autosaved to
+  // localStorage on every change (see persistState()/restoreState()),
+  // so nothing is actually lost however someone leaves. The explicit
+  // per-item ✕ and the cart-level Clear button (#orderCartClearBtn,
+  // wired below) are the real, always-visible way to discard a draft.
 
   // Minimal cart-replacement hook so team.js (a separate script/
   // closure with no access to this file's private `state`) can drive
