@@ -1991,9 +1991,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // instead, so they're never mistaken for a real category.
   function workCardMetaHTML(item) {
     const isDemo = item.cat === "demo";
-    return isDemo
-      ? `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`
-      : `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
+    if (isDemo) return `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`;
+    // Static/Carousel cards drop the category pill overlay entirely,
+    // by request — Reels/Catalogue keep it.
+    if (activeShowcaseCat === "static" || activeShowcaseCat === "carousel") return "";
+    return `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
   }
 
   function workCardHTML(item, idx) {
