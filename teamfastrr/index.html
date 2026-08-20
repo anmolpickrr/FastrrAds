@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-108" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-108" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-108" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-108" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-108" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-108" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-108" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-108" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-108" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-108" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-108" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-108" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-109" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-109" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-109" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-109" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-109" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-109" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-109" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-109" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-109" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-109" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-109" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-109" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1447,45 +1447,36 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    the site's global prefers-reduced-motion rule like every other
    animation on the page. */
 footer{padding:64px 0 0; margin-top:40px;}
-/* A real card, not text floating over the page background — a glass
-   panel with two slow-drifting glow blobs (the same ambient-motion
-   language the Services section uses) so the page's last moment
-   before the footer reads as one deliberate, premium close rather
-   than a plain centered heading + button. Two-column on desktop
-   (message left, action right, the way most modern SaaS closing
-   bands are laid out) so the flow reads left-to-right instead of a
-   stacked announcement; collapses to centered/stacked once there's
-   no room for two columns to breathe. */
+/* A quiet, single-column closing statement instead of a two-column
+   card with moving glow blobs — the calmer "one line, one button"
+   pattern modern SaaS sites use for their last CTA before the
+   footer, built from restraint rather than decoration: a fine dot
+   grid (radial-gradient dots, not an image) that fades toward every
+   edge via a mask, one big confident headline, and a single centered
+   button. No motion at all here — the Services section already
+   carries the page's ambient-glow language, so this section reads as
+   a deliberate change of pace, not a repeat of it. */
 .footer-cta{
-  position:relative; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:32px;
-  padding:clamp(28px,4vw,44px) clamp(24px,4vw,48px); margin-bottom:44px;
-  border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
-  box-shadow:var(--shadow-md), var(--inset-hi);
+  position:relative; overflow:hidden; text-align:center; padding:clamp(56px,8vw,88px) 24px;
+  margin-bottom:44px; border-radius:var(--radius); background:var(--surface-1); border:1px solid var(--line);
 }
-.footer-cta-glow{position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0; opacity:.22; will-change:transform;}
-.footer-cta-glow.g1{width:280px; height:280px; top:-90px; left:-40px; background:var(--violet); animation:footerGlowA 15s ease-in-out infinite alternate;}
-.footer-cta-glow.g2{width:220px; height:220px; bottom:-80px; right:6%; background:var(--teal); opacity:.16; animation:footerGlowB 19s ease-in-out infinite alternate;}
-@keyframes footerGlowA{0%{transform:translate(0,0);}100%{transform:translate(30px,20px);}}
-@keyframes footerGlowB{0%{transform:translate(0,0);}100%{transform:translate(-24px,-18px);}}
-@media (prefers-reduced-motion: reduce){.footer-cta-glow{animation:none;}}
-.footer-cta-text{position:relative; z-index:1; max-width:520px;}
-.footer-cta-text .eyebrow{margin-bottom:10px;}
-/* Toned down from an earlier pass that read as too loud next to the
-   rest of the page — medium weight (not the browser-default bold
-   every heading otherwise gets) and var(--text-1) instead of
-   full-contrast white, so this reads as a calm closing line rather
-   than shouting over the button beside it. */
-.footer-cta-text h3{font-size:clamp(19px,2.2vw,26px); font-weight:600; letter-spacing:-0.01em; line-height:1.3; color:var(--text-1);}
-.footer-cta-text p{margin-top:10px; font-size:14px; line-height:1.6; color:var(--text-2); max-width:440px;}
-.footer-cta-btn{position:relative; z-index:1; flex:0 0 auto; display:inline-flex; align-items:center; gap:9px; white-space:nowrap;}
+.footer-cta::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:radial-gradient(var(--line) 1px, transparent 1px);
+  background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(ellipse 60% 100% at 50% 50%, #000 30%, transparent 78%);
+  mask-image:radial-gradient(ellipse 60% 100% at 50% 50%, #000 30%, transparent 78%);
+  opacity:.55;
+}
+.footer-cta-text{position:relative; z-index:1; max-width:520px; margin:0 auto;}
+.footer-cta-text .eyebrow{justify-content:center; margin-bottom:14px;}
+.footer-cta-text h3{font-size:clamp(24px,3.4vw,34px); font-weight:700; letter-spacing:-0.02em; line-height:1.2; color:var(--text-0);}
+.footer-cta-text p{margin:14px auto 0; font-size:14.5px; line-height:1.6; color:var(--text-2); max-width:400px;}
+.footer-cta-btn{
+  position:relative; z-index:1; display:inline-flex; align-items:center; gap:9px; white-space:nowrap; margin-top:30px;
+}
 .footer-cta-btn svg{width:15px; height:15px; transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
 .footer-cta-btn:hover svg{transform:translateX(4px);}
-@media (max-width:720px){
-  .footer-cta{flex-direction:column; text-align:center; gap:20px;}
-  .footer-cta-text{max-width:none;}
-  .footer-cta-text p{max-width:none;}
-  .footer-cta-btn{width:100%; justify-content:center;}
-}
 
 /* Minimal, compact close to the page — brand + tagline anchor the
    left, a plain horizontal link row sits on the right (not a labeled
@@ -1685,8 +1676,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-108" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-108" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-109" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-109" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2137,8 +2128,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-108" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-108" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-109" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-109" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2410,8 +2401,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-108"></script>
-<script src="assets/app.js?v=20260811-108"></script>
-<script type="module" src="assets/team.js?v=20260811-108"></script>
+<script src="assets/creative-data.js?v=20260811-109"></script>
+<script src="assets/app.js?v=20260811-109"></script>
+<script type="module" src="assets/team.js?v=20260811-109"></script>
 </body>
 </html>
