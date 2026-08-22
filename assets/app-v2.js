@@ -2967,12 +2967,35 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       }, delay);
     }
 
+    // Icon SVGs kept as plain markup strings (not a shared icon map
+    // elsewhere) since these four are only ever used here, in the
+    // action-grid launcher shown before the first real message.
     const QUICK_STARTERS = [
-      { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
-      { label: "How does ordering work?", text: "How does the order process work?" },
-      { label: "Turnaround time", text: "What's the turnaround time?" },
-      { label: "Discounts & GST", text: "Tell me about discounts and GST" },
-      { label: "Talk to the team", text: "I'd like to talk to the team" },
+      {
+        label: "Services & pricing",
+        text: "What services do you offer and what do they cost?",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+      },
+      {
+        label: "How ordering works",
+        text: "How does the order process work?",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+      },
+      {
+        label: "Turnaround time",
+        text: "What's the turnaround time?",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+      },
+      {
+        label: "Discounts & GST",
+        text: "Tell me about discounts and GST",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2h-4l-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/><path d="M14 15l6 6M20 15l-6 6"/></svg>',
+      },
+      {
+        label: "Talk to the team",
+        text: "I'd like to talk to the team",
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+      },
     ];
     function renderQuickChips() {
       quickEl.innerHTML = "";
@@ -2980,7 +3003,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         const b = document.createElement("button");
         b.type = "button";
         b.className = "fasty-quick-chip";
-        b.textContent = q.label;
+        b.innerHTML = `<span class="fasty-quick-icon">${q.icon}</span><span class="fasty-quick-label">${escapeHtml(q.label)}</span>`;
         b.addEventListener("click", () => sendUserMessage(q.text));
         quickEl.appendChild(b);
       });
