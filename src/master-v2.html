@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-112" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-112" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-112" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-112" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-112" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-112" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-112" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-112" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-112" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-112" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-112" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-113" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-113" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-113" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-113" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-113" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-113" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-113" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-113" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-113" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-113" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-113" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-113" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -572,102 +572,87 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .lb-next:hover{transform:translateY(-50%) translateX(4px) scale(1.06); background:rgba(255,255,255,.14);}
 @media (max-width:700px){.lb-prev,.lb-next{width:38px; height:38px;} .lb-prev{left:8px;} .lb-next{right:8px;} .lb-close{top:10px; right:10px;}}
 
-/* ---------- SERVICES ----------
-   Small equal tabs (icon + name + price only — no index label, kept
-   deliberately short) sit above one expandable window. Each tab
-   carries its own accent color (--accent, set inline per tab); the
-   active one gets a slowly-rotating conic-gradient ring in that color
-   plus a spring-in checkmark, and the whole stage (.svc-stage) picks
-   up two soft, slowly-drifting blurred glow blobs tinted to the
-   active service's accent (--svc-accent, toggled via the
-   accent-<service> classes below, transitioned by JS in
-   renderServiceNav()) — ambient motion that reads as alive without
-   competing with the content. The window below morphs height between
-   services (#svcExpand / animateExpandHeight() in app.js) while its
-   content slides + scales in from the direction of the clicked tab.
-   The tab row itself never resizes on selection. */
-.svc-stage{position:relative;}
-.svc-stage.accent-reels{--svc-accent:var(--violet);}
-.svc-stage.accent-catalogue{--svc-accent:var(--teal);}
-.svc-stage.accent-static{--svc-accent:var(--gold);}
-.svc-stage.accent-carousel{--svc-accent:var(--danger);}
-.svc-glow{
-  position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0;
-  background:var(--svc-accent, var(--violet)); opacity:.16;
-  transition:background .6s ease; will-change:transform;
+/* ---------- SERVICES / PACKAGES ----------
+   A grid of package cards, not a tab row — clicking one opens a
+   modal that visually grows out of that exact card via a FLIP
+   transform morph (openPkgModal()/closePkgModal() in app-v2.js): the
+   modal is momentarily positioned/sized (via transform) to exactly
+   match the clicked card's own rect with transitions disabled, then
+   released to its real centered size with transitions enabled, so
+   the browser animates the difference — the "card becomes the
+   detail view" motion, not a generic fade-in dialog. Each card
+   carries its own accent color (--accent); the modal picks up that
+   same accent for its glow and reuses the exact panel content/IDs
+   the section always had (svcName/tier-row/svc-glance/scope-panel),
+   so none of the underlying rendering logic changed. */
+.pkg-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px;}
+.pkg-card{
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:14px;
+  padding:26px 22px; border-radius:var(--radius); background:var(--surface-1); border:1px solid var(--line);
+  text-align:left; cursor:pointer; color:inherit; overflow:hidden;
+  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
 }
-.svc-glow.g1{width:340px; height:340px; top:-80px; left:8%; animation:svcGlowFloatA 16s ease-in-out infinite alternate;}
-.svc-glow.g2{width:280px; height:280px; bottom:-60px; right:10%; opacity:.13; animation:svcGlowFloatB 20s ease-in-out infinite alternate;}
-@keyframes svcGlowFloatA{0%{transform:translate(0,0) scale(1);}100%{transform:translate(36px,26px) scale(1.08);}}
-@keyframes svcGlowFloatB{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-30px,-22px) scale(1.05);}}
-@media (prefers-reduced-motion: reduce){.svc-glow{animation:none;}}
+.pkg-card::before{
+  content:''; position:absolute; inset:0; z-index:0; opacity:0; pointer-events:none;
+  background:radial-gradient(140px 140px at 26% -10%, var(--accent), transparent 72%);
+  transition:opacity .35s ease;
+}
+.pkg-card:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 18px 36px -20px var(--accent), var(--shadow-sm);}
+.pkg-card:hover::before{opacity:.16;}
+.pkg-card:active{transform:translateY(-1px) scale(.99);}
+.pkg-card:focus-visible{outline:none; border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);}
+.pkg-card-icon{
+  position:relative; z-index:1; width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.pkg-card-icon svg{width:20px; height:20px;}
+.pkg-card:hover .pkg-card-icon{transform:scale(1.1) rotate(-4deg);}
+.pkg-card-name{position:relative; z-index:1; font-family:var(--font-display); font-size:16.5px; font-weight:700; letter-spacing:-0.01em; color:var(--text-0);}
+.pkg-card-desc{position:relative; z-index:1; font-size:12.5px; line-height:1.55; color:var(--text-2); flex:1 1 auto;}
+.pkg-card-foot{
+  position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; width:100%;
+  padding-top:14px; border-top:1px solid var(--line-soft);
+}
+.pkg-card-price{font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--accent);}
+.pkg-card-arrow{width:15px; height:15px; color:var(--text-2); transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease;}
+.pkg-card:hover .pkg-card-arrow{transform:translateX(4px); color:var(--accent);}
+@media (max-width:900px){.pkg-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:520px){.pkg-grid{grid-template-columns:1fr;}}
 
-.svc-tabrow{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
-.svc-tab{
-  position:relative; flex:1 1 200px; display:flex; align-items:center; gap:12px;
-  padding:14px 40px 14px 16px; border-radius:var(--radius-sm); background:var(--surface-1);
-  border:1px solid var(--line); opacity:.62; cursor:pointer; text-align:left; color:inherit;
-  transition:opacity .25s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+/* Modal — flex-centered inside the backdrop rather than centered via
+   its own transform, so .pkg-modal's transform stays entirely free
+   for the FLIP morph (no fighting with a translate(-50%,-50%)
+   centering trick). */
+.pkg-modal-backdrop{
+  position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center; padding:24px;
+  background:rgba(4,6,10,.62); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  opacity:0; visibility:hidden; transition:opacity .35s ease, visibility 0s linear .35s;
 }
-.svc-tab:hover{opacity:.88; background:var(--surface-hover); transform:translateY(-2px);}
-.svc-tab.active{
-  opacity:1; background:var(--glass); border-color:var(--accent);
-  box-shadow:0 10px 26px -14px var(--accent), var(--inset-hi);
+.pkg-modal-backdrop.open{opacity:1; visibility:visible; transition:opacity .35s ease, visibility 0s linear 0s;}
+.pkg-modal{
+  position:relative; width:min(720px, 100%); max-height:min(84vh, 820px); border-radius:var(--radius);
+  background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
+  overflow:hidden; transform-origin:center center;
+  border-color:color-mix(in srgb, var(--accent, var(--violet)) 35%, var(--line));
 }
-/* A slim conic-gradient ring, masked to just the border, slowly
-   spinning around the active tab — the "flashy" cue that this one is
-   open, contained to a thin outline so it stays subtle. Degrades
-   gracefully to a static ring wherever @property isn't supported. */
-@property --svc-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
-.svc-tab.active::before{
-  content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
-  background:conic-gradient(from var(--svc-spin), var(--accent), transparent 28%, var(--accent) 55%, transparent 85%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.75; pointer-events:none; animation:svcSpin 3.2s linear infinite;
+.pkg-modal-glow{
+  position:absolute; top:-70px; right:-70px; width:260px; height:260px; border-radius:50%; filter:blur(70px);
+  background:var(--accent, var(--violet)); opacity:.2; pointer-events:none; z-index:0;
 }
-@keyframes svcSpin{to{--svc-spin:360deg;}}
-@media (prefers-reduced-motion: reduce){.svc-tab.active::before{animation:none;}}
-.svc-tab-icon{
-  flex:0 0 auto; width:20px; height:20px; display:flex; align-items:center; justify-content:center;
-  color:var(--text-2); transition:color .25s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+.pkg-modal-close{
+  position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; background:var(--surface-1); border:1px solid var(--line);
+  color:var(--text-1); transition:background .2s ease, color .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
 }
-.svc-tab-icon svg{width:18px; height:18px;}
-.svc-tab.active .svc-tab-icon{color:var(--accent); transform:scale(1.12);}
-.svc-tab-body{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:3px;}
-.svc-tab-name{
-  font-family:var(--font-display); font-size:14px; font-weight:700; letter-spacing:-0.01em;
-  color:var(--text-1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color .25s ease;
-}
-.svc-tab.active .svc-tab-name{color:var(--text-0);}
-.svc-tab-price{font-family:var(--font-mono); font-size:11px; color:var(--text-2); transition:color .25s ease;}
-.svc-tab.active .svc-tab-price{color:var(--accent);}
-.svc-tab-check{
-  position:absolute; top:50%; right:14px; width:18px; height:18px; border-radius:50%;
-  background:var(--accent); color:var(--btn-ink); font-size:10px; font-weight:800;
-  display:flex; align-items:center; justify-content:center; transform:translateY(-50%) scale(0);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-}
-.svc-tab.active .svc-tab-check{transform:translateY(-50%) scale(1);}
-.svc-tab:focus-visible{outline:none; box-shadow:0 0 0 2px var(--accent);}
-@media (max-width:720px){.svc-tab{flex:1 1 calc(50% - 5px);} .svc-tab-price{display:none;}}
-@media (max-width:480px){.svc-tab{flex:1 1 100%;}}
+.pkg-modal-close svg{width:15px; height:15px;}
+.pkg-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
+.pkg-modal-close:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent, var(--violet)) 40%, transparent);}
+.pkg-modal-scroll{position:relative; z-index:1; max-height:min(84vh, 820px); overflow-y:auto;}
+@media (max-width:640px){.pkg-modal{width:100%;}}
+body.pkg-modal-open{overflow:hidden;}
 
-/* The expand wrapper is what actually animates open/closed height
-   between services; the panel inside it just supplies the card
-   chrome, tinted to the active accent so the glow blobs, tab ring,
-   and panel border all read as one cohesive color story per service. */
-.svc-expand{position:relative; z-index:1; overflow:hidden;}
-.svc-panel{
-  border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
-  box-shadow:var(--shadow-md), var(--inset-hi); transition:border-color .5s ease;
-  border-color:color-mix(in srgb, var(--svc-accent, var(--violet)) 35%, var(--line));
-}
 .svc-panel-inner{padding:26px clamp(20px,4vw,40px) 30px;}
-.svc-panel-inner.is-entering{animation:svcPanelOpenRight .46s cubic-bezier(.16,1,.3,1);}
-.svc-panel-inner.dir-left{animation-name:svcPanelOpenLeft;}
-@keyframes svcPanelOpenRight{0%{opacity:0; transform:translateX(18px) scale(.98);}100%{opacity:1; transform:translateX(0) scale(1);}}
-@keyframes svcPanelOpenLeft{0%{opacity:0; transform:translateX(-18px) scale(.98);}100%{opacity:1; transform:translateX(0) scale(1);}}
 .svc-panel-head{
   display:flex; justify-content:space-between; align-items:flex-end; gap:28px; flex-wrap:wrap;
   padding-bottom:26px; border-bottom:1px solid var(--line-soft);
@@ -1678,8 +1663,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-113" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-113" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1819,90 +1804,96 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">02 — Services &amp; Package Scope</span>
       <h2>Pick a service.<br>See the exact scope.</h2>
-      <p>Pick a service below, and a cut too if it's an AI Reel. Price, scope, and delivery details update instantly, everywhere on this page.</p>
+      <p>Pick a package below to see the exact scope open up — price, deliverables, and delivery details, all in one place.</p>
     </div>
 
-    <!-- A single row of small equal tabs (#svcNav), and one expandable
-         window below (#svcExpand) that the whole panel lives inside —
-         picking a tab never resizes the row itself, only opens/morphs
-         the window below it (animateExpandHeight() in app.js) and
-         slides+scales the panel's content in from that tab's direction
-         (the .is-entering/.dir-* classes on #svcPanelInner). The whole
-         thing sits in #svcStage, whose accent-<service> class (toggled
-         alongside the tab switch) tints the ambient glow blobs, the
-         active tab's spinning ring, and the panel border to match. -->
-    <div class="svc-stage accent-reels" id="svcStage">
-      <div class="svc-glow g1" aria-hidden="true"></div>
-      <div class="svc-glow g2" aria-hidden="true"></div>
+    <!-- A grid of package cards (#svcNav); clicking one opens a modal
+         that visually grows out of the clicked card via a FLIP
+         transform morph (openPkgModal()/closePkgModal() in app-v2.js
+         — the modal is momentarily positioned/sized to match the
+         card's own rect with transitions off, then released to its
+         real centered size with transitions on, so the browser
+         animates the difference between the two). The modal reuses
+         the exact same content/IDs the old inline panel used
+         (svcName/svcGlance/tier-row/scope-panel), so all rendering
+         logic is untouched — only how it's revealed changed. -->
+    <div class="pkg-grid reveal-on-scroll" id="svcNav">
+      <button type="button" class="pkg-card" data-svc="reels" style="--accent:var(--violet);">
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+        <span class="pkg-card-name">AI Reels</span>
+        <span class="pkg-card-desc">Script-to-screen AI reels across 4 package tiers.</span>
+        <span class="pkg-card-foot">
+          <span class="pkg-card-price">From ₹2,500</span>
+          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </span>
+      </button>
+      <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--teal);">
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></span>
+        <span class="pkg-card-name">360° Catalogue Video</span>
+        <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
+        <span class="pkg-card-foot">
+          <span class="pkg-card-price">From ₹1,800</span>
+          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </span>
+      </button>
+      <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--gold);">
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg></span>
+        <span class="pkg-card-name">Static Creative</span>
+        <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
+        <span class="pkg-card-foot">
+          <span class="pkg-card-price">From ₹499</span>
+          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </span>
+      </button>
+      <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--danger);">
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></span>
+        <span class="pkg-card-name">Carousel Creative</span>
+        <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
+        <span class="pkg-card-foot">
+          <span class="pkg-card-price">From ₹1,499</span>
+          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </span>
+      </button>
+    </div>
 
-      <div class="svc-tabrow reveal-on-scroll" id="svcNav" role="tablist">
-        <button type="button" class="svc-tab active" data-svc="reels" role="tab" aria-selected="true" style="--accent:var(--violet);">
-          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
-          <span class="svc-tab-body">
-            <span class="svc-tab-name">AI Reels</span>
-            <span class="svc-tab-price">From ₹2,500</span>
-          </span>
-          <span class="svc-tab-check">✓</span>
+    <div class="pkg-modal-backdrop" id="pkgModalBackdrop">
+      <div class="pkg-modal" id="pkgModal" role="dialog" aria-modal="true" aria-label="Package details">
+        <span class="pkg-modal-glow" id="pkgModalGlow" aria-hidden="true"></span>
+        <button type="button" class="pkg-modal-close" id="pkgModalClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <button type="button" class="svc-tab" data-svc="catalogue" role="tab" aria-selected="false" style="--accent:var(--teal);">
-          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></span>
-          <span class="svc-tab-body">
-            <span class="svc-tab-name">360° Catalogue Video</span>
-            <span class="svc-tab-price">From ₹1,800</span>
-          </span>
-          <span class="svc-tab-check">✓</span>
-        </button>
-        <button type="button" class="svc-tab" data-svc="static" role="tab" aria-selected="false" style="--accent:var(--gold);">
-          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg></span>
-          <span class="svc-tab-body">
-            <span class="svc-tab-name">Static Creative</span>
-            <span class="svc-tab-price">From ₹499</span>
-          </span>
-          <span class="svc-tab-check">✓</span>
-        </button>
-        <button type="button" class="svc-tab" data-svc="carousel" role="tab" aria-selected="false" style="--accent:var(--danger);">
-          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></span>
-          <span class="svc-tab-body">
-            <span class="svc-tab-name">Carousel Creative</span>
-            <span class="svc-tab-price">From ₹1,499</span>
-          </span>
-          <span class="svc-tab-check">✓</span>
-        </button>
-      </div>
-
-      <div class="svc-expand" id="svcExpand">
-      <div class="svc-panel" id="svcPanelHost">
-        <div class="svc-panel-inner" id="svcPanelInner">
-          <div class="svc-panel-head">
-            <div>
-              <h3 id="svcName">AI Reel</h3>
-              <p class="svc-panel-short" id="svcShort"></p>
+        <div class="pkg-modal-scroll">
+          <div class="svc-panel-inner" id="svcPanelInner">
+            <div class="svc-panel-head">
+              <div>
+                <h3 id="svcName">AI Reel</h3>
+                <p class="svc-panel-short" id="svcShort"></p>
+              </div>
+              <div class="svc-panel-price-wrap">
+                <div class="svc-panel-price" id="svcStartPrice"></div>
+                <div class="svc-min-order">Min. order value ₹10,000</div>
+              </div>
             </div>
-            <div class="svc-panel-price-wrap">
-              <div class="svc-panel-price" id="svcStartPrice"></div>
-              <div class="svc-min-order">Min. order value ₹10,000</div>
+
+            <div class="tier-row" id="tierRow">
+              <button class="tier-chip" data-tier="1"><span>Quick Cut</span><b>₹2,500</b></button>
+              <button class="tier-chip" data-tier="2"><span>Story Cut</span><b>₹3,500</b></button>
+              <button class="tier-chip active" data-tier="3"><span>Director's Cut</span><b>₹5,000</b></button>
+              <button class="tier-chip" data-tier="4"><span>Studio Cut</span><b>₹8,000</b></button>
             </div>
-          </div>
 
-          <div class="tier-row" id="tierRow">
-            <button class="tier-chip" data-tier="1"><span>Quick Cut</span><b>₹2,500</b></button>
-            <button class="tier-chip" data-tier="2"><span>Story Cut</span><b>₹3,500</b></button>
-            <button class="tier-chip active" data-tier="3"><span>Director's Cut</span><b>₹5,000</b></button>
-            <button class="tier-chip" data-tier="4"><span>Studio Cut</span><b>₹8,000</b></button>
-          </div>
+            <div class="svc-glance" id="svcGlance"></div>
 
-          <div class="svc-glance" id="svcGlance"></div>
-
-          <div class="scope-panel" id="scopePanel">
-            <div class="scope-tab-bar">
-              <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
-              <button class="scope-tab-btn" data-tab="exc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not Included</button>
-              <button class="scope-tab-btn" data-tab="need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg> Client Provides</button>
+            <div class="scope-panel" id="scopePanel">
+              <div class="scope-tab-bar">
+                <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
+                <button class="scope-tab-btn" data-tab="exc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not Included</button>
+                <button class="scope-tab-btn" data-tab="need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg> Client Provides</button>
+              </div>
+              <div class="scope-body" id="scopeBody"></div>
             </div>
-            <div class="scope-body" id="scopeBody"></div>
           </div>
         </div>
-      </div>
       </div>
     </div>
 
@@ -2159,8 +2150,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-113" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-113" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2503,10 +2494,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-112"></script>
-<script src="assets/app.js?v=20260811-112"></script>
+<script src="assets/creative-data.js?v=20260811-113"></script>
+<script src="assets/app-v2.js?v=20260811-113"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-112"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-113"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
