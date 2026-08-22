@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-114" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-114" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-114" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-114" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-114" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-114" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-114" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-114" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-114" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-114" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-114" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-114" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-118" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -604,7 +604,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    effects. */
 .pkg-card::after{
   content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--accent), transparent 30%, var(--accent) 55%, transparent 85%);
+  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.35; pointer-events:none; animation:pkgSpin 6s linear infinite;
@@ -624,7 +624,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    behind it, the same "orb" language the Fasty toggle uses. */
 .pkg-card-icon{
   position:relative; z-index:1; width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--accent) 60%, #fff), var(--accent) 70%);
+  background:linear-gradient(135deg, var(--violet), var(--teal));
   color:#0c0d10; box-shadow:0 8px 18px -6px var(--accent), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
   transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
 }
@@ -663,7 +663,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    static border once it opens. */
 .pkg-modal::after{
   content:''; position:absolute; inset:0; z-index:2; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--accent, var(--violet)), transparent 30%, var(--accent, var(--violet)) 55%, transparent 85%);
+  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.8; pointer-events:none; animation:pkgSpin 8s linear infinite;
@@ -1456,6 +1456,59 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
 .copy-btn.copy-error{background:var(--danger); color:var(--btn-ink); border-color:transparent;}
 
 
+/* ---------- TESTIMONIALS ----------
+   A single dark stage, deliberately breaking from the page's own
+   light/dark theme (like the reference board) rather than following
+   it — one soft top-down spotlight glow, one quiet oversized ghost
+   word sitting behind the cards, and a small handful of gently
+   tilted testimonial notes. Only two colors (violet/teal) carry the
+   glow throughout, same restraint as the rest of this redesign —
+   no per-card accent hues, no extra shapes beyond the one pin dot
+   per card. */
+.testi-stage{
+  position:relative; overflow:hidden; border-radius:var(--radius);
+  background:#08090c; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px);
+}
+.testi-spotlight{
+  position:absolute; top:-20%; left:50%; width:70%; height:70%; transform:translateX(-50%);
+  background:radial-gradient(ellipse at top, rgba(139,124,246,.28), transparent 65%);
+  pointer-events:none; z-index:0;
+}
+.testi-ghost{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-family:var(--font-display); font-weight:800; font-size:clamp(80px,14vw,180px); letter-spacing:-0.03em;
+  color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.14); white-space:nowrap; pointer-events:none; z-index:0;
+}
+.testi-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(3,1fr); gap:28px 22px;}
+.testi-card{
+  position:relative; transform:rotate(var(--tilt,0deg)); padding:26px 22px 22px; border-radius:14px;
+  background:#111319; border:1px solid rgba(255,255,255,.08); box-shadow:0 20px 40px -22px rgba(0,0,0,.7);
+  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, border-color .35s ease;
+}
+.testi-card:hover{transform:rotate(0deg) translateY(-6px); border-color:color-mix(in srgb, var(--violet) 45%, rgba(255,255,255,.08)); box-shadow:0 26px 50px -20px rgba(139,124,246,.35);}
+.testi-pin{
+  position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:12px; height:12px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff, var(--violet) 60%, var(--teal) 130%);
+  box-shadow:0 0 10px 2px color-mix(in srgb, var(--violet) 55%, transparent);
+}
+.testi-quote{font-size:14px; line-height:1.65; color:#d7d9de;}
+.testi-author{display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.08);}
+.testi-avatar{
+  width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#0c0d10; font-weight:700; font-size:13px;
+}
+.testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px;}
+.testi-author-text b{color:#f4f5f7; font-weight:600;}
+.testi-author-text span{color:#83899a;}
+@media (max-width:900px){.testi-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:640px){
+  .testi-grid{grid-template-columns:1fr; gap:22px;}
+  .testi-card{transform:none;}
+  .testi-card:hover{transform:translateY(-4px);}
+  .testi-ghost{font-size:22vw;}
+}
+
+
 /* ---------- FOOTER ----------
    Three movements instead of one flat link block: a CTA that gives the
    footer a reason to exist beyond "here are some links," the actual
@@ -1544,7 +1597,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 }
 .fasty-toggle::before{
   content:''; position:absolute; inset:-7px; border-radius:50%; z-index:-1;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 40%, var(--gold) 65%, var(--violet));
+  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet));
   filter:blur(9px); opacity:.55;
   animation:fastySpin 7s linear infinite, fastyPulse 3.4s ease-in-out infinite;
   transition:opacity .3s ease;
@@ -1646,7 +1699,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 
 .fasty-panel::before{
   content:''; position:absolute; inset:-2px; border-radius:calc(var(--radius) + 2px); padding:1.5px;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 35%, var(--gold) 60%, var(--violet) 100%);
+  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.85; pointer-events:none; animation:fastySpin 9s linear infinite;
@@ -1760,8 +1813,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-114" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-114" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1917,7 +1970,7 @@ footer{padding:64px 0 0; margin-top:40px;}
           <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </span>
       </button>
-      <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--teal);">
+      <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
         <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8Zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3Z"/></svg></span>
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
@@ -1926,7 +1979,7 @@ footer{padding:64px 0 0; margin-top:40px;}
           <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </span>
       </button>
-      <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--gold);">
+      <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
         <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
         <span class="pkg-card-name">Static Creative</span>
         <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
@@ -1935,7 +1988,7 @@ footer{padding:64px 0 0; margin-top:40px;}
           <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </span>
       </button>
-      <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--danger);">
+      <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
         <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 4.5A1.5 1.5 0 0 1 4.5 3h5A1.5 1.5 0 0 1 11 4.5v5A1.5 1.5 0 0 1 9.5 11h-5A1.5 1.5 0 0 1 3 9.5v-5Zm10 0A1.5 1.5 0 0 1 14.5 3h5A1.5 1.5 0 0 1 21 4.5v5A1.5 1.5 0 0 1 19.5 11h-5a1.5 1.5 0 0 1-1.5-1.5v-5ZM3 14.5A1.5 1.5 0 0 1 4.5 13h5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 9.5 21h-5A1.5 1.5 0 0 1 3 19.5v-5Zm10 0a1.5 1.5 0 0 1 1.5-1.5h5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-5Z"/></svg></span>
         <span class="pkg-card-name">Carousel Creative</span>
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
@@ -2144,6 +2197,54 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
+<section class="section" id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">04 — What Clients Say</span>
+      <h2>Real feedback.<br>From real campaigns.</h2>
+      <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
+    </div>
+
+    <!-- A single dark "spotlight" stage regardless of site theme (like
+         the reference board) — one soft top-down glow, one quiet
+         ghost word behind the cards, and 3 slightly tilted testimonial
+         notes, each with a small glowing pin dot instead of a literal
+         3D pushpin graphic, keeping the same restrained violet/teal
+         glow language the rest of the redesign uses. Placeholder
+         copy: swap in real client quotes before this goes live. -->
+    <div class="testi-stage reveal-on-scroll">
+      <span class="testi-spotlight" aria-hidden="true"></span>
+      <span class="testi-ghost" aria-hidden="true">Trusted</span>
+      <div class="testi-grid">
+        <div class="testi-card" style="--tilt:-4deg;">
+          <span class="testi-pin" aria-hidden="true"></span>
+          <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
+          <div class="testi-author">
+            <span class="testi-avatar">F</span>
+            <span class="testi-author-text"><b>Founder</b><span>D2C Beauty Brand</span></span>
+          </div>
+        </div>
+        <div class="testi-card" style="--tilt:3deg;">
+          <span class="testi-pin" aria-hidden="true"></span>
+          <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
+          <div class="testi-author">
+            <span class="testi-avatar">M</span>
+            <span class="testi-author-text"><b>Marketing Lead</b><span>Fashion &amp; Apparel</span></span>
+          </div>
+        </div>
+        <div class="testi-card" style="--tilt:-2deg;">
+          <span class="testi-pin" aria-hidden="true"></span>
+          <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
+          <div class="testi-author">
+            <span class="testi-avatar">G</span>
+            <span class="testi-author-text"><b>Growth Manager</b><span>Home &amp; Living</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="messages" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
@@ -2218,8 +2319,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-114" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-114" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2491,8 +2592,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-114"></script>
-<script src="assets/app-v2.js?v=20260811-114"></script>
-<script type="module" src="assets/team-v2.js?v=20260811-114"></script>
+<script src="assets/creative-data.js?v=20260811-118"></script>
+<script src="assets/app-v2.js?v=20260811-118"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-118"></script>
 </body>
 </html>
