@@ -3193,21 +3193,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   /* ----------------------------------------------------------
      TESTIMONIALS SPOTLIGHT
-     One soft light drifting on its own across the grid-wall stage
-     (a slow randomized loop, driven through the same --spot-x/
-     --spot-y + CSS transition the click-to-focus move uses, so both
-     read as one continuous light instead of two separate effects).
-     Clicking a card moves the light to it, brightens that card, and
-     fades the others; clicking the same card again — or the stage's
-     empty background — clears focus and resumes the idle drift.
+     One soft light drifting on its own across the grid-wall stage —
+     purely ambient now that the cards themselves scroll continuously
+     in two rows (see .testi-marquee in master-v2.html); there's no
+     single stable card position left to focus on click, so this is
+     just a slow randomized idle drift, nothing more.
   ---------------------------------------------------------- */
   function initTestiSpotlight() {
     const stage = document.getElementById("testiStage");
     if (!stage) return;
     const spotlight = document.getElementById("testiSpotlight");
-    const cards = Array.from(stage.querySelectorAll(".testi-card"));
-    let idleTimer = null;
-    let focused = false;
 
     function setSpot(xPct, yPct) {
       spotlight.style.setProperty("--spot-x", xPct + "%");
@@ -3215,64 +3210,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
 
     function idleDrift() {
-      if (focused) return;
       const x = 22 + Math.random() * 56;
       const y = 20 + Math.random() * 55;
       setSpot(x, y);
-      idleTimer = setTimeout(idleDrift, 3800 + Math.random() * 1600);
+      setTimeout(idleDrift, 3800 + Math.random() * 1600);
     }
-
-    function stopIdle() {
-      if (idleTimer) clearTimeout(idleTimer);
-      idleTimer = null;
-    }
-
-    function focusCard(card) {
-      const stageRect = stage.getBoundingClientRect();
-      const cardRect = card.getBoundingClientRect();
-      const x = ((cardRect.left + cardRect.width / 2 - stageRect.left) / stageRect.width) * 100;
-      const y = ((cardRect.top + cardRect.height / 2 - stageRect.top) / stageRect.height) * 100;
-      stopIdle();
-      focused = true;
-      stage.classList.add("focused");
-      setSpot(x, y);
-      cards.forEach((c) => {
-        const isActive = c === card;
-        c.classList.toggle("active", isActive);
-        c.setAttribute("aria-pressed", String(isActive));
-      });
-    }
-
-    function clearFocus() {
-      if (!focused) return;
-      focused = false;
-      stage.classList.remove("focused");
-      cards.forEach((c) => {
-        c.classList.remove("active");
-        c.setAttribute("aria-pressed", "false");
-      });
-      idleDrift();
-    }
-
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        if (card.classList.contains("active")) {
-          clearFocus();
-        } else {
-          focusCard(card);
-        }
-      });
-      card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          card.click();
-        }
-      });
-    });
-
-    stage.addEventListener("click", (e) => {
-      if (e.target === stage) clearFocus();
-    });
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setSpot(50, 30);
