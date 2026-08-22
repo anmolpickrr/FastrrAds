@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-128" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-128" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-128" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-128" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-128" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-128" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-128" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-128" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-128" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-128" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-128" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-128" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1653,39 +1653,63 @@ footer{padding:64px 0 0; margin-top:40px;}
    minimal text link underneath: an animated underline + arrow, not a
    filled pill. This is the calmest, least "componentized" this
    section can be while still reading as a deliberate closing moment. */
-.footer-cta{position:relative; text-align:center; padding:76px 20px 110px; margin-bottom:56px; isolation:isolate;}
-/* Decorative scene behind the statement. Two separate layers on
-   purpose: the glow wash is a huge inset (-140px), CSS-gradient-only
-   background — no child elements, so there's nothing for overflow to
-   clip and the gradient itself fades to transparent long before it
-   reaches its own box edge, which is what a moving blurred div
-   bounded by overflow:hidden couldn't guarantee (that's what was
-   producing the visible hard edge the glow used to cut off against).
-   No drift animation either — a static, generously-sized wash reads
-   calmer than something constantly re-testing its own clip boundary.
-   The particle layer stays tightly inset so its percentage-based
-   positions still land inside the visible statement, not out in the
-   glow wash's much larger box. */
+/* A cinematic, full-presence closing stage — no real photography
+   behind it (nothing in the asset library is an appropriate generic
+   backdrop: every real shot on this site is either a specific
+   person's face or another brand's branded/text creative, neither of
+   which belongs blurred into decorative wallpaper here), so the
+   "shallow depth of field forest" mood from the reference is built
+   entirely from layered CSS light: several soft out-of-focus color
+   blooms — cool violet/teal plus a warm amber tone standing in for
+   dappled sunlight — and a few tighter "bokeh disc" highlights, the
+   kind of soft circular blown-out points a real shallow-DOF shot
+   would show. */
+.footer-cta{position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate; min-height:clamp(520px,64vh,680px); display:flex; flex-direction:column; align-items:center; justify-content:center;}
 .footer-cta-glowwash{
-  position:absolute; inset:-140px; z-index:-2; pointer-events:none;
+  position:absolute; inset:-160px; z-index:-2; pointer-events:none;
   background:
-    radial-gradient(620px 460px at 26% 32%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 70%),
-    radial-gradient(660px 500px at 74% 70%, color-mix(in srgb, var(--teal) 18%, transparent), transparent 70%);
+    radial-gradient(70px 70px at 28% 62%, rgba(255,255,255,.16), transparent 72%),
+    radial-gradient(46px 46px at 66% 26%, rgba(255,255,255,.13), transparent 72%),
+    radial-gradient(54px 54px at 80% 66%, rgba(255,255,255,.1), transparent 72%),
+    radial-gradient(420px 380px at 20% 20%, color-mix(in srgb, var(--violet) 26%, transparent), transparent 68%),
+    radial-gradient(460px 420px at 84% 16%, color-mix(in srgb, #ffb457 18%, transparent), transparent 70%),
+    radial-gradient(520px 460px at 78% 80%, color-mix(in srgb, var(--teal) 24%, transparent), transparent 68%),
+    radial-gradient(360px 320px at 12% 84%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 68%),
+    radial-gradient(340px 300px at 50% 46%, color-mix(in srgb, #ffb457 9%, transparent), transparent 72%);
 }
 .footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none;}
+/* Drifting motes, not fixed twinkling dots — a slow fall-and-fade
+   (translateY + a little rotate) reads as the reference's falling
+   petals without needing actual leaf art; two of the seven carry a
+   warm amber tint for the same reason the glow wash does. */
 .footer-cta-particle{
   position:absolute; width:3px; height:3px; border-radius:50%; background:#fff;
-  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerTwinkle 4.5s ease-in-out infinite;
+  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerDrift 6.5s ease-in-out infinite;
 }
-.footer-cta-particle.p1{top:18%; left:14%; animation-delay:0s;}
-.footer-cta-particle.p2{top:64%; left:22%; width:2px; height:2px; animation-delay:.9s;}
-.footer-cta-particle.p3{top:30%; left:82%; animation-delay:1.8s;}
-.footer-cta-particle.p4{top:76%; left:78%; width:2px; height:2px; animation-delay:2.6s;}
-.footer-cta-particle.p5{top:10%; left:52%; width:2px; height:2px; animation-delay:3.3s;}
-.footer-cta-particle.p6{top:46%; left:8%; width:2px; height:2px; animation-delay:1.4s;}
-.footer-cta-particle.p7{top:52%; left:90%; animation-delay:2.1s;}
-@keyframes footerTwinkle{0%,100%{opacity:0; transform:scale(.4);}50%{opacity:1; transform:scale(1);}}
+.footer-cta-particle.p1{top:12%; left:14%; animation-delay:0s;}
+.footer-cta-particle.p2{top:58%; left:22%; width:2px; height:2px; animation-delay:1.3s;}
+.footer-cta-particle.p3{top:24%; left:82%; animation-delay:2.6s;}
+.footer-cta-particle.p4{top:70%; left:78%; width:2px; height:2px; animation-delay:3.9s;}
+.footer-cta-particle.p5{top:6%; left:52%; width:2px; height:2px; animation-delay:5s;}
+.footer-cta-particle.p6{top:40%; left:8%; width:2px; height:2px; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:2s;}
+.footer-cta-particle.p7{top:46%; left:91%; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:4.4s;}
+@keyframes footerDrift{
+  0%{opacity:0; transform:translateY(-8px) rotate(0deg) scale(.5);}
+  15%{opacity:1;}
+  85%{opacity:1;}
+  100%{opacity:0; transform:translateY(22px) rotate(50deg) scale(.8);}
+}
 @media (prefers-reduced-motion: reduce){.footer-cta-particle{animation:none; opacity:.5;}}
+/* Small editorial corner labels — the reference's minimal
+   "UXUI Project / 2024 / Planto" top corners, adapted to this site's
+   own content instead of a case-study slate. */
+.footer-cta-tag{
+  position:absolute; top:0; z-index:1; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--text-2); opacity:.75;
+}
+.footer-cta-tag.tag-left{left:0; text-align:left;}
+.footer-cta-tag.tag-right{right:0; text-align:right;}
+@media (max-width:640px){.footer-cta-tag{display:none;}}
 /* A small pill badge above the headline, same crystal-glass surface
    as the package cards — echoes the reference's "Founder member sale
    special" tag instead of a plain inline eyebrow label. */
@@ -1748,6 +1772,20 @@ footer{padding:64px 0 0; margin-top:40px;}
 .footer-mock-line.l2{width:55%; margin-bottom:0;}
 @media (max-width:520px){
   .footer-cta-mocks{display:none;}
+}
+/* Two short blocks of copy pinned to the section's own bottom edge —
+   the reference's dual-column body text, adapted to one language and
+   this site's own content instead of a case-study description. */
+.footer-cta-copy{
+  position:absolute; left:20px; right:20px; bottom:16px; z-index:1;
+  display:flex; justify-content:space-between; gap:32px; text-align:left;
+  max-width:900px; margin:0 auto;
+}
+.footer-cta-copy p{max-width:320px; font-size:12.5px; line-height:1.6; color:var(--text-2);}
+.footer-cta-copy p:last-child{text-align:right; margin-left:auto;}
+@media (max-width:760px){
+  .footer-cta-copy{position:static; flex-direction:column; gap:10px; margin-top:40px; text-align:center;}
+  .footer-cta-copy p{max-width:none; text-align:center !important; margin:0 auto;}
 }
 
 /* Minimal, compact close to the page — brand + tagline anchor the
@@ -2045,8 +2083,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2628,6 +2666,8 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="footer-cta-particle p6"></span>
         <span class="footer-cta-particle p7"></span>
       </span>
+      <span class="footer-cta-tag tag-left" aria-hidden="true">Creative Production<br>2026</span>
+      <span class="footer-cta-tag tag-right" aria-hidden="true">Fastrr Ads</span>
       <span class="footer-cta-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z"/></svg>Let's create something great</span>
       <h3>Got a campaign to put into <span class="accent">production</span>?</h3>
       <p class="footer-cta-sub">Tell us the brief, the brand, and the deadline — we'll scope a clear, itemized quote and get creative moving the same day.</p>
@@ -2647,14 +2687,18 @@ footer{padding:64px 0 0; margin-top:40px;}
           <span class="footer-mock-line l2"></span>
         </div>
       </div>
+      <div class="footer-cta-copy">
+        <p>Fastrr Ads is a creative production service for performance marketing teams — real AI reels, catalogue videos, statics, and carousels, matched to your brand and built to convert, not stock or templates.</p>
+        <p>Every order gets a clear, itemized quote up front and a fixed turnaround per creative, so campaigns keep shipping without back-and-forth or surprise costs along the way.</p>
+      </div>
     </div>
     <!-- TEAM:STRIP:END -->
 
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3005,10 +3049,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-128"></script>
-<script src="assets/app-v2.js?v=20260811-128"></script>
+<script src="assets/creative-data.js?v=20260811-130"></script>
+<script src="assets/app-v2.js?v=20260811-130"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-128"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-130"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
