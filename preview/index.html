@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-121" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-121" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-121" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-121" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-121" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-121" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-121" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-121" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-121" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-121" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-121" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-121" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-122" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-122" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-122" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-122" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-122" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-122" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-122" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-122" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-122" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-122" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-122" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-122" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -585,90 +585,72 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    same accent for its glow and reuses the exact panel content/IDs
    the section always had (svcName/tier-row/svc-glance/scope-panel),
    so none of the underlying rendering logic changed. */
-/* A dark "stage" the cards float in, matching the reference video:
-   a scattered cloud of cards drifting independently with a soft dual
-   glow behind them, rather than a flat grid. Cards are absolutely
-   positioned via --x/--y/--rot (set per card below) and drift on top
-   of that base position using an animated margin (transform stays
-   free for hover/drag/tilt so nothing fights over one property). */
-.pkg-stage{
-  position:relative; z-index:1; margin-bottom:16px; min-height:560px;
-  border-radius:calc(var(--radius) + 8px); overflow:hidden; isolation:isolate;
-  background:
-    radial-gradient(560px 320px at 18% 12%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 70%),
-    radial-gradient(560px 320px at 84% 82%, color-mix(in srgb, var(--teal) 14%, transparent), transparent 70%),
-    #08090c;
-}
-.pkg-stage::before{
-  content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
-  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
-  background-size:26px 26px;
-}
+/* The cards float directly on the page background now — no boxed
+   "stage" panel behind them — matching the reference video's open
+   feel. What reads as premium instead is per-card: a soft static
+   color-matched glow + shadow (box-shadow, so it isn't clipped by
+   the card's own overflow:hidden) and a quiet gradient ring, neither
+   of which move on their own — see the notes below on why the
+   ambient drift and spinning ring were both removed. */
+.pkg-stage{position:relative; z-index:1; margin-bottom:16px; min-height:520px;}
 .pkg-card{
   position:absolute; left:var(--deck-x); top:var(--deck-y); z-index:1;
   display:flex; flex-direction:column; align-items:flex-start; gap:12px;
-  width:220px; padding:22px 20px; border-radius:var(--radius); background:var(--surface-1); border:1px solid transparent;
+  width:222px; padding:24px 21px; border-radius:calc(var(--radius) + 2px); background:var(--surface-1); border:1px solid transparent;
   text-align:left; cursor:grab; color:inherit; overflow:hidden; touch-action:none; user-select:none;
   transform:translate(-50%,-50%) rotate(var(--deck-rot));
-  transition:box-shadow .3s ease, left 1.1s cubic-bezier(.16,1,.3,1), top 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
+  transition:box-shadow .35s ease, left 1.1s cubic-bezier(.16,1,.3,1), top 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
   transition-delay:var(--fan-delay,0s);
-  box-shadow:0 20px 40px -22px rgba(0,0,0,.6);
+  box-shadow:
+    0 22px 46px -24px color-mix(in srgb, var(--accent) 30%, transparent),
+    0 14px 34px -16px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.05);
 }
 /* Entrance choreography matching the reference video: the 4 cards
    start bunched into one tight, slightly fanned "deck" near the
    bottom (--deck-x/--deck-y/--deck-rot), then — once the section
    scrolls into view (.pkg-stage.revealed, set by the shared
    reveal-on-scroll observer) — each glides out to its own scattered
-   resting spot (--x/--y/--rot), staggered per card via --fan-delay.
-   Only once a card has arrived does its ambient drift animation
-   start (--drift-start below), so the "fan open" motion and the
-   idle floating never fight over the same frame. */
-.pkg-stage.revealed .pkg-card{
-  left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));
-  animation:pkgDriftX var(--drift-dur-x) ease-in-out infinite alternate, pkgDriftY var(--drift-dur-y) ease-in-out infinite alternate;
-  animation-delay:calc(var(--drift-start) + var(--drift-delay)), calc(var(--drift-start) - var(--drift-delay));
-}
-@keyframes pkgDriftX{from{margin-left:calc(var(--drift-x) * -1);} to{margin-left:var(--drift-x);}}
-@keyframes pkgDriftY{from{margin-top:calc(var(--drift-y) * -1);} to{margin-top:var(--drift-y);}}
+   resting spot (--x/--y/--rot), staggered per card via --fan-delay,
+   and stays put once settled. No ongoing ambient drift or spinning
+   light afterwards — a single deliberate motion, then still, reads
+   calmer and more premium than a perpetually jittering layout. */
+.pkg-stage.revealed .pkg-card{left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));}
 @media (prefers-reduced-motion: reduce){
   .pkg-card{transition:box-shadow .3s ease; left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));}
-  .pkg-stage.revealed .pkg-card{animation:none;}
 }
 .pkg-card::before{
   content:''; position:absolute; inset:0; z-index:0; opacity:0; pointer-events:none;
   background:radial-gradient(140px 140px at 26% -10%, var(--accent), transparent 72%);
   transition:opacity .35s ease;
 }
-/* A slim, always-on spinning gradient ring instead of a flat 1px
-   border — quiet at rest, brighter on hover, same masked-border
-   technique as the Fasty toggle/panel so the whole page's "glowing
-   outline" language reads as one system rather than two unrelated
-   effects. */
+/* A quiet, static gradient ring instead of a flat 1px border — subtle
+   at rest, a little brighter on hover — same masked-border technique
+   as the Fasty panel, just held still rather than spinning. */
 .pkg-card::after{
   content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
+  background:linear-gradient(135deg, var(--violet), transparent 45%, var(--teal) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.4; pointer-events:none; animation:pkgSpin 6s linear infinite;
-  transition:opacity .3s ease;
+  opacity:.28; pointer-events:none; transition:opacity .3s ease;
 }
-@property --pkg-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
-@keyframes pkgSpin{to{--pkg-spin:360deg;}}
-@media (prefers-reduced-motion: reduce){.pkg-card::after{animation:none;}}
-.pkg-card:hover{z-index:3; box-shadow:0 26px 50px -20px var(--accent);}
-.pkg-card:hover::before{opacity:.2;}
-.pkg-card:hover::after{opacity:1;}
+.pkg-card:hover{z-index:3; box-shadow:
+    0 28px 56px -22px color-mix(in srgb, var(--accent) 48%, transparent),
+    0 16px 38px -14px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+.pkg-card:hover::before{opacity:.16;}
+.pkg-card:hover::after{opacity:.65;}
 .pkg-card:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);}
 /* Persistent "picked" state — a brighter ring plus a small badge,
    kept in sync with state.service by renderServiceNav() so whichever
    card was last opened still reads as selected after the modal closes. */
-.pkg-card.selected{z-index:2; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px var(--accent);}
-.pkg-card.selected::after{opacity:1;}
-/* While being dragged: freeze the ambient drift, lift above the
-   others, and swap the cursor — position is then driven directly by
-   pointer coordinates (see initPkgDrag() in app-v2.js) instead of the
-   --x/--y base position. */
-.pkg-card.dragging{z-index:50; cursor:grabbing; animation-play-state:paused; transition:none; box-shadow:0 30px 60px -18px var(--accent);}
+.pkg-card.selected{z-index:2; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px color-mix(in srgb, var(--accent) 55%, transparent);}
+.pkg-card.selected::after{opacity:.65;}
+/* While being dragged: lift above the others and swap the cursor —
+   position is then driven directly by pointer coordinates (see
+   initPkgDrag() in app-v2.js) instead of the --x/--y base position. */
+.pkg-card.dragging{z-index:50; cursor:grabbing; transition:none; box-shadow:0 30px 60px -18px color-mix(in srgb, var(--accent) 55%, transparent);}
 /* A glowing gradient orb, not a flat-tinted box holding a thin
    lineart glyph — bold, filled icon shapes (see the SVGs in markup)
    sit on a radial-gradient badge with a soft color-matched glow
@@ -697,33 +679,19 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .pkg-card-arrow svg{width:13px; height:13px;}
 .pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg); color:var(--accent); border-color:var(--accent);}
 /* Base scattered layout for each card — a loose cloud, not a grid,
-   per the reference video (cards fanned out, independently tilted
-   and drifting, rather than aligned columns). Each card also gets
-   its own drift distance/speed so the motion reads as organic. */
-.pkg-card[data-svc="reels"]{
-  --x:16%; --y:34%; --rot:-6deg; --drift-x:12px; --drift-y:16px; --drift-dur-x:7.5s; --drift-dur-y:9.5s; --drift-delay:0s;
-  --deck-x:44%; --deck-y:82%; --deck-rot:-11deg; --fan-delay:0s; --drift-start:1.3s;
-}
-.pkg-card[data-svc="catalogue"]{
-  --x:40%; --y:64%; --rot:4deg; --drift-x:14px; --drift-y:11px; --drift-dur-x:8.5s; --drift-dur-y:6.5s; --drift-delay:-1.2s;
-  --deck-x:49%; --deck-y:85%; --deck-rot:-4deg; --fan-delay:.12s; --drift-start:1.42s;
-}
-.pkg-card[data-svc="static"]{
-  --x:64%; --y:30%; --rot:-3deg; --drift-x:11px; --drift-y:14px; --drift-dur-x:6.8s; --drift-dur-y:9s; --drift-delay:-2.4s;
-  --deck-x:54%; --deck-y:82%; --deck-rot:3deg; --fan-delay:.24s; --drift-start:1.54s;
-}
-.pkg-card[data-svc="carousel"]{
-  --x:86%; --y:60%; --rot:7deg; --drift-x:13px; --drift-y:12px; --drift-dur-x:9.2s; --drift-dur-y:7.2s; --drift-delay:-3.6s;
-  --deck-x:59%; --deck-y:85%; --deck-rot:10deg; --fan-delay:.36s; --drift-start:1.66s;
-}
+   per the reference video (cards fanned out and independently
+   tilted, rather than aligned columns). */
+.pkg-card[data-svc="reels"]{--x:16%; --y:34%; --rot:-6deg; --deck-x:44%; --deck-y:82%; --deck-rot:-11deg; --fan-delay:0s;}
+.pkg-card[data-svc="catalogue"]{--x:40%; --y:64%; --rot:4deg; --deck-x:49%; --deck-y:85%; --deck-rot:-4deg; --fan-delay:.12s;}
+.pkg-card[data-svc="static"]{--x:64%; --y:30%; --rot:-3deg; --deck-x:54%; --deck-y:82%; --deck-rot:3deg; --fan-delay:.24s;}
+.pkg-card[data-svc="carousel"]{--x:86%; --y:60%; --rot:7deg; --deck-x:59%; --deck-y:85%; --deck-rot:10deg; --fan-delay:.36s;}
 /* Below the breakpoint dragging stops being practical (no hover, one
    thumb), so the stage folds into a plain static stacked list —
    same cards, same click-to-open behaviour, no floating/drag, no fan
    entrance (they're already stacked as a list, nothing to fan out of). */
 @media (max-width:760px){
-  .pkg-stage{min-height:0; display:flex; flex-direction:column; gap:14px; padding:18px; background:var(--surface-1);}
-  .pkg-stage::before{display:none;}
-  .pkg-card, .pkg-stage.revealed .pkg-card{position:static; left:auto; top:auto; width:100%; transform:none; margin:0 !important; animation:none; cursor:pointer; transition:box-shadow .3s ease;}
+  .pkg-stage{min-height:0; display:flex; flex-direction:column; gap:14px; padding:18px; background:var(--surface-1); border-radius:var(--radius);}
+  .pkg-card, .pkg-stage.revealed .pkg-card{position:static; left:auto; top:auto; width:100%; transform:none; cursor:pointer; transition:box-shadow .3s ease;}
 }
 
 /* Modal — flex-centered inside the backdrop rather than centered via
@@ -741,21 +709,19 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
   overflow:hidden; transform-origin:center center;
 }
-/* Same slim spinning gradient ring the package cards use, carried
-   over into the detail view they morph into — the accent keeps
-   traveling around the modal's edge instead of settling into a flat
-   static border once it opens. */
+/* Same quiet gradient ring the package cards use, carried over into
+   the detail view they morph into — held still, not spinning, for a
+   calmer, more premium edge. */
 .pkg-modal::after{
   content:''; position:absolute; inset:0; z-index:2; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
+  background:linear-gradient(135deg, var(--violet), transparent 45%, var(--teal) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.8; pointer-events:none; animation:pkgSpin 8s linear infinite;
+  opacity:.55; pointer-events:none;
 }
-@media (prefers-reduced-motion: reduce){.pkg-modal::after{animation:none;}}
 .pkg-modal-glow{
   position:absolute; top:-70px; right:-70px; width:260px; height:260px; border-radius:50%; filter:blur(70px);
-  background:var(--accent, var(--violet)); opacity:.2; pointer-events:none; z-index:0;
+  background:var(--accent, var(--violet)); opacity:.14; pointer-events:none; z-index:0;
 }
 .pkg-modal-close{
   position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%;
@@ -1574,12 +1540,12 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   position:absolute; top:var(--spot-y,28%); left:var(--spot-x,50%); z-index:0;
   width:clamp(280px,34vw,460px); height:clamp(280px,34vw,460px);
   transform:translate(-50%,-50%); border-radius:50%;
-  background:radial-gradient(circle, rgba(139,124,246,.34), rgba(94,213,196,.14) 45%, transparent 72%);
-  filter:blur(18px); pointer-events:none; opacity:.85;
+  background:radial-gradient(circle, rgba(139,124,246,.22), rgba(94,213,196,.09) 45%, transparent 72%);
+  filter:blur(22px); pointer-events:none; opacity:.7;
   transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1), width .6s ease, height .6s ease, opacity .6s ease;
 }
 @media (prefers-reduced-motion: reduce){.testi-spotlight{transition:opacity .6s ease;}}
-.testi-stage.focused .testi-spotlight{width:clamp(320px,40vw,560px); height:clamp(320px,40vw,560px); opacity:1;}
+.testi-stage.focused .testi-spotlight{width:clamp(320px,40vw,560px); height:clamp(320px,40vw,560px); opacity:.85;}
 .testi-ghost{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
   font-family:var(--font-display); font-weight:800; font-size:clamp(80px,14vw,180px); letter-spacing:-0.03em;
@@ -1923,8 +1889,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-121" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-121" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-122" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-122" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2060,7 +2026,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8Zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3Z"/></svg></span>
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="4.2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path fill="currentColor" d="M19.5 8.2c.9.9 1.4 1.85 1.4 2.8 0 2.65-4.2 4.8-9.4 4.8v-2c4.4 0 7.4-1.7 7.4-2.8 0-.4-.3-.9-.9-1.5l1.5-1.3Z"/></svg></span>
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
@@ -2078,7 +2044,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 4.5A1.5 1.5 0 0 1 4.5 3h5A1.5 1.5 0 0 1 11 4.5v5A1.5 1.5 0 0 1 9.5 11h-5A1.5 1.5 0 0 1 3 9.5v-5Zm10 0A1.5 1.5 0 0 1 14.5 3h5A1.5 1.5 0 0 1 21 4.5v5A1.5 1.5 0 0 1 19.5 11h-5a1.5 1.5 0 0 1-1.5-1.5v-5ZM3 14.5A1.5 1.5 0 0 1 4.5 13h5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 9.5 21h-5A1.5 1.5 0 0 1 3 19.5v-5Zm10 0a1.5 1.5 0 0 1 1.5-1.5h5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-5Z"/></svg></span>
+        <span class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/><rect x="9.7" y="3.5" width="4.6" height="17" rx="1.4" fill="currentColor"/><rect x="17" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/></svg></span>
         <span class="pkg-card-name">Carousel Creative</span>
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
         <span class="pkg-card-foot">
@@ -2335,8 +2301,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-121" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-121" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-122" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-122" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2501,7 +2467,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-121"></script>
-<script src="assets/app-v2.js?v=20260811-121"></script>
+<script src="assets/creative-data.js?v=20260811-122"></script>
+<script src="assets/app-v2.js?v=20260811-122"></script>
 </body>
 </html>
