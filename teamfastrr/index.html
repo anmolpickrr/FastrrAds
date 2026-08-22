@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-125" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-125" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-125" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-125" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-125" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-125" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-125" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-125" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-125" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-125" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-125" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-125" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -615,19 +615,19 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .pkg-card{
   position:absolute; left:var(--deck-x); top:var(--deck-y); z-index:1;
   display:flex; flex-direction:column; align-items:flex-start; gap:13px;
-  width:234px; padding:23px 21px; border-radius:calc(var(--radius) + 6px);
+  width:234px; min-height:238px; padding:28px 22px 24px; border-radius:calc(var(--radius) + 6px);
   background:
     linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.015) 55%),
     color-mix(in srgb, var(--surface-1) 60%, transparent);
   backdrop-filter:blur(18px) saturate(1.4);
   -webkit-backdrop-filter:blur(18px) saturate(1.4);
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.6);
   text-align:left; cursor:grab; color:inherit; overflow:hidden; touch-action:none; user-select:none;
   transform:translate(-50%,-50%) rotate(var(--deck-rot));
-  transition:box-shadow .35s ease, left 1.1s cubic-bezier(.16,1,.3,1), top 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
+  transition:box-shadow .35s ease, border-color .35s ease, left 1.1s cubic-bezier(.16,1,.3,1), top 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
   transition-delay:var(--fan-delay,0s);
   box-shadow:
-    0 24px 50px -26px color-mix(in srgb, var(--accent) 35%, transparent),
+    0 24px 50px -28px color-mix(in srgb, var(--accent) 22%, transparent),
     0 14px 34px -18px rgba(0,0,0,.55),
     inset 0 1px 0 rgba(255,255,255,.14);
 }
@@ -644,56 +644,45 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 @media (prefers-reduced-motion: reduce){
   .pkg-card{transition:box-shadow .3s ease; left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));}
 }
-/* Diagonal facet sheen — light catching one corner of the glass, the
-   same "crystal" cue used elsewhere in this redesign — plus a soft
-   accent bloom that brightens on hover. */
+/* Diagonal facet sheen only — a plain light catching one corner of
+   the glass, no accent-colored bloom mixed into it, so the card reads
+   as clear crystal rather than tinted. */
 .pkg-card::before{
   content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(160px 140px at 20% -10%, color-mix(in srgb, var(--accent) 40%, transparent), transparent 70%),
-    linear-gradient(125deg, rgba(255,255,255,.14) 0%, transparent 30%, transparent 72%, color-mix(in srgb, var(--accent) 10%, transparent) 100%);
-  opacity:.75; transition:opacity .35s ease;
+  background:linear-gradient(125deg, rgba(255,255,255,.14) 0%, transparent 30%, transparent 72%, rgba(255,255,255,.04) 100%);
+  opacity:.8; transition:opacity .35s ease;
 }
-/* A quiet, static gradient ring instead of a flat 1px border — subtle
-   at rest, a little brighter on hover — same masked-border technique
-   as the Fasty panel, just held still rather than spinning. */
-.pkg-card::after{
-  content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; padding:1.5px;
-  background:linear-gradient(135deg, var(--violet), transparent 45%, var(--teal) 100%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.32; pointer-events:none; transition:opacity .3s ease;
-}
-.pkg-card:hover{z-index:3; box-shadow:
-    0 28px 56px -22px color-mix(in srgb, var(--accent) 48%, transparent),
+.pkg-card:hover{z-index:3; border-color:rgba(255,255,255,.8); box-shadow:
+    0 28px 56px -26px color-mix(in srgb, var(--accent) 30%, transparent),
     0 16px 38px -14px rgba(0,0,0,.5),
-    inset 0 1px 0 rgba(255,255,255,.18);
+    inset 0 1px 0 rgba(255,255,255,.2);
 }
 .pkg-card:hover::before{opacity:1;}
-.pkg-card:hover::after{opacity:.75;}
 .pkg-card:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);}
-/* Persistent "picked" state — a brighter ring plus a small badge,
-   kept in sync with state.service by renderServiceNav() so whichever
-   card was last opened still reads as selected after the modal closes. */
-.pkg-card.selected{z-index:2; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px color-mix(in srgb, var(--accent) 55%, transparent);}
-.pkg-card.selected::after{opacity:.75;}
+/* Persistent "picked" state — kept in sync with state.service by
+   renderServiceNav() so whichever card was last opened still reads
+   as selected after the modal closes. The accent ring here is a
+   state indicator, not decoration, so it's the one place color still
+   outlines the card. */
+.pkg-card.selected{z-index:2; border-color:transparent; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px color-mix(in srgb, var(--accent) 45%, transparent);}
 /* While being dragged: lift above the others and swap the cursor —
    position is then driven directly by pointer coordinates (see
    initPkgDrag() in app.js) instead of the --x/--y base position. */
-.pkg-card.dragging{z-index:50; cursor:grabbing; transition:none; box-shadow:0 30px 60px -18px color-mix(in srgb, var(--accent) 55%, transparent);}
-/* A small glowing gem/orb, not a full-bleed color banner — sits
-   directly on the glass alongside a slim corner badge, reading as one
-   crystal object rather than a card with a flat color block stuck on
-   top of it. */
-.pkg-card-icon-orb{
-  position:relative; z-index:1; width:50px; height:50px; border-radius:15px; flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--violet), var(--teal));
-  box-shadow:0 10px 22px -8px var(--accent), inset 0 1px 0 rgba(255,255,255,.4), 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+.pkg-card.dragging{z-index:50; cursor:grabbing; transition:none; box-shadow:0 30px 60px -18px color-mix(in srgb, var(--accent) 45%, transparent);}
+/* A plain minimal glyph, not a colored icon tile — keeps the card
+   reading as clean glass+line rather than a card with a decorated
+   badge stuck on it. The glow line beneath it is the one deliberate
+   neon touch: a slim gradient bar with a soft blurred bloom under it,
+   kept subtle (low opacity, gentle blur) rather than a bright strip. */
+.pkg-card-icon-plain{position:relative; z-index:1; width:26px; height:26px; flex:0 0 auto; color:var(--text-0);}
+.pkg-card-icon-plain svg{width:100%; height:100%;}
+.pkg-card-glowline{
+  position:relative; z-index:1; width:34px; height:2px; border-radius:2px; flex:0 0 auto;
+  background:linear-gradient(90deg, var(--violet), var(--teal));
+  opacity:.75; box-shadow:0 0 8px 1px color-mix(in srgb, var(--violet) 45%, transparent), 0 0 8px 1px color-mix(in srgb, var(--teal) 35%, transparent);
+  transition:width .3s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
 }
-.pkg-card-icon-orb svg{width:23px; height:23px; color:#0c0d10;}
-.pkg-card:hover .pkg-card-icon-orb{transform:scale(1.1) rotate(-4deg); box-shadow:0 12px 26px -6px var(--accent), inset 0 1px 0 rgba(255,255,255,.5), 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);}
+.pkg-card:hover .pkg-card-glowline{width:46px; opacity:1;}
 .pkg-card-badge{
   position:absolute; top:19px; right:19px; z-index:1;
   padding:4px 10px; border-radius:100px; font-size:10.5px; font-weight:700; letter-spacing:.01em;
@@ -1585,73 +1574,59 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   -webkit-mask-image:radial-gradient(ellipse 78% 78% at 50% 42%, #000 38%, transparent 92%);
   mask-image:radial-gradient(ellipse 78% 78% at 50% 42%, #000 38%, transparent 92%);
 }
-/* A soft light that drifts across the wall on its own, and glides
-   smoothly to whichever card is clicked (initTestiSpotlight() in
-   app.js sets --spot-x/--spot-y). One slow, eased transition
-   drives both the idle drift and the click-to-focus move, so they
-   read as the same continuous light rather than two effects. */
+/* A soft light that drifts across the wall on its own (initTestiSpotlight()
+   in app.js sets --spot-x/--spot-y on a slow interval) — purely
+   ambient now that the cards themselves move, not something a click
+   redirects. */
 .testi-spotlight{
   position:absolute; top:var(--spot-y,28%); left:var(--spot-x,50%); z-index:0;
   width:clamp(280px,34vw,460px); height:clamp(280px,34vw,460px);
   transform:translate(-50%,-50%); border-radius:50%;
   background:radial-gradient(circle, rgba(139,124,246,.22), rgba(94,213,196,.09) 45%, transparent 72%);
   filter:blur(22px); pointer-events:none; opacity:.7;
-  transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1), width .6s ease, height .6s ease, opacity .6s ease;
+  transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1);
 }
-@media (prefers-reduced-motion: reduce){.testi-spotlight{transition:opacity .6s ease;}}
-.testi-stage.focused .testi-spotlight{width:clamp(320px,40vw,560px); height:clamp(320px,40vw,560px); opacity:.85;}
+@media (prefers-reduced-motion: reduce){.testi-spotlight{transition:none;}}
 .testi-ghost{
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-family:var(--font-display); font-weight:800; font-size:clamp(80px,14vw,180px); letter-spacing:-0.03em;
-  color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.14); white-space:nowrap; pointer-events:none; z-index:0;
+  position:absolute; top:14%; left:50%; transform:translate(-50%,-50%);
+  font-family:var(--font-display); font-weight:800; font-size:clamp(60px,10vw,130px); letter-spacing:-0.03em;
+  color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.12); white-space:nowrap; pointer-events:none; z-index:0;
 }
-.testi-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(3,1fr); gap:26px 22px;}
-/* Crystal glass surface — the same frosted, translucent language as
-   the package cards, instead of a flat opaque tile — so the section
-   reads as one consistent "system" rather than two different card
-   styles. Cards fade/slide in with a per-card stagger the first time
-   the section scrolls into view (--reveal-delay, set per card below),
-   then settle; only hover/focus/click motion continues after that. */
+/* Two rows of continuously scrolling testimonial cards (opposite
+   directions, different speeds) instead of a static grid — each row's
+   content is duplicated once so the loop point is invisible. A
+   left/right mask fades cards in and out at the section's own edges
+   rather than cutting them off hard. Hovering a row pauses it so a
+   quote can actually be read. */
+.testi-marquee{
+  position:relative; z-index:1; display:flex; flex-direction:column; gap:20px; margin-top:8px;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.testi-row{display:flex; gap:20px; width:max-content;}
+.testi-row-a{animation:testiScrollLeft 46s linear infinite;}
+.testi-row-b{animation:testiScrollRight 52s linear infinite;}
+.testi-row:hover{animation-play-state:paused;}
+@keyframes testiScrollLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes testiScrollRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+@media (prefers-reduced-motion: reduce){.testi-row{animation:none;}}
+/* Crystal glass surface — same frosted, translucent language as the
+   package cards (60% white border, no colored outline) so the two
+   sections read as one consistent system. */
 .testi-card{
-  position:relative; padding:24px 22px 22px; border-radius:16px;
+  flex:0 0 auto; width:min(320px,78vw); padding:22px 22px 20px; border-radius:16px;
   background:
     linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.015) 55%),
     color-mix(in srgb, var(--surface-1) 52%, transparent);
   backdrop-filter:blur(16px) saturate(1.35); -webkit-backdrop-filter:blur(16px) saturate(1.35);
-  border:1px solid rgba(255,255,255,.13);
-  box-shadow:0 20px 40px -22px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.09);
-  cursor:pointer; opacity:0;
-  transform:translateY(16px) rotate(var(--tilt,0deg));
-  transition:transform .55s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, border-color .35s ease, opacity .6s ease, filter .5s ease;
-  transition-delay:var(--reveal-delay,0s), 0s, 0s, var(--reveal-delay,0s), 0s;
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 20px 40px -22px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.1);
+  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
 }
-.testi-stage.revealed .testi-card{opacity:1; transform:translateY(0) rotate(var(--tilt,0deg));}
-@media (prefers-reduced-motion: reduce){
-  .testi-card{transition:box-shadow .3s ease, border-color .3s ease, filter .3s ease; opacity:1; transform:rotate(var(--tilt,0deg));}
-}
-.testi-card:hover{transform:rotate(0deg) translateY(-6px); border-color:color-mix(in srgb, var(--violet) 45%, rgba(255,255,255,.1)); box-shadow:0 26px 50px -20px rgba(139,124,246,.4);}
-.testi-stage.revealed .testi-card:hover{transform:rotate(0deg) translateY(-6px);}
-.testi-card:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 50%, transparent);}
-/* Click focus: the target card brightens and settles flat while its
-   siblings fade back — same restrained violet/teal glow, just aimed
-   at one card at a time instead of spread evenly across all three. */
-.testi-stage.focused .testi-card{opacity:.42; filter:saturate(.65);}
-.testi-stage.focused .testi-card.active{
-  opacity:1; filter:none; transform:rotate(0deg) translateY(-6px);
-  border-color:color-mix(in srgb, var(--violet) 55%, rgba(255,255,255,.1));
-  box-shadow:0 30px 60px -18px rgba(139,124,246,.5);
-}
-.testi-pin{
-  position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:12px; height:12px; border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #fff, var(--violet) 60%, var(--teal) 130%);
-  box-shadow:0 0 10px 2px color-mix(in srgb, var(--violet) 55%, transparent);
-  animation:testiPinPulse 3.2s ease-in-out infinite;
-}
-@keyframes testiPinPulse{0%,100%{box-shadow:0 0 10px 2px color-mix(in srgb, var(--violet) 55%, transparent);}50%{box-shadow:0 0 14px 4px color-mix(in srgb, var(--violet) 70%, transparent);}}
-@media (prefers-reduced-motion: reduce){.testi-pin{animation:none;}}
-.testi-quote-mark{display:block; width:18px; height:14px; margin-bottom:10px; color:var(--violet); opacity:.75;}
+.testi-card:hover{transform:translateY(-4px); border-color:rgba(255,255,255,.85); box-shadow:0 26px 50px -20px rgba(139,124,246,.3);}
+.testi-quote-mark{display:block; width:18px; height:14px; margin-bottom:10px; color:var(--violet); opacity:.8;}
 .testi-quote{font-size:14px; line-height:1.65; color:#e3e5ea;}
-.testi-author{display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.09);}
+.testi-author{display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.14);}
 .testi-avatar{
   width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg, var(--violet), var(--teal)); color:#0c0d10; font-weight:700; font-size:13px;
@@ -1659,20 +1634,7 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
 .testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px; min-width:0;}
 .testi-author-text b{color:#f4f5f7; font-weight:600;}
 .testi-author-text span{color:#9299a8;}
-.testi-card:nth-child(1){--reveal-delay:0s;}
-.testi-card:nth-child(2){--reveal-delay:.08s;}
-.testi-card:nth-child(3){--reveal-delay:.16s;}
-.testi-card:nth-child(4){--reveal-delay:.24s;}
-.testi-card:nth-child(5){--reveal-delay:.32s;}
-.testi-card:nth-child(6){--reveal-delay:.4s;}
-@media (max-width:900px){.testi-grid{grid-template-columns:1fr 1fr;}}
-@media (max-width:640px){
-  .testi-grid{grid-template-columns:1fr; gap:20px;}
-  .testi-card{transform:translateY(16px);}
-  .testi-stage.revealed .testi-card{transform:translateY(0);}
-  .testi-card:hover{transform:translateY(-4px);}
-  .testi-ghost{font-size:22vw;}
-}
+@media (max-width:640px){.testi-ghost{font-size:16vw;}}
 
 
 /* ---------- FOOTER ----------
@@ -1691,84 +1653,139 @@ footer{padding:64px 0 0; margin-top:40px;}
    minimal text link underneath: an animated underline + arrow, not a
    filled pill. This is the calmest, least "componentized" this
    section can be while still reading as a deliberate closing moment. */
-.footer-cta{position:relative; text-align:center; padding:64px 20px 100px; margin-bottom:56px; isolation:isolate;}
-/* Decorative scene behind the statement — two soft blurred color
-   blooms plus a handful of twinkling particle dots, standing in for
-   the reference's nature backdrop but built from the site's own
-   violet/teal crystal language instead of literal flowers. Purely
-   ambient: aria-hidden, never obscures the text above it. */
-.footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none; overflow:hidden; border-radius:calc(var(--radius) + 20px);}
-.footer-cta-glow{position:absolute; border-radius:50%; filter:blur(60px); opacity:.22;}
-.footer-cta-glow.g1{top:-40px; left:8%; width:280px; height:280px; background:var(--violet);}
-.footer-cta-glow.g2{bottom:-60px; right:10%; width:320px; height:320px; background:var(--teal);}
+/* A cinematic, full-presence closing stage — no real photography
+   behind it (nothing in the asset library is an appropriate generic
+   backdrop: every real shot on this site is either a specific
+   person's face or another brand's branded/text creative, neither of
+   which belongs blurred into decorative wallpaper here), so the
+   "shallow depth of field forest" mood from the reference is built
+   entirely from layered CSS light: several soft out-of-focus color
+   blooms — cool violet/teal plus a warm amber tone standing in for
+   dappled sunlight — and a few tighter "bokeh disc" highlights, the
+   kind of soft circular blown-out points a real shallow-DOF shot
+   would show. */
+.footer-cta{position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate; min-height:clamp(520px,64vh,680px); display:flex; flex-direction:column; align-items:center; justify-content:center;}
+.footer-cta-glowwash{
+  position:absolute; inset:-160px; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(70px 70px at 28% 62%, rgba(255,255,255,.16), transparent 72%),
+    radial-gradient(46px 46px at 66% 26%, rgba(255,255,255,.13), transparent 72%),
+    radial-gradient(54px 54px at 80% 66%, rgba(255,255,255,.1), transparent 72%),
+    radial-gradient(420px 380px at 20% 20%, color-mix(in srgb, var(--violet) 26%, transparent), transparent 68%),
+    radial-gradient(460px 420px at 84% 16%, color-mix(in srgb, #ffb457 18%, transparent), transparent 70%),
+    radial-gradient(520px 460px at 78% 80%, color-mix(in srgb, var(--teal) 24%, transparent), transparent 68%),
+    radial-gradient(360px 320px at 12% 84%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 68%),
+    radial-gradient(340px 300px at 50% 46%, color-mix(in srgb, #ffb457 9%, transparent), transparent 72%);
+}
+.footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none;}
+/* Drifting motes, not fixed twinkling dots — a slow fall-and-fade
+   (translateY + a little rotate) reads as the reference's falling
+   petals without needing actual leaf art; two of the seven carry a
+   warm amber tint for the same reason the glow wash does. */
 .footer-cta-particle{
   position:absolute; width:3px; height:3px; border-radius:50%; background:#fff;
-  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerTwinkle 4.5s ease-in-out infinite;
+  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerDrift 6.5s ease-in-out infinite;
 }
-.footer-cta-particle.p1{top:18%; left:14%; animation-delay:0s;}
-.footer-cta-particle.p2{top:64%; left:22%; width:2px; height:2px; animation-delay:.9s;}
-.footer-cta-particle.p3{top:30%; left:82%; animation-delay:1.8s;}
-.footer-cta-particle.p4{top:76%; left:78%; width:2px; height:2px; animation-delay:2.6s;}
-.footer-cta-particle.p5{top:10%; left:52%; width:2px; height:2px; animation-delay:3.3s;}
-@keyframes footerTwinkle{0%,100%{opacity:0; transform:scale(.4);}50%{opacity:1; transform:scale(1);}}
+.footer-cta-particle.p1{top:12%; left:14%; animation-delay:0s;}
+.footer-cta-particle.p2{top:58%; left:22%; width:2px; height:2px; animation-delay:1.3s;}
+.footer-cta-particle.p3{top:24%; left:82%; animation-delay:2.6s;}
+.footer-cta-particle.p4{top:70%; left:78%; width:2px; height:2px; animation-delay:3.9s;}
+.footer-cta-particle.p5{top:6%; left:52%; width:2px; height:2px; animation-delay:5s;}
+.footer-cta-particle.p6{top:40%; left:8%; width:2px; height:2px; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:2s;}
+.footer-cta-particle.p7{top:46%; left:91%; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:4.4s;}
+@keyframes footerDrift{
+  0%{opacity:0; transform:translateY(-8px) rotate(0deg) scale(.5);}
+  15%{opacity:1;}
+  85%{opacity:1;}
+  100%{opacity:0; transform:translateY(22px) rotate(50deg) scale(.8);}
+}
 @media (prefers-reduced-motion: reduce){.footer-cta-particle{animation:none; opacity:.5;}}
+/* Small editorial corner labels — the reference's minimal
+   "UXUI Project / 2024 / Planto" top corners, adapted to this site's
+   own content instead of a case-study slate. */
+.footer-cta-tag{
+  position:absolute; top:0; z-index:1; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--text-2); opacity:.75;
+}
+.footer-cta-tag.tag-left{left:0; text-align:left;}
+.footer-cta-tag.tag-right{right:0; text-align:right;}
+@media (max-width:640px){.footer-cta-tag{display:none;}}
 /* A small pill badge above the headline, same crystal-glass surface
    as the package cards — echoes the reference's "Founder member sale
    special" tag instead of a plain inline eyebrow label. */
 .footer-cta-badge{
-  display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; padding:7px 16px 7px 13px;
+  display:inline-flex; align-items:center; gap:6px; margin-bottom:22px; padding:7px 16px 7px 13px;
   border-radius:100px; font-size:12px; font-weight:600; letter-spacing:.02em; color:var(--text-1);
   background:color-mix(in srgb, var(--surface-1) 55%, transparent);
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.6);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
   box-shadow:0 10px 26px -16px var(--violet);
 }
 .footer-cta-badge svg{width:13px; height:13px; color:var(--violet); flex:0 0 auto;}
 .footer-cta h3{
   position:relative; z-index:1;
-  font-size:clamp(28px,4.2vw,44px); font-weight:700; letter-spacing:-0.02em; line-height:1.15;
-  max-width:680px; margin:0 auto; color:var(--text-0);
+  font-size:clamp(34px,5.4vw,56px); font-weight:800; letter-spacing:-0.02em; line-height:1.12;
+  max-width:720px; margin:0 auto; color:var(--text-0);
 }
 .footer-cta h3 .accent{
   background:linear-gradient(100deg,var(--violet),var(--teal));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
+.footer-cta-sub{
+  position:relative; z-index:1; max-width:480px; margin:16px auto 0; font-size:15px; line-height:1.6; color:var(--text-2);
+}
+/* A filled crystal-glass pill, not a plain underline link — matches
+   the reference's rounded CTA button instead of a minimal text link. */
 .footer-cta-link{
-  position:relative; z-index:1; display:inline-flex; align-items:center; gap:8px; margin-top:30px;
-  font-size:15px; font-weight:600; color:var(--text-0);
-  background:none; border:none; padding:2px 0; cursor:pointer;
+  position:relative; z-index:1; display:inline-flex; align-items:center; gap:9px; margin-top:32px;
+  padding:14px 26px; border-radius:100px; font-size:15px; font-weight:700; color:var(--text-0);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.02) 60%),
+    color-mix(in srgb, var(--surface-1) 55%, transparent);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.75); cursor:pointer;
+  box-shadow:0 18px 40px -20px var(--violet), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, border-color .3s ease;
 }
-.footer-cta-link::after{
-  content:''; position:absolute; left:0; right:24px; bottom:-5px; height:1.5px;
-  background:linear-gradient(100deg,var(--violet),var(--teal)); transform:scaleX(0); transform-origin:left;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-}
-.footer-cta-link:hover::after{transform:scaleX(1);}
+.footer-cta-link:hover{transform:translateY(-2px); border-color:#fff; box-shadow:0 22px 46px -18px var(--violet), inset 0 1px 0 rgba(255,255,255,.28);}
 .footer-cta-link svg{width:16px; height:16px; transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
 .footer-cta-link:hover svg{transform:translateX(4px);}
-.footer-cta-link:focus-visible{outline:none;}
-.footer-cta-link:focus-visible::after{transform:scaleX(1);}
+.footer-cta-link:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 45%, transparent);}
 /* Two small floating "product preview" cards, tilted and partly
    overlapping beneath the statement — the same frosted crystal-glass
    surface as the package cards, standing in for the reference's
    floating UI mockups. Pure decoration (aria-hidden), so their
    content is abstract placeholder lines/dots, not real UI. */
-.footer-cta-mocks{position:relative; z-index:0; max-width:420px; height:86px; margin:44px auto 0; pointer-events:none;}
+.footer-cta-mocks{position:relative; z-index:0; max-width:460px; height:98px; margin:54px auto 0; pointer-events:none;}
 .footer-mock{
-  position:absolute; top:0; width:180px; padding:14px 16px; border-radius:16px;
-  background:linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.015) 55%), color-mix(in srgb, var(--surface-1) 55%, transparent);
+  position:absolute; top:0; width:200px; padding:16px 18px; border-radius:16px;
+  background:linear-gradient(160deg, rgba(255,255,255,.1), rgba(255,255,255,.015) 55%), color-mix(in srgb, var(--surface-1) 55%, transparent);
   backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.12); box-shadow:0 20px 40px -22px rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.55); box-shadow:0 22px 44px -22px rgba(0,0,0,.55);
 }
-.footer-mock-1{left:calc(50% - 150px); transform:rotate(-6deg); z-index:1;}
-.footer-mock-2{left:calc(50% - 10px); top:14px; transform:rotate(5deg); z-index:2;}
-.footer-mock-dot{display:block; width:20px; height:20px; border-radius:7px; margin-bottom:10px; background:linear-gradient(135deg, var(--violet), var(--teal));}
-.footer-mock-avatar{display:block; width:20px; height:20px; border-radius:50%; margin-bottom:10px; background:linear-gradient(135deg, var(--teal), var(--violet));}
-.footer-mock-line{display:block; height:6px; border-radius:4px; background:rgba(255,255,255,.14); margin-bottom:6px;}
+.footer-mock-1{left:calc(50% - 170px); transform:rotate(-6deg); z-index:1;}
+.footer-mock-2{left:calc(50% - 8px); top:16px; transform:rotate(5deg); z-index:2;}
+.footer-mock-dot{display:block; width:22px; height:22px; border-radius:7px; margin-bottom:11px; background:linear-gradient(135deg, var(--violet), var(--teal));}
+.footer-mock-avatar{display:block; width:22px; height:22px; border-radius:50%; margin-bottom:11px; background:linear-gradient(135deg, var(--teal), var(--violet));}
+.footer-mock-line{display:block; height:6px; border-radius:4px; background:rgba(255,255,255,.16); margin-bottom:7px;}
 .footer-mock-line.l1{width:85%;}
 .footer-mock-line.l2{width:55%; margin-bottom:0;}
 @media (max-width:520px){
   .footer-cta-mocks{display:none;}
+}
+/* Two short blocks of copy pinned to the section's own bottom edge —
+   the reference's dual-column body text, adapted to one language and
+   this site's own content instead of a case-study description. */
+.footer-cta-copy{
+  position:absolute; left:20px; right:20px; bottom:16px; z-index:1;
+  display:flex; justify-content:space-between; gap:32px; text-align:left;
+  max-width:900px; margin:0 auto;
+}
+.footer-cta-copy p{max-width:320px; font-size:12.5px; line-height:1.6; color:var(--text-2);}
+.footer-cta-copy p:last-child{text-align:right; margin-left:auto;}
+@media (max-width:760px){
+  .footer-cta-copy{position:static; flex-direction:column; gap:10px; margin-top:40px; text-align:center;}
+  .footer-cta-copy p{max-width:none; text-align:center !important; margin:0 auto;}
 }
 
 /* Minimal, compact close to the page — brand + tagline anchor the
@@ -1800,35 +1817,48 @@ footer{padding:64px 0 0; margin-top:40px;}
    the panel visually grows out of the button rather than appearing as
    an unrelated overlay. See initFasty() in app.js for the answer
    engine; this file only owns how it looks. */
-.fasty-widget{position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;}
-/* A glowing orb, not a flat filled circle — a slowly spinning
-   conic-gradient ring blurred behind the button (::before) reads as
-   a soft ambient glow rather than a hard-edged halo, a gentle pulse
-   breathes it in and out, and three tiny sparkle dots drift in and
-   out around the rim. All of it dims (not vanishes) once the panel
-   is open, so the button still feels alive as a "close" control. */
+.fasty-widget{
+  --fasty-c1:#8B7CFA; --fasty-c2:#4F8DFF;
+  position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;
+}
+/* A dark glowing "portal" ring, not a solid filled ball — matches
+   the reference more closely than the earlier filled-gradient orb: a
+   near-black disc, a slim spinning conic-gradient ring right at its
+   edge (::after, masked so only the rim itself is colored), and a
+   larger blurred copy of that same ring behind it (::before) as the
+   soft halo. Indigo→blue (--fasty-c1/--fasty-c2 below) rather than
+   the site's violet→teal, so Fasty reads as its own distinct object.
+   Small 4-point sparkle glyphs (not plain dots) drift in and out
+   around the rim. Everything dims (not vanishes) once the panel is
+   open, so the button still feels alive as a "close" control. */
 @property --fasty-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 .fasty-toggle{
   position:relative; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; color:#fff;
-  background:radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--violet) 55%, #fff), var(--violet) 55%, var(--teal) 135%);
-  box-shadow:0 8px 22px -8px var(--violet), 0 2px 8px rgba(0,0,0,.25);
+  background:radial-gradient(circle at 50% 40%, #17161f, #08080b 76%);
+  box-shadow:0 8px 22px -8px var(--fasty-c1), 0 2px 8px rgba(0,0,0,.4);
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
 }
 .fasty-toggle::before{
-  content:''; position:absolute; inset:-7px; border-radius:50%; z-index:-1;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet));
-  filter:blur(9px); opacity:.55;
+  content:''; position:absolute; inset:-9px; border-radius:50%; z-index:-1;
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1));
+  filter:blur(11px); opacity:.6;
   animation:fastySpin 7s linear infinite, fastyPulse 3.4s ease-in-out infinite;
   transition:opacity .3s ease;
 }
-.fasty-widget.open .fasty-toggle::before{opacity:.22; animation-play-state:paused;}
+.fasty-toggle::after{
+  content:''; position:absolute; inset:0; border-radius:50%; z-index:1; pointer-events:none; padding:2px;
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+.fasty-widget.open .fasty-toggle::before{opacity:.25; animation-play-state:paused;}
 @keyframes fastySpin{to{--fasty-spin:360deg;}}
-@keyframes fastyPulse{0%,100%{filter:blur(9px);}50%{filter:blur(13px);}}
+@keyframes fastyPulse{0%,100%{filter:blur(11px);}50%{filter:blur(15px);}}
 @media (prefers-reduced-motion: reduce){.fasty-toggle::before{animation:none;}}
-.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--violet), 0 2px 6px rgba(0,0,0,.28);}
+.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--fasty-c1), 0 2px 6px rgba(0,0,0,.4);}
 .fasty-toggle:active{transform:scale(.96);}
-.fasty-toggle-icon{width:19px; height:19px; position:absolute; transition:opacity .2s ease, transform .2s ease;}
+.fasty-toggle-icon{width:19px; height:19px; position:absolute; z-index:2; transition:opacity .2s ease, transform .2s ease;}
 .fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
 .fasty-widget.open .fasty-icon-chat{opacity:0; transform:rotate(45deg) scale(.6);}
 .fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
@@ -1843,13 +1873,14 @@ footer{padding:64px 0 0; margin-top:40px;}
 @keyframes fastyBlink{0%,38%,100%{transform:scaleY(1);}46%{transform:scaleY(.22);}}
 @media (prefers-reduced-motion: reduce){.fasty-eye-bar{animation:none;}}
 .fasty-sparkle{
-  position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; opacity:0; pointer-events:none;
-  box-shadow:0 0 4px 1px rgba(255,255,255,.8); animation:fastySparkle 3.6s ease-in-out infinite;
+  position:absolute; color:#fff; opacity:0; pointer-events:none;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.8)); animation:fastySparkle 3.6s ease-in-out infinite;
 }
-.fasty-sparkle.s1{top:-3px; left:10px; animation-delay:0s;}
-.fasty-sparkle.s2{bottom:-1px; right:-3px; animation-delay:1.2s;}
-.fasty-sparkle.s3{top:8px; right:-6px; width:2px; height:2px; animation-delay:2.4s;}
-@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3);}50%{opacity:1; transform:scale(1);}}
+.fasty-sparkle svg{display:block; width:100%; height:100%;}
+.fasty-sparkle.s1{top:-5px; left:8px; width:9px; height:9px; animation-delay:0s;}
+.fasty-sparkle.s2{bottom:0; right:-6px; width:7px; height:7px; animation-delay:1.2s;}
+.fasty-sparkle.s3{top:10px; right:-8px; width:5px; height:5px; animation-delay:2.4s;}
+@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3) rotate(0deg);}50%{opacity:1; transform:scale(1) rotate(15deg);}}
 .fasty-widget.open .fasty-sparkle{opacity:0; animation-play-state:paused;}
 @media (prefers-reduced-motion: reduce){.fasty-sparkle{animation:none; opacity:0;}}
 .fasty-toggle-badge{
@@ -1929,7 +1960,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 
 .fasty-panel::before{
   content:''; position:absolute; inset:-2px; border-radius:calc(var(--radius) + 2px); padding:1.5px;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet) 100%);
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.85; pointer-events:none; animation:fastySpin 9s linear infinite;
@@ -2052,8 +2083,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-125" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-125" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2202,7 +2233,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="pkg-stage reveal-on-scroll" id="svcNav">
       <button type="button" class="pkg-card" data-svc="reels" style="--accent:var(--violet);">
         <span class="pkg-card-badge">4 tiers</span>
-        <span class="pkg-card-icon-orb"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">AI Reels</span>
         <span class="pkg-card-desc">Script-to-screen AI reels across 4 package tiers.</span>
         <span class="pkg-card-foot">
@@ -2212,7 +2244,8 @@ footer{padding:64px 0 0; margin-top:40px;}
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
         <span class="pkg-card-badge">360°</span>
-        <span class="pkg-card-icon-orb"><svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="4.2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path fill="currentColor" d="M19.5 8.2c.9.9 1.4 1.85 1.4 2.8 0 2.65-4.2 4.8-9.4 4.8v-2c4.4 0 7.4-1.7 7.4-2.8 0-.4-.3-.9-.9-1.5l1.5-1.3Z"/></svg></span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="4.2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path fill="currentColor" d="M19.5 8.2c.9.9 1.4 1.85 1.4 2.8 0 2.65-4.2 4.8-9.4 4.8v-2c4.4 0 7.4-1.7 7.4-2.8 0-.4-.3-.9-.9-1.5l1.5-1.3Z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
@@ -2222,7 +2255,8 @@ footer{padding:64px 0 0; margin-top:40px;}
       </button>
       <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
         <span class="pkg-card-badge">1 frame</span>
-        <span class="pkg-card-icon-orb"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">Static Creative</span>
         <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
         <span class="pkg-card-foot">
@@ -2232,7 +2266,8 @@ footer{padding:64px 0 0; margin-top:40px;}
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
         <span class="pkg-card-badge">5 slides</span>
-        <span class="pkg-card-icon-orb"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/><rect x="9.7" y="3.5" width="4.6" height="17" rx="1.4" fill="currentColor"/><rect x="17" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/></svg></span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/><rect x="9.7" y="3.5" width="4.6" height="17" rx="1.4" fill="currentColor"/><rect x="17" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">Carousel Creative</span>
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
         <span class="pkg-card-foot">
@@ -2283,42 +2318,6 @@ footer{padding:64px 0 0; margin-top:40px;}
       </div>
     </div>
 
-    <details class="rules-panel reveal-on-scroll">
-      <summary class="rules-panel-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        Good to know before you quote
-        <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="rules-general">
-        <span class="rules-general-label">General terms that apply across every service and package</span>
-        <ul class="rules-list">
-          <li><b>₹10,000 minimum order.</b> You can mix and match any services or cuts to reach it, and the calculator always shows your full order total.</li>
-          <li><b>Turnaround is per creative.</b> For bulk orders, actual delivery time depends on quantity, creative type, cut, and complexity, not the single-creative number shown.</li>
-          <li><b>The turnaround clock starts on handoff.</b> That means once we've received all the assets and details we need from you, not on your payment date.</li>
-          <li><b>New concepts mean a new quote.</b> Major creative rework or extras beyond what's included are quoted separately.</li>
-          <li><b>AI output can vary slightly</b> between runs, but we always match your brief as closely as possible.</li>
-          <li><b>GST is optional at checkout:</b> included by default at 18% on the order total after any discount, or switch it off in the calculator for a non-GST invoice. Prices elsewhere on the page are pre-GST.</li>
-          <li><b>One discount applies to the whole order.</b> It's calculated on the combined total, not on each creative type individually, and can be either a percentage or a flat ₹ amount.</li>
-        </ul>
-      </div>
-      <details class="rules-compare-toggle" id="rulesCompareToggle">
-        <summary>Compare all 4 AI Reel packages at a glance</summary>
-        <div class="compare-wrap">
-          <table class="compare-table" id="reelCompareTable">
-            <thead>
-              <tr><th>Package</th><th data-tier-col="1">Quick Cut</th><th data-tier-col="2">Story Cut</th><th data-tier-col="3">Director's Cut</th><th data-tier-col="4">Studio Cut</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Price</td><td data-tier-col="1">₹2,500</td><td data-tier-col="2">₹3,500</td><td data-tier-col="3">₹5,000</td><td data-tier-col="4">₹8,000</td></tr>
-              <tr><td>Max duration</td><td data-tier-col="1">Up to 25 sec</td><td data-tier-col="2">25 sec</td><td data-tier-col="3">30 sec</td><td data-tier-col="4">35 sec</td></tr>
-              <tr><td>Script</td><td data-tier-col="1">From brief, no approval step</td><td data-tier-col="2">From brief, no approval step</td><td data-tier-col="3">1 option, for approval</td><td data-tier-col="4">1 + 2 hooks, for approval</td></tr>
-              <tr><td>Revision</td><td data-tier-col="1">1 (minor, in-frame)</td><td data-tier-col="2">1 (wording, hook length)</td><td data-tier-col="3">1 (small script changes)</td><td data-tier-col="4">1 (small script changes)</td></tr>
-              <tr><td>Delivery</td><td data-tier-col="1">1–2 working days</td><td data-tier-col="2">Up to 3 working days</td><td data-tier-col="3">Up to 4 working days</td><td data-tier-col="4">Up to 5 working days</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-    </details>
   </div>
 </section>
 
@@ -2448,75 +2447,121 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- A soft dark vignette wash regardless of site theme (like the
-         reference board), no boxed panel edge — one quiet ghost word
-         behind the cards, a light that drifts/focuses on click, and 6
-         crystal-glass testimonial notes, each with a small glowing pin
-         dot instead of a literal 3D pushpin graphic, keeping the same
-         restrained violet/teal glow language the rest of the redesign
-         uses. Placeholder copy + names: swap in real client quotes
+    <!-- A soft dark vignette wash regardless of site theme, no boxed
+         panel edge — one quiet ghost word behind the cards, an
+         ambient light drifting on its own, and 6 crystal-glass
+         testimonial notes split across two rows that scroll
+         continuously in opposite directions (each row's content
+         duplicated once for a seamless loop; hover a row to pause
+         it). Placeholder copy + names: swap in real client quotes
          before this goes live. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
       <span class="testi-spotlight" id="testiSpotlight" aria-hidden="true"></span>
       <span class="testi-ghost" aria-hidden="true">Trusted</span>
-      <div class="testi-grid">
-        <div class="testi-card" style="--tilt:-4deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">R</span>
-            <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+      <div class="testi-marquee">
+        <div class="testi-row testi-row-a">
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">R</span>
+              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">A</span>
+              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">S</span>
+              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">R</span>
+              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">A</span>
+              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">S</span>
+              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+            </div>
           </div>
         </div>
-        <div class="testi-card" style="--tilt:3deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">A</span>
-            <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+        <div class="testi-row testi-row-b">
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">K</span>
+              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:-2deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">S</span>
-            <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">M</span>
+              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:2deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">K</span>
-            <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">D</span>
+              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:-3deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">M</span>
-            <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">K</span>
+              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:4deg;" tabindex="0" role="button" aria-pressed="false">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-          <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">D</span>
-            <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">M</span>
+              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">D</span>
+              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+</div>
   </div>
 </section>
 
@@ -2594,8 +2639,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-125" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-125" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2867,8 +2912,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-125"></script>
-<script src="assets/app.js?v=20260811-125"></script>
-<script type="module" src="assets/team.js?v=20260811-125"></script>
+<script src="assets/creative-data.js?v=20260811-130"></script>
+<script src="assets/app.js?v=20260811-130"></script>
+<script type="module" src="assets/team.js?v=20260811-130"></script>
 </body>
 </html>
