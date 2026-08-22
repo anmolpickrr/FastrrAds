@@ -600,72 +600,116 @@
      boxed panel) plus who delivers it.
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
-  const svcStage = document.getElementById("svcStage");
-  const svcExpand = document.getElementById("svcExpand");
-  const svcPanelInner = document.getElementById("svcPanelInner");
   const tierRow = document.getElementById("tierRow");
   const scopePanel = document.getElementById("scopePanel");
-  const SERVICE_ORDER = ["reels", "catalogue", "static", "carousel"];
-  let lastNavService = null;
+  const pkgModalBackdrop = document.getElementById("pkgModalBackdrop");
+  const pkgModal = document.getElementById("pkgModal");
+  const pkgModalGlow = document.getElementById("pkgModalGlow");
+  const pkgModalClose = document.getElementById("pkgModalClose");
+  let pkgOriginCard = null;
+  let pkgModalOpen = false;
 
-  // The tab row never resizes — only the window below it does. This
-  // pins #svcExpand to its pre-switch pixel height, lets the new
-  // service's content render (already done by the time this runs,
-  // since it's only ever called after the synchronous render() pass
-  // that updates it), then transitions to the real new height and
-  // clears the inline height once settled so future organic reflows
-  // (e.g. a browser resize) aren't left pinned to a stale value.
-  function animateExpandHeight(startH) {
-    if (!startH) return;
-    requestAnimationFrame(() => {
-      const endH = svcExpand.scrollHeight;
-      if (Math.abs(endH - startH) < 1) return;
-      svcExpand.style.height = startH + "px";
-      void svcExpand.offsetHeight;
-      svcExpand.style.transition = "height .45s cubic-bezier(.16,1,.3,1)";
-      svcExpand.style.height = endH + "px";
-      const onEnd = (e) => {
-        if (e.target !== svcExpand || e.propertyName !== "height") return;
-        svcExpand.style.transition = "";
-        svcExpand.style.height = "";
-        svcExpand.removeEventListener("transitionend", onEnd);
-      };
-      svcExpand.addEventListener("transitionend", onEnd);
-    });
+  // The card-to-modal "grow" morph (FLIP: First-Last-Invert-Play).
+  // 1. Show the modal (opacity/visibility only) so its natural,
+  //    centered layout box can be measured.
+  // 2. Compute the transform that would make that box exactly
+  //    overlay the clicked card's box, and apply it with transitions
+  //    off — visually the modal snaps into looking like the card.
+  // 3. Force a reflow, turn transitions back on, then clear the
+  //    transform — the browser animates from "shaped like the card"
+  //    to "its real size", which is what reads as the card growing
+  //    into the detail view rather than a dialog just fading in.
+  // transitionend isn't fully reliable to hang cleanup on — it can be
+  // skipped if a transition gets interrupted/re-triggered mid-flight
+  // (e.g. closing again before the previous close finished animating),
+  // which would otherwise leave the modal's "open" class stuck forever
+  // even though it's no longer visible. pendingCloseCleanup lets a new
+  // open flush any not-yet-run close cleanup synchronously first, and
+  // closePkgModal backs its own transitionend listener with a fallback
+  // timer so cleanup always runs even if that event never fires.
+  let pendingCloseCleanup = null;
+
+  function openPkgModal(card) {
+    if (pendingCloseCleanup) {
+      pendingCloseCleanup();
+      pendingCloseCleanup = null;
+    }
+    pkgOriginCard = card;
+    const accent = getComputedStyle(card).getPropertyValue("--accent").trim() || "var(--violet)";
+    pkgModal.style.setProperty("--accent", accent);
+    pkgModalGlow.style.background = accent;
+    pkgModalBackdrop.classList.add("open");
+    pkgModal.classList.add("open");
+    document.body.classList.add("pkg-modal-open");
+    document.documentElement.classList.add("pkg-modal-open");
+    pkgModalOpen = true;
+
+    const cardRect = card.getBoundingClientRect();
+    const targetRect = pkgModal.getBoundingClientRect();
+    const scaleX = cardRect.width / targetRect.width;
+    const scaleY = cardRect.height / targetRect.height;
+    const dx = cardRect.left + cardRect.width / 2 - (targetRect.left + targetRect.width / 2);
+    const dy = cardRect.top + cardRect.height / 2 - (targetRect.top + targetRect.height / 2);
+
+    pkgModal.style.transition = "none";
+    pkgModal.style.opacity = "0";
+    pkgModal.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+    void pkgModal.offsetWidth;
+    pkgModal.style.transition = "transform .5s cubic-bezier(.16,1,.3,1), opacity .3s ease";
+    pkgModal.style.opacity = "1";
+    pkgModal.style.transform = "translate(0,0) scale(1,1)";
+  }
+
+  function closePkgModal() {
+    if (!pkgModalOpen) return;
+    pkgModalOpen = false;
+    pkgModalBackdrop.classList.remove("open");
+    document.body.classList.remove("pkg-modal-open");
+    document.documentElement.classList.remove("pkg-modal-open");
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      pendingCloseCleanup = null;
+      pkgModal.classList.remove("open");
+      pkgModal.style.transition = "";
+      pkgModal.style.transform = "";
+      pkgModal.style.opacity = "";
+    };
+    pendingCloseCleanup = finish;
+    if (!pkgOriginCard || !document.body.contains(pkgOriginCard)) {
+      finish();
+      return;
+    }
+    const cardRect = pkgOriginCard.getBoundingClientRect();
+    const targetRect = pkgModal.getBoundingClientRect();
+    const scaleX = cardRect.width / targetRect.width;
+    const scaleY = cardRect.height / targetRect.height;
+    const dx = cardRect.left + cardRect.width / 2 - (targetRect.left + targetRect.width / 2);
+    const dy = cardRect.top + cardRect.height / 2 - (targetRect.top + targetRect.height / 2);
+    pkgModal.style.transition = "transform .4s cubic-bezier(.4,0,.2,1), opacity .3s ease";
+    pkgModal.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+    pkgModal.style.opacity = "0";
+    const onEnd = (e) => {
+      if (e.target !== pkgModal || e.propertyName !== "transform") return;
+      pkgModal.removeEventListener("transitionend", onEnd);
+      finish();
+    };
+    pkgModal.addEventListener("transitionend", onEnd);
+    setTimeout(finish, 500);
   }
 
   function renderServiceNav() {
-    svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
-      const isActive = btn.dataset.svc === state.service;
-      btn.setAttribute("aria-selected", String(isActive));
-      btn.classList.toggle("active", isActive);
-    });
-    // The tab row's own size never changes on selection — only the
-    // window below it (#svcExpand) does, morphing height and sliding
-    // its content in from whichever direction the clicked tab sits
-    // relative to the previous one. Only re-animate when the service
-    // actually changed (render() runs on plenty of unrelated state
-    // changes too, e.g. cart edits, which shouldn't replay this).
-    if (state.service !== lastNavService) {
-      const isFirst = lastNavService === null;
-      const fromIdx = SERVICE_ORDER.indexOf(lastNavService);
-      const toIdx = SERVICE_ORDER.indexOf(state.service);
-      const goingLeft = !isFirst && toIdx < fromIdx;
-      const startH = svcExpand.offsetHeight;
-      lastNavService = state.service;
-      svcStage.className = "svc-stage accent-" + state.service;
-      svcPanelInner.classList.remove("is-entering", "dir-left");
-      void svcPanelInner.offsetWidth;
-      svcPanelInner.classList.add("is-entering");
-      if (goingLeft) svcPanelInner.classList.add("dir-left");
-      if (!isFirst) animateExpandHeight(startH);
-    }
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
     }
+    svcNav.querySelectorAll(".pkg-card").forEach((card) => {
+      card.classList.toggle("selected", card.dataset.svc === state.service);
+    });
   }
 
   function scopeListHTML(items) {
@@ -1383,7 +1427,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     "mousedown",
     (e) => {
       const el = e.target.closest(
-        ".svc-tab, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button, #orderCartClearBtn"
+        ".pkg-card, .tier-chip, .scope-tab-btn, .showcase-tab, .qtier-chip, #qtyMinus, #qtyPlus, #obAddBtn, #orderCartList button, #orderCartClearBtn"
       );
       if (!el) return;
       e.preventDefault();
@@ -1395,14 +1439,99 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".svc-tab").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      withScrollAnchor(() => {
-        state.service = btn.dataset.svc;
+  // Cards float on the stage (base position set by --x/--y in CSS,
+  // drifting ambiently via a CSS animation) and can be dragged to a
+  // new spot with the pointer, matching the reference video's
+  // "floating card cloud" interaction. A drag past a small threshold
+  // suppresses the click that would otherwise open the modal, so a
+  // drag and a tap stay clearly distinct gestures. Below the 760px
+  // breakpoint the stage becomes a static stacked list (see the CSS
+  // media query) and dragging is skipped entirely.
+  function initPkgDrag() {
+    const THRESHOLD = 6;
+    svcNav.querySelectorAll(".pkg-card").forEach((card) => {
+      let tracking = false;
+      let dragging = false;
+      let suppressNextClick = false;
+      let pointerId = null;
+      let startX = 0;
+      let startY = 0;
+      let originLeft = 0;
+      let originTop = 0;
+
+      card.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        if (getComputedStyle(card).position !== "absolute") return;
+        tracking = true;
+        dragging = false;
+        pointerId = e.pointerId;
+        const stageRect = svcNav.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        originLeft = cardRect.left - stageRect.left + cardRect.width / 2;
+        originTop = cardRect.top - stageRect.top + cardRect.height / 2;
+        card.setPointerCapture(pointerId);
+      });
+
+      card.addEventListener("pointermove", (e) => {
+        if (!tracking) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (!dragging && Math.hypot(dx, dy) > THRESHOLD) {
+          dragging = true;
+          card.classList.add("dragging");
+        }
+        if (!dragging) return;
+        const stageRect = svcNav.getBoundingClientRect();
+        const left = Math.max(0, Math.min(stageRect.width, originLeft + dx));
+        const top = Math.max(0, Math.min(stageRect.height, originTop + dy));
+        card.style.left = left + "px";
+        card.style.top = top + "px";
+      });
+
+      const endDrag = () => {
+        if (!tracking) return;
+        tracking = false;
+        if (dragging) {
+          dragging = false;
+          suppressNextClick = true;
+          card.classList.remove("dragging");
+        }
+        if (pointerId !== null) {
+          try {
+            card.releasePointerCapture(pointerId);
+          } catch (err) {
+            /* pointer already released */
+          }
+        }
+        pointerId = null;
+      };
+      card.addEventListener("pointerup", endDrag);
+      card.addEventListener("pointercancel", endDrag);
+
+      card.addEventListener("click", (e) => {
+        if (suppressNextClick) {
+          suppressNextClick = false;
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        state.service = card.dataset.svc;
         render();
         switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+        openPkgModal(card);
       });
     });
+  }
+  initPkgDrag();
+
+  pkgModalClose.addEventListener("click", closePkgModal);
+  pkgModalBackdrop.addEventListener("click", (e) => {
+    if (e.target === pkgModalBackdrop) closePkgModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && pkgModalOpen) closePkgModal();
   });
 
   tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
@@ -2941,9 +3070,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       }, delay);
     }
 
+    // Icon SVGs kept as plain markup strings (not a shared icon map
+    // elsewhere) since these four are only ever used here, in the
+    // action-grid launcher shown before the first real message.
     const QUICK_STARTERS = [
       { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
-      { label: "How does ordering work?", text: "How does the order process work?" },
+      { label: "How ordering works", text: "How does the order process work?" },
       { label: "Turnaround time", text: "What's the turnaround time?" },
       { label: "Discounts & GST", text: "Tell me about discounts and GST" },
       { label: "Talk to the team", text: "I'd like to talk to the team" },
@@ -2954,7 +3086,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         const b = document.createElement("button");
         b.type = "button";
         b.className = "fasty-quick-chip";
-        b.textContent = q.label;
+        b.innerHTML = `<span class="fasty-quick-label">${escapeHtml(q.label)}</span>`;
         b.addEventListener("click", () => sendUserMessage(q.text));
         quickEl.appendChild(b);
       });
@@ -3060,10 +3192,101 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
 
   /* ----------------------------------------------------------
+     TESTIMONIALS SPOTLIGHT
+     One soft light drifting on its own across the grid-wall stage
+     (a slow randomized loop, driven through the same --spot-x/
+     --spot-y + CSS transition the click-to-focus move uses, so both
+     read as one continuous light instead of two separate effects).
+     Clicking a card moves the light to it, brightens that card, and
+     fades the others; clicking the same card again — or the stage's
+     empty background — clears focus and resumes the idle drift.
+  ---------------------------------------------------------- */
+  function initTestiSpotlight() {
+    const stage = document.getElementById("testiStage");
+    if (!stage) return;
+    const spotlight = document.getElementById("testiSpotlight");
+    const cards = Array.from(stage.querySelectorAll(".testi-card"));
+    let idleTimer = null;
+    let focused = false;
+
+    function setSpot(xPct, yPct) {
+      spotlight.style.setProperty("--spot-x", xPct + "%");
+      spotlight.style.setProperty("--spot-y", yPct + "%");
+    }
+
+    function idleDrift() {
+      if (focused) return;
+      const x = 22 + Math.random() * 56;
+      const y = 20 + Math.random() * 55;
+      setSpot(x, y);
+      idleTimer = setTimeout(idleDrift, 3800 + Math.random() * 1600);
+    }
+
+    function stopIdle() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = null;
+    }
+
+    function focusCard(card) {
+      const stageRect = stage.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const x = ((cardRect.left + cardRect.width / 2 - stageRect.left) / stageRect.width) * 100;
+      const y = ((cardRect.top + cardRect.height / 2 - stageRect.top) / stageRect.height) * 100;
+      stopIdle();
+      focused = true;
+      stage.classList.add("focused");
+      setSpot(x, y);
+      cards.forEach((c) => {
+        const isActive = c === card;
+        c.classList.toggle("active", isActive);
+        c.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    function clearFocus() {
+      if (!focused) return;
+      focused = false;
+      stage.classList.remove("focused");
+      cards.forEach((c) => {
+        c.classList.remove("active");
+        c.setAttribute("aria-pressed", "false");
+      });
+      idleDrift();
+    }
+
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        if (card.classList.contains("active")) {
+          clearFocus();
+        } else {
+          focusCard(card);
+        }
+      });
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    stage.addEventListener("click", (e) => {
+      if (e.target === stage) clearFocus();
+    });
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setSpot(50, 30);
+    } else {
+      idleDrift();
+    }
+  }
+
+  /* ----------------------------------------------------------
      INIT
   ---------------------------------------------------------- */
   restoreState();
   renderShowcase("reels");
   render();
   initFasty();
+  initTestiSpotlight();
 })();
