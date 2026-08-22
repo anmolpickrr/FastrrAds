@@ -641,6 +641,7 @@
     pkgModalBackdrop.classList.add("open");
     pkgModal.classList.add("open");
     document.body.classList.add("pkg-modal-open");
+    document.documentElement.classList.add("pkg-modal-open");
     pkgModalOpen = true;
 
     const cardRect = card.getBoundingClientRect();
@@ -664,6 +665,7 @@
     pkgModalOpen = false;
     pkgModalBackdrop.classList.remove("open");
     document.body.classList.remove("pkg-modal-open");
+    document.documentElement.classList.remove("pkg-modal-open");
 
     let done = false;
     const finish = () => {
