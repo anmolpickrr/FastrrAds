@@ -619,7 +619,21 @@
   //    transform — the browser animates from "shaped like the card"
   //    to "its real size", which is what reads as the card growing
   //    into the detail view rather than a dialog just fading in.
+  // transitionend isn't fully reliable to hang cleanup on — it can be
+  // skipped if a transition gets interrupted/re-triggered mid-flight
+  // (e.g. closing again before the previous close finished animating),
+  // which would otherwise leave the modal's "open" class stuck forever
+  // even though it's no longer visible. pendingCloseCleanup lets a new
+  // open flush any not-yet-run close cleanup synchronously first, and
+  // closePkgModal backs its own transitionend listener with a fallback
+  // timer so cleanup always runs even if that event never fires.
+  let pendingCloseCleanup = null;
+
   function openPkgModal(card) {
+    if (pendingCloseCleanup) {
+      pendingCloseCleanup();
+      pendingCloseCleanup = null;
+    }
     pkgOriginCard = card;
     const accent = getComputedStyle(card).getPropertyValue("--accent").trim() || "var(--violet)";
     pkgModal.style.setProperty("--accent", accent);
@@ -651,12 +665,17 @@
     pkgModalBackdrop.classList.remove("open");
     document.body.classList.remove("pkg-modal-open");
 
+    let done = false;
     const finish = () => {
+      if (done) return;
+      done = true;
+      pendingCloseCleanup = null;
       pkgModal.classList.remove("open");
       pkgModal.style.transition = "";
       pkgModal.style.transform = "";
       pkgModal.style.opacity = "";
     };
+    pendingCloseCleanup = finish;
     if (!pkgOriginCard || !document.body.contains(pkgOriginCard)) {
       finish();
       return;
@@ -676,6 +695,7 @@
       finish();
     };
     pkgModal.addEventListener("transitionend", onEnd);
+    setTimeout(finish, 500);
   }
 
   function renderServiceNav() {
