@@ -604,10 +604,42 @@
   const scopePanel = document.getElementById("scopePanel");
   const pkgModalBackdrop = document.getElementById("pkgModalBackdrop");
   const pkgModal = document.getElementById("pkgModal");
+  const pkgModalScroll = document.getElementById("pkgModalScroll");
   const pkgModalGlow = document.getElementById("pkgModalGlow");
   const pkgModalClose = document.getElementById("pkgModalClose");
+  const svcPanelInner = document.getElementById("svcPanelInner");
   let pkgOriginCard = null;
   let pkgModalOpen = false;
+
+  // AI Reels' 4 tiers carry different amounts of included/excluded
+  // copy, so the panel's natural content height differs per tier —
+  // left alone, switching tiers would resize (and, since the modal is
+  // flex-centered in its backdrop, reposition) the whole modal. This
+  // renders each tier's content once up front (synchronously, before
+  // the modal is ever shown) just to measure it, restores whichever
+  // tier was actually selected, and returns the tallest height seen —
+  // openPkgModal() locks the scroll region to that height before the
+  // FLIP-morph measures the modal's box, so the footprint never moves
+  // while switching tiers afterward.
+  function measureMaxTierHeight() {
+    if (state.service !== "reels") return 0;
+    const savedTier = state.tier;
+    const savedScopeTab = state.scopeTab;
+    let maxH = 0;
+    [1, 2, 3, 4].forEach((t) => {
+      state.tier = t;
+      renderServiceSummary();
+      renderServiceGlance();
+      renderScopePanel();
+      maxH = Math.max(maxH, svcPanelInner.scrollHeight);
+    });
+    state.tier = savedTier;
+    state.scopeTab = savedScopeTab;
+    renderServiceSummary();
+    renderServiceGlance();
+    renderScopePanel();
+    return maxH;
+  }
 
   // The card-to-modal "grow" morph (FLIP: First-Last-Invert-Play).
   // 1. Show the modal (opacity/visibility only) so its natural,
@@ -638,6 +670,15 @@
     const accent = getComputedStyle(card).getPropertyValue("--accent").trim() || "var(--violet)";
     pkgModal.style.setProperty("--accent", accent);
     pkgModalGlow.style.background = accent;
+    const maxTierH = measureMaxTierHeight();
+    if (maxTierH) {
+      pkgModalScroll.style.setProperty("--modal-locked-h", Math.ceil(maxTierH) + "px");
+      pkgModalScroll.classList.add("height-locked");
+    } else {
+      pkgModalScroll.classList.remove("height-locked");
+      pkgModalScroll.style.removeProperty("--modal-locked-h");
+    }
+
     pkgModalBackdrop.classList.add("open");
     pkgModal.classList.add("open");
     document.body.classList.add("pkg-modal-open");
