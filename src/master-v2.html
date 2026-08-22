@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- This exact file is also served, byte-for-byte, at /teamfastrr/ —
+     a genuinely separate URL for the internal team, not a redirect
+     into this one (see initAccessMode() in app.js). <base href="/">
+     makes every relative asset/script path below resolve against the
+     site root regardless of which of the two URLs actually loaded it,
+     since /teamfastrr/ is one directory deeper. -->
+<base href="/">
+<title>Fastrr Ads</title>
+<meta name="description" content="Internal creative agency showcase, service scope, price calculator and message generator.">
+<!-- Matches the actual browser tab background, not the site's own
+     theme toggle — those are two different things (the site defaults
+     to dark regardless of OS preference, but a visitor's tab chrome
+     follows their OS/browser setting either way). The `media` attribute
+     is natively supported for favicons: the browser picks whichever
+     link matches its own color scheme, no JS needed, so there's no
+     flash and no dependency on our theme toggle at all. -->
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-112" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-112" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-112" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-112" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-112" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-112" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-112" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-112" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#08090c; --bg-1:#0f1216; --bg-2:#14181e;
+  --glass: rgba(255,255,255,0.045); --glass-strong: rgba(255,255,255,0.08);
+  --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.06); --surface-hover: rgba(255,255,255,0.09);
+  --line: rgba(255,255,255,0.1); --line-soft: rgba(255,255,255,0.06);
+  --violet:#8b7cf6; --violet-soft:rgba(139,124,246,0.16);
+  --teal:#2fd9c4; --teal-soft:rgba(47,217,196,0.14);
+  --sky:#5ab4f0; --sky-soft:rgba(90,180,240,0.15);
+  --gold:#f5c26b;
+  --text-0:#f4f5f7; --text-1:#b7bcc6; --text-2:#828998;
+  --radius:20px; --radius-sm:12px; --radius-xs:8px;
+  --card-shadow: 0 24px 60px -24px rgba(139,124,246,0.35);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.24), 0 2px 6px -2px rgba(0,0,0,0.28);
+  --shadow-md: 0 2px 6px -2px rgba(0,0,0,0.3), 0 16px 36px -18px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 20px -8px rgba(0,0,0,0.45), 0 28px 64px -24px rgba(139,124,246,0.32);
+  --inset-hi: inset 0 1px 0 rgba(255,255,255,0.06);
+  --ease: cubic-bezier(.16,1,.3,1);
+  --btn-ink:#0a0a0d; --scrollbar: rgba(255,255,255,0.16);
+  --nav-bg: rgba(8,9,12,0.72);
+  --danger:#e0827e; --success:#2fd9c4;
+  --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+:root[data-theme="dark"], html[data-theme="dark"]{
+  --bg-0:#08090c; --bg-1:#0f1216; --bg-2:#14181e;
+  --glass: rgba(255,255,255,0.045); --glass-strong: rgba(255,255,255,0.08);
+  --surface-1: rgba(255,255,255,0.03); --surface-2: rgba(255,255,255,0.06); --surface-hover: rgba(255,255,255,0.09);
+  --line: rgba(255,255,255,0.1); --line-soft: rgba(255,255,255,0.06);
+  --violet:#8b7cf6; --violet-soft:rgba(139,124,246,0.16);
+  --teal:#2fd9c4; --teal-soft:rgba(47,217,196,0.14);
+  --sky:#5ab4f0; --sky-soft:rgba(90,180,240,0.15);
+  --gold:#f5c26b;
+  --text-0:#f4f5f7; --text-1:#b7bcc6; --text-2:#828998;
+  --card-shadow: 0 24px 60px -24px rgba(139,124,246,0.35);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.24), 0 2px 6px -2px rgba(0,0,0,0.28);
+  --shadow-md: 0 2px 6px -2px rgba(0,0,0,0.3), 0 16px 36px -18px rgba(0,0,0,0.5);
+  --shadow-lg: 0 8px 20px -8px rgba(0,0,0,0.45), 0 28px 64px -24px rgba(139,124,246,0.32);
+  --inset-hi: inset 0 1px 0 rgba(255,255,255,0.06);
+  --btn-ink:#0a0a0d; --scrollbar: rgba(255,255,255,0.16);
+  --nav-bg: rgba(8,9,12,0.72);
+  --danger:#e0827e; --success:#2fd9c4;
+}
+:root[data-theme="light"], html[data-theme="light"]{
+  --bg-0:#f7f6f2; --bg-1:#ffffff; --bg-2:#efeee9;
+  --glass: rgba(20,18,14,0.035); --glass-strong: rgba(20,18,14,0.07);
+  --surface-1: rgba(20,18,14,0.025); --surface-2: rgba(20,18,14,0.05); --surface-hover: rgba(20,18,14,0.08);
+  --line: rgba(20,18,14,0.12); --line-soft: rgba(20,18,14,0.07);
+  /* Contrast fix (client audit): violet/teal/gold/text-2/danger darkened for
+     light theme — original values scored 2.89–3.96:1 against card/glass
+     backgrounds where they're used as *text* (wc-cat labels, active tab
+     text, rules-panel label, copy-btn states), below the WCAG AA 4.5:1
+     normal-text minimum. New values verified >=4.5:1 in every real usage
+     context (see PR notes). violet-soft/teal-soft tints updated to match
+     the new base hues. */
+  --violet:#5a44c9; --violet-soft:rgba(90,68,201,0.12);
+  --teal:#0b5d52; --teal-soft:rgba(11,93,82,0.12);
+  --sky:#1f6fae; --sky-soft:rgba(31,111,174,0.11);
+  --gold:#8f5f0a;
+  --text-0:#161512; --text-1:#514f49; --text-2:#5f5b53;
+  --card-shadow: 0 24px 50px -26px rgba(111,90,223,0.25);
+  --shadow-sm: 0 1px 2px rgba(30,24,10,0.06), 0 2px 6px -2px rgba(30,24,10,0.08);
+  --shadow-md: 0 2px 6px -2px rgba(30,24,10,0.06), 0 16px 32px -18px rgba(30,24,10,0.16);
+  --shadow-lg: 0 8px 20px -10px rgba(30,24,10,0.14), 0 26px 56px -24px rgba(111,90,223,0.22);
+  --inset-hi: inset 0 1px 0 rgba(255,255,255,0.7);
+  --btn-ink:#fbfaf7; --scrollbar: rgba(20,18,14,0.18);
+  --nav-bg: rgba(247,246,242,0.82);
+  --danger:#a8453f; --success:#0b5d52;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]){
+    --bg-0:#f7f6f2; --bg-1:#ffffff; --bg-2:#efeee9;
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; color:var(--text-0);
+  font-family:var(--font-body); -webkit-font-smoothing:antialiased;
+  overflow-x:hidden; transition:background-color .35s ease,color .35s ease;
+  letter-spacing:-0.006em;
+  background-color:var(--bg-0);
+  background-repeat:no-repeat;
+  background-image:
+    radial-gradient(1000px circle at 14% 2%, var(--violet-soft), transparent 60%),
+    radial-gradient(820px circle at 88% 9%, var(--teal-soft), transparent 58%),
+    radial-gradient(980px circle at 8% 21%, var(--sky-soft), transparent 62%),
+    radial-gradient(900px circle at 92% 33%, var(--violet-soft), transparent 60%),
+    radial-gradient(1000px circle at 10% 46%, var(--sky-soft), transparent 62%),
+    radial-gradient(880px circle at 90% 58%, var(--teal-soft), transparent 58%),
+    radial-gradient(900px circle at 14% 71%, var(--violet-soft), transparent 60%),
+    radial-gradient(820px circle at 88% 84%, var(--sky-soft), transparent 58%),
+    radial-gradient(900px circle at 20% 96%, var(--teal-soft), transparent 60%);
+}
+/* No forced border-radius here — browsers already round the outline to
+   match whatever shape the focused element itself has (pill, panel,
+   sharp-cornered text button). Forcing a flat 4px radius on every
+   focus state was squaring off pills and boxing in text-only controls
+   that have no border of their own, which is what read as a cheap,
+   ill-fitted highlight. outline-offset is 0 (not a gap) so the ring
+   sits flush against elements that already carry their own border/
+   active-state color (pills, dropdowns) instead of drawing a second,
+   visibly separate ring outside it — one clean edge instead of two
+   concentric ones. */
+:focus-visible{outline:2px solid var(--violet); outline-offset:0;}
+body.lb-locked{overflow:hidden;}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:0.001ms !important; animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important; scroll-behavior:auto !important;
+  }
+  .reveal-on-scroll{opacity:1 !important; transform:none !important;}
+  .filmstrip-track{animation:none !important;}
+  .hero-tile{opacity:1 !important; animation:none !important; transform:rotate(var(--r,0deg)) !important;}
+  .hero-tile-drift{animation:none !important; transform:none !important;}
+  .hero-tile-inner{transition:none !important; transform:none !important;}
+  .hero-tile-media{transition:none !important; transform:none !important;}
+  .hero-tile.tile-hero::before,.hero-tile.tile-secondary::before{transition:none !important;}
+  .hero-title .word span{animation:none !important; transform:none !important;}
+}
+h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
+p{margin:0;}
+ul{margin:0; padding:0; list-style:none;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer; color:inherit;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1280px; margin:0 auto; padding:0 32px;}
+@media (max-width:720px){.wrap{padding:0 18px;}}
+.eyebrow{
+  font-family:var(--font-mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--violet); display:inline-flex; align-items:center; gap:8px;
+}
+.glass{
+  background:var(--glass); border:1px solid var(--line); border-radius:var(--radius);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-md), var(--inset-hi);
+}
+::-webkit-scrollbar{height:8px; width:8px;}
+::-webkit-scrollbar-thumb{background:var(--scrollbar); border-radius:8px;}
+.reveal-on-scroll{opacity:0; transform:translateY(24px); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+.reveal-on-scroll.revealed{opacity:1; transform:translateY(0);}
+
+/* ---------- NAV ---------- */
+.site-nav{
+  position:sticky; top:0; z-index:60; padding:14px 0 0;
+}
+.nav-pill{
+  display:flex; align-items:center; justify-content:space-between; height:60px;
+  padding:0 10px 0 14px; border-radius:100px; background:var(--nav-bg);
+  border:1px solid var(--line-soft); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-md), var(--inset-hi); transition:box-shadow .3s ease, border-color .3s ease;
+}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:18px;}
+.nav-pill .brand{margin-left:24px;}
+@media (max-width:520px){.nav-pill .brand{margin-left:12px;}}
+.brand-logo{height:40px; width:auto; display:block; transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.brand-logo-dark{display:none;}
+html[data-theme="dark"] .brand-logo-light{display:none;}
+html[data-theme="dark"] .brand-logo-dark{display:block;}
+.brand:hover .brand-logo{transform:scale(1.04);}
+footer .brand-logo{height:24px;}
+.nav-links{display:flex; gap:6px; font-size:13.5px; color:var(--text-1);}
+.nav-links a{transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;}
+.nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
+.nav-right{display:flex; align-items:center; gap:14px;}
+/* On the public build .nav-right previously held only the theme
+   toggle once the team-only profile trigger was stripped, leaving it
+   visually stranded against the wider .brand on the left and pulling
+   .nav-links off-center (space-between splits by item width, not
+   visual center). This CTA gives the right side real weight again —
+   a proper action, not just an icon — and rebalances the whole pill. */
+.nav-cta{padding:9px 20px; font-size:13px; white-space:nowrap;}
+@media (max-width:600px){.nav-cta{padding:8px 14px; font-size:12px;}}
+@media (max-width:380px){.nav-cta{display:none;}}
+.theme-toggle{
+  width:32px; height:32px; border-radius:50%; border:none; background:transparent;
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto; color:var(--text-2);
+  perspective:52px; transition:background .2s ease, color .2s ease;
+}
+.theme-toggle:hover{background:var(--surface-hover); color:var(--text-0);}
+/* A genuine two-sided coin flip — sun on the stack's front face
+   (rotateY 0), moon on its back face (rotateY 180), each with
+   backface-visibility hidden, so the two icons swap places rather than
+   one visually crossfading on top of the other. The stack's own
+   rotation is now driven entirely by the real theme state (the
+   [data-theme] selectors below), not a perpetual idle loop — at rest
+   it always shows whichever icon matches the theme actually applied,
+   so the icon is a correct status indicator, not just ambient motion.
+   The only animation is the one-shot turn when the state changes,
+   which happens on click (and once on page load if the saved theme
+   is dark). Paired with the whole-button spin below, one click reads
+   as a single deliberate turn instead of a decorative loop. */
+.theme-icon-stack{
+  width:16px; height:16px; position:relative; display:block;
+  transform-style:preserve-3d; transform:rotateY(0deg);
+  transition:transform .5s cubic-bezier(.65,0,.35,1);
+}
+:root[data-theme="dark"] .theme-icon-stack{transform:rotateY(180deg);}
+.theme-icon{
+  width:16px; height:16px; display:block; position:absolute; top:50%; left:50%;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+}
+.theme-icon-sun{transform:translate(-50%,-50%) rotateY(0deg);}
+.theme-icon-moon{transform:translate(-50%,-50%) rotateY(180deg);}
+/* Explicit @keyframes spin, restarted via a JS-added class on every click
+   (see initTheme in app.js) — a large, unmistakable whole-button motion
+   layered on top of the icon flip above, so the toggle reads as
+   animated even if the smaller icon-only transition is easy to miss. */
+.theme-toggle.theme-spin{animation:theme-toggle-spin .45s cubic-bezier(.34,1.56,.64,1);}
+@keyframes theme-toggle-spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+@media (max-width:900px){.nav-links{display:none;}}
+@media (max-width:520px){.nav-pill{padding:0 8px 0 10px;}}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative; min-height:0; overflow:hidden; max-width:100vw;
+  padding:104px 0 0; display:flex; flex-direction:column; justify-content:flex-start;
+}
+.hero > .wrap{width:100%; position:relative; z-index:2; max-width:1280px; overflow:visible;}
+.hero-bg-glow{position:absolute; inset:0; z-index:0; pointer-events:none;}
+.hero-stage{position:relative; min-height:580px; padding-bottom:20px;}
+@media (max-width:900px){.hero-stage{min-height:0; padding-bottom:0;}}
+.hero-eyebrow{margin-bottom:16px;}
+.hero-head{max-width:460px; width:100%; position:relative; z-index:3;}
+.hero-title{
+  font-size:clamp(32px,5vw,56px); line-height:1.04; font-weight:700; letter-spacing:-0.015em;
+  max-width:100%;
+}
+.hero-title .word{display:inline-block; overflow:hidden; vertical-align:top; max-width:100%;}
+.hero-title .word span{display:inline-block; transform:translateY(105%); animation:wordUp .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:calc(var(--w,0) * .08s);}
+@keyframes wordUp{to{transform:translateY(0);}}
+.hero-title .accent{
+  background:linear-gradient(100deg,var(--violet),var(--teal));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero-sub{margin-top:16px; font-size:14.5px; line-height:1.6; color:var(--text-1); max-width:440px;}
+.hero-cta-row{display:flex; gap:14px; margin-top:24px; flex-wrap:wrap;}
+.btn{
+  padding:13px 24px; border-radius:var(--radius-sm); font-weight:600; font-size:14.5px; border:1px solid transparent; display:inline-flex; align-items:center; gap:8px;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background .25s ease, border-color .25s ease;
+}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:linear-gradient(100deg,var(--violet),var(--teal)); color:var(--btn-ink); box-shadow:0 6px 18px -8px var(--violet-soft), var(--inset-hi);}
+.btn-primary:hover{box-shadow:0 16px 34px -10px var(--violet-soft), 0 4px 10px -4px rgba(0,0,0,0.25), var(--inset-hi); transform:translateY(-2px);}
+.btn-ghost{background:var(--surface-1); border-color:var(--line); color:var(--text-0); box-shadow:var(--inset-hi);}
+.btn-ghost:hover{background:var(--surface-hover); border-color:var(--violet); transform:translateY(-2px); box-shadow:var(--shadow-sm), var(--inset-hi);}
+
+/* ---------- HERO ORBIT — explicitly-aligned 7-column creative cluster ----------
+   .hero-visual is a single fixed-size composition box anchored to the
+   top-right of the hero stage. Seven columns, each sharing one exact
+   72px width (72 = lcm(4,9)×2, so both the 4:5 static ratio and the
+   9:16 video ratio land on exact integer heights with zero rounding
+   error), separated by a constant 14px gap — no rotation, no overlap.
+   Edges line up because every tile in every column shares the same
+   literal pixel width, not because of tuned overlap math. Box is
+   588×514. Columns alternate a 0/36px top offset for rhythm without
+   breaking any single column's internal alignment.
+
+   Each tile is three nested layers, one motion concern each, so nothing
+   fights over the `transform` property:
+     .hero-tile        — entrance choreography (converge + fade, no rotation)
+     .hero-tile-inner   — mouse/scroll parallax (JS, translate3d)
+     .hero-tile-media   — hover zoom on the image/video itself
+   Caption reveal + the gradient glow accent sit on top of that. */
+.hero-visual{
+  position:absolute; top:0; right:0; width:588px; height:514px; z-index:1;
+  transform-origin:top right;
+}
+@media (max-width:1180px){.hero-visual{transform:scale(.86);}}
+@media (max-width:1060px){.hero-visual{transform:scale(.72);}}
+@media (max-width:900px){.hero-visual{display:none;}}
+.hero-orbit{position:absolute; inset:0; z-index:1; pointer-events:none;}
+.hero-tile{
+  position:absolute; opacity:0; pointer-events:auto;
+  transform:rotate(var(--r,0deg)) translate(var(--ix,0px),var(--iy,26px)) scale(.9);
+  animation:tileIn .95s cubic-bezier(.16,1,.3,1) forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes tileIn{to{opacity:1; transform:rotate(var(--r,0deg)) translate(0,0) scale(1);}}
+.hero-tile-drift{position:absolute; inset:0;}
+.hero-tile.tile-drift .hero-tile-drift{animation:tileDrift var(--drift-dur,7s) ease-in-out calc(var(--d,0s) + .95s) infinite;}
+@keyframes tileDrift{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-7px) scale(1.012);}
+}
+.hero-tile-inner{
+  position:absolute; inset:0; border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--line); background:var(--bg-2);
+  box-shadow:var(--shadow-lg), var(--inset-hi);
+  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease;
+  will-change:transform;
+}
+.hero-tile-inner:hover{box-shadow:0 32px 68px -18px rgba(0,0,0,0.62), var(--inset-hi);}
+.hero-tile-media{position:absolute; inset:0; border-radius:var(--radius); overflow:hidden; transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.hero-tile-inner:hover .hero-tile-media{transform:scale(1.07);}
+.hero-tile-media img,.hero-tile-media video{width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block;}
+/* Restrained gradient accents — subtle by default, opens up on hover so
+   the cluster still reads as mostly photographic/video, not gradient-
+   washed. tile-hero (the dominant video) gets the fuller accent; a second,
+   quieter echo on tile-secondary (the catalogue video) ties the two video
+   tiles together without repeating the effect on every tile. */
+.hero-tile.tile-hero::before,.hero-tile.tile-secondary::before{
+  content:''; position:absolute; inset:-16px; z-index:-1; border-radius:calc(var(--radius) + 14px);
+  background:radial-gradient(60% 60% at 50% 42%, var(--violet-soft), transparent 72%);
+  filter:blur(20px); opacity:.5; transition:opacity .45s ease;
+}
+.hero-tile.tile-hero:hover::before{opacity:.8;}
+.hero-tile.tile-secondary::before{opacity:.24; filter:blur(16px);}
+.hero-tile.tile-secondary:hover::before{opacity:.45;}
+
+/* Kinetic filmstrip — real creative thumbnails, auto-scrolling rows */
+.hero-filmstrip{position:relative; z-index:1; margin-top:36px; padding-bottom:44px; display:flex; flex-direction:column; gap:8px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+.filmstrip-row{overflow:hidden; width:100%;}
+.filmstrip-track{display:flex; gap:14px; width:max-content; will-change:transform;}
+.filmstrip-row.dir-left .filmstrip-track{animation:strip-left var(--dur,55s) linear infinite;}
+.filmstrip-row.dir-right .filmstrip-track{animation:strip-right var(--dur,55s) linear infinite;}
+@keyframes strip-left{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes strip-right{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+/* Row 1 (video: Reels + Catalogue) is genuinely 9:16; Row 2 (Static
+   Ads) is genuinely 4:5. Sizing each row's tiles to an aspect-ratio
+   container that matches its real content ratio (same trick already
+   used for .ar-portrait/.ar-4x5 in the main showcase below) means
+   object-fit:cover never has to crop — the box and the source share
+   a ratio. Widths are chosen so both rows render at ~the same tile
+   height, so the pair still reads as one balanced strip. */
+.filmstrip-tile{flex:0 0 auto; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--bg-2); box-shadow:0 18px 40px -22px rgba(0,0,0,0.4); transition:transform .3s ease, box-shadow .3s ease;}
+.filmstrip-tile:hover{transform:translateY(-6px) scale(1.03); box-shadow:0 22px 46px -18px rgba(0,0,0,0.5); z-index:2;}
+.filmstrip-tile.tile-video{width:118px; aspect-ratio:9/16;}
+.filmstrip-tile.tile-static{width:168px; aspect-ratio:4/5;}
+.filmstrip-tile img,.filmstrip-tile video{display:block; width:100%; height:100%; object-fit:cover;}
+@media (max-width:720px){
+  .filmstrip-tile.tile-video{width:83px;}
+  .filmstrip-tile.tile-static{width:118px;}
+}
+
+.marquee-strip{position:relative; z-index:2; overflow:hidden; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); padding:14px 0;}
+.marquee-track{display:flex; gap:44px; white-space:nowrap; animation:marquee 70s linear infinite; width:max-content;}
+.marquee-track span{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* No panel background of its own — same treatment as .marquee-strip right
+   above it (hairline top/bottom rule only), so the strip sits directly on
+   the page's own continuous body background and reads as one more full-
+   bleed band in the page flow rather than a separate boxed-in element.
+   Two rows of logos drift past each other (opposite directions), masked to
+   a soft fade at both edges so it reads as an infinite belt. Every source
+   logo was pre-processed into flat single-tone art (same ink color, alpha-
+   only shape) so every mark reads at identical visual weight regardless of
+   its original colors — filter just flips that one tone light/dark to
+   match whichever theme is active. */
+/* border-top/border-bottom sit at the OUTER edge of the box, outside
+   its own padding — so padding alone (the previous approach here)
+   only ever created space between the hairline and this strip's own
+   content (the label/logos), never between the hairline itself and
+   Showcase above / Services below. With Showcase's bottom padding and
+   Services' top padding both zeroed (see their inline style overrides),
+   that left each hairline sitting flush against the neighboring
+   section's content — exactly the "line touching the heading/images"
+   read from a screenshot. margin supplies the missing outer gap;
+   padding still handles the inner gap to the label/logos. */
+.brand-logos-strip{
+  position:relative; z-index:2; overflow:hidden; margin:64px 0; padding:40px 0;
+  border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+}
+@media (max-width:640px){.brand-logos-strip{margin:44px 0;}}
+/* A quiet rule flanking the label on both sides — the same minimal
+   "as seen in" convention used on most trust-bar strips — instead of
+   bare centered text, so it reads as a deliberate section label rather
+   than a stray caption floating above the logos. */
+.brand-logos-label{
+  display:flex; align-items:center; justify-content:center; gap:18px;
+  font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--violet); margin-bottom:32px;
+}
+.brand-logos-label::before,.brand-logos-label::after{content:""; flex:1 1 auto; max-width:64px; height:1px; background:var(--line-soft);}
+.brand-logos-rows{
+  display:flex; flex-direction:column; gap:22px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+}
+.brand-logos-row{overflow:hidden; width:100%;}
+.brand-logos-track{display:flex; align-items:center; gap:52px; width:max-content; animation:brandMarquee 85s linear infinite;}
+.brand-logos-row.reverse .brand-logos-track{animation-direction:reverse; animation-duration:95s;}
+@keyframes brandMarquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+/* Every mark shares the same rendered HEIGHT (not a fixed box) so visual
+   weight stays consistent regardless of source aspect ratio — a square
+   badge and a wide wordmark both read at the same size. Capping width
+   too (the previous approach) was what made wide wordmarks shrink far
+   below square/icon marks; letting width follow naturally, with only a
+   modest safety cap for the widest wordmarks, fixes that without letting
+   any one mark dominate the row's horizontal space. */
+.brand-logo-box{height:28px; display:flex; align-items:center; flex:0 0 auto;}
+/* Per-logo size correction (see sizePct in creative-data.js) — a few
+   marks otherwise read visually larger/smaller than the row despite
+   sharing the same box height, so this scales the rendered height up
+   or down from that shared 28px baseline via a per-image CSS variable
+   instead of the fixed box, which would just center-crop/pad instead. */
+.brand-logos-track img{
+  height:calc(28px * var(--logo-scale, 1)); width:auto; max-width:150px; object-fit:contain;
+  filter:opacity(.62); transition:filter .2s ease;
+}
+.brand-logos-track img:hover{filter:opacity(.9);}
+html[data-theme="dark"] .brand-logos-track img{filter:invert(1) opacity(.7);}
+html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1);}
+:root:not([data-theme]) .brand-logos-track img{filter:invert(1) opacity(.7);}
+:root:not([data-theme]) .brand-logos-track img:hover{filter:invert(1) opacity(1);}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]) .brand-logos-track img{filter:opacity(.62);}
+  :root:not([data-theme]) .brand-logos-track img:hover{filter:opacity(.9);}
+}
+@media (prefers-reduced-motion:reduce){.brand-logos-track{animation:none;}}
+
+/* ---------- SECTION HEADER ---------- */
+.section{padding:104px 0; position:relative;}
+@media (max-width:640px){.section{padding:76px 0;}}
+.section-head{max-width:640px; margin-bottom:44px;}
+/* 20px, not the eyebrow's own 14px rhythm — the jump from an 11-12px
+   mono label to a 28-40px display heading needs more separation than a
+   same-size text pairing would, or the two read as crowded together
+   despite the gap technically being nonzero. */
+.section-head h2{font-size:clamp(28px,3.4vw,40px); margin-top:28px; line-height:1.08; letter-spacing:-0.015em;}
+.section-head p{margin-top:16px; color:var(--text-1); font-size:15.5px; line-height:1.65;}
+
+/* ---------- SHOWCASE ---------- */
+.showcase-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:26px;}
+.showcase-tab{
+  padding:9px 18px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1);
+  color:var(--text-1); font-size:13.5px; font-weight:600; transition:background .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+.showcase-tab:hover{background:var(--surface-hover); color:var(--text-0); transform:translateY(-1px);}
+.showcase-tab.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet); box-shadow:0 4px 14px -6px var(--violet-soft);}
+.showcase-row-wrap{position:relative;}
+.showcase-track{
+  display:flex; align-items:flex-start; gap:14px; overflow-x:auto; scroll-snap-type:x proximity; padding:6px 4px 18px;
+  scrollbar-width:thin; perspective:1000px;
+}
+/* Card sizing is aspect-ratio driven (see .ar-square / .ar-portrait below)
+   rather than one fixed width for every category. Static/Carousel content
+   is genuinely 1:1 and AI Reels/360° Catalogue source video is genuinely
+   9:16 — sizing each category's cards to its real media ratio (instead of
+   force-cropping everything into a square) is what fixes the "misaligned"
+   complaint. Within a single showcase tab every card shares the same
+   width+aspect, so the row still reads as one clean, evenly-spaced strip. */
+.work-card{
+  flex:0 0 auto; scroll-snap-align:start; border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--line); background:var(--surface-1); cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .35s var(--ease), box-shadow .35s ease, border-color .35s ease;
+  transform-style:preserve-3d; will-change:transform;
+  opacity:0; animation:cardIn .6s var(--ease) forwards;
+  animation-delay:calc(var(--i,0) * 55ms);
+}
+.work-card.ar-square{width:250px;}
+.work-card.ar-portrait{width:196px;}
+.work-card.ar-4x5{width:222px;}
+@media (max-width:520px){
+  .work-card.ar-square{width:208px;}
+  .work-card.ar-portrait{width:164px;}
+  .work-card.ar-4x5{width:184px;}
+}
+@keyframes cardIn{from{opacity:0; transform:translateY(22px);}to{opacity:1; transform:translateY(0);}}
+.work-card:hover{box-shadow:var(--shadow-lg); border-color:var(--glass-strong); transform:translateY(-4px);}
+.wc-media-wrap{position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--bg-2);}
+.work-card.ar-portrait .wc-media-wrap{aspect-ratio:9/16;}
+.work-card.ar-4x5 .wc-media-wrap{aspect-ratio:4/5;}
+.wc-media-wrap .wc-media{width:100%; height:100%; object-fit:cover; transition:transform .5s; will-change:transform;}
+.work-card:hover .wc-media{transform:scale(1.05);}
+.wc-mini-prev,.wc-mini-next{
+  position:absolute; top:50%; transform:translateY(-50%); width:28px; height:28px; border-radius:50%;
+  border:none; background:rgba(8,9,12,0.55); color:#fff; opacity:0; transition:opacity .25s;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.carousel-card:hover .wc-mini-prev,.carousel-card:hover .wc-mini-next{opacity:1;}
+.wc-mini-prev{left:8px;} .wc-mini-next{right:8px;}
+.wc-dots{position:absolute; bottom:8px; left:0; right:0; display:flex; justify-content:center; gap:5px;}
+.wc-dot{width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.45);}
+.wc-dot.active{background:#fff;}
+/* Nothing below the media — the creative is the whole card. Category is
+   the only label, overlaid on the image itself as a small pill, so every
+   card's height is just its fixed media aspect-ratio and a row always
+   lines up card-for-card regardless of text length. */
+.wc-cat-pill{
+  position:absolute; top:10px; left:10px; z-index:2; max-width:calc(100% - 20px);
+  padding:4px 10px; border-radius:100px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px); color:#fff;
+  font-family:var(--font-mono); font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.05em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.wc-demo-note{
+  position:absolute; top:10px; left:10px; right:10px; z-index:2;
+  padding:5px 10px; border-radius:10px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px);
+  font-size:10.5px; color:#fff; font-style:italic; line-height:1.4;
+}
+.work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
+.showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
+.nav-arrow{
+  width:38px; height:38px; border-radius:50%; border:1px solid var(--line); background:var(--surface-1);
+  color:var(--text-0); font-size:18px; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-sm); transition:background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.nav-arrow:hover{background:var(--surface-hover); border-color:var(--violet); transform:scale(1.08); box-shadow:var(--shadow-md);}
+
+/* ---------- LIGHTBOX ---------- */
+.lightbox{position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:30px;}
+.lightbox.open{display:flex;}
+.lb-backdrop{position:absolute; inset:0; background:rgba(4,4,6,0.86); backdrop-filter:blur(6px);}
+.lightbox.open .lb-backdrop{animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.lb-content{position:relative; z-index:2; max-width:920px; width:100%; display:flex; flex-direction:column; align-items:center; gap:18px; animation:lbPop .35s cubic-bezier(.16,1,.3,1);}
+@keyframes lbPop{from{opacity:0; transform:scale(.94) translateY(10px);}to{opacity:1; transform:scale(1) translateY(0);}}
+@keyframes lbMediaIn{from{opacity:0; transform:scale(.97);}to{opacity:1; transform:scale(1);}}
+.lb-frame,.lb-carousel{animation:lbMediaIn .4s cubic-bezier(.16,1,.3,1);}
+.lb-frame{position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line-soft); background:#000; max-height:76vh;}
+.lb-frame-vertical{aspect-ratio:9/16; height:76vh; max-height:76vh;}
+.lb-frame-square{aspect-ratio:1/1; max-height:76vh;}
+.lb-frame-4x5{aspect-ratio:4/5; height:76vh; max-height:76vh;}
+.lb-frame img,.lb-frame video{width:100%; height:100%; object-fit:cover;}
+.lb-play-badge{position:absolute; top:14px; left:14px; background:rgba(0,0,0,.55); color:#fff; font-family:var(--font-mono); font-size:12px; padding:5px 11px; border-radius:100px;}
+.lb-carousel{position:relative; border-radius:var(--radius); overflow:hidden; max-height:76vh; aspect-ratio:1/1; background:#000;}
+.lb-carousel img{width:100%; height:100%; object-fit:cover;}
+.lb-slide-prev,.lb-slide-next{
+  position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%;
+  border:none; background:rgba(0,0,0,.5); color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center;
+}
+.lb-slide-prev{left:12px;} .lb-slide-next{right:12px;}
+.lb-dots{position:absolute; bottom:14px; left:0; right:0; display:flex; justify-content:center; gap:6px;}
+.lb-dot{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.4);}
+.lb-dot.active{background:#fff;}
+.lb-caption{text-align:center; color:#f4f5f7; max-width:600px;}
+.lb-caption .lb-cat{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--teal);}
+.lb-caption h3{margin-top:8px; font-size:19px;}
+.lb-caption p{margin-top:6px; color:#b7bcc6; font-size:13.5px;}
+.lb-close{position:absolute; top:22px; right:26px; z-index:3; width:40px; height:40px; border-radius:50%; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06); color:#fff; font-size:18px; transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .2s;}
+.lb-close:hover{transform:rotate(90deg) scale(1.08); background:rgba(255,255,255,.14);}
+.lb-prev,.lb-next{position:absolute; top:50%; transform:translateY(-50%); z-index:3; width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06); color:#fff; font-size:22px; transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .2s;}
+.lb-prev{left:22px;} .lb-next{right:22px;}
+.lb-prev:hover{transform:translateY(-50%) translateX(-4px) scale(1.06); background:rgba(255,255,255,.14);}
+.lb-next:hover{transform:translateY(-50%) translateX(4px) scale(1.06); background:rgba(255,255,255,.14);}
+@media (max-width:700px){.lb-prev,.lb-next{width:38px; height:38px;} .lb-prev{left:8px;} .lb-next{right:8px;} .lb-close{top:10px; right:10px;}}
+
+/* ---------- SERVICES ----------
+   Small equal tabs (icon + name + price only — no index label, kept
+   deliberately short) sit above one expandable window. Each tab
+   carries its own accent color (--accent, set inline per tab); the
+   active one gets a slowly-rotating conic-gradient ring in that color
+   plus a spring-in checkmark, and the whole stage (.svc-stage) picks
+   up two soft, slowly-drifting blurred glow blobs tinted to the
+   active service's accent (--svc-accent, toggled via the
+   accent-<service> classes below, transitioned by JS in
+   renderServiceNav()) — ambient motion that reads as alive without
+   competing with the content. The window below morphs height between
+   services (#svcExpand / animateExpandHeight() in app.js) while its
+   content slides + scales in from the direction of the clicked tab.
+   The tab row itself never resizes on selection. */
+.svc-stage{position:relative;}
+.svc-stage.accent-reels{--svc-accent:var(--violet);}
+.svc-stage.accent-catalogue{--svc-accent:var(--teal);}
+.svc-stage.accent-static{--svc-accent:var(--gold);}
+.svc-stage.accent-carousel{--svc-accent:var(--danger);}
+.svc-glow{
+  position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; z-index:0;
+  background:var(--svc-accent, var(--violet)); opacity:.16;
+  transition:background .6s ease; will-change:transform;
+}
+.svc-glow.g1{width:340px; height:340px; top:-80px; left:8%; animation:svcGlowFloatA 16s ease-in-out infinite alternate;}
+.svc-glow.g2{width:280px; height:280px; bottom:-60px; right:10%; opacity:.13; animation:svcGlowFloatB 20s ease-in-out infinite alternate;}
+@keyframes svcGlowFloatA{0%{transform:translate(0,0) scale(1);}100%{transform:translate(36px,26px) scale(1.08);}}
+@keyframes svcGlowFloatB{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-30px,-22px) scale(1.05);}}
+@media (prefers-reduced-motion: reduce){.svc-glow{animation:none;}}
+
+.svc-tabrow{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;}
+.svc-tab{
+  position:relative; flex:1 1 200px; display:flex; align-items:center; gap:12px;
+  padding:14px 40px 14px 16px; border-radius:var(--radius-sm); background:var(--surface-1);
+  border:1px solid var(--line); opacity:.62; cursor:pointer; text-align:left; color:inherit;
+  transition:opacity .25s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+}
+.svc-tab:hover{opacity:.88; background:var(--surface-hover); transform:translateY(-2px);}
+.svc-tab.active{
+  opacity:1; background:var(--glass); border-color:var(--accent);
+  box-shadow:0 10px 26px -14px var(--accent), var(--inset-hi);
+}
+/* A slim conic-gradient ring, masked to just the border, slowly
+   spinning around the active tab — the "flashy" cue that this one is
+   open, contained to a thin outline so it stays subtle. Degrades
+   gracefully to a static ring wherever @property isn't supported. */
+@property --svc-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
+.svc-tab.active::before{
+  content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+  background:conic-gradient(from var(--svc-spin), var(--accent), transparent 28%, var(--accent) 55%, transparent 85%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  opacity:.75; pointer-events:none; animation:svcSpin 3.2s linear infinite;
+}
+@keyframes svcSpin{to{--svc-spin:360deg;}}
+@media (prefers-reduced-motion: reduce){.svc-tab.active::before{animation:none;}}
+.svc-tab-icon{
+  flex:0 0 auto; width:20px; height:20px; display:flex; align-items:center; justify-content:center;
+  color:var(--text-2); transition:color .25s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.svc-tab-icon svg{width:18px; height:18px;}
+.svc-tab.active .svc-tab-icon{color:var(--accent); transform:scale(1.12);}
+.svc-tab-body{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:3px;}
+.svc-tab-name{
+  font-family:var(--font-display); font-size:14px; font-weight:700; letter-spacing:-0.01em;
+  color:var(--text-1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color .25s ease;
+}
+.svc-tab.active .svc-tab-name{color:var(--text-0);}
+.svc-tab-price{font-family:var(--font-mono); font-size:11px; color:var(--text-2); transition:color .25s ease;}
+.svc-tab.active .svc-tab-price{color:var(--accent);}
+.svc-tab-check{
+  position:absolute; top:50%; right:14px; width:18px; height:18px; border-radius:50%;
+  background:var(--accent); color:var(--btn-ink); font-size:10px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; transform:translateY(-50%) scale(0);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.svc-tab.active .svc-tab-check{transform:translateY(-50%) scale(1);}
+.svc-tab:focus-visible{outline:none; box-shadow:0 0 0 2px var(--accent);}
+@media (max-width:720px){.svc-tab{flex:1 1 calc(50% - 5px);} .svc-tab-price{display:none;}}
+@media (max-width:480px){.svc-tab{flex:1 1 100%;}}
+
+/* The expand wrapper is what actually animates open/closed height
+   between services; the panel inside it just supplies the card
+   chrome, tinted to the active accent so the glow blobs, tab ring,
+   and panel border all read as one cohesive color story per service. */
+.svc-expand{position:relative; z-index:1; overflow:hidden;}
+.svc-panel{
+  border-radius:var(--radius); background:var(--glass); border:1px solid var(--line);
+  box-shadow:var(--shadow-md), var(--inset-hi); transition:border-color .5s ease;
+  border-color:color-mix(in srgb, var(--svc-accent, var(--violet)) 35%, var(--line));
+}
+.svc-panel-inner{padding:26px clamp(20px,4vw,40px) 30px;}
+.svc-panel-inner.is-entering{animation:svcPanelOpenRight .46s cubic-bezier(.16,1,.3,1);}
+.svc-panel-inner.dir-left{animation-name:svcPanelOpenLeft;}
+@keyframes svcPanelOpenRight{0%{opacity:0; transform:translateX(18px) scale(.98);}100%{opacity:1; transform:translateX(0) scale(1);}}
+@keyframes svcPanelOpenLeft{0%{opacity:0; transform:translateX(-18px) scale(.98);}100%{opacity:1; transform:translateX(0) scale(1);}}
+.svc-panel-head{
+  display:flex; justify-content:space-between; align-items:flex-end; gap:28px; flex-wrap:wrap;
+  padding-bottom:26px; border-bottom:1px solid var(--line-soft);
+}
+.svc-panel-head h3{font-size:clamp(24px,3vw,32px); letter-spacing:-0.015em;}
+.svc-panel-price-wrap{display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+.svc-panel-price{
+  font-family:var(--font-mono); font-size:clamp(22px,2.6vw,28px); font-weight:600; color:var(--teal);
+  white-space:nowrap; line-height:1;
+}
+.svc-min-order{font-size:11.5px; color:var(--text-2); white-space:nowrap;}
+.svc-panel-short{margin-top:12px; color:var(--text-1); font-size:15px; max-width:560px;}
+
+.tier-row{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:0;}
+.tier-row.is-hidden{display:none;}
+.tier-chip{
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:6px;
+  padding:16px 16px 14px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--surface-1);
+  font-size:12.5px; font-weight:600; color:var(--text-2); opacity:.55;
+  transition:background .25s ease, color .25s ease, opacity .25s ease, border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+}
+.tier-chip b{font-family:var(--font-mono); font-size:18px; color:var(--text-0); font-weight:600;}
+.tier-chip:hover{opacity:.85; background:var(--surface-hover); transform:translateY(-1px);}
+.tier-chip.active{
+  opacity:1; background:linear-gradient(135deg,var(--violet-soft),var(--surface-1)); border-color:var(--violet); color:var(--violet);
+  box-shadow:0 10px 24px -12px var(--violet-soft), var(--inset-hi); transform:translateY(-1px);
+}
+.tier-chip.active::after{
+  content:'✓'; position:absolute; top:14px; right:14px; width:18px; height:18px; border-radius:50%;
+  background:var(--violet); color:var(--btn-ink); font-size:10px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+}
+/* A rounded chip now has its own border for a ring to sit against, but
+   focus still reuses the active state's fill rather than a boxed
+   outline layered on top of it, matching the rest of the section. */
+.tier-chip:focus-visible{outline:none; opacity:.85; border-color:var(--violet);}
+.qtier-chip:focus-visible{outline:none; background:var(--surface-hover);}
+@media (max-width:640px){
+  .tier-row{grid-template-columns:1fr;}
+  .tier-chip{flex-direction:row; align-items:center; justify-content:space-between; padding:14px 16px;}
+}
+
+/* At-a-glance strip — the handful of numbers someone actually scans
+   for (length, turnaround, revisions) surface immediately instead of
+   being buried inside the Included tab's spec grid, so understanding
+   a package doesn't require a click first. Row dividers only, no
+   card/box treatment, so it reads as one continuous fact strip. */
+.svc-glance{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  margin-top:26px; padding-top:22px; border-top:1px solid var(--line-soft);
+}
+.svc-glance-item{padding:0 22px; border-left:1px solid var(--line-soft);}
+.svc-glance-item:first-child{padding-left:0; border-left:none;}
+.svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
+.svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
+@media (max-width:760px){
+  .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
+  .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
+}
+@media (max-width:420px){
+  .svc-glance{grid-template-columns:1fr; row-gap:18px;}
+  .svc-glance-item{border-left:none !important; padding-left:0 !important;}
+}
+
+.scope-panel{margin-top:28px;}
+/* Segmented pill switch — the selected list gets a filled, full-
+   contrast segment while the other two fade back, so which of the
+   three lists is currently on screen is obvious at a glance instead
+   of relying on a thin underline someone has to notice. */
+.scope-tab-bar{
+  display:inline-flex; flex-wrap:wrap; gap:3px; margin-bottom:24px; padding:4px;
+  border-radius:100px; background:var(--surface-1); border:1px solid var(--line-soft);
+}
+.scope-tab-btn{
+  display:flex; align-items:center; gap:6px; padding:9px 16px; border-radius:100px;
+  background:none; border:none; font-size:13px; font-weight:600; color:var(--text-2); opacity:.6;
+  transition:color .2s ease, opacity .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.scope-tab-btn svg{width:13px; height:13px; flex:0 0 auto; opacity:.7; transition:opacity .2s ease;}
+.scope-tab-btn:hover{opacity:.85;}
+.scope-tab-btn.active{opacity:1; color:var(--text-0); background:var(--surface-2); box-shadow:var(--inset-hi), var(--shadow-sm);}
+.scope-tab-btn.active svg{opacity:1;}
+.scope-tab-btn:focus-visible{outline:none; opacity:1; box-shadow:0 0 0 2px var(--violet-soft);}
+.scope-body{max-width:900px;}
+@media (max-width:480px){.scope-tab-bar{display:flex; width:100%;} .scope-tab-btn{flex:1 1 0; justify-content:center;}}
+
+/* Plain bordered rows — now just the secondary production facts
+   (script/language/support) that don't fit the at-a-glance strip
+   above, so this list stays short instead of repeating duration/
+   turnaround/revisions a second time. Single column: three rows at
+   most doesn't need a second column to avoid trailing empty space. */
+.scope-specs{margin-bottom:20px;}
+.scope-spec-row{display:flex; gap:16px; padding:8px 0; font-size:13px; border-bottom:1px solid var(--line-soft);}
+.scope-spec-row span{flex:0 0 110px; color:var(--text-2); font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding-top:2px;}
+.scope-spec-row b{color:var(--text-0); font-weight:600; line-height:1.5;}
+@media (max-width:480px){.scope-spec-row{flex-direction:column; gap:2px;} .scope-spec-row span{flex:none;}}
+
+.scope-list li{position:relative; padding-left:28px; margin-bottom:14px; font-size:14.5px; color:var(--text-1); line-height:1.55;}
+.scope-list li:last-child{margin-bottom:0;}
+.scope-list li::before{
+  content:'✓'; position:absolute; left:0; top:1px; width:18px; height:18px; border-radius:50%;
+  background:var(--teal-soft); color:var(--teal); font-size:10.5px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+}
+.scope-list.scope-exc li::before{content:'✕'; background:rgba(224,130,126,0.16); color:var(--danger);}
+.scope-list.scope-need li::before{content:'↑'; background:var(--violet-soft); color:var(--violet);}
+/* Clearly larger than the 14px gap between items inside a single
+   group — at 20px the two rhythms were close enough that a new group
+   starting didn't read any differently from the next line in the same
+   list, which is what made "once per order" vs "per selected product"
+   still hard to tell apart at a glance. */
+.scope-need-group{margin-bottom:34px;}
+.scope-need-group:last-of-type{margin-bottom:0;}
+.scope-need-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:12px;}
+.scope-note{margin-top:14px; font-size:12.5px; color:var(--text-2); font-style:italic;}
+.scope-deliver-box{margin-top:20px; padding-top:16px; border-top:1px solid var(--line-soft); font-size:13px; color:var(--text-1); line-height:1.55;}
+.scope-deliver-box b{color:var(--text-2); display:block; margin-bottom:5px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-mono); font-weight:700;}
+
+.compare-wrap{overflow-x:auto; margin-top:16px;}
+table.compare-table{width:100%; border-collapse:collapse; font-size:13px; min-width:560px;}
+table.compare-table th,table.compare-table td{padding:13px 16px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:nowrap;}
+table.compare-table th:first-child,table.compare-table td:first-child{padding-left:0;}
+table.compare-table tbody tr:last-child td{border-bottom:none;}
+table.compare-table tbody tr:hover td{background:var(--surface-1);}
+table.compare-table thead th{color:var(--text-2); font-weight:600; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; border-bottom:2px solid var(--line);}
+table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet);}
+
+/* ---------- GOOD TO KNOW / RULES ----------
+   Purely general, cross-cutting terms — deliberately NOT scoped to
+   whatever service/tier happens to be selected above (that's what the
+   scope panel's own Included/Not Included/Client Provides tabs and
+   spec sidebar are for). Keeping this list free of per-selection detail
+   is what stops it from just repeating the panel above in miniature. */
+.rules-panel{margin-top:40px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.rules-panel-label{
+  display:flex; align-items:center; gap:9px; font-weight:700; font-size:14px; color:var(--gold);
+  cursor:pointer; list-style:none; user-select:none; padding:4px 0;
+}
+.rules-panel-label::-webkit-details-marker{display:none;}
+.rules-panel-chevron{margin-left:auto; color:var(--text-2); transition:transform .25s ease;}
+.rules-panel[open] .rules-panel-chevron{transform:rotate(180deg);}
+
+/* Plain single-column list, no card boxes/backgrounds/icon badges —
+   just a bold lead-in a few words long so the point is scannable,
+   running straight into one short plain-text sentence after it. Thin
+   row dividers are the only structure, matching how the rest of the
+   page's own lists (e.g. .scope-list) are built rather than
+   introducing a separate "designed" component for this panel. */
+.rules-general{margin-top:20px;}
+.rules-general-label{display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2); margin-bottom:8px;}
+.rules-list li{padding:11px 0; border-bottom:1px solid var(--line-soft); font-size:13.5px; color:var(--text-1); line-height:1.55;}
+.rules-list li:last-child{border-bottom:none; padding-bottom:0;}
+.rules-list li b{color:var(--text-0);}
+
+.rules-compare-toggle,.mini-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
+.rules-compare-toggle summary,.mini-toggle summary{
+  cursor:pointer; list-style:none; user-select:none; font-size:12.5px; font-weight:600; color:var(--text-1);
+  display:flex; align-items:center; gap:6px;
+}
+.rules-compare-toggle summary::-webkit-details-marker,.mini-toggle summary::-webkit-details-marker{display:none;}
+.rules-compare-toggle summary::before,.mini-toggle summary::before{content:'›'; display:inline-block; font-size:15px; color:var(--text-2); transition:transform .2s ease;}
+.rules-compare-toggle[open] summary::before,.mini-toggle[open] summary::before{transform:rotate(90deg);}
+.rules-compare-toggle summary:hover,.mini-toggle summary:hover{color:var(--text-0);}
+.mini-toggle{margin-top:14px; margin-bottom:14px; padding-top:14px;}
+.mini-toggle[open]>summary{margin-bottom:12px;}
+.mini-toggle .ob-facts{margin:0;}
+
+/* ---------- ORDER BUILDER / CALCULATOR ----------
+   Two-panel layout: a left "configure a creative" builder that feeds
+   an explicit Add-to-Order action, and a right order panel holding the
+   cart (one row per creative type/tier/qty combination, editable and
+   removable in place) plus a single order-level discount + total. This
+   replaces the old single-package calculator, which had no way to
+   represent a client buying more than one creative type per order. */
+.field-row:not([hidden]){display:flex; flex-direction:column; gap:6px; margin-bottom:18px;}
+.field-row label{font-size:12px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
+.field-row-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.field-row-split .field-row{margin-bottom:14px;}
+@media (max-width:480px){.field-row-split{grid-template-columns:1fr;}}
+.select-input,.text-input{
+  padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1); color:var(--text-0);
+  font-size:14px; font-family:inherit; box-shadow:var(--inset-hi); transition:border-color .2s ease, box-shadow .2s ease;
+}
+.select-input:focus,.text-input:focus{outline:none; border-color:var(--violet); box-shadow:0 0 10px 1px var(--violet-soft), var(--inset-hi);}
+.select-input::placeholder,.text-input::placeholder,textarea.msg-box::placeholder{color:var(--text-2); opacity:1;}
+
+/* Password visibility toggle — a plain eye icon inside the field,
+   same convention as most login forms. The input's own right padding
+   makes room so typed characters never run under the icon. */
+.password-field{position:relative;}
+.password-field .text-input{width:100%; padding-right:42px;}
+.password-toggle{
+  position:absolute; top:50%; right:6px; transform:translateY(-50%); width:30px; height:30px;
+  display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--text-2);
+  background:none; border:none; -webkit-appearance:none; appearance:none; padding:0;
+  transition:color .2s ease, background .2s ease, transform .15s ease;
+}
+.password-toggle:hover{color:var(--text-0); background:var(--surface-hover); transform:translateY(-50%) scale(1.06);}
+.password-toggle:active{transform:translateY(-50%) scale(.94);}
+.eye-icon{display:block;}
+.eye-icon.eye-closed{display:none;}
+.password-toggle[aria-pressed="true"] .eye-icon.eye-open{display:none;}
+.password-toggle[aria-pressed="true"] .eye-icon.eye-closed{display:block;}
+.qty-row{display:flex; align-items:center; gap:8px;}
+.qty-btn{width:36px; height:36px; flex:0 0 auto; border-radius:var(--radius-xs); border:1px solid var(--line); background:var(--surface-1); font-size:18px; color:var(--text-0); box-shadow:var(--shadow-sm); transition:background .2s ease, transform .2s ease, box-shadow .2s ease;}
+.qty-btn:hover{background:var(--surface-hover); transform:translateY(-1px);}
+.qty-btn:active{transform:scale(0.94);}
+#qQtyInput{width:100%; min-width:0; text-align:center;}
+.tier-mini-row{display:flex; gap:6px; flex-wrap:wrap;}
+.qtier-chip{padding:6px 12px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1); font-size:12.5px; color:var(--text-1); opacity:.6; transition:background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease, opacity .2s ease;}
+.qtier-chip:hover{opacity:.9; background:var(--surface-hover); transform:translateY(-1px);}
+.qtier-chip.active{opacity:1; background:var(--violet); color:var(--btn-ink); border-color:var(--violet); box-shadow:0 6px 14px -6px var(--violet-soft);}
+.summary-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line-soft); font-size:14px;}
+.summary-row span{color:var(--text-2);}
+.summary-row.total{border-bottom:none; padding-top:14px; font-size:19px; font-weight:700; font-family:var(--font-display);}
+.summary-row.total span{color:var(--text-1); font-family:var(--font-body); font-weight:600; font-size:14px;}
+
+.order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:18px; align-items:start;}
+@media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
+
+/* Public/internal split — index.html and teamfastrr/index.html are two
+   genuinely separate files built from this one master (see
+   scripts/build_pages.py): internal-only markup (Message Generator,
+   Order History, the manual discount/GST override fields, the team
+   sign-in popup, assets/team.js) is stripped out of the public build
+   entirely, not just hidden here — a public visitor's browser never
+   receives that markup or script over the network. The Order
+   panel/pricing builder itself stays in both builds and is fully
+   visible/usable in the public one (a visitor can add creatives and
+   see the live order total); public orders just get the automatic
+   bulk-order offer (see .oc-offer) instead of a raw editable discount
+   field, and GST charged as a fixed, non-optional line. app.js still
+   branches on .is-internal (via initAccessMode()) for pricing/copy
+   logic shared by both builds — see isInternal() there. */
+html.is-internal .oc-offer{display:none !important;}
+
+.ob-panel,.oc-panel{padding:22px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.ob-panel-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:14px;}
+.ob-panel .field-row{margin-bottom:14px;}
+.ob-facts{display:flex; flex-wrap:wrap; gap:8px;}
+.ob-fact{font-size:11.5px; padding:5px 11px; border-radius:100px; background:var(--surface-2); color:var(--text-1); display:flex; align-items:center; gap:6px;}
+.ob-fact .dot{width:5px; height:5px; border-radius:50%; background:var(--teal); flex:0 0 auto;}
+.ob-add-btn{width:100%; justify-content:center; margin-top:4px;}
+
+/* Bulk-order offer — a single quiet line at the top of the Order
+   panel, not a manual discount control. Public visitors get an
+   automatic 10% off once their order crosses ₹10,000 (see
+   applyPublicOffer() in app.js); the line itself doubles as progress
+   feedback before that ("add ₹X more") and confirmation after
+   ("applied"), so it stays useful at every point instead of just
+   sitting there as decoration. Internal team keeps the manual
+   discount field instead (stripped from the public build entirely —
+   see scripts/build_pages.py) since they're pricing real negotiated
+   orders, not shopping a public discount. */
+/* A ticket, not a badge — a code stub (dashed divider, monospace
+   code) split from the copy, reading as an actual coupon rather than
+   an abstract percentage shape. Two distinct states: outlined/muted
+   stub while short of the threshold (an invitation, not an achievement
+   yet), switching to a filled gradient stub once unlocked. The unlock
+   moment itself is a single quiet diagonal sheen sweeping across the
+   stub plus a soft fade-in — no bounce, no pulsing ring — "catchy but
+   professional" rather than a flashy pop. */
+.oc-offer{
+  position:relative; display:flex; align-items:stretch; margin-bottom:16px;
+  border-radius:var(--radius); background:var(--surface-1); border:1px solid var(--line);
+  overflow:hidden; transition:background .3s ease, border-color .3s ease;
+}
+.oc-offer:empty{display:none;}
+.oc-offer-main{flex:1 1 auto; min-width:0; padding:13px 16px; display:flex; flex-direction:column; justify-content:center; gap:3px;}
+.oc-offer-kicker{font-family:var(--font-mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);}
+.oc-offer-title{font-size:13px; color:var(--text-1); line-height:1.4;}
+.oc-offer-title b{color:var(--text-0); font-weight:700;}
+.oc-offer-stub{
+  position:relative; flex:0 0 auto; width:112px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px; padding:10px;
+  border-left:1.5px dashed var(--line); background:var(--surface-2); overflow:hidden;
+  transition:background .3s ease;
+}
+.oc-offer-code{
+  font-family:var(--font-mono); font-size:14px; font-weight:800; letter-spacing:.05em;
+  color:var(--text-1); padding:4px 9px; border-radius:6px; border:1px dashed var(--line);
+  transition:color .3s ease, border-color .3s ease, background .3s ease;
+}
+.oc-offer-code-status{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); transition:color .3s ease;}
+
+/* Flat teal fill once unlocked — a solid, confident "this is applied"
+   color rather than a moving gradient, so the coupon reads as settled
+   state instead of a still-loading/decorative effect. The code chip
+   keeps its own solid dark background regardless, so the coupon text
+   stays readable against the flat fill either way. */
+.oc-offer.is-unlocked .oc-offer-stub{background:var(--teal);}
+.oc-offer.is-unlocked .oc-offer-code{background:rgba(8,6,18,.55); border-color:rgba(255,255,255,.4); color:#fff;}
+.oc-offer.is-unlocked .oc-offer-code-status{color:rgba(255,255,255,.8);}
+
+@keyframes offerFadeIn{0%{opacity:.55;}100%{opacity:1;}}
+@keyframes offerSheen{
+  0%{transform:translateX(-140%) skewX(-18deg);}
+  100%{transform:translateX(240%) skewX(-18deg);}
+}
+/* Unlock moment: fade-in plus a soft outward ring that blooms once
+   around the whole offer card, on top of the stub's diagonal sheen —
+   enough to draw the eye to the discount without any bounce or
+   flashing. */
+@keyframes offerRing{
+  0%{box-shadow:0 0 0 0 rgba(139,124,246,.35);}
+  60%{box-shadow:0 0 0 10px rgba(139,124,246,0);}
+  100%{box-shadow:0 0 0 10px rgba(139,124,246,0);}
+}
+.oc-offer.just-unlocked{animation:offerFadeIn .5s ease-out, offerRing 1.1s ease-out;}
+.oc-offer-stub::after{
+  content:''; position:absolute; top:0; bottom:0; width:36%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent);
+  opacity:0; pointer-events:none;
+}
+.oc-offer.just-unlocked .oc-offer-stub::after{opacity:1; animation:offerSheen .75s ease-out;}
+
+/* Lead capture CTA — sits inside the Order panel itself, right after
+   the Final Amount, so it reads as the order's own next step rather
+   than an unrelated prompt floating below the whole builder. Opens
+   .lead-modal on click; see initLeadModal() in app.js. */
+.lead-cta{margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);}
+.lead-cta-sub{margin-bottom:14px; font-size:13px; color:var(--text-1); line-height:1.5;}
+.lead-cta-btn{width:100%; justify-content:center;}
+
+.lead-panel-head{margin-bottom:20px;}
+.lead-panel-sub{margin-top:8px; font-size:13.5px; color:var(--text-1); line-height:1.55; max-width:560px;}
+.lead-form .field-row{margin-bottom:16px;}
+.lead-form .field-row:last-of-type{margin-bottom:0;}
+.field-optional{font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-2);}
+.lead-textarea{min-height:76px; resize:vertical; font-family:var(--font-body); line-height:1.5; padding-top:10px;}
+.lead-submit-btn{margin-top:6px; width:100%; justify-content:center;}
+.lead-form-status{margin-top:12px; font-size:12.5px; line-height:1.5;}
+.lead-form-status:empty{display:none;}
+.lead-form-status.is-success{color:var(--teal);}
+.lead-form-status.is-error{color:var(--danger);}
+
+/* Modal — same overlay/backdrop convention as .lightbox (fixed,
+   centered, fade+pop in), just a lighter panel sized for a form
+   instead of media. */
+.lead-modal{position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:20px;}
+.lead-modal.open{display:flex;}
+.lead-modal-backdrop{position:absolute; inset:0; background:rgba(4,4,6,0.72); backdrop-filter:blur(6px);}
+.lead-modal.open .lead-modal-backdrop{animation:fadeIn .25s ease;}
+.lead-modal-panel{
+  position:relative; z-index:1; width:100%; max-width:600px; max-height:88vh; overflow-y:auto;
+  padding:clamp(24px,4vw,36px); border-radius:var(--radius); background:var(--bg-1); border:1px solid var(--line);
+  box-shadow:var(--shadow-lg), var(--inset-hi);
+}
+.lead-modal.open .lead-modal-panel{animation:lbPop .3s cubic-bezier(.16,1,.3,1);}
+.lead-modal-close{
+  position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); background:var(--surface-1); color:var(--text-1); font-size:14px;
+  transition:background .2s ease, color .2s ease, transform .2s ease;
+}
+.lead-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
+
+.lead-success:not([hidden]){display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px; padding:20px 8px 8px;}
+.lead-success svg{color:var(--teal);}
+.lead-success p{font-size:15px; color:var(--text-1); line-height:1.55; max-width:400px;}
+.lead-success .btn{margin-top:2px;}
+
+/* Order-confirm success check — a quick, deliberate pop-and-settle
+   (scale past 100% then back) rather than a plain fade, so the
+   moment an order actually gets logged reads as a distinct
+   confirmation beat, not just another state swap. */
+.order-success-check{animation:orderCheckPop .5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes orderCheckPop{
+  0%{transform:scale(.4); opacity:0;}
+  60%{transform:scale(1.15); opacity:1;}
+  100%{transform:scale(1); opacity:1;}
+}
+
+/* Read-only cart preview inside the order-confirm modal — same
+   visual language as the live order-summary panel (surface-1 rows,
+   mono price) so it reads as "the order you already built," not a
+   separate re-entry step. */
+.oc-review{margin-bottom:20px; padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.oc-review-label{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:10px;}
+.oc-review-row{display:flex; align-items:baseline; justify-content:space-between; gap:12px; font-size:13px; padding:4px 0;}
+.oc-review-row span:first-child{color:var(--text-1);}
+.oc-review-row span:last-child{font-family:var(--font-mono); color:var(--text-2); white-space:nowrap;}
+.oc-review-total{display:flex; align-items:baseline; justify-content:space-between; margin-top:8px; padding-top:10px; border-top:1px solid var(--line-soft); font-weight:700;}
+.oc-review-total b{font-family:var(--font-display); font-size:16px; color:var(--text-0);}
+
+/* Order History — internal-team-only, gated behind real Firebase Auth
+   (separate from the site-wide is-internal flag, which is just an
+   obscurity toggle). See assets/team.js. Each signed-in team member
+   only ever queries/writes orders where uid == their own auth uid, so
+   the per-user isolation is enforced by Firestore security rules, not
+   just hidden in the UI. */
+.team-auth-head{margin-bottom:20px;}
+.team-auth-head h4{font-size:17px; font-weight:600; margin-bottom:6px;}
+.team-auth-sub{font-size:13px; color:var(--text-2); line-height:1.5;}
+.team-form .field-row{margin-bottom:14px;}
+.team-form .field-row:last-of-type{margin-bottom:0;}
+.team-submit-btn{margin-top:6px; width:100%; justify-content:center;}
+.team-form-status{margin-top:12px; font-size:12.5px; line-height:1.5;}
+.team-form-status:empty{display:none;}
+.team-form-status.is-success{color:var(--teal);}
+.team-form-status.is-error{color:var(--danger);}
+.team-auth-switch{margin-top:18px; padding-top:16px; border-top:1px solid var(--line-soft); font-size:12.5px; color:var(--text-2); text-align:center;}
+.team-auth-switch button{background:none; border:none; padding:0; font:inherit; color:var(--violet); font-weight:600; text-decoration:underline; text-underline-offset:2px; cursor:pointer;}
+.team-auth-switch button:hover{color:var(--text-0);}
+
+/* Profile dropdown — replaces the old inline "05 — Order History"
+   page section entirely; Order History is only ever reached from
+   here, never shown on the page itself. Hover reveals it on desktop;
+   a JS-toggled .menu-open class (see team.js) covers click/touch so
+   it's reachable without a mouse too. Signed-out state never shows
+   this menu at all — the trigger just opens the sign-in popup then. */
+.team-profile{position:relative;}
+/* Signed-in styling only — signed-out keeps the plain ghost-button
+   look (nothing to imply an account menu when there isn't one yet).
+   Signed-in drops the outlined "ghost button" pill entirely — a
+   gradient-filled avatar plus name, transparent until hovered, reads
+   as a native app account switcher rather than a bordered form
+   control. The avatar bubble shows the display name's first letter
+   via a data attribute (set in team.js) so the button stays a single
+   element with a dynamic label, rather than needing an innerHTML
+   rebuild. */
+.team-profile-trigger[data-signed-in="1"]{
+  display:inline-flex; align-items:center; gap:9px; border-color:transparent; background:transparent; box-shadow:none;
+  padding:6px 10px 6px 6px !important; transition:background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.team-profile-trigger[data-signed-in="1"]:hover{background:var(--surface-hover); border-color:var(--line-soft); box-shadow:none;}
+.team-profile-trigger[data-signed-in="1"]::before{
+  content:attr(data-initial); display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, var(--violet), var(--teal));
+  color:#fff; font-family:var(--font-display); font-size:12.5px; font-weight:700; box-shadow:var(--shadow-sm, 0 2px 6px rgba(0,0,0,.2));
+}
+.team-profile-trigger[data-signed-in="1"]::after{
+  content:''; flex:0 0 auto; width:7px; height:7px; margin-left:1px;
+  border-right:1.6px solid currentColor; border-bottom:1.6px solid currentColor;
+  transform:rotate(45deg); opacity:.5; transition:transform .18s ease;
+}
+.team-profile.menu-open .team-profile-trigger[data-signed-in="1"]::after{transform:rotate(225deg); margin-top:3px;}
+.team-profile-menu{
+  position:absolute; top:calc(100% + 10px); right:0; min-width:230px; padding:8px;
+  background:var(--bg-1); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow-lg), var(--inset-hi);
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity .18s ease, transform .18s ease, visibility 0s linear .18s; z-index:60;
+}
+.team-profile:hover .team-profile-menu:not([hidden]),
+.team-profile.menu-open .team-profile-menu:not([hidden]){
+  opacity:1; visibility:visible; transform:translateY(0); transition-delay:0s;
+}
+.team-profile-menu-header{display:flex; align-items:center; gap:10px; padding:8px 10px 12px;}
+.team-profile-menu-avatar{
+  flex:0 0 auto; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff;
+  font-family:var(--font-display); font-size:15px; font-weight:700;
+}
+.team-profile-menu-who{min-width:0;}
+.team-profile-menu-name{font-size:13.5px; font-weight:600; color:var(--text-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-profile-menu-email{font-size:11.5px; color:var(--text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-profile-menu-divider{height:1px; background:var(--line-soft); margin:0 2px 6px;}
+.team-profile-menu button{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:9px 10px; border-radius:10px;
+  font-size:13.5px; color:var(--text-1); background:none; border:none; transition:background .15s ease, color .15s ease;
+}
+.team-profile-menu button:hover{background:var(--surface-hover); color:var(--text-0);}
+.team-profile-menu button svg{flex:0 0 auto; width:16px; height:16px; color:var(--text-2); transition:color .15s ease;}
+.team-profile-menu button:hover svg{color:var(--text-0);}
+#teamProfileSignOutBtn:hover{color:var(--danger);}
+#teamProfileSignOutBtn:hover svg{color:var(--danger);}
+
+
+/* Admin-only "My Orders / All Orders" scope switch — hidden entirely
+   for regular team members via the [hidden] attribute set in JS. */
+.team-scope-row:not([hidden]){display:flex; gap:8px; margin-bottom:14px;}
+.team-scope-chip{font-size:13px; font-weight:600; padding:8px 16px; border-radius:100px; background:var(--surface-2); border:1px solid transparent; color:var(--text-2); transition:background .2s ease, color .2s ease, border-color .2s ease;}
+.team-scope-chip:hover{color:var(--text-1);}
+.team-scope-chip.is-active{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0);}
+.team-scope-admin-tag{margin-left:6px; font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; padding:2px 6px; border-radius:100px; background:rgba(139,124,246,.22); color:var(--violet);}
+
+/* Search bar takes the lion's share of the row; the compact selects
+   sit to its right and wrap onto their own line on narrow viewports
+   rather than squeezing the search input down. */
+.team-history-toolbar{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;}
+.team-order-search{flex:1 1 320px; min-width:220px;}
+.team-toolbar-select{flex:0 0 auto; width:auto; min-width:150px;}
+.team-custom-range-row:not([hidden]){display:flex; flex-wrap:wrap; gap:14px; margin:-4px 0 14px;}
+.team-custom-range-row label{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-2);}
+.team-custom-range-row input[type="date"]{width:auto; padding:8px 10px; font-size:13px;}
+
+.team-filter-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;}
+.team-filter-chip{font-size:12.5px; padding:7px 14px; border-radius:100px; background:var(--surface-2); border:1px solid transparent; color:var(--text-2); transition:background .2s ease, color .2s ease, border-color .2s ease;}
+.team-filter-chip:hover{color:var(--text-1);}
+.team-filter-chip.is-active{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0);}
+
+/* Fixed-height viewport regardless of how many results a filter/search
+   turns up, so switching between All/Placed/Confirmed/etc. only ever
+   changes the rows inside — the modal itself never grows, shrinks, or
+   re-centers as the result count changes. */
+.team-order-list{display:flex; flex-direction:column; gap:10px; height:48vh; overflow-y:auto; padding-right:4px;}
+.team-order-empty{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px; height:100%; padding:20px; color:var(--text-2);}
+.team-order-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px; flex:0 0 auto;}
+.team-order-empty p{font-size:12.5px; line-height:1.5; max-width:280px;}
+
+/* Every card shares the same top-row layout (name left, amount/status/
+   view-button right) regardless of package-text length — that text
+   lives on its own full-width line below instead of competing for
+   space on the top row, which is what let cards wrap differently from
+   one another and throw the amount/status/icon out of alignment. */
+.team-order-card{padding:14px 16px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.team-order-card-top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.team-order-main{min-width:0; flex:1 1 auto;}
+.team-order-title-line{display:flex; align-items:baseline; gap:8px; min-width:0;}
+.team-order-client{font-size:14px; font-weight:600; color:var(--text-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.team-order-number{font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--text-2); flex:0 0 auto;}
+.team-order-meta{font-size:12px; color:var(--text-2); margin-top:4px; line-height:1.5;}
+.team-order-items{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.team-order-item-chip{font-size:11.5px; color:var(--text-1); background:var(--surface-2); border:1px solid var(--line-soft); border-radius:100px; padding:4px 10px; white-space:nowrap;}
+.team-order-right{display:flex; align-items:center; gap:10px; flex:0 0 auto;}
+.team-order-amount{font-size:14px; font-weight:600; font-family:var(--font-display); color:var(--text-1); white-space:nowrap;}
+.team-order-status-select{
+  font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; padding:5px 10px;
+  border-radius:100px; white-space:nowrap; flex:0 0 auto; border:1px solid transparent; cursor:pointer;
+  font-family:inherit; transition:background .2s ease, color .2s ease, opacity .2s ease;
+}
+.team-order-status-select:disabled{opacity:.6; cursor:default;}
+.team-order-status-select.status-placed{background:rgba(124,109,255,.16); color:#9d8fff;}
+.team-order-status-select.status-completed{background:rgba(45,212,191,.16); color:var(--teal);}
+.team-order-status-select.status-cancelled{background:var(--surface-2); color:var(--text-2);}
+.team-order-status-select option{background:var(--bg-1); color:var(--text-0);}
+.team-order-view-btn, .team-order-invoice-btn, .team-order-delete-btn, .team-order-edit-btn{
+  display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
+  border-radius:8px; border:1px solid var(--line-soft); background:var(--surface-2); color:var(--text-2);
+  cursor:pointer; transition:background .2s ease, color .2s ease, border-color .2s ease; flex:0 0 auto;
+}
+.team-order-view-btn:hover, .team-order-invoice-btn:hover{color:var(--text-0); border-color:var(--line);}
+.team-order-view-btn svg, .team-order-invoice-btn svg, .team-order-delete-btn svg, .team-order-edit-btn svg{width:15px; height:15px;}
+.team-order-card.is-open .team-order-view-btn{color:var(--violet); border-color:var(--violet);}
+.team-order-invoice-btn:disabled, .team-order-delete-btn:disabled{opacity:.5; cursor:default;}
+.team-order-delete-btn:hover{color:var(--btn-ink); background:var(--danger); border-color:var(--danger);}
+.team-order-edit-btn:hover{color:var(--violet); background:var(--violet-soft); border-color:var(--violet);}
+
+/* Edit Order banner — injected above the order builder only while a
+   rep is editing an already-placed order, so it's unmistakable that
+   the cart below is a loaded-in order rather than a fresh build, and
+   that clicking Place Your Order will update that order in place. */
+.edit-order-banner{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  margin-bottom:18px; padding:14px 20px; border-radius:var(--radius-sm);
+  background:var(--violet-soft); border:1px solid var(--violet);
+  scroll-margin-top:100px; /* clears the sticky nav when scrolled to */
+}
+.edit-order-banner p{margin:0; font-size:13.5px; color:var(--text-0); line-height:1.5;}
+.edit-order-banner b{color:var(--violet);}
+.edit-order-banner button{flex:0 0 auto;}
+.team-order-details{
+  margin-top:12px; padding-top:14px; border-top:1px dashed var(--line-soft);
+  display:none; grid-template-columns:1fr 1fr; gap:12px 24px;
+}
+.team-order-card.is-open .team-order-details{display:grid;}
+.team-order-detail-row{font-size:13px; color:var(--text-0); min-width:0;}
+.team-order-detail-row span{display:block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); margin-bottom:3px;}
+.team-order-detail-row.span-2{grid-column:1 / -1;}
+.team-order-detail-row a{color:inherit;}
+@media (max-width:480px){
+  .team-order-details{grid-template-columns:1fr;}
+  .team-order-client{white-space:normal; overflow:visible; text-overflow:clip;}
+  .team-order-search{flex-basis:100%;}
+}
+
+.ob-add-btn.flash{animation:obFlash .5s ease;}
+@keyframes obFlash{0%{transform:scale(1);} 40%{transform:scale(.97);} 100%{transform:scale(1);}}
+
+.oc-panel{display:flex; flex-direction:column;}
+.oc-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px;}
+.oc-head-label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2);}
+.oc-head-right{display:flex; align-items:baseline; gap:12px;}
+.oc-count{font-size:12.5px; color:var(--text-1); font-weight:600;}
+/* An always-visible, obvious way to discard the whole draft order —
+   this is what makes it safe to not have a "you'll lose your changes"
+   browser reload prompt: nothing is actually hidden behind a warning
+   dialog, it's just a plain button right where the cart already is. */
+.oc-clear-btn{
+  display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:var(--text-2);
+  background:none; border:none; border-bottom:1px solid transparent; border-radius:0; padding:2px 0;
+  transition:color .2s ease, border-color .2s ease;
+}
+.oc-clear-btn svg{width:12px; height:12px;}
+.oc-clear-btn:hover{color:var(--danger); border-color:var(--danger);}
+.oc-clear-btn:focus-visible{outline:none; color:var(--danger);}
+.oc-panel.flash-warn{animation:input-shake .32s;}
+
+.order-cart-list{margin-top:12px; border-top:1px solid var(--line-soft);}
+.cart-empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; padding:26px 20px; color:var(--text-2);}
+.cart-empty svg{color:var(--text-2); opacity:.6; width:24px; height:24px;}
+.cart-empty p{font-size:12.5px; line-height:1.5; max-width:260px;}
+
+/* Name + facts live in their own column (.cart-item-info), separate
+   from qty/price/remove — a 4-column grid with align-items:start, so
+   qty/price/remove sit at a fixed position at the TOP of every row
+   regardless of how tall the info column grows. Facts are clamped to
+   2 lines (WebKit line-clamp) so they never run on indefinitely, and
+   critically never spill under the qty/price/remove columns — they're
+   confined to the info column's own width, not the full row width.
+   .cart-item-qty gets an explicit fixed width (not just min-width on
+   the number) so a 1-digit vs 2-digit quantity can't shift where
+   price/remove sit from row to row — each .cart-item is its own grid
+   context, so column widths aren't otherwise shared across rows. */
+.cart-item{display:grid; grid-template-columns:1fr 78px 96px 40px; align-items:start; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
+.cart-item-info{min-width:0;}
+.cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
+.cart-item-facts{
+  margin-top:4px; font-size:11.5px; color:var(--text-2); line-height:1.5;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.cart-item-qty{width:78px; display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:13px; font-weight:600;}
+.ci-qty-btn{width:24px; height:24px; flex:0 0 auto; border-radius:50%; border:1px solid var(--line); background:var(--surface-1); font-size:14px; line-height:1; color:var(--text-1); transition:background .2s ease, color .2s ease;}
+.ci-qty-btn:hover{background:var(--surface-hover); color:var(--text-0);}
+.cart-item-qty span{flex:1 1 auto; text-align:center;}
+.cart-item-price{font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--teal); white-space:nowrap; text-align:right;}
+.cart-item-actions{width:40px; display:flex; justify-content:flex-end;}
+.ci-remove{width:28px; height:28px; border-radius:50%; border:1px solid transparent; background:none; color:var(--text-2); font-size:13px; transition:background .2s ease, color .2s ease, border-color .2s ease;}
+.ci-remove:hover{background:rgba(224,130,126,0.14); color:var(--danger); border-color:var(--line-soft);}
+@media (max-width:640px){
+  .cart-item{grid-template-columns:1fr; row-gap:10px;}
+  .cart-item-qty,.cart-item-price,.cart-item-actions{justify-self:start; width:auto;}
+}
+
+/* Caption, not a dropdown — this used to be its own collapsible
+   "Turnaround note" section between the cart and the pricing rows,
+   which (with Price breakdown right below it) made the panel read as
+   two stacked toggles before you even reached the total. Folded down
+   into one quiet line under Final Amount instead: still there for
+   whoever wants the bulk-order caveat, gone for everyone just scanning
+   the total. */
+.order-tat-note{margin:10px 0 0; font-size:11.5px; line-height:1.5; color:var(--text-2);}
+.order-summary{margin-top:16px; padding-top:16px; border-top:1px solid var(--line-soft);}
+.order-summary .field-row{margin-bottom:12px;}
+.order-summary .field-row label{display:flex; align-items:center; gap:8px;}
+/* Subtotal/Discount/GST always visible now, not a second collapsed
+   section — three short rows didn't earn their own disclosure toggle,
+   and hiding them by default meant the Final Amount below looked
+   unexplained until you clicked something. Slightly smaller and
+   more muted than Final Amount so the hierarchy (detail → total)
+   still reads at a glance. */
+.order-breakdown .summary-row{font-size:13px; padding:8px 0;}
+.order-breakdown .summary-row b{font-weight:600; color:var(--text-1);}
+
+/* Order Discount + GST — no cards, no button chrome. Both live as two
+   more rows in the same plain list as Subtotal/Discount/GST/Total
+   below (same row height, same hairline rule, label left / control
+   right), so the whole panel reads as one quiet list instead of
+   "controls" sitting on top of a "summary". Only the discount amount
+   once it's non-zero, and GST once switched off, actually change
+   color — everything else stays the same muted tone as static text. */
+.adj-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; border-bottom:1px solid var(--line-soft);}
+.adj-row > span:first-child{color:var(--text-2); font-size:14px;}
+.adj-control{display:flex; align-items:center; gap:10px;}
+
+/* A standalone, always-visible control (not tucked inside the
+   collapsed "Price breakdown" toggle) — this is where a rep actually
+   negotiates pricing live on a call, so it stays bold and out in the
+   open. Styled as a plain row rather than its own bordered/shadowed
+   card, though, so it reads as part of the Order panel's own summary
+   rows (matching .summary-row's divider language) instead of a boxed
+   component competing with the panel around it. */
+.discount-standalone{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:12px 0; margin-bottom:2px; border-bottom:1px solid var(--line-soft);
+}
+.discount-standalone > span:first-child{color:var(--text-0); font-size:14px; font-weight:600;}
+.discount-standalone .unit-toggle-btn{font-size:13px; padding:4px 9px;}
+.discount-standalone .summary-input{width:60px; font-size:15px; font-weight:700; text-align:right; padding:6px 8px;}
+.gst-switch-state{display:inline-block; margin-left:8px; font-style:normal; font-size:11px; font-weight:600; padding:3px 8px; border-radius:100px; background:var(--surface-2); color:var(--text-2); vertical-align:middle;}
+.gst-switch-state.is-on{background:var(--teal-soft); color:var(--teal);}
+
+/* % / ₹ — plain text, not a button pair, but with enough affordance
+   that it doesn't read as static: the selected unit carries a small
+   underline (the same "this is a switchable tab" cue used everywhere
+   from browser tabs to segmented controls), and hovering *either*
+   option raises a soft rounded highlight + lifts it slightly — motion
+   and a hand cursor are what say "clickable" here, not a permanent box. */
+.unit-toggle{display:flex; align-items:center; gap:2px; font-family:var(--font-mono); font-size:12.5px;}
+.unit-toggle-btn{
+  padding:4px 7px; border-radius:6px; color:var(--text-2); font-weight:600; background:none; border:none;
+  cursor:pointer; position:relative; transition:color .15s ease, background-color .15s ease, transform .15s ease;
+}
+.unit-toggle-btn::after{
+  content:""; position:absolute; left:7px; right:7px; bottom:1px; height:2px; border-radius:2px;
+  background:var(--teal); transform:scaleX(0); transition:transform .18s ease;
+}
+.unit-toggle-btn:hover{color:var(--text-0); background:var(--surface-hover); transform:translateY(-1px);}
+.unit-toggle-btn:active{transform:translateY(0) scale(.94);}
+.unit-toggle-btn.active{color:var(--text-0);}
+.unit-toggle-btn.active::after{transform:scaleX(1);}
+.unit-toggle-btn:focus-visible{outline:none; color:var(--text-0); background:var(--surface-hover);}
+.unit-toggle-sep{color:var(--line);}
+
+/* The amount input has no visible box at rest — just the number,
+   right-aligned, with a hairline underline that only picks up color on
+   focus. This is the one place data is actually entered, so it earns a
+   touch more presence than plain text, but nothing close to a "field". */
+.summary-input{
+  width:56px; text-align:right; background:none; border:none; border-bottom:1px solid var(--line-soft);
+  padding:2px 0; font-size:14px; font-weight:600; color:var(--text-0); font-family:inherit;
+  -moz-appearance:textfield;
+}
+.summary-input:focus{outline:none; border-bottom-color:var(--teal);}
+.summary-input::-webkit-outer-spin-button,.summary-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+#discountRow.is-active b{color:var(--teal);}
+
+/* GST — a bare switch, no surrounding card. Small and quiet since it's
+   binary and defaults to on; the row below already states the result
+   in words ("Not applied") once it's switched off, so no extra hint
+   text is needed here. */
+.gst-switch{position:relative; display:inline-flex; width:30px; height:17px; flex:0 0 auto;}
+.gst-switch input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
+.gst-switch-track{
+  position:absolute; inset:0; border-radius:100px; background:var(--surface-2); border:1px solid var(--line);
+  transition:background .15s ease, border-color .15s ease; pointer-events:none;
+}
+.gst-switch-thumb{
+  position:absolute; top:2px; left:2px; width:11px; height:11px; border-radius:50%; background:var(--text-2);
+  transition:transform .15s ease, background .15s ease; pointer-events:none;
+}
+.gst-switch input:checked ~ .gst-switch-track{background:var(--teal-soft); border-color:var(--teal);}
+.gst-switch input:checked ~ .gst-switch-track .gst-switch-thumb{transform:translateX(13px); background:var(--teal);}
+#gstRow.is-muted{opacity:.5;}
+
+/* ---------- MESSAGES ---------- */
+.brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
+.brand-fields-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+.brand-fields-grid .field-row{margin-bottom:0;}
+@media (max-width:900px){.brand-fields-grid{grid-template-columns:1fr 1fr;}}
+@media (max-width:520px){.brand-fields-grid{grid-template-columns:1fr;}}
+.req-star{color:var(--danger);}
+.brand-fields-note{margin-top:14px; font-size:11.5px; color:var(--text-2);}
+.text-input.input-error,.select-input.input-error{border-color:var(--danger); animation:input-shake .32s;}
+@keyframes input-shake{
+  10%,90%{transform:translateX(-1px);}
+  20%,80%{transform:translateX(2px);}
+  30%,50%,70%{transform:translateX(-4px);}
+  40%,60%{transform:translateX(4px);}
+}
+.msg-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+@media (max-width:900px){.msg-grid{grid-template-columns:1fr;}}
+.msg-card{padding:28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); display:flex; flex-direction:column; box-shadow:var(--shadow-md), var(--inset-hi);}
+.msg-card h4{font-size:16px; margin-bottom:14px; display:flex; align-items:center; gap:8px; letter-spacing:-0.005em;}
+.msg-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.msg-card-head h4{margin-bottom:0;}
+.pdf-btn{
+  flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 13px; margin-bottom:14px; border-radius:100px; border:1px solid var(--line);
+  background:var(--surface-1); color:var(--text-1); font-size:12px; font-weight:600;
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.pdf-btn:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
+.pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none;}
+.msg-inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+textarea.msg-box{
+  width:100%; min-height:340px; resize:vertical; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1);
+  color:var(--text-0); font-family:var(--font-mono); font-size:12.5px; line-height:1.6; padding:16px; flex:1;
+  box-shadow:var(--inset-hi); transition:border-color .2s ease, box-shadow .2s ease;
+}
+textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 10px 1px var(--violet-soft), var(--inset-hi);}
+.copy-btn{
+  margin-top:14px; align-self:flex-start; padding:11px 20px; border-radius:var(--radius-sm); border:1px solid var(--line);
+  background:var(--surface-2); color:var(--text-0); font-weight:600; font-size:13.5px;
+  box-shadow:var(--shadow-sm); transition:background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.copy-btn:hover{background:var(--surface-hover); transform:translateY(-2px); box-shadow:var(--shadow-md);}
+.copy-btn:active{transform:translateY(0) scale(0.97);}
+.copy-btn.copied{background:var(--teal); color:var(--btn-ink); border-color:transparent;}
+.copy-btn.copy-error{background:var(--danger); color:var(--btn-ink); border-color:transparent;}
+
+
+/* ---------- FOOTER ----------
+   Three movements instead of one flat link block: a CTA that gives the
+   footer a reason to exist beyond "here are some links," the actual
+   nav content, and a huge outlined wordmark with a slow light-sweep
+   running through it — the one "premium, alive" touch, done in pure
+   CSS (no JS tracking) so it's cheap, reliable, and already respects
+   the site's global prefers-reduced-motion rule like every other
+   animation on the page. */
+footer{padding:64px 0 0; margin-top:40px;}
+/* No card, no border, no fill — every boxed version of this still
+   read as a generic template banner. Just a large editorial statement
+   sitting directly on the page background (the same gradient-text
+   accent word the hero title uses, bookending the page) with a plain
+   minimal text link underneath: an animated underline + arrow, not a
+   filled pill. This is the calmest, least "componentized" this
+   section can be while still reading as a deliberate closing moment. */
+.footer-cta{text-align:center; padding:0 20px; margin-bottom:56px;}
+.footer-cta .eyebrow{justify-content:center; margin-bottom:18px;}
+.footer-cta h3{
+  font-size:clamp(28px,4.2vw,44px); font-weight:700; letter-spacing:-0.02em; line-height:1.15;
+  max-width:680px; margin:0 auto; color:var(--text-0);
+}
+.footer-cta h3 .accent{
+  background:linear-gradient(100deg,var(--violet),var(--teal));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.footer-cta-link{
+  position:relative; display:inline-flex; align-items:center; gap:8px; margin-top:30px;
+  font-size:15px; font-weight:600; color:var(--text-0);
+  background:none; border:none; padding:2px 0; cursor:pointer;
+}
+.footer-cta-link::after{
+  content:''; position:absolute; left:0; right:24px; bottom:-5px; height:1.5px;
+  background:linear-gradient(100deg,var(--violet),var(--teal)); transform:scaleX(0); transform-origin:left;
+  transition:transform .35s cubic-bezier(.16,1,.3,1);
+}
+.footer-cta-link:hover::after{transform:scaleX(1);}
+.footer-cta-link svg{width:16px; height:16px; transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+.footer-cta-link:hover svg{transform:translateX(4px);}
+.footer-cta-link:focus-visible{outline:none;}
+.footer-cta-link:focus-visible::after{transform:scaleX(1);}
+
+/* Minimal, compact close to the page — brand + tagline anchor the
+   left, a plain horizontal link row sits on the right (not a labeled
+   stacked column), and a thin divider hands off to a single-line
+   copyright bar. No watermark/wordmark backdrop — on a page this
+   content-dense, a giant animated logo read as filler rather than
+   restraint, so the footer is sized to its own content instead. */
+.footer-top{display:flex; justify-content:space-between; align-items:center; gap:40px; flex-wrap:wrap; padding:8px 0 32px;}
+.footer-brand{max-width:360px;}
+.footer-brand .brand-logo{height:26px;}
+.footer-tagline{margin-top:14px; font-size:13px; line-height:1.6; color:var(--text-2);}
+.footer-links{display:flex; align-items:center; gap:28px; flex-wrap:wrap;}
+.footer-links a{font-size:13px; color:var(--text-1); transition:color .2s ease;}
+.footer-links a:hover{color:var(--violet);}
+
+.footer-bottom{padding:20px 0 28px; border-top:1px solid var(--line-soft);}
+.footer-bottom p{color:var(--text-2); font-size:12px; letter-spacing:.02em;}
+@media (max-width:640px){
+  .footer-cta::before{width:340px; height:200px;}
+  .footer-top{gap:20px; padding:4px 0 28px;}
+  .footer-links{gap:20px;}
+}
+
+/* ---------- FASTY (public chat assistant) ----------
+   A docked widget, not a full-screen modal — it never blocks the rest
+   of the page, matching how a help widget should feel (available, not
+   intrusive). Toggle button + panel share the same fixed corner so
+   the panel visually grows out of the button rather than appearing as
+   an unrelated overlay. See initFasty() in app.js for the answer
+   engine; this file only owns how it looks. */
+.fasty-widget{position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;}
+.fasty-toggle{
+  position:relative; width:48px; height:48px; border-radius:50%; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:#fff;
+  background:var(--violet);
+  box-shadow:0 8px 20px -8px rgba(139,124,246,.5), 0 2px 6px rgba(0,0,0,.22);
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s ease;
+}
+.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 26px -8px rgba(139,124,246,.6), 0 2px 6px rgba(0,0,0,.28);}
+.fasty-toggle:active{transform:scale(.96);}
+.fasty-toggle-icon{width:19px; height:19px; position:absolute; transition:opacity .2s ease, transform .2s ease;}
+.fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
+.fasty-widget.open .fasty-icon-chat{opacity:0; transform:rotate(45deg) scale(.6);}
+.fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
+.fasty-toggle-badge{
+  position:absolute; top:-2px; right:-2px; min-width:19px; height:19px; padding:0 5px; border-radius:100px;
+  background:var(--danger); color:#fff; font-size:11px; font-weight:800; line-height:19px; text-align:center;
+  border:2px solid var(--bg-0); animation:fastyBadgePop .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes fastyBadgePop{0%{transform:scale(0);}100%{transform:scale(1);}}
+
+/* A small nudge, not a callout — sits directly above the toggle
+   button, compact enough to read as a label rather than a second UI
+   surface. Stays up (see initFasty() in app.js) until the visitor
+   either opens the chat or dismisses it directly, gently breathing
+   in and out on a slow loop the whole time so it stays noticeable
+   without ever feeling like it's flashing or demanding attention.
+   Right-anchored to the toggle's own right edge (the same edge the
+   badge sits against), not centered over it — the bubble is wider
+   than the 48px button, and centering it can push its far edge past
+   the viewport's right border when the widget sits close to that
+   edge (e.g. narrower windows). Anchoring right and growing left
+   keeps the whole bubble on-screen regardless of width or viewport
+   size. */
+.fasty-hint{
+  position:absolute; bottom:calc(100% + 12px); right:0; transform:translateY(6px);
+  display:flex; align-items:center; gap:6px; padding:8px 8px 8px 14px; border-radius:100px;
+  background:var(--bg-1); border:1px solid var(--line); box-shadow:var(--shadow-md);
+  font-size:13px; font-weight:600; color:var(--text-0); white-space:nowrap;
+  opacity:0; visibility:hidden; z-index:-1;
+  transition:transform .3s ease, visibility 0s linear .3s;
+}
+.fasty-hint.visible{
+  visibility:visible; transform:translateY(0); z-index:1;
+  transition:transform .3s ease;
+  animation:fastyHintBreathe 5s ease-in-out infinite;
+}
+@keyframes fastyHintBreathe{
+  0%{opacity:0;}
+  10%{opacity:1;}
+  70%{opacity:1;}
+  80%{opacity:0;}
+  100%{opacity:0;}
+}
+/* The global reduced-motion override forces every animation to a
+   single near-instant run — for a loop that spends its last stretch
+   at opacity:0, that would freeze the hint invisible rather than
+   just skip its motion. Overriding back to a static, fully visible
+   state here keeps the hint legible without animating it. */
+@media (prefers-reduced-motion: reduce){.fasty-hint.visible{animation:none; opacity:1;}}
+.fasty-hint-close{
+  width:18px; height:18px; border-radius:50%; border:none; background:var(--surface-2); color:var(--text-2);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto; padding:0;
+  transition:background .2s ease, color .2s ease;
+}
+.fasty-hint-close svg{width:9px; height:9px;}
+.fasty-hint-close:hover{background:var(--surface-hover); color:var(--text-0);}
+@media (max-width:480px){.fasty-hint{display:none;}}
+
+.fasty-panel{
+  display:none; flex-direction:column; position:absolute; right:0; bottom:calc(100% + 14px);
+  width:min(370px, calc(100vw - 40px)); height:min(560px, calc(100vh - 140px));
+  border-radius:var(--radius); background:var(--bg-1); border:1px solid var(--line);
+  box-shadow:var(--shadow-md), var(--inset-hi); overflow:hidden;
+  transform-origin:bottom right;
+  transition:width .25s cubic-bezier(.16,1,.3,1), height .25s cubic-bezier(.16,1,.3,1);
+}
+.fasty-widget.open .fasty-panel{display:flex; animation:fastyPop .28s cubic-bezier(.16,1,.3,1);}
+@keyframes fastyPop{0%{opacity:0; transform:scale(.92) translateY(10px);}100%{opacity:1; transform:scale(1) translateY(0);}}
+/* Expanded — a roomier read for a longer back-and-forth, toggled by
+   the header's expand button rather than a separate full-screen mode,
+   so it's still the same docked widget, just bigger. */
+.fasty-panel.is-expanded{width:min(460px, calc(100vw - 40px)); height:min(680px, calc(100vh - 80px));}
+
+.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 10px 13px 16px; background:var(--violet-soft); border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
+.fasty-avatar{
+  width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:var(--violet); color:#fff;
+}
+.fasty-head-text{flex:1 1 auto; min-width:0;}
+.fasty-head-name{font-family:var(--font-display); font-weight:700; font-size:14.5px; color:var(--text-0);}
+.fasty-head-status{display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--text-2);}
+.fasty-status-dot{width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 3px var(--teal-soft); flex:0 0 auto;}
+/* Small and quiet on purpose — plain icon buttons, not bordered chips
+   competing with the avatar/name for attention right next to them. */
+.fasty-head-expand,.fasty-head-close{
+  width:24px; height:24px; border-radius:50%; border:none; background:none; color:var(--text-2);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto; position:relative;
+  transition:background .2s ease, color .2s ease;
+}
+.fasty-head-expand svg,.fasty-head-close svg{width:13px; height:13px;}
+.fasty-head-expand:hover,.fasty-head-close:hover{color:var(--text-0); background:var(--surface-2);}
+.fasty-expand-icon{position:absolute; transition:opacity .15s ease, transform .15s ease;}
+.fasty-icon-shrink{opacity:0; transform:scale(.7);}
+.fasty-head-expand[aria-pressed="true"] .fasty-icon-grow{opacity:0; transform:scale(.7);}
+.fasty-head-expand[aria-pressed="true"] .fasty-icon-shrink{opacity:1; transform:scale(1);}
+@media (max-width:480px){.fasty-head-expand{display:none;}}
+
+.fasty-messages{flex:1 1 auto; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; scroll-behavior:smooth;}
+.fasty-msg{display:flex; max-width:88%;}
+.fasty-msg-bubble{padding:9px 12px; border-radius:14px; font-size:13.5px; line-height:1.5;}
+.fasty-msg-bubble p{margin:0 0 6px;}
+.fasty-msg-bubble p:last-child{margin-bottom:0;}
+.fasty-msg-bubble b{color:inherit; font-weight:700;}
+.fasty-msg.bot{align-self:flex-start;}
+.fasty-msg.bot .fasty-msg-bubble{background:var(--surface-1); border:1px solid var(--line-soft); color:var(--text-1); border-bottom-left-radius:4px;}
+.fasty-msg.user{align-self:flex-end;}
+.fasty-msg.user .fasty-msg-bubble{background:var(--violet); color:#fff; border-bottom-right-radius:4px;}
+.fasty-msg-actions{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.fasty-msg-action{
+  font-size:12px; font-weight:600; padding:6px 12px; border-radius:100px; border:1px solid var(--line); color:var(--text-1);
+  background:var(--surface-2); cursor:pointer; transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.fasty-msg-action:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
+
+/* Three-dot "thinking" indicator — a brief, deliberate pause before
+   Fasty's reply lands reads as considered rather than an instant
+   canned-string swap, without faking a real network round trip. */
+.fasty-typing{display:flex; gap:4px; align-items:center; padding:2px 3px;}
+.fasty-typing span{width:6px; height:6px; border-radius:50%; background:var(--text-2); animation:fastyTypingBounce 1.1s ease-in-out infinite;}
+.fasty-typing span:nth-child(2){animation-delay:.15s;}
+.fasty-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes fastyTypingBounce{0%,60%,100%{opacity:.35; transform:translateY(0);}30%{opacity:1; transform:translateY(-3px);}}
+
+.fasty-quick{display:flex; flex-wrap:wrap; gap:7px; padding:0 16px 12px; flex:0 0 auto;}
+.fasty-quick:empty{display:none;}
+.fasty-quick-chip{
+  font-size:12px; font-weight:600; padding:7px 13px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
+  cursor:pointer; transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease; white-space:nowrap;
+}
+.fasty-quick-chip:hover{background:var(--surface-hover); border-color:var(--violet); color:var(--text-0); transform:translateY(-1px);}
+
+.fasty-input-row{display:flex; align-items:center; gap:8px; padding:12px 14px; border-top:1px solid var(--line-soft); flex:0 0 auto;}
+.fasty-input{
+  flex:1 1 auto; min-width:0; padding:10px 14px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-0);
+  font-size:13.5px; font-family:inherit;
+}
+.fasty-input:focus{outline:none; border-color:var(--violet); box-shadow:0 0 0 3px var(--violet-soft);}
+.fasty-send{
+  width:36px; height:36px; flex:0 0 auto; border-radius:50%; border:none; cursor:pointer; color:#fff;
+  display:flex; align-items:center; justify-content:center; background:var(--violet);
+  transition:transform .2s ease;
+}
+.fasty-send svg{width:16px; height:16px;}
+.fasty-send:hover{transform:scale(1.06);}
+.fasty-send:active{transform:scale(.94);}
+
+@media (max-width:480px){
+  .fasty-widget{right:14px; bottom:14px;}
+  .fasty-panel{width:calc(100vw - 28px); height:min(72vh, 560px); bottom:calc(100% + 12px); right:-6px;}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <div class="nav-pill">
+      <a href="#hero" class="brand" aria-label="Home">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+      </a>
+      <div class="nav-links">
+        <a href="#showcase">Work</a>
+        <a href="#services">Services</a>
+        <a href="#quote">Quote</a>
+        <!-- PUBLIC:STRIP:START -->
+        <a href="#messages">Messages</a>
+        <!-- PUBLIC:STRIP:END -->
+      </div>
+      <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <span class="theme-icon-stack">
+            <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
+            <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8.3 8.3 0 1 1 9.7 4a6.6 6.6 0 0 0 10.3 10.3z"></path></svg>
+          </span>
+        </button>
+        <!-- TEAM:STRIP:START -->
+        <a href="#quote" class="btn btn-ghost nav-cta">Get a Quote</a>
+        <!-- TEAM:STRIP:END -->
+        <!-- PUBLIC:STRIP:START -->
+        <!-- Signed-out: a plain button, click opens the sign-in popup
+             (see team.js). Signed-in: becomes a profile trigger — hover
+             or click reveals a small menu (Order History, Sign out)
+             instead of navigating anywhere; Order History used to be
+             its own page section but now only lives behind this menu,
+             never shown inline on the page itself. -->
+        <div class="team-profile" id="teamProfile" style="display:none;">
+          <button type="button" class="btn btn-ghost team-profile-trigger" id="teamNavBtn" style="padding:9px 16px; font-size:13px;"></button>
+          <div class="team-profile-menu" id="teamProfileMenu" hidden>
+            <div class="team-profile-menu-header" id="teamProfileMenuHeader"></div>
+            <div class="team-profile-menu-divider"></div>
+            <button type="button" id="teamProfileHistoryBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+              Order History
+            </button>
+            <button type="button" id="teamProfileSignOutBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+              Sign out
+            </button>
+          </div>
+        </div>
+        <!-- PUBLIC:STRIP:END -->
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="wrap">
+    <div class="hero-stage" id="heroStage">
+      <div class="hero-head">
+        <span class="eyebrow">● Fastrr Ads — Live Creative Portfolio</span>
+        <h1 class="hero-title">
+          <span class="word" style="--w:0"><span>Real</span></span> <span class="word" style="--w:1"><span>AI</span></span> <span class="word" style="--w:2"><span>creative</span></span><br>
+          <span class="word" style="--w:3"><span>that</span></span> <span class="word" style="--w:4"><span class="accent">grows</span></span> <span class="word" style="--w:5"><span class="accent">your</span></span> <span class="word" style="--w:6"><span class="accent">brand.</span></span>
+        </h1>
+        <p class="hero-sub">Fastrr Ads is a creative service for brands. We make real AI reels, videos, statics, and carousels engineered to convert, not stock or mockups. Every piece below is delivered work. Browse the portfolio, then we'll scope a clear, itemized quote for your project.</p>
+        <div class="hero-cta-row">
+          <a href="#showcase" class="btn btn-primary">See the Work ↓</a>
+          <a href="#quote" class="btn btn-ghost">Build a Quote</a>
+        </div>
+      </div>
+      <div class="hero-visual" id="heroVisual">
+        <div class="hero-orbit" id="heroOrbit" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-filmstrip" id="heroFilmstrip"></div>
+  <!-- The 50% keyframe loop is only seamless if a single half of the
+       track is already wider than the viewport can ever be — otherwise
+       the visible edge runs out of content before the loop wraps and
+       the page background shows through as a gap. Repeating the phrase
+       group several times per half (instead of once) keeps each half
+       comfortably wider than any real screen. -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+      <span>AI Reels</span><span>·</span><span>360° Catalogue Videos</span><span>·</span><span>Static Creatives</span><span>·</span><span>Carousel Creatives</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="showcase" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">01 — Creative Showcase</span>
+      <h2>Real work.<br>Not mockups.</h2>
+      <p>Every thumbnail below is a delivered Fastrr creative. Browse by category, preview carousels inline, and click any card to open the full viewer.</p>
+    </div>
+    <div class="showcase-tabs reveal-on-scroll">
+      <button class="showcase-tab active" data-cat="reels">AI Reels</button>
+      <button class="showcase-tab" data-cat="catalogue">360° Catalogue Videos</button>
+      <button class="showcase-tab" data-cat="static">Static Creatives</button>
+      <button class="showcase-tab" data-cat="carousel">Carousel Creatives</button>
+    </div>
+    <div class="showcase-row-wrap reveal-on-scroll">
+      <div class="showcase-nav" id="showcaseNav">
+        <button class="nav-arrow" id="carPrev" aria-label="Scroll left">‹</button>
+        <button class="nav-arrow" id="carNext" aria-label="Scroll right">›</button>
+      </div>
+      <div class="showcase-track" id="showcaseTrack"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Sits after the showcase (not right under the hero's own scrolling
+     marquee) so two moving strips never run back-to-back — the work
+     gallery above gives it a static break first. Hidden by default
+     (inline style) so nothing shows if JS fails to load before
+     BRAND_LOGOS is populated; app.js unhides it once there's at least
+     one real logo to display. -->
+<div class="brand-logos-strip" id="brandLogosStrip" style="display:none;">
+  <div class="wrap">
+    <span class="brand-logos-label">Trusted by brands we've worked with</span>
+    <div class="brand-logos-rows">
+      <div class="brand-logos-row">
+        <div class="brand-logos-track" id="brandLogosTrackA"></div>
+      </div>
+      <div class="brand-logos-row reverse">
+        <div class="brand-logos-track" id="brandLogosTrackB"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section" id="services" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">02 — Services &amp; Package Scope</span>
+      <h2>Pick a service.<br>See the exact scope.</h2>
+      <p>Pick a service below, and a cut too if it's an AI Reel. Price, scope, and delivery details update instantly, everywhere on this page.</p>
+    </div>
+
+    <!-- A single row of small equal tabs (#svcNav), and one expandable
+         window below (#svcExpand) that the whole panel lives inside —
+         picking a tab never resizes the row itself, only opens/morphs
+         the window below it (animateExpandHeight() in app.js) and
+         slides+scales the panel's content in from that tab's direction
+         (the .is-entering/.dir-* classes on #svcPanelInner). The whole
+         thing sits in #svcStage, whose accent-<service> class (toggled
+         alongside the tab switch) tints the ambient glow blobs, the
+         active tab's spinning ring, and the panel border to match. -->
+    <div class="svc-stage accent-reels" id="svcStage">
+      <div class="svc-glow g1" aria-hidden="true"></div>
+      <div class="svc-glow g2" aria-hidden="true"></div>
+
+      <div class="svc-tabrow reveal-on-scroll" id="svcNav" role="tablist">
+        <button type="button" class="svc-tab active" data-svc="reels" role="tab" aria-selected="true" style="--accent:var(--violet);">
+          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+          <span class="svc-tab-body">
+            <span class="svc-tab-name">AI Reels</span>
+            <span class="svc-tab-price">From ₹2,500</span>
+          </span>
+          <span class="svc-tab-check">✓</span>
+        </button>
+        <button type="button" class="svc-tab" data-svc="catalogue" role="tab" aria-selected="false" style="--accent:var(--teal);">
+          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></span>
+          <span class="svc-tab-body">
+            <span class="svc-tab-name">360° Catalogue Video</span>
+            <span class="svc-tab-price">From ₹1,800</span>
+          </span>
+          <span class="svc-tab-check">✓</span>
+        </button>
+        <button type="button" class="svc-tab" data-svc="static" role="tab" aria-selected="false" style="--accent:var(--gold);">
+          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg></span>
+          <span class="svc-tab-body">
+            <span class="svc-tab-name">Static Creative</span>
+            <span class="svc-tab-price">From ₹499</span>
+          </span>
+          <span class="svc-tab-check">✓</span>
+        </button>
+        <button type="button" class="svc-tab" data-svc="carousel" role="tab" aria-selected="false" style="--accent:var(--danger);">
+          <span class="svc-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></span>
+          <span class="svc-tab-body">
+            <span class="svc-tab-name">Carousel Creative</span>
+            <span class="svc-tab-price">From ₹1,499</span>
+          </span>
+          <span class="svc-tab-check">✓</span>
+        </button>
+      </div>
+
+      <div class="svc-expand" id="svcExpand">
+      <div class="svc-panel" id="svcPanelHost">
+        <div class="svc-panel-inner" id="svcPanelInner">
+          <div class="svc-panel-head">
+            <div>
+              <h3 id="svcName">AI Reel</h3>
+              <p class="svc-panel-short" id="svcShort"></p>
+            </div>
+            <div class="svc-panel-price-wrap">
+              <div class="svc-panel-price" id="svcStartPrice"></div>
+              <div class="svc-min-order">Min. order value ₹10,000</div>
+            </div>
+          </div>
+
+          <div class="tier-row" id="tierRow">
+            <button class="tier-chip" data-tier="1"><span>Quick Cut</span><b>₹2,500</b></button>
+            <button class="tier-chip" data-tier="2"><span>Story Cut</span><b>₹3,500</b></button>
+            <button class="tier-chip active" data-tier="3"><span>Director's Cut</span><b>₹5,000</b></button>
+            <button class="tier-chip" data-tier="4"><span>Studio Cut</span><b>₹8,000</b></button>
+          </div>
+
+          <div class="svc-glance" id="svcGlance"></div>
+
+          <div class="scope-panel" id="scopePanel">
+            <div class="scope-tab-bar">
+              <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
+              <button class="scope-tab-btn" data-tab="exc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not Included</button>
+              <button class="scope-tab-btn" data-tab="need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg> Client Provides</button>
+            </div>
+            <div class="scope-body" id="scopeBody"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <details class="rules-panel reveal-on-scroll">
+      <summary class="rules-panel-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        Good to know before you quote
+        <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </summary>
+      <div class="rules-general">
+        <span class="rules-general-label">General terms that apply across every service and package</span>
+        <ul class="rules-list">
+          <li><b>₹10,000 minimum order.</b> You can mix and match any services or cuts to reach it, and the calculator always shows your full order total.</li>
+          <li><b>Turnaround is per creative.</b> For bulk orders, actual delivery time depends on quantity, creative type, cut, and complexity, not the single-creative number shown.</li>
+          <li><b>The turnaround clock starts on handoff.</b> That means once we've received all the assets and details we need from you, not on your payment date.</li>
+          <li><b>New concepts mean a new quote.</b> Major creative rework or extras beyond what's included are quoted separately.</li>
+          <li><b>AI output can vary slightly</b> between runs, but we always match your brief as closely as possible.</li>
+          <li><b>GST is optional at checkout:</b> included by default at 18% on the order total after any discount, or switch it off in the calculator for a non-GST invoice. Prices elsewhere on the page are pre-GST.</li>
+          <li><b>One discount applies to the whole order.</b> It's calculated on the combined total, not on each creative type individually, and can be either a percentage or a flat ₹ amount.</li>
+        </ul>
+      </div>
+      <details class="rules-compare-toggle" id="rulesCompareToggle">
+        <summary>Compare all 4 AI Reel packages at a glance</summary>
+        <div class="compare-wrap">
+          <table class="compare-table" id="reelCompareTable">
+            <thead>
+              <tr><th>Package</th><th data-tier-col="1">Quick Cut</th><th data-tier-col="2">Story Cut</th><th data-tier-col="3">Director's Cut</th><th data-tier-col="4">Studio Cut</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Price</td><td data-tier-col="1">₹2,500</td><td data-tier-col="2">₹3,500</td><td data-tier-col="3">₹5,000</td><td data-tier-col="4">₹8,000</td></tr>
+              <tr><td>Max duration</td><td data-tier-col="1">Up to 25 sec</td><td data-tier-col="2">25 sec</td><td data-tier-col="3">30 sec</td><td data-tier-col="4">35 sec</td></tr>
+              <tr><td>Script</td><td data-tier-col="1">From brief, no approval step</td><td data-tier-col="2">From brief, no approval step</td><td data-tier-col="3">1 option, for approval</td><td data-tier-col="4">1 + 2 hooks, for approval</td></tr>
+              <tr><td>Revision</td><td data-tier-col="1">1 (minor, in-frame)</td><td data-tier-col="2">1 (wording, hook length)</td><td data-tier-col="3">1 (small script changes)</td><td data-tier-col="4">1 (small script changes)</td></tr>
+              <tr><td>Delivery</td><td data-tier-col="1">1–2 working days</td><td data-tier-col="2">Up to 3 working days</td><td data-tier-col="3">Up to 4 working days</td><td data-tier-col="4">Up to 5 working days</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </details>
+  </div>
+</section>
+
+<section class="section" id="quote" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">03 — Quote &amp; Price Calculator</span>
+      <h2>Add your creatives.<br>Watch the price update live.</h2>
+      <p>Add every creative type the client needs, with a quantity for each, and a cut too if it's an AI Reel. Your order total updates live as you build.</p>
+    </div>
+
+    <div class="order-builder reveal-on-scroll">
+      <div class="ob-panel">
+        <div class="ob-panel-label">Configure a creative</div>
+
+        <div class="field-row">
+          <label for="qServiceSelect">Creative Type</label>
+          <select class="select-input" id="qServiceSelect">
+            <option value="reels">AI Reel</option>
+            <option value="catalogue">360° Catalogue Video</option>
+            <option value="static">Static Creative</option>
+            <option value="carousel">Carousel Creative</option>
+          </select>
+        </div>
+        <div class="field-row" id="qTierField">
+          <label>Package</label>
+          <div class="tier-mini-row">
+            <button class="qtier-chip" data-tier="1">Quick Cut</button>
+            <button class="qtier-chip" data-tier="2">Story Cut</button>
+            <button class="qtier-chip active" data-tier="3">Director's Cut</button>
+            <button class="qtier-chip" data-tier="4">Studio Cut</button>
+          </div>
+        </div>
+
+        <details class="mini-toggle">
+          <summary>Package details</summary>
+          <div class="ob-facts" id="obFacts"></div>
+        </details>
+
+        <div class="field-row-split">
+          <div class="field-row">
+            <label>Quantity</label>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+              <input class="text-input" type="number" id="qQtyInput" min="1" value="1">
+              <button type="button" class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+          <div class="field-row">
+            <label>Unit Price</label>
+            <div class="text-input" id="qUnitPrice" style="background:transparent; border-style:dashed;"></div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary ob-add-btn" id="obAddBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span id="obAddBtnLabel">Add to Order</span>
+        </button>
+      </div>
+
+      <div class="oc-panel" id="ocPanel">
+        <div class="oc-head">
+          <span class="oc-head-label">Order</span>
+          <span class="oc-head-right">
+            <span class="oc-count" id="ocCount">0 items</span>
+            <button type="button" class="oc-clear-btn" id="orderCartClearBtn" hidden>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              Clear
+            </button>
+          </span>
+        </div>
+
+        <div class="oc-offer" id="ocOffer"></div>
+
+        <div class="order-cart-list" id="orderCartList"></div>
+
+        <div class="order-summary">
+          <!-- PUBLIC:STRIP:START -->
+          <div class="discount-standalone" id="discountFieldRow">
+            <span>Discount</span>
+            <span class="adj-control">
+              <span class="unit-toggle" id="discountTypeToggle" role="group" aria-label="Discount type">
+                <button type="button" class="unit-toggle-btn active" data-type="pct">%</button>
+                <span class="unit-toggle-sep">/</span>
+                <button type="button" class="unit-toggle-btn" data-type="flat">₹</button>
+              </span>
+              <input class="summary-input" type="number" id="qDiscountInput" min="0" max="100" value="0">
+            </span>
+          </div>
+          <label class="adj-row" for="qGstToggle" id="gstToggleRow">
+            <span>GST (18%) <em class="gst-switch-state" id="gstSwitchState">With GST</em></span>
+            <span class="gst-switch">
+              <input type="checkbox" id="qGstToggle" checked>
+              <span class="gst-switch-track"><span class="gst-switch-thumb"></span></span>
+            </span>
+          </label>
+          <!-- PUBLIC:STRIP:END -->
+
+          <div class="order-breakdown">
+            <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
+            <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+            <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+          </div>
+
+          <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
+          <p class="order-tat-note">Turnaround shown per item above is for a single creative — bulk orders or multiple creative types may take longer depending on quantity, creative type, cut, and complexity.</p>
+        </div>
+
+        <div class="lead-cta">
+          <!-- TEAM:STRIP:START -->
+          <p class="lead-cta-sub">Ready to move forward with this order? Place your order and our team will get in touch to confirm the details.</p>
+          <!-- TEAM:STRIP:END -->
+          <!-- PUBLIC:STRIP:START -->
+          <p class="lead-cta-sub">Talked through the order with the client? Place it to save it under your account, then move on to sending them their package summary.</p>
+          <!-- PUBLIC:STRIP:END -->
+          <!-- On the public build this opens the lead-capture popup
+               (js-open-lead-modal, wired in app.js). On the team build,
+               team.js intercepts this same click in the capture phase
+               (stopImmediatePropagation) and opens #orderConfirmModal
+               instead — the internal order-creation flow — rather than
+               needing two different buttons or a runtime branch here. -->
+          <button type="button" class="btn btn-primary lead-cta-btn js-open-lead-modal" id="placeOrderBtn">Place Your Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PUBLIC:STRIP:START -->
+<section class="section" id="messages" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">04 — Message Generator</span>
+      <h2>One message for the package. One for what's needed next.</h2>
+      <p>Both messages are generated from the exact same quote, so you can drop them straight into the client and Creative Team WhatsApp groups with nothing miscommunicated.</p>
+    </div>
+
+    <div class="brand-fields-panel reveal-on-scroll">
+      <div class="brand-fields-grid">
+        <div class="field-row">
+          <label for="brandNameInput">Client / Brand Name <span class="req-star">*</span></label>
+          <input class="text-input" id="brandNameInput" placeholder="e.g. Aurex Living *" required>
+        </div>
+        <div class="field-row">
+          <label for="websiteInput">Website <span class="req-star">*</span></label>
+          <input class="text-input" id="websiteInput" type="text" placeholder="e.g. www.brand.com *" required>
+        </div>
+        <div class="field-row">
+          <label for="brandCategorySelect">Brand Category <span class="req-star">*</span></label>
+          <select class="select-input" id="brandCategorySelect" required>
+            <option value="" disabled selected>Select category *</option>
+            <option value="Fashion &amp; Apparel">Fashion &amp; Apparel</option>
+            <option value="Beauty &amp; Personal Care">Beauty &amp; Personal Care</option>
+            <option value="Home &amp; Living">Home &amp; Living</option>
+            <option value="Electronics &amp; Gadgets">Electronics &amp; Gadgets</option>
+            <option value="Food &amp; FMCG">Food &amp; FMCG</option>
+            <option value="Health &amp; Wellness">Health &amp; Wellness</option>
+            <option value="Jewellery &amp; Accessories">Jewellery &amp; Accessories</option>
+            <option value="Pet Care">Pet Care</option>
+            <option value="Baby &amp; Kids">Baby &amp; Kids</option>
+            <option value="UGC / Lifestyle">UGC / Lifestyle</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label for="packageDetailsVal">Package Details <span class="req-star">*</span></label>
+          <div class="text-input" id="packageDetailsVal" style="background:transparent; border-style:dashed; color:var(--text-1);"></div>
+        </div>
+      </div>
+      <p class="brand-fields-note">* Required. Updates both generated messages below. Package Details follows the order you've built above.</p>
+    </div>
+
+    <div class="msg-grid reveal-on-scroll">
+      <div class="msg-card">
+        <div class="msg-card-head">
+          <h4>Package Summary</h4>
+          <button class="pdf-btn" id="downloadPdfBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span id="downloadPdfBtnLabel">Download PDF</span>
+          </button>
+        </div>
+        <textarea class="msg-box" id="clientMsg" readonly></textarea>
+        <button class="copy-btn" id="copyClientBtn">Copy Package Summary</button>
+      </div>
+
+      <div class="msg-card">
+        <h4>What We Need From You</h4>
+        <div class="msg-inputs">
+          <input class="text-input" id="specialReqInput" placeholder="Special requirements (optional)" style="grid-column:1 / -1;">
+        </div>
+        <textarea class="msg-box" id="internalMsg" readonly></textarea>
+        <button class="copy-btn" id="copyInternalBtn">Copy Requirements Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- PUBLIC:STRIP:END -->
+
+<footer>
+  <div class="wrap">
+    <!-- TEAM:STRIP:START -->
+    <!-- Cold-lead prompt — makes sense for a public visitor browsing
+         on their own, not for a client already mid-order on a live
+         call with the team, so it's public-only. -->
+    <div class="footer-cta reveal-on-scroll">
+      <span class="eyebrow">Let's create something great</span>
+      <h3>Got a campaign to put into <span class="accent">production</span>?</h3>
+      <button type="button" class="footer-cta-link js-open-lead-modal">
+        Share your requirement
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+    <!-- TEAM:STRIP:END -->
+
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-112" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+        </div>
+        <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#showcase">Work</a>
+        <a href="#services">Services</a>
+        <a href="#quote">Quote</a>
+        <!-- PUBLIC:STRIP:START -->
+        <a href="#messages">Messages</a>
+        <!-- PUBLIC:STRIP:END -->
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="footerYear"></span> Fastrr Ads. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <div class="lb-backdrop" id="lbBackdrop"></div>
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lb-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lb-content">
+    <div id="lbMedia"></div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+</div>
+
+<iframe name="leadHiddenFrame" id="leadHiddenFrame" style="display:none" aria-hidden="true" tabindex="-1"></iframe>
+
+<!-- TEAM:STRIP:START -->
+<!-- Fasty — a client-side FAQ assistant for public visitors (services,
+     pricing, order process, turnaround, discounts/GST). Answers are
+     generated from the same DATA/pricing constants the calculator
+     itself uses (see initFasty() in app.js), so they can't drift out
+     of sync with the real numbers on the page. Public-only: internal
+     reps already have a live team member to ask, so this whole block
+     is stripped from the team build. -->
+<div class="fasty-widget" id="fastyWidget">
+  <button type="button" class="fasty-toggle" id="fastyToggle" aria-label="Chat with Fasty, the Fastrr Ads assistant" aria-expanded="false">
+    <svg class="fasty-toggle-icon fasty-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+      <circle cx="8.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+    <svg class="fasty-toggle-icon fasty-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <span class="fasty-toggle-badge" id="fastyToggleBadge" hidden>1</span>
+  </button>
+
+  <div class="fasty-hint" id="fastyHint">
+    <span>Need help? 👋</span>
+    <button type="button" class="fasty-hint-close" id="fastyHintClose" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+
+  <div class="fasty-panel" id="fastyPanel">
+    <div class="fasty-head">
+      <span class="fasty-avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+          <circle cx="8.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <div class="fasty-head-text">
+        <div class="fasty-head-name">Fasty</div>
+        <div class="fasty-head-status"><span class="fasty-status-dot"></span>Fastrr Ads Assistant</div>
+      </div>
+      <button type="button" class="fasty-head-expand" id="fastyPanelExpand" aria-label="Expand chat" aria-pressed="false">
+        <svg class="fasty-expand-icon fasty-icon-grow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg>
+        <svg class="fasty-expand-icon fasty-icon-shrink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5"/></svg>
+      </button>
+      <button type="button" class="fasty-head-close" id="fastyPanelClose" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="fasty-messages" id="fastyMessages" aria-live="polite"></div>
+
+    <div class="fasty-quick" id="fastyQuick"></div>
+
+    <form class="fasty-input-row" id="fastyForm">
+      <input class="fasty-input" id="fastyInput" type="text" placeholder="Ask about services, pricing, or ordering…" autocomplete="off" aria-label="Message Fasty">
+      <button type="submit" class="fasty-send" aria-label="Send message">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      </button>
+    </form>
+  </div>
+</div>
+<!-- TEAM:STRIP:END -->
+
+<!-- PUBLIC:STRIP:START -->
+<!-- Team sign-in/signup popup — opens automatically on arrival via
+     /teamfastrr while signed out, and any time via the nav "Team Sign
+     In" button. Reuses the .lead-modal component (same overlay,
+     backdrop, pop-in) for a consistent modal feel across the page. -->
+<div class="lead-modal" id="teamAuthModal">
+  <div class="lead-modal-backdrop" id="teamAuthModalBackdrop"></div>
+  <div class="lead-modal-panel" role="dialog" aria-modal="true" aria-labelledby="teamAuthTitle" style="max-width:440px;">
+    <button class="lead-modal-close" id="teamAuthModalClose" aria-label="Close">✕</button>
+    <div class="team-auth-head">
+      <h4 id="teamAuthTitle">Sign in</h4>
+      <p class="team-auth-sub" id="teamAuthSub">Use your Fastrr work email to access your order history.</p>
+    </div>
+    <form class="team-form" id="teamAuthForm" novalidate>
+      <div class="field-row" id="teamNameRow" hidden>
+        <label for="teamNameInput">Name</label>
+        <input class="text-input" id="teamNameInput" type="text" placeholder="Your full name" autocomplete="name">
+      </div>
+      <div class="field-row">
+        <label for="teamEmailInput">Work email</label>
+        <input class="text-input" id="teamEmailInput" type="email" placeholder="you@fastrr.com" required autocomplete="email">
+      </div>
+      <div class="field-row">
+        <label for="teamPasswordInput">Password</label>
+        <div class="password-field">
+          <input class="text-input" id="teamPasswordInput" type="password" placeholder="••••••••" required autocomplete="current-password" minlength="6">
+          <button type="button" class="password-toggle" id="teamPasswordToggle" aria-label="Show password" aria-pressed="false">
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-7-11-7a20.3 20.3 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a20.28 20.28 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary team-submit-btn" id="teamAuthSubmitBtn">
+        <span id="teamAuthSubmitBtnLabel">Sign in</span>
+      </button>
+      <p class="team-form-status" id="teamAuthStatus"></p>
+    </form>
+    <div class="team-auth-switch">
+      <span id="teamAuthSwitchText">New to the team?</span>
+      <button type="button" id="teamAuthSwitchBtn">Create an account</button>
+    </div>
+  </div>
+</div>
+<!-- PUBLIC:STRIP:END -->
+
+<!-- PUBLIC:STRIP:START -->
+<!-- Internal order-creation flow. Opened in place of the public lead
+     popup when #placeOrderBtn is clicked on the team build (see
+     team.js) — the sales rep has already talked the client through
+     the options; this step reviews the cart they've built, collects
+     the client's contact details, and logs the order under the
+     signed-in rep's account (see 05 — Order History), rather than
+     capturing a cold lead. -->
+<div class="lead-modal" id="orderConfirmModal">
+  <div class="lead-modal-backdrop" id="orderConfirmModalBackdrop"></div>
+  <div class="lead-modal-panel" role="dialog" aria-modal="true" aria-labelledby="orderConfirmTitle">
+    <button class="lead-modal-close" id="orderConfirmModalClose" aria-label="Close">✕</button>
+
+    <div id="orderConfirmFormView">
+      <div class="lead-panel-head">
+        <div class="ob-panel-label" id="orderConfirmTitle">Confirm Order</div>
+        <p class="lead-panel-sub" id="orderConfirmSub">Review the order and add the client's details. This logs the order under your account in Order History.</p>
+      </div>
+
+      <div class="oc-review" id="orderConfirmSummary"></div>
+
+      <form class="lead-form" id="orderConfirmForm" novalidate>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="ocClientName">Client / Brand Name</label>
+            <input class="text-input" type="text" id="ocClientName" autocomplete="name" required>
+          </div>
+          <div class="field-row">
+            <label for="ocClientEmail">Email</label>
+            <input class="text-input" type="email" id="ocClientEmail" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="ocClientPhone">Contact Number</label>
+            <input class="text-input" type="tel" id="ocClientPhone" autocomplete="tel" value="+91 " required>
+          </div>
+          <div class="field-row">
+            <label for="ocClientWebsite">Website <span class="field-optional">(optional)</span></label>
+            <input class="text-input" type="text" id="ocClientWebsite" autocomplete="url" placeholder="e.g. www.brand.com">
+          </div>
+        </div>
+        <div class="field-row">
+          <label for="ocClientCategory">Brand Category <span class="field-optional">(optional)</span></label>
+          <select class="select-input" id="ocClientCategory">
+            <option value="" selected>Select category</option>
+            <option value="Fashion &amp; Apparel">Fashion &amp; Apparel</option>
+            <option value="Beauty &amp; Personal Care">Beauty &amp; Personal Care</option>
+            <option value="Home &amp; Living">Home &amp; Living</option>
+            <option value="Electronics &amp; Gadgets">Electronics &amp; Gadgets</option>
+            <option value="Food &amp; FMCG">Food &amp; FMCG</option>
+            <option value="Health &amp; Wellness">Health &amp; Wellness</option>
+            <option value="Jewellery &amp; Accessories">Jewellery &amp; Accessories</option>
+            <option value="Pet Care">Pet Care</option>
+            <option value="Baby &amp; Kids">Baby &amp; Kids</option>
+            <option value="UGC / Lifestyle">UGC / Lifestyle</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label for="ocClientNotes">Notes <span class="field-optional">(optional)</span></label>
+          <textarea class="text-input lead-textarea" id="ocClientNotes" rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary lead-submit-btn" id="orderConfirmSubmitBtn">
+          <span id="orderConfirmSubmitBtnLabel">Confirm &amp; Place Order</span>
+        </button>
+        <p class="lead-form-status" id="orderConfirmStatus" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div id="orderConfirmSuccessView" class="lead-success" hidden>
+      <svg class="order-success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><circle cx="12" cy="12" r="10"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
+      <p id="orderConfirmSuccessText"><strong>Order placed successfully.</strong><br>Saved to your Order History. Continue to the Message Generator to send the client their package summary and next steps.</p>
+      <button type="button" class="btn btn-primary" id="orderConfirmContinueBtn" style="width:100%; justify-content:center;">Continue to Message Generator</button>
+      <button type="button" class="btn btn-ghost" id="orderConfirmCloseBtn" style="width:100%; justify-content:center;">Close</button>
+    </div>
+  </div>
+</div>
+<!-- PUBLIC:STRIP:END -->
+
+<!-- PUBLIC:STRIP:START -->
+<!-- Order History — reached only via the profile dropdown (Order
+     History menu item) once signed in, never shown inline on the page
+     itself. Same log-order form + filterable list as before, just
+     living in a modal now instead of its own page section. -->
+<div class="lead-modal" id="orderHistoryModal">
+  <div class="lead-modal-backdrop" id="orderHistoryModalBackdrop"></div>
+  <div class="lead-modal-panel order-history-panel" role="dialog" aria-modal="true" aria-labelledby="orderHistoryTitle" style="max-width:1000px; max-height:min(90vh,920px);">
+    <button class="lead-modal-close" id="orderHistoryModalClose" aria-label="Close">✕</button>
+    <div class="lead-panel-head">
+      <div class="ob-panel-label" id="orderHistoryTitle">Order History</div>
+    </div>
+
+    <div class="team-scope-row" id="teamScopeRow" hidden>
+      <button type="button" class="team-scope-chip is-active" data-scope="mine">My Orders</button>
+      <button type="button" class="team-scope-chip" data-scope="all">All Orders <span class="team-scope-admin-tag">Admin</span></button>
+    </div>
+
+    <div class="team-history-toolbar">
+      <input class="text-input team-order-search" id="teamOrderSearch" type="search" placeholder="Search by client, package, or order number…">
+      <select class="select-input team-toolbar-select" id="teamDateFilter" aria-label="Filter by date">
+        <option value="all">All time</option>
+        <option value="today">Today</option>
+        <option value="week">This week</option>
+        <option value="month">This month</option>
+        <option value="lastmonth">Last month</option>
+        <option value="custom">Custom range…</option>
+      </select>
+      <select class="select-input team-toolbar-select" id="teamSortFilter" aria-label="Sort orders">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="amount-desc">Amount: high to low</option>
+        <option value="amount-asc">Amount: low to high</option>
+      </select>
+      <select class="select-input team-toolbar-select" id="teamMemberFilter" aria-label="Filter by team member" hidden>
+        <option value="all">All team members</option>
+      </select>
+    </div>
+
+    <div class="team-custom-range-row" id="teamCustomRangeRow" hidden>
+      <label>From <input type="date" class="text-input" id="teamDateFrom"></label>
+      <label>To <input type="date" class="text-input" id="teamDateTo"></label>
+    </div>
+
+    <div class="team-filter-row" id="teamFilterRow">
+      <button type="button" class="team-filter-chip is-active" data-status="all">All</button>
+      <button type="button" class="team-filter-chip" data-status="placed">Placed</button>
+      <button type="button" class="team-filter-chip" data-status="completed">Confirmed</button>
+      <button type="button" class="team-filter-chip" data-status="cancelled">Cancelled</button>
+    </div>
+
+    <div class="team-order-list" id="teamOrderList">
+      <div class="team-order-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><path d="M9 11H3v10h6V11ZM21 3h-6v18h6V3ZM15 15H9v6h6v-6Z"/></svg>
+        <p>No orders placed yet. Orders you place from the homepage will show up here.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PUBLIC:STRIP:END -->
+
+<div class="lead-modal" id="leadModal">
+  <div class="lead-modal-backdrop" id="leadModalBackdrop"></div>
+  <div class="lead-modal-panel" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle">
+    <button class="lead-modal-close" id="leadModalClose" aria-label="Close">✕</button>
+
+    <div id="leadFormView">
+      <div class="lead-panel-head">
+        <div class="ob-panel-label" id="leadModalTitle">Share Your Requirement</div>
+        <p class="lead-panel-sub">Tell us a bit about what you need and we'll get back to you shortly.</p>
+      </div>
+      <form id="leadForm" class="lead-form" novalidate>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="leadName">Full Name</label>
+            <input class="text-input" type="text" id="leadName" name="name" autocomplete="name" required>
+          </div>
+          <div class="field-row">
+            <label for="leadEmail">Email ID</label>
+            <input class="text-input" type="email" id="leadEmail" name="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="field-row-split">
+          <div class="field-row">
+            <label for="leadPhone">Contact Number</label>
+            <input class="text-input" type="tel" id="leadPhone" name="phone" autocomplete="tel" placeholder="+91 98765 43210" required>
+          </div>
+          <div class="field-row">
+            <label for="leadBrand">Brand Name</label>
+            <input class="text-input" type="text" id="leadBrand" name="brand" autocomplete="organization">
+          </div>
+        </div>
+        <div class="field-row">
+          <label for="leadRequirement">Requirement / Service Required</label>
+          <input class="text-input" type="text" id="leadRequirement" name="requirement" placeholder="e.g. AI Reels, Static Creatives, a custom package…" required>
+        </div>
+        <div class="field-row">
+          <label for="leadDetails">Any Other Relevant Details <span class="field-optional">(optional)</span></label>
+          <textarea class="text-input lead-textarea" id="leadDetails" name="details" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary lead-submit-btn" id="leadSubmitBtn">
+          <span id="leadSubmitBtnLabel">Submit</span>
+        </button>
+        <p class="lead-form-status" id="leadFormStatus" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div id="leadSuccessView" class="lead-success" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="34" height="34"><circle cx="12" cy="12" r="10"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
+      <p>Thanks for sharing your requirement. Our team will review the details and get in touch with you shortly.</p>
+      <button type="button" class="btn btn-ghost" id="leadSuccessCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF (~400KB) is never loaded upfront — it only powers the
+     internal-only PDF export in the Message Generator (Package
+     Summary + Invoice), which is a rarely-clicked action. Both call
+     sites fetch it on demand via window.__ensureJsPDF() (see the top
+     of app.js) instead, the first time someone actually clicks
+     Download PDF. -->
+<script src="assets/creative-data.js?v=20260811-112"></script>
+<script src="assets/app.js?v=20260811-112"></script>
+<!-- PUBLIC:STRIP:START -->
+<script type="module" src="assets/team.js?v=20260811-112"></script>
+<!-- PUBLIC:STRIP:END -->
+</body>
+</html>
