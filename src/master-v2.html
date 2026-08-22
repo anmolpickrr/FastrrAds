@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-131" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-131" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-131" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-131" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-131" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-131" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-131" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-131" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-131" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-131" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-131" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-131" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-132" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-132" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-132" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-132" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-132" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-132" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-132" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-132" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-132" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-132" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-132" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-132" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -758,6 +758,15 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .pkg-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
 .pkg-modal-close:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent, var(--violet)) 40%, transparent);}
 .pkg-modal-scroll{position:relative; z-index:1; max-height:min(84vh, 820px); overflow-y:auto;}
+/* For AI Reels, the 4 tier chips have different amounts of included/
+   excluded copy, so the panel's natural content height differs per
+   tier — left alone, switching tiers would resize (and, since the
+   modal is flex-centered in its backdrop, reposition) the whole
+   modal. openPkgModal() pre-measures all 4 tiers' content once at
+   open time and locks the scroll region to the tallest one via this
+   class + --modal-locked-h, so the modal's footprint never moves
+   while switching tiers, only its content updates. */
+.pkg-modal-scroll.height-locked{height:var(--modal-locked-h, auto);}
 @media (max-width:640px){.pkg-modal{width:100%;}}
 /* body.overflow:hidden alone doesn't actually lock scrolling — the
    <html> element is the real scrolling context in standards mode, so
@@ -1609,22 +1618,68 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    package cards (60% white border, no colored outline) so the two
    sections read as one consistent system. */
 .testi-card{
-  flex:0 0 auto; width:min(320px,78vw); padding:22px 22px 20px; border-radius:16px;
+  --accent:var(--violet);
+  position:relative; overflow:hidden; isolation:isolate;
+  flex:0 0 auto; width:min(330px,78vw); padding:24px 24px 22px; border-radius:16px;
   background:
     linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.015) 55%),
     color-mix(in srgb, var(--surface-1) 52%, transparent);
   backdrop-filter:blur(16px) saturate(1.35); -webkit-backdrop-filter:blur(16px) saturate(1.35);
   border:1px solid rgba(255,255,255,.6);
   box-shadow:0 20px 40px -22px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.1);
-  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
+  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, border-color .3s ease;
 }
-.testi-card:hover{transform:translateY(-4px); border-color:rgba(255,255,255,.85); box-shadow:0 26px 50px -20px rgba(139,124,246,.3);}
-.testi-quote-mark{display:block; width:18px; height:14px; margin-bottom:10px; color:var(--violet); opacity:.8;}
-.testi-quote{font-size:14px; line-height:1.65; color:#e3e5ea;}
-.testi-author{display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.14);}
+.testi-row-a .testi-card:nth-child(3n+2){--accent:var(--teal);}
+.testi-row-a .testi-card:nth-child(3n){--accent:#ffb86b;}
+.testi-row-b .testi-card:nth-child(3n+2){--accent:var(--teal);}
+.testi-row-b .testi-card:nth-child(3n){--accent:#ffb86b;}
+/* A soft diagonal sheen that sweeps across each card every few
+   seconds, staggered per card so the row still feels alive even
+   while paused on hover — cheap, GPU-friendly, no JS. */
+.testi-card::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.10) 46%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.10) 54%, transparent 70%);
+  transform:translateX(-130%);
+  animation:testiSheen 8s ease-in-out infinite;
+}
+.testi-row-a .testi-card:nth-child(1)::before{animation-delay:0s;}
+.testi-row-a .testi-card:nth-child(2)::before{animation-delay:1.4s;}
+.testi-row-a .testi-card:nth-child(3)::before{animation-delay:2.8s;}
+.testi-row-a .testi-card:nth-child(4)::before{animation-delay:0s;}
+.testi-row-a .testi-card:nth-child(5)::before{animation-delay:1.4s;}
+.testi-row-a .testi-card:nth-child(6)::before{animation-delay:2.8s;}
+.testi-row-b .testi-card:nth-child(1)::before{animation-delay:.7s;}
+.testi-row-b .testi-card:nth-child(2)::before{animation-delay:2.1s;}
+.testi-row-b .testi-card:nth-child(3)::before{animation-delay:3.5s;}
+.testi-row-b .testi-card:nth-child(4)::before{animation-delay:.7s;}
+.testi-row-b .testi-card:nth-child(5)::before{animation-delay:2.1s;}
+.testi-row-b .testi-card:nth-child(6)::before{animation-delay:3.5s;}
+@keyframes testiSheen{
+  0%,82%{transform:translateX(-130%);}
+  100%{transform:translateX(130%);}
+}
+/* Thin accent glow line hugging the card's bottom edge, colored per
+   card via --accent so the row reads with a little more life than
+   one flat violet/teal repeated everywhere. */
+.testi-card::after{
+  content:''; position:absolute; left:24px; right:24px; bottom:0; height:2px; border-radius:2px; z-index:0; pointer-events:none;
+  background:linear-gradient(90deg, var(--accent), transparent 85%);
+  opacity:.55;
+}
+.testi-card:hover{
+  transform:perspective(800px) rotateX(2deg) translateY(-6px) scale(1.015);
+  border-color:rgba(255,255,255,.85);
+  box-shadow:0 28px 54px -20px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+@media (prefers-reduced-motion: reduce){.testi-card::before{animation:none;}}
+.testi-stars{position:relative; z-index:1; display:flex; gap:3px; margin-bottom:12px;}
+.testi-stars svg{width:13px; height:13px; color:var(--accent);}
+.testi-quote-mark{position:relative; z-index:1; display:block; width:18px; height:14px; margin-bottom:10px; color:var(--accent); opacity:.85;}
+.testi-quote{position:relative; z-index:1; font-size:15px; font-weight:500; line-height:1.62; letter-spacing:-.1px; color:#e9eaee;}
+.testi-author{position:relative; z-index:1; display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.14);}
 .testi-avatar{
   width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#0c0d10; font-weight:700; font-size:13px;
+  background:linear-gradient(135deg, var(--accent), var(--teal)); color:#0c0d10; font-weight:700; font-size:13px;
 }
 .testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px; min-width:0;}
 .testi-author-text b{color:#f4f5f7; font-weight:600;}
@@ -1658,18 +1713,31 @@ footer{padding:64px 0 0; margin-top:40px;}
    it — nothing in the asset library is an appropriate generic
    backdrop (every real shot here is either a specific person's face
    or another brand's branded/text creative). */
-.footer-cta{position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate; min-height:clamp(440px,52vh,560px); display:flex; flex-direction:column; align-items:center; justify-content:center;}
-.footer-cta-glowwash{
-  position:absolute; inset:-200px; z-index:-2; pointer-events:none;
-  background:
-    radial-gradient(560px 520px at 20% 24%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 72%),
-    radial-gradient(600px 560px at 82% 78%, color-mix(in srgb, var(--teal) 20%, transparent), transparent 72%),
-    radial-gradient(460px 420px at 78% 14%, color-mix(in srgb, #ffb457 12%, transparent), transparent 74%);
+/* The glow is painted directly on .footer-cta's own background using
+   percentages of its own box (0–100%), the same technique the
+   testimonials vignette uses — not a separate inset/overflow-hidden
+   child layer. That combination kept producing a visible clip edge
+   (either the child's own inset boundary, or .footer-cta's box
+   clipping the child's bleed) no matter how the fade was tuned;
+   painting straight on the box removes the clip boundary entirely, so
+   there's nothing left for the gradient's fade to be cut against —
+   it just completes on its own, fully within the box, by design. */
+.footer-cta{
+  position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate;
+  min-height:clamp(440px,52vh,560px); display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+/* The breathing opacity animates only this pseudo-element's own
+   background, not .footer-cta itself — animating opacity on the
+   section directly would also dim the headline/CTA text on every
+   pulse, which isn't the intent. */
+.footer-cta::before{
+  content:''; position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background:radial-gradient(ellipse 85% 80% at 50% 48%, color-mix(in srgb, var(--violet) 15%, transparent) 0%, color-mix(in srgb, var(--teal) 11%, transparent) 45%, transparent 78%);
   animation:footerGlowBreathe 14s ease-in-out infinite;
 }
 @keyframes footerGlowBreathe{0%,100%{opacity:.85;}50%{opacity:1;}}
-@media (prefers-reduced-motion: reduce){.footer-cta-glowwash{animation:none;}}
-.footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none;}
+@media (prefers-reduced-motion: reduce){.footer-cta::before{animation:none;}}
+.footer-cta-scene{position:absolute; inset:0; z-index:-1; pointer-events:none;}
 /* Drifting motes, not fixed twinkling dots — a slow fall-and-fade
    (translateY + a little rotate) reads as gentle ambient life; two of
    the five carry a warm amber tint matching the glow wash. */
@@ -2060,8 +2128,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-132" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-132" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2267,7 +2335,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <button type="button" class="pkg-modal-close" id="pkgModalClose" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <div class="pkg-modal-scroll">
+        <div class="pkg-modal-scroll" id="pkgModalScroll">
           <div class="svc-panel-inner" id="svcPanelInner">
             <div class="svc-panel-head">
               <div>
@@ -2452,6 +2520,13 @@ footer{padding:64px 0 0; margin-top:40px;}
       <div class="testi-marquee">
         <div class="testi-row testi-row-a">
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
             <div class="testi-author">
@@ -2460,6 +2535,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
             <div class="testi-author">
@@ -2468,6 +2550,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
             <div class="testi-author">
@@ -2476,6 +2565,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
             <div class="testi-author">
@@ -2484,6 +2580,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
             <div class="testi-author">
@@ -2492,6 +2595,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
             <div class="testi-author">
@@ -2502,6 +2612,13 @@ footer{padding:64px 0 0; margin-top:40px;}
         </div>
         <div class="testi-row testi-row-b">
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
             <div class="testi-author">
@@ -2510,6 +2627,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
             <div class="testi-author">
@@ -2518,6 +2642,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
             <div class="testi-author">
@@ -2526,6 +2657,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
             <div class="testi-author">
@@ -2534,6 +2672,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
             <div class="testi-author">
@@ -2542,6 +2687,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             </div>
           </div>
           <div class="testi-card">
+            <span class="testi-stars" aria-hidden="true">
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+              <svg viewBox="0 0 20 19" fill="currentColor"><path d="M10 0l2.9 6.3 6.9.7-5.2 4.7 1.5 6.8L10 15l-6.1 3.5 1.5-6.8L0 7l6.9-.7L10 0Z"/></svg>
+            </span>
             <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
             <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
             <div class="testi-author">
@@ -2631,7 +2783,7 @@ footer{padding:64px 0 0; margin-top:40px;}
     <!-- Cold-lead prompt — makes sense for a public visitor browsing
          on their own, not for a client already mid-order on a live
          call with the team, so it's public-only. -->
-    <div class="footer-cta reveal-on-scroll">
+    <div class="footer-cta">
       <span class="footer-cta-glowwash" aria-hidden="true"></span>
       <span class="footer-cta-scene" aria-hidden="true">
         <span class="footer-cta-particle p1"></span>
@@ -2653,8 +2805,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-132" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-132" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3008,10 +3160,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-131"></script>
-<script src="assets/app-v2.js?v=20260811-131"></script>
+<script src="assets/creative-data.js?v=20260811-132"></script>
+<script src="assets/app-v2.js?v=20260811-132"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-131"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-132"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
