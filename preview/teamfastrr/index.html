@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-130" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-130" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-130" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-130" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-130" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-130" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-130" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-131" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-131" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-131" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-131" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-131" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-131" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-131" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-131" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-131" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-131" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-131" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-131" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1587,11 +1587,6 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1);
 }
 @media (prefers-reduced-motion: reduce){.testi-spotlight{transition:none;}}
-.testi-ghost{
-  position:absolute; top:14%; left:50%; transform:translate(-50%,-50%);
-  font-family:var(--font-display); font-weight:800; font-size:clamp(60px,10vw,130px); letter-spacing:-0.03em;
-  color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.12); white-space:nowrap; pointer-events:none; z-index:0;
-}
 /* Two rows of continuously scrolling testimonial cards (opposite
    directions, different speeds) instead of a static grid — each row's
    content is duplicated once so the loop point is invisible. A
@@ -1634,7 +1629,6 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
 .testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px; min-width:0;}
 .testi-author-text b{color:#f4f5f7; font-weight:600;}
 .testi-author-text span{color:#9299a8;}
-@media (max-width:640px){.testi-ghost{font-size:16vw;}}
 
 
 /* ---------- FOOTER ----------
@@ -1653,46 +1647,41 @@ footer{padding:64px 0 0; margin-top:40px;}
    minimal text link underneath: an animated underline + arrow, not a
    filled pill. This is the calmest, least "componentized" this
    section can be while still reading as a deliberate closing moment. */
-/* A cinematic, full-presence closing stage — no real photography
-   behind it (nothing in the asset library is an appropriate generic
-   backdrop: every real shot on this site is either a specific
-   person's face or another brand's branded/text creative, neither of
-   which belongs blurred into decorative wallpaper here), so the
-   "shallow depth of field forest" mood from the reference is built
-   entirely from layered CSS light: several soft out-of-focus color
-   blooms — cool violet/teal plus a warm amber tone standing in for
-   dappled sunlight — and a few tighter "bokeh disc" highlights, the
-   kind of soft circular blown-out points a real shallow-DOF shot
-   would show. */
-.footer-cta{position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate; min-height:clamp(520px,64vh,680px); display:flex; flex-direction:column; align-items:center; justify-content:center;}
+/* A calm closing stage — simplified after feedback that the previous
+   version had too many competing elements (corner labels, floating
+   mock cards, a dual-column copy block) and small "bokeh disc"
+   highlights whose fade radius was too tight for their size, so they
+   read as hard-edged circles rather than soft light. What's left:
+   one smooth, generously-sized glow wash (a gentle opacity breathe,
+   not position drift, so there's no motion to ever look clipped) and
+   a handful of quiet drifting particles. No real photography behind
+   it — nothing in the asset library is an appropriate generic
+   backdrop (every real shot here is either a specific person's face
+   or another brand's branded/text creative). */
+.footer-cta{position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate; min-height:clamp(440px,52vh,560px); display:flex; flex-direction:column; align-items:center; justify-content:center;}
 .footer-cta-glowwash{
-  position:absolute; inset:-160px; z-index:-2; pointer-events:none;
+  position:absolute; inset:-200px; z-index:-2; pointer-events:none;
   background:
-    radial-gradient(70px 70px at 28% 62%, rgba(255,255,255,.16), transparent 72%),
-    radial-gradient(46px 46px at 66% 26%, rgba(255,255,255,.13), transparent 72%),
-    radial-gradient(54px 54px at 80% 66%, rgba(255,255,255,.1), transparent 72%),
-    radial-gradient(420px 380px at 20% 20%, color-mix(in srgb, var(--violet) 26%, transparent), transparent 68%),
-    radial-gradient(460px 420px at 84% 16%, color-mix(in srgb, #ffb457 18%, transparent), transparent 70%),
-    radial-gradient(520px 460px at 78% 80%, color-mix(in srgb, var(--teal) 24%, transparent), transparent 68%),
-    radial-gradient(360px 320px at 12% 84%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 68%),
-    radial-gradient(340px 300px at 50% 46%, color-mix(in srgb, #ffb457 9%, transparent), transparent 72%);
+    radial-gradient(560px 520px at 20% 24%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 72%),
+    radial-gradient(600px 560px at 82% 78%, color-mix(in srgb, var(--teal) 20%, transparent), transparent 72%),
+    radial-gradient(460px 420px at 78% 14%, color-mix(in srgb, #ffb457 12%, transparent), transparent 74%);
+  animation:footerGlowBreathe 14s ease-in-out infinite;
 }
+@keyframes footerGlowBreathe{0%,100%{opacity:.85;}50%{opacity:1;}}
+@media (prefers-reduced-motion: reduce){.footer-cta-glowwash{animation:none;}}
 .footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none;}
 /* Drifting motes, not fixed twinkling dots — a slow fall-and-fade
-   (translateY + a little rotate) reads as the reference's falling
-   petals without needing actual leaf art; two of the seven carry a
-   warm amber tint for the same reason the glow wash does. */
+   (translateY + a little rotate) reads as gentle ambient life; two of
+   the five carry a warm amber tint matching the glow wash. */
 .footer-cta-particle{
   position:absolute; width:3px; height:3px; border-radius:50%; background:#fff;
-  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerDrift 6.5s ease-in-out infinite;
+  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerDrift 7s ease-in-out infinite;
 }
-.footer-cta-particle.p1{top:12%; left:14%; animation-delay:0s;}
-.footer-cta-particle.p2{top:58%; left:22%; width:2px; height:2px; animation-delay:1.3s;}
-.footer-cta-particle.p3{top:24%; left:82%; animation-delay:2.6s;}
-.footer-cta-particle.p4{top:70%; left:78%; width:2px; height:2px; animation-delay:3.9s;}
-.footer-cta-particle.p5{top:6%; left:52%; width:2px; height:2px; animation-delay:5s;}
-.footer-cta-particle.p6{top:40%; left:8%; width:2px; height:2px; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:2s;}
-.footer-cta-particle.p7{top:46%; left:91%; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:4.4s;}
+.footer-cta-particle.p1{top:16%; left:16%; animation-delay:0s;}
+.footer-cta-particle.p2{top:66%; left:24%; width:2px; height:2px; animation-delay:1.6s;}
+.footer-cta-particle.p3{top:26%; left:80%; animation-delay:3.2s;}
+.footer-cta-particle.p4{top:20%; left:52%; width:2px; height:2px; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:4.8s;}
+.footer-cta-particle.p5{top:70%; left:78%; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:2.4s;}
 @keyframes footerDrift{
   0%{opacity:0; transform:translateY(-8px) rotate(0deg) scale(.5);}
   15%{opacity:1;}
@@ -1700,16 +1689,6 @@ footer{padding:64px 0 0; margin-top:40px;}
   100%{opacity:0; transform:translateY(22px) rotate(50deg) scale(.8);}
 }
 @media (prefers-reduced-motion: reduce){.footer-cta-particle{animation:none; opacity:.5;}}
-/* Small editorial corner labels — the reference's minimal
-   "UXUI Project / 2024 / Planto" top corners, adapted to this site's
-   own content instead of a case-study slate. */
-.footer-cta-tag{
-  position:absolute; top:0; z-index:1; font-family:var(--font-mono); font-size:11px; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--text-2); opacity:.75;
-}
-.footer-cta-tag.tag-left{left:0; text-align:left;}
-.footer-cta-tag.tag-right{right:0; text-align:right;}
-@media (max-width:640px){.footer-cta-tag{display:none;}}
 /* A small pill badge above the headline, same crystal-glass surface
    as the package cards — echoes the reference's "Founder member sale
    special" tag instead of a plain inline eyebrow label. */
@@ -1751,43 +1730,6 @@ footer{padding:64px 0 0; margin-top:40px;}
 .footer-cta-link svg{width:16px; height:16px; transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
 .footer-cta-link:hover svg{transform:translateX(4px);}
 .footer-cta-link:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 45%, transparent);}
-/* Two small floating "product preview" cards, tilted and partly
-   overlapping beneath the statement — the same frosted crystal-glass
-   surface as the package cards, standing in for the reference's
-   floating UI mockups. Pure decoration (aria-hidden), so their
-   content is abstract placeholder lines/dots, not real UI. */
-.footer-cta-mocks{position:relative; z-index:0; max-width:460px; height:98px; margin:54px auto 0; pointer-events:none;}
-.footer-mock{
-  position:absolute; top:0; width:200px; padding:16px 18px; border-radius:16px;
-  background:linear-gradient(160deg, rgba(255,255,255,.1), rgba(255,255,255,.015) 55%), color-mix(in srgb, var(--surface-1) 55%, transparent);
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.55); box-shadow:0 22px 44px -22px rgba(0,0,0,.55);
-}
-.footer-mock-1{left:calc(50% - 170px); transform:rotate(-6deg); z-index:1;}
-.footer-mock-2{left:calc(50% - 8px); top:16px; transform:rotate(5deg); z-index:2;}
-.footer-mock-dot{display:block; width:22px; height:22px; border-radius:7px; margin-bottom:11px; background:linear-gradient(135deg, var(--violet), var(--teal));}
-.footer-mock-avatar{display:block; width:22px; height:22px; border-radius:50%; margin-bottom:11px; background:linear-gradient(135deg, var(--teal), var(--violet));}
-.footer-mock-line{display:block; height:6px; border-radius:4px; background:rgba(255,255,255,.16); margin-bottom:7px;}
-.footer-mock-line.l1{width:85%;}
-.footer-mock-line.l2{width:55%; margin-bottom:0;}
-@media (max-width:520px){
-  .footer-cta-mocks{display:none;}
-}
-/* Two short blocks of copy pinned to the section's own bottom edge —
-   the reference's dual-column body text, adapted to one language and
-   this site's own content instead of a case-study description. */
-.footer-cta-copy{
-  position:absolute; left:20px; right:20px; bottom:16px; z-index:1;
-  display:flex; justify-content:space-between; gap:32px; text-align:left;
-  max-width:900px; margin:0 auto;
-}
-.footer-cta-copy p{max-width:320px; font-size:12.5px; line-height:1.6; color:var(--text-2);}
-.footer-cta-copy p:last-child{text-align:right; margin-left:auto;}
-@media (max-width:760px){
-  .footer-cta-copy{position:static; flex-direction:column; gap:10px; margin-top:40px; text-align:center;}
-  .footer-cta-copy p{max-width:none; text-align:center !important; margin:0 auto;}
-}
-
 /* Minimal, compact close to the page — brand + tagline anchor the
    left, a plain horizontal link row sits on the right (not a labeled
    stacked column), and a thin divider hands off to a single-line
@@ -1821,22 +1763,30 @@ footer{padding:64px 0 0; margin-top:40px;}
   --fasty-c1:#8B7CFA; --fasty-c2:#4F8DFF;
   position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;
 }
-/* A dark glowing "portal" ring, not a solid filled ball — matches
-   the reference more closely than the earlier filled-gradient orb: a
-   near-black disc, a slim spinning conic-gradient ring right at its
-   edge (::after, masked so only the rim itself is colored), and a
-   larger blurred copy of that same ring behind it (::before) as the
-   soft halo. Indigo→blue (--fasty-c1/--fasty-c2 below) rather than
-   the site's violet→teal, so Fasty reads as its own distinct object.
-   Small 4-point sparkle glyphs (not plain dots) drift in and out
-   around the rim. Everything dims (not vanishes) once the panel is
-   open, so the button still feels alive as a "close" control. */
+/* A glass sphere with a glowing "LED-matrix" face patch embedded in
+   it, matching the Behance showreel reference — not a flat 2D ring.
+   The ball itself is layered radial-gradients (a bright highlight
+   top-left, a darker rim bottom-right, inset shadows for the glass
+   edge) rather than a single flat fill, so it reads as a lit,
+   semi-translucent orb. The face is its own small rounded-rect glow
+   (.fasty-face) with a fine dot-grid overlay standing in for the
+   reference's pixel/LED texture, holding the two pause-bar "eyes".
+   A handful of particles burst gently upward off the top of the ball
+   on a continuous loop (not just on hover) for the "real animation"
+   feel the reference has, intensifying a little on hover. Everything
+   dims (not vanishes) once the panel is open, so the button still
+   feels alive as a "close" control. */
 @property --fasty-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 .fasty-toggle{
   position:relative; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; color:#fff;
-  background:radial-gradient(circle at 50% 40%, #17161f, #08080b 76%);
-  box-shadow:0 8px 22px -8px var(--fasty-c1), 0 2px 8px rgba(0,0,0,.4);
+  display:flex; align-items:center; justify-content:center; color:#fff; overflow:visible;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.4), transparent 40%),
+    radial-gradient(circle at 68% 80%, rgba(0,0,0,.4), transparent 58%),
+    radial-gradient(circle at 50% 48%, #211f2c, #08080c 88%);
+  box-shadow:
+    inset 0 -6px 10px rgba(0,0,0,.5), inset 0 4px 7px rgba(255,255,255,.14),
+    0 8px 22px -8px var(--fasty-c1), 0 2px 8px rgba(0,0,0,.4);
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
 }
 .fasty-toggle::before{
@@ -1856,11 +1806,26 @@ footer{padding:64px 0 0; margin-top:40px;}
 @keyframes fastySpin{to{--fasty-spin:360deg;}}
 @keyframes fastyPulse{0%,100%{filter:blur(11px);}50%{filter:blur(15px);}}
 @media (prefers-reduced-motion: reduce){.fasty-toggle::before{animation:none;}}
-.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--fasty-c1), 0 2px 6px rgba(0,0,0,.4);}
+.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:inset 0 -6px 10px rgba(0,0,0,.5), inset 0 4px 7px rgba(255,255,255,.14), 0 12px 28px -8px var(--fasty-c1), 0 2px 6px rgba(0,0,0,.4);}
 .fasty-toggle:active{transform:scale(.96);}
+/* The glowing face patch — a small rounded-rect gradient with a fine
+   dot-grid texture (LED-matrix cue), positioned/animated exactly like
+   the other toggle-state icon (fades + shrinks away when the panel
+   opens, same as the close-X fades in). */
+.fasty-face{
+  width:29px; height:19px; border-radius:8px; position:absolute; z-index:2; top:50%; left:50%;
+  display:flex; align-items:center; justify-content:center; gap:4px; overflow:hidden;
+  background:radial-gradient(120% 160% at 28% 18%, rgba(255,255,255,.55), transparent 55%), linear-gradient(135deg, var(--fasty-c2), var(--fasty-c1));
+  box-shadow:0 0 10px 1px color-mix(in srgb, var(--fasty-c2) 55%, transparent);
+  transform:translate(-50%,-50%); transition:opacity .2s ease, transform .2s ease;
+}
+.fasty-face::before{
+  content:''; position:absolute; inset:0; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+  background-image:radial-gradient(rgba(0,0,0,.4) 1px, transparent 1px); background-size:3px 3px;
+}
+.fasty-widget.open .fasty-face{opacity:0; transform:translate(-50%,-50%) rotate(45deg) scale(.6);}
 .fasty-toggle-icon{width:19px; height:19px; position:absolute; z-index:2; transition:opacity .2s ease, transform .2s ease;}
 .fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
-.fasty-widget.open .fasty-icon-chat{opacity:0; transform:rotate(45deg) scale(.6);}
 .fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
 /* The two bars read as a simple robot face/pause-glyph, matching the
    reference — a soft alternating blink keeps it feeling alive without
@@ -1872,15 +1837,27 @@ footer{padding:64px 0 0; margin-top:40px;}
 .fasty-eye-bar-2{animation-delay:.15s;}
 @keyframes fastyBlink{0%,38%,100%{transform:scaleY(1);}46%{transform:scaleY(.22);}}
 @media (prefers-reduced-motion: reduce){.fasty-eye-bar{animation:none;}}
+/* A gentle continuous particle burst off the top of the ball — small
+   dots rising, drifting sideways, and fading, looping on staggered
+   delays so it never looks perfectly repeating. Runs all the time
+   (not just on hover) for the "real, moving" feel; hover just speeds
+   the loop up slightly via a shorter duration. */
 .fasty-sparkle{
-  position:absolute; color:#fff; opacity:0; pointer-events:none;
-  filter:drop-shadow(0 0 3px rgba(255,255,255,.8)); animation:fastySparkle 3.6s ease-in-out infinite;
+  position:absolute; top:30%; width:3px; height:3px; border-radius:50%;
+  background:radial-gradient(circle, #fff, var(--fasty-c2)); opacity:0; pointer-events:none;
+  box-shadow:0 0 4px 1px color-mix(in srgb, var(--fasty-c2) 70%, transparent);
+  animation:fastyBurst 3.6s ease-in infinite;
 }
-.fasty-sparkle svg{display:block; width:100%; height:100%;}
-.fasty-sparkle.s1{top:-5px; left:8px; width:9px; height:9px; animation-delay:0s;}
-.fasty-sparkle.s2{bottom:0; right:-6px; width:7px; height:7px; animation-delay:1.2s;}
-.fasty-sparkle.s3{top:10px; right:-8px; width:5px; height:5px; animation-delay:2.4s;}
-@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3) rotate(0deg);}50%{opacity:1; transform:scale(1) rotate(15deg);}}
+.fasty-sparkle.s1{left:30%; animation-delay:0s; --dx:-8px;}
+.fasty-sparkle.s2{left:50%; width:2px; height:2px; animation-delay:.9s; --dx:4px;}
+.fasty-sparkle.s3{left:62%; animation-delay:1.8s; --dx:10px;}
+.fasty-sparkle.s4{left:42%; width:2px; height:2px; animation-delay:2.6s; --dx:-3px;}
+@keyframes fastyBurst{
+  0%{opacity:0; transform:translate(0,0) scale(.5);}
+  12%{opacity:1;}
+  100%{opacity:0; transform:translate(var(--dx),-30px) scale(1.1);}
+}
+.fasty-toggle:hover .fasty-sparkle{animation-duration:2.2s;}
 .fasty-widget.open .fasty-sparkle{opacity:0; animation-play-state:paused;}
 @media (prefers-reduced-motion: reduce){.fasty-sparkle{animation:none; opacity:0;}}
 .fasty-toggle-badge{
@@ -2083,8 +2060,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2458,7 +2435,6 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
       <span class="testi-spotlight" id="testiSpotlight" aria-hidden="true"></span>
-      <span class="testi-ghost" aria-hidden="true">Trusted</span>
       <div class="testi-marquee">
         <div class="testi-row testi-row-a">
           <div class="testi-card">
@@ -2639,8 +2615,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-130" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-131" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2912,8 +2888,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-130"></script>
-<script src="assets/app-v2.js?v=20260811-130"></script>
-<script type="module" src="assets/team-v2.js?v=20260811-130"></script>
+<script src="assets/creative-data.js?v=20260811-131"></script>
+<script src="assets/app-v2.js?v=20260811-131"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-131"></script>
 </body>
 </html>
