@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-127" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-127" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-127" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-127" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-127" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-127" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-127" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-127" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-127" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-127" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-127" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-127" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-128" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-128" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-128" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-128" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-128" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-128" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-128" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-128" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-128" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-128" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-128" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-128" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1654,24 +1654,25 @@ footer{padding:64px 0 0; margin-top:40px;}
    filled pill. This is the calmest, least "componentized" this
    section can be while still reading as a deliberate closing moment. */
 .footer-cta{position:relative; text-align:center; padding:76px 20px 110px; margin-bottom:56px; isolation:isolate;}
-/* Decorative scene behind the statement — soft blurred color blooms
-   that drift slowly on their own (standing in for an actual moving
-   nature clip, which isn't something this build can source real
-   footage for — this reads as ambient light breathing instead) plus
-   a handful of twinkling particle dots, built from the site's own
-   violet/teal crystal language rather than literal flowers. Purely
-   ambient: aria-hidden, never obscures the text above it. */
-.footer-cta-scene{
-  position:absolute; inset:-20px; z-index:-1; pointer-events:none; overflow:hidden;
-  -webkit-mask-image:radial-gradient(ellipse 75% 80% at 50% 45%, #000 45%, transparent 88%);
-  mask-image:radial-gradient(ellipse 75% 80% at 50% 45%, #000 45%, transparent 88%);
+/* Decorative scene behind the statement. Two separate layers on
+   purpose: the glow wash is a huge inset (-140px), CSS-gradient-only
+   background — no child elements, so there's nothing for overflow to
+   clip and the gradient itself fades to transparent long before it
+   reaches its own box edge, which is what a moving blurred div
+   bounded by overflow:hidden couldn't guarantee (that's what was
+   producing the visible hard edge the glow used to cut off against).
+   No drift animation either — a static, generously-sized wash reads
+   calmer than something constantly re-testing its own clip boundary.
+   The particle layer stays tightly inset so its percentage-based
+   positions still land inside the visible statement, not out in the
+   glow wash's much larger box. */
+.footer-cta-glowwash{
+  position:absolute; inset:-140px; z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(620px 460px at 26% 32%, color-mix(in srgb, var(--violet) 22%, transparent), transparent 70%),
+    radial-gradient(660px 500px at 74% 70%, color-mix(in srgb, var(--teal) 18%, transparent), transparent 70%);
 }
-.footer-cta-glow{position:absolute; border-radius:50%; filter:blur(64px); opacity:.24; animation:footerGlowDrift 22s ease-in-out infinite alternate;}
-.footer-cta-glow.g1{top:-60px; left:4%; width:320px; height:320px; background:var(--violet); animation-duration:24s;}
-.footer-cta-glow.g2{bottom:-80px; right:6%; width:360px; height:360px; background:var(--teal); animation-duration:28s; animation-delay:-6s;}
-.footer-cta-glow.g3{top:20%; left:50%; width:260px; height:260px; background:var(--violet); opacity:.14; animation-duration:32s; animation-delay:-14s;}
-@keyframes footerGlowDrift{0%{transform:translate(0,0) scale(1);}50%{transform:translate(24px,-18px) scale(1.08);}100%{transform:translate(-18px,14px) scale(.96);}}
-@media (prefers-reduced-motion: reduce){.footer-cta-glow{animation:none;}}
+.footer-cta-scene{position:absolute; inset:-20px; z-index:-1; pointer-events:none;}
 .footer-cta-particle{
   position:absolute; width:3px; height:3px; border-radius:50%; background:#fff;
   box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerTwinkle 4.5s ease-in-out infinite;
@@ -1778,35 +1779,48 @@ footer{padding:64px 0 0; margin-top:40px;}
    the panel visually grows out of the button rather than appearing as
    an unrelated overlay. See initFasty() in app.js for the answer
    engine; this file only owns how it looks. */
-.fasty-widget{position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;}
-/* A glowing orb, not a flat filled circle — a slowly spinning
-   conic-gradient ring blurred behind the button (::before) reads as
-   a soft ambient glow rather than a hard-edged halo, a gentle pulse
-   breathes it in and out, and three tiny sparkle dots drift in and
-   out around the rim. All of it dims (not vanishes) once the panel
-   is open, so the button still feels alive as a "close" control. */
+.fasty-widget{
+  --fasty-c1:#8B7CFA; --fasty-c2:#4F8DFF;
+  position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;
+}
+/* A dark glowing "portal" ring, not a solid filled ball — matches
+   the reference more closely than the earlier filled-gradient orb: a
+   near-black disc, a slim spinning conic-gradient ring right at its
+   edge (::after, masked so only the rim itself is colored), and a
+   larger blurred copy of that same ring behind it (::before) as the
+   soft halo. Indigo→blue (--fasty-c1/--fasty-c2 below) rather than
+   the site's violet→teal, so Fasty reads as its own distinct object.
+   Small 4-point sparkle glyphs (not plain dots) drift in and out
+   around the rim. Everything dims (not vanishes) once the panel is
+   open, so the button still feels alive as a "close" control. */
 @property --fasty-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 .fasty-toggle{
   position:relative; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; color:#fff;
-  background:radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--violet) 55%, #fff), var(--violet) 55%, var(--teal) 135%);
-  box-shadow:0 8px 22px -8px var(--violet), 0 2px 8px rgba(0,0,0,.25);
+  background:radial-gradient(circle at 50% 40%, #17161f, #08080b 76%);
+  box-shadow:0 8px 22px -8px var(--fasty-c1), 0 2px 8px rgba(0,0,0,.4);
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
 }
 .fasty-toggle::before{
-  content:''; position:absolute; inset:-7px; border-radius:50%; z-index:-1;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet));
-  filter:blur(9px); opacity:.55;
+  content:''; position:absolute; inset:-9px; border-radius:50%; z-index:-1;
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1));
+  filter:blur(11px); opacity:.6;
   animation:fastySpin 7s linear infinite, fastyPulse 3.4s ease-in-out infinite;
   transition:opacity .3s ease;
 }
-.fasty-widget.open .fasty-toggle::before{opacity:.22; animation-play-state:paused;}
+.fasty-toggle::after{
+  content:''; position:absolute; inset:0; border-radius:50%; z-index:1; pointer-events:none; padding:2px;
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+}
+.fasty-widget.open .fasty-toggle::before{opacity:.25; animation-play-state:paused;}
 @keyframes fastySpin{to{--fasty-spin:360deg;}}
-@keyframes fastyPulse{0%,100%{filter:blur(9px);}50%{filter:blur(13px);}}
+@keyframes fastyPulse{0%,100%{filter:blur(11px);}50%{filter:blur(15px);}}
 @media (prefers-reduced-motion: reduce){.fasty-toggle::before{animation:none;}}
-.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--violet), 0 2px 6px rgba(0,0,0,.28);}
+.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--fasty-c1), 0 2px 6px rgba(0,0,0,.4);}
 .fasty-toggle:active{transform:scale(.96);}
-.fasty-toggle-icon{width:19px; height:19px; position:absolute; transition:opacity .2s ease, transform .2s ease;}
+.fasty-toggle-icon{width:19px; height:19px; position:absolute; z-index:2; transition:opacity .2s ease, transform .2s ease;}
 .fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
 .fasty-widget.open .fasty-icon-chat{opacity:0; transform:rotate(45deg) scale(.6);}
 .fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
@@ -1821,13 +1835,14 @@ footer{padding:64px 0 0; margin-top:40px;}
 @keyframes fastyBlink{0%,38%,100%{transform:scaleY(1);}46%{transform:scaleY(.22);}}
 @media (prefers-reduced-motion: reduce){.fasty-eye-bar{animation:none;}}
 .fasty-sparkle{
-  position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; opacity:0; pointer-events:none;
-  box-shadow:0 0 4px 1px rgba(255,255,255,.8); animation:fastySparkle 3.6s ease-in-out infinite;
+  position:absolute; color:#fff; opacity:0; pointer-events:none;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.8)); animation:fastySparkle 3.6s ease-in-out infinite;
 }
-.fasty-sparkle.s1{top:-3px; left:10px; animation-delay:0s;}
-.fasty-sparkle.s2{bottom:-1px; right:-3px; animation-delay:1.2s;}
-.fasty-sparkle.s3{top:8px; right:-6px; width:2px; height:2px; animation-delay:2.4s;}
-@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3);}50%{opacity:1; transform:scale(1);}}
+.fasty-sparkle svg{display:block; width:100%; height:100%;}
+.fasty-sparkle.s1{top:-5px; left:8px; width:9px; height:9px; animation-delay:0s;}
+.fasty-sparkle.s2{bottom:0; right:-6px; width:7px; height:7px; animation-delay:1.2s;}
+.fasty-sparkle.s3{top:10px; right:-8px; width:5px; height:5px; animation-delay:2.4s;}
+@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3) rotate(0deg);}50%{opacity:1; transform:scale(1) rotate(15deg);}}
 .fasty-widget.open .fasty-sparkle{opacity:0; animation-play-state:paused;}
 @media (prefers-reduced-motion: reduce){.fasty-sparkle{animation:none; opacity:0;}}
 .fasty-toggle-badge{
@@ -1907,7 +1922,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 
 .fasty-panel::before{
   content:''; position:absolute; inset:-2px; border-radius:calc(var(--radius) + 2px); padding:1.5px;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet) 100%);
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.85; pointer-events:none; animation:fastySpin 9s linear infinite;
@@ -2030,8 +2045,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-127" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-127" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2603,10 +2618,8 @@ footer{padding:64px 0 0; margin-top:40px;}
          on their own, not for a client already mid-order on a live
          call with the team, so it's public-only. -->
     <div class="footer-cta reveal-on-scroll">
+      <span class="footer-cta-glowwash" aria-hidden="true"></span>
       <span class="footer-cta-scene" aria-hidden="true">
-        <span class="footer-cta-glow g1"></span>
-        <span class="footer-cta-glow g2"></span>
-        <span class="footer-cta-glow g3"></span>
         <span class="footer-cta-particle p1"></span>
         <span class="footer-cta-particle p2"></span>
         <span class="footer-cta-particle p3"></span>
@@ -2640,8 +2653,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-127" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-127" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-128" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2684,9 +2697,9 @@ footer{padding:64px 0 0; margin-top:40px;}
      is stripped from the team build. -->
 <div class="fasty-widget" id="fastyWidget">
   <button type="button" class="fasty-toggle" id="fastyToggle" aria-label="Chat with Fasty, the Fastrr Ads assistant" aria-expanded="false">
-    <span class="fasty-sparkle s1" aria-hidden="true"></span>
-    <span class="fasty-sparkle s2" aria-hidden="true"></span>
-    <span class="fasty-sparkle s3" aria-hidden="true"></span>
+    <span class="fasty-sparkle s1" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0 7.2 4.8 12 6 7.2 7.2 6 12 4.8 7.2 0 6 4.8 4.8Z"/></svg></span>
+    <span class="fasty-sparkle s2" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0 7.2 4.8 12 6 7.2 7.2 6 12 4.8 7.2 0 6 4.8 4.8Z"/></svg></span>
+    <span class="fasty-sparkle s3" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0 7.2 4.8 12 6 7.2 7.2 6 12 4.8 7.2 0 6 4.8 4.8Z"/></svg></span>
     <svg class="fasty-toggle-icon fasty-icon-chat" viewBox="0 0 24 24" fill="none">
       <rect class="fasty-eye-bar" x="8.4" y="6.2" width="3" height="11.6" rx="1.5" fill="currentColor"/>
       <rect class="fasty-eye-bar fasty-eye-bar-2" x="12.6" y="6.2" width="3" height="11.6" rx="1.5" fill="currentColor"/>
@@ -2992,10 +3005,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-127"></script>
-<script src="assets/app-v2.js?v=20260811-127"></script>
+<script src="assets/creative-data.js?v=20260811-128"></script>
+<script src="assets/app-v2.js?v=20260811-128"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-127"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-128"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
