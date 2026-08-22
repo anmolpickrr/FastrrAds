@@ -705,6 +705,9 @@
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
     }
+    svcNav.querySelectorAll(".pkg-card").forEach((card) => {
+      card.classList.toggle("selected", card.dataset.svc === state.service);
+    });
   }
 
   function scopeListHTML(items) {
@@ -1434,14 +1437,92 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   /* ----------------------------------------------------------
      7. WIRE UP CONTROLS
   ---------------------------------------------------------- */
-  svcNav.querySelectorAll(".pkg-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      state.service = card.dataset.svc;
-      render();
-      switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
-      openPkgModal(card);
+  // Cards float on the stage (base position set by --x/--y in CSS,
+  // drifting ambiently via a CSS animation) and can be dragged to a
+  // new spot with the pointer, matching the reference video's
+  // "floating card cloud" interaction. A drag past a small threshold
+  // suppresses the click that would otherwise open the modal, so a
+  // drag and a tap stay clearly distinct gestures. Below the 760px
+  // breakpoint the stage becomes a static stacked list (see the CSS
+  // media query) and dragging is skipped entirely.
+  function initPkgDrag() {
+    const THRESHOLD = 6;
+    svcNav.querySelectorAll(".pkg-card").forEach((card) => {
+      let tracking = false;
+      let dragging = false;
+      let suppressNextClick = false;
+      let pointerId = null;
+      let startX = 0;
+      let startY = 0;
+      let originLeft = 0;
+      let originTop = 0;
+
+      card.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        if (getComputedStyle(card).position !== "absolute") return;
+        tracking = true;
+        dragging = false;
+        pointerId = e.pointerId;
+        const stageRect = svcNav.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        originLeft = cardRect.left - stageRect.left + cardRect.width / 2;
+        originTop = cardRect.top - stageRect.top + cardRect.height / 2;
+        card.setPointerCapture(pointerId);
+      });
+
+      card.addEventListener("pointermove", (e) => {
+        if (!tracking) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (!dragging && Math.hypot(dx, dy) > THRESHOLD) {
+          dragging = true;
+          card.classList.add("dragging");
+        }
+        if (!dragging) return;
+        const stageRect = svcNav.getBoundingClientRect();
+        const left = Math.max(0, Math.min(stageRect.width, originLeft + dx));
+        const top = Math.max(0, Math.min(stageRect.height, originTop + dy));
+        card.style.left = left + "px";
+        card.style.top = top + "px";
+      });
+
+      const endDrag = () => {
+        if (!tracking) return;
+        tracking = false;
+        if (dragging) {
+          dragging = false;
+          suppressNextClick = true;
+          card.classList.remove("dragging");
+        }
+        if (pointerId !== null) {
+          try {
+            card.releasePointerCapture(pointerId);
+          } catch (err) {
+            /* pointer already released */
+          }
+        }
+        pointerId = null;
+      };
+      card.addEventListener("pointerup", endDrag);
+      card.addEventListener("pointercancel", endDrag);
+
+      card.addEventListener("click", (e) => {
+        if (suppressNextClick) {
+          suppressNextClick = false;
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
+        state.service = card.dataset.svc;
+        render();
+        switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
+        openPkgModal(card);
+      });
     });
-  });
+  }
+  initPkgDrag();
 
   pkgModalClose.addEventListener("click", closePkgModal);
   pkgModalBackdrop.addEventListener("click", (e) => {
@@ -2991,31 +3072,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // elsewhere) since these four are only ever used here, in the
     // action-grid launcher shown before the first real message.
     const QUICK_STARTERS = [
-      {
-        label: "Services & pricing",
-        text: "What services do you offer and what do they cost?",
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-      },
-      {
-        label: "How ordering works",
-        text: "How does the order process work?",
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
-      },
-      {
-        label: "Turnaround time",
-        text: "What's the turnaround time?",
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
-      },
-      {
-        label: "Discounts & GST",
-        text: "Tell me about discounts and GST",
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a2 2 0 0 0-2-2h-4l-2-2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/><path d="M14 15l6 6M20 15l-6 6"/></svg>',
-      },
-      {
-        label: "Talk to the team",
-        text: "I'd like to talk to the team",
-        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-      },
+      { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
+      { label: "How ordering works", text: "How does the order process work?" },
+      { label: "Turnaround time", text: "What's the turnaround time?" },
+      { label: "Discounts & GST", text: "Tell me about discounts and GST" },
+      { label: "Talk to the team", text: "I'd like to talk to the team" },
     ];
     function renderQuickChips() {
       quickEl.innerHTML = "";
@@ -3023,7 +3084,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         const b = document.createElement("button");
         b.type = "button";
         b.className = "fasty-quick-chip";
-        b.innerHTML = `<span class="fasty-quick-icon">${q.icon}</span><span class="fasty-quick-label">${escapeHtml(q.label)}</span>`;
+        b.innerHTML = `<span class="fasty-quick-label">${escapeHtml(q.label)}</span>`;
         b.addEventListener("click", () => sendUserMessage(q.text));
         quickEl.appendChild(b);
       });

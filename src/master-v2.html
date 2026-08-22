@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-119" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-119" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-119" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-119" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-119" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-119" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-119" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-119" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-119" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-119" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-119" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-119" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -585,13 +585,39 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    same accent for its glow and reuses the exact panel content/IDs
    the section always had (svcName/tier-row/svc-glance/scope-panel),
    so none of the underlying rendering logic changed. */
-.pkg-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px;}
-.pkg-card{
-  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:14px;
-  padding:26px 22px; border-radius:var(--radius); background:var(--surface-1); border:1px solid transparent;
-  text-align:left; cursor:pointer; color:inherit; overflow:hidden;
-  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease;
+/* A dark "stage" the cards float in, matching the reference video:
+   a scattered cloud of cards drifting independently with a soft dual
+   glow behind them, rather than a flat grid. Cards are absolutely
+   positioned via --x/--y/--rot (set per card below) and drift on top
+   of that base position using an animated margin (transform stays
+   free for hover/drag/tilt so nothing fights over one property). */
+.pkg-stage{
+  position:relative; z-index:1; margin-bottom:16px; min-height:560px;
+  border-radius:calc(var(--radius) + 8px); overflow:hidden; isolation:isolate;
+  background:
+    radial-gradient(560px 320px at 18% 12%, color-mix(in srgb, var(--violet) 16%, transparent), transparent 70%),
+    radial-gradient(560px 320px at 84% 82%, color-mix(in srgb, var(--teal) 14%, transparent), transparent 70%),
+    #08090c;
 }
+.pkg-stage::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+.pkg-card{
+  position:absolute; left:var(--x); top:var(--y); z-index:1;
+  display:flex; flex-direction:column; align-items:flex-start; gap:12px;
+  width:220px; padding:22px 20px; border-radius:var(--radius); background:var(--surface-1); border:1px solid transparent;
+  text-align:left; cursor:grab; color:inherit; overflow:hidden; touch-action:none; user-select:none;
+  transform:translate(-50%,-50%) rotate(var(--rot));
+  animation:pkgDriftX var(--drift-dur-x) ease-in-out infinite alternate, pkgDriftY var(--drift-dur-y) ease-in-out infinite alternate;
+  animation-delay:var(--drift-delay), calc(var(--drift-delay) * -1);
+  transition:box-shadow .3s ease;
+  box-shadow:0 20px 40px -22px rgba(0,0,0,.6);
+}
+@keyframes pkgDriftX{from{margin-left:calc(var(--drift-x) * -1);} to{margin-left:var(--drift-x);}}
+@keyframes pkgDriftY{from{margin-top:calc(var(--drift-y) * -1);} to{margin-top:var(--drift-y);}}
+@media (prefers-reduced-motion: reduce){.pkg-card{animation:none;}}
 .pkg-card::before{
   content:''; position:absolute; inset:0; z-index:0; opacity:0; pointer-events:none;
   background:radial-gradient(140px 140px at 26% -10%, var(--accent), transparent 72%);
@@ -607,17 +633,26 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.35; pointer-events:none; animation:pkgSpin 6s linear infinite;
+  opacity:.4; pointer-events:none; animation:pkgSpin 6s linear infinite;
   transition:opacity .3s ease;
 }
 @property --pkg-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 @keyframes pkgSpin{to{--pkg-spin:360deg;}}
 @media (prefers-reduced-motion: reduce){.pkg-card::after{animation:none;}}
-.pkg-card:hover{transform:translateY(-4px); box-shadow:0 18px 36px -20px var(--accent), var(--shadow-sm);}
-.pkg-card:hover::before{opacity:.16;}
-.pkg-card:hover::after{opacity:.9;}
-.pkg-card:active{transform:translateY(-1px) scale(.99);}
+.pkg-card:hover{z-index:3; box-shadow:0 26px 50px -20px var(--accent);}
+.pkg-card:hover::before{opacity:.2;}
+.pkg-card:hover::after{opacity:1;}
 .pkg-card:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);}
+/* Persistent "picked" state — a brighter ring plus a small badge,
+   kept in sync with state.service by renderServiceNav() so whichever
+   card was last opened still reads as selected after the modal closes. */
+.pkg-card.selected{z-index:2; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px var(--accent);}
+.pkg-card.selected::after{opacity:1;}
+/* While being dragged: freeze the ambient drift, lift above the
+   others, and swap the cursor — position is then driven directly by
+   pointer coordinates (see initPkgDrag() in app-v2.js) instead of the
+   --x/--y base position. */
+.pkg-card.dragging{z-index:50; cursor:grabbing; animation-play-state:paused; transition:none; box-shadow:0 30px 60px -18px var(--accent);}
 /* A glowing gradient orb, not a flat-tinted box holding a thin
    lineart glyph — bold, filled icon shapes (see the SVGs in markup)
    sit on a radial-gradient badge with a soft color-matched glow
@@ -637,10 +672,30 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   padding-top:14px; border-top:1px solid var(--line-soft);
 }
 .pkg-card-price{font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--accent);}
-.pkg-card-arrow{width:15px; height:15px; color:var(--text-2); transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease;}
-.pkg-card:hover .pkg-card-arrow{transform:translateX(4px); color:var(--accent);}
-@media (max-width:900px){.pkg-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:520px){.pkg-grid{grid-template-columns:1fr;}}
+.pkg-card-arrow{
+  position:relative; z-index:1; width:30px; height:30px; border-radius:50%; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); color:var(--text-2);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease, border-color .25s ease, background .25s ease;
+}
+.pkg-card-arrow svg{width:13px; height:13px;}
+.pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg); color:var(--accent); border-color:var(--accent);}
+/* Base scattered layout for each card — a loose cloud, not a grid,
+   per the reference video (cards fanned out, independently tilted
+   and drifting, rather than aligned columns). Each card also gets
+   its own drift distance/speed so the motion reads as organic. */
+.pkg-card[data-svc="reels"]{--x:16%; --y:34%; --rot:-6deg; --drift-x:12px; --drift-y:16px; --drift-dur-x:7.5s; --drift-dur-y:9.5s; --drift-delay:0s;}
+.pkg-card[data-svc="catalogue"]{--x:40%; --y:64%; --rot:4deg; --drift-x:14px; --drift-y:11px; --drift-dur-x:8.5s; --drift-dur-y:6.5s; --drift-delay:-1.2s;}
+.pkg-card[data-svc="static"]{--x:64%; --y:30%; --rot:-3deg; --drift-x:11px; --drift-y:14px; --drift-dur-x:6.8s; --drift-dur-y:9s; --drift-delay:-2.4s;}
+.pkg-card[data-svc="carousel"]{--x:86%; --y:60%; --rot:7deg; --drift-x:13px; --drift-y:12px; --drift-dur-x:9.2s; --drift-dur-y:7.2s; --drift-delay:-3.6s;}
+/* Below the breakpoint dragging stops being practical (no hover, one
+   thumb), so the stage folds into a plain static stacked list —
+   same cards, same click-to-open behaviour, no floating/drag. */
+@media (max-width:760px){
+  .pkg-stage{min-height:0; display:flex; flex-direction:column; gap:14px; padding:18px; background:var(--surface-1);}
+  .pkg-stage::before{display:none;}
+  .pkg-card{position:static; width:100%; transform:none; margin:0 !important; animation:none; cursor:pointer;}
+}
 
 /* Modal — flex-centered inside the backdrop rather than centered via
    its own transform, so .pkg-modal's transform stays entirely free
@@ -1761,25 +1816,18 @@ footer{padding:64px 0 0; margin-top:40px;}
 .fasty-typing span:nth-child(3){animation-delay:.3s;}
 @keyframes fastyTypingBounce{0%,60%,100%{opacity:.35; transform:translateY(0);}30%{opacity:1; transform:translateY(-3px);}}
 
-/* An action grid, not a row of pills — icon tiles for "Services &
-   pricing / How ordering works / Turnaround / Talk to the team" read
-   as a real launcher (closer to the reference's app-like feel) and
-   only ever show before the first real message, same as the old
-   chip row did. */
+/* A "Suggested topics" grid — text only, no icons, per explicit
+   request. Compact rounded tiles rather than pills so they still read
+   as a real launcher, just without an icon glyph inside each one. */
 .fasty-quick{display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:2px 16px 14px; flex:0 0 auto;}
 .fasty-quick:empty{display:none;}
 .fasty-quick-chip{
-  display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:12px 12px 11px;
-  border-radius:14px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
+  display:flex; align-items:center; padding:12px 14px; border-radius:12px;
+  border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
   text-align:left; cursor:pointer;
   transition:background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 .fasty-quick-chip:hover{background:var(--surface-hover); border-color:var(--violet); transform:translateY(-2px); box-shadow:0 12px 22px -16px var(--violet);}
-.fasty-quick-icon{
-  width:26px; height:26px; border-radius:8px; flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center; background:var(--violet-soft); color:var(--violet);
-}
-.fasty-quick-icon svg{width:14px; height:14px;}
 .fasty-quick-label{font-size:12px; font-weight:600; line-height:1.35; color:var(--text-0);}
 @media (max-width:400px){.fasty-quick{grid-template-columns:1fr;}}
 
@@ -1813,8 +1861,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-119" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-119" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1967,14 +2015,14 @@ footer{padding:64px 0 0; margin-top:40px;}
          the exact same content/IDs the old inline panel used
          (svcName/svcGlance/tier-row/scope-panel), so all rendering
          logic is untouched — only how it's revealed changed. -->
-    <div class="pkg-grid reveal-on-scroll" id="svcNav">
+    <div class="pkg-stage reveal-on-scroll" id="svcNav">
       <button type="button" class="pkg-card" data-svc="reels" style="--accent:var(--violet);">
         <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
         <span class="pkg-card-name">AI Reels</span>
         <span class="pkg-card-desc">Script-to-screen AI reels across 4 package tiers.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹2,500</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
@@ -1983,7 +2031,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,800</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
@@ -1992,7 +2040,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹499</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
@@ -2001,7 +2049,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,499</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
     </div>
@@ -2348,8 +2396,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-119" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-119" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2702,10 +2750,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-118"></script>
-<script src="assets/app-v2.js?v=20260811-118"></script>
+<script src="assets/creative-data.js?v=20260811-119"></script>
+<script src="assets/app-v2.js?v=20260811-119"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-118"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-119"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
