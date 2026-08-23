@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-151" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-151" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-151" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-151" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-151" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-151" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-151" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-151" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-151" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-151" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-151" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-151" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-152" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-152" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-152" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-152" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-152" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-152" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-152" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-152" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-152" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-152" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-152" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-152" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1597,48 +1597,46 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
   mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
 }
-/* ---- Static review grid, deliberately not a scrolling/marquee gimmick.
-   The kinetic-typography marquee (ghost word drifting behind scrolling
-   quote rows) read as decorative filler rather than proof — motion for
-   its own sake, and the quotes underneath leaned into punchy tagline
-   phrasing that read as written-for-the-site rather than said-by-a-client.
-   This replaces both problems at once: quotes are still, so they can
-   actually be read, and they're written the way a client would type a
-   WhatsApp message — specific, a little uneven, occasionally lukewarm
-   (one 4-star, one that lands a small complaint) — instead of uniformly
-   glowing one-liners. */
-.testi-grid{
-  position:relative; z-index:1; margin-top:8px;
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(272px, 1fr)); gap:18px;
+/* ---- Editorial quote list — deliberately not a card/box shape at
+   all. Both prior attempts (scrolling marquee, then a boxed review-card
+   grid) still read as decoration or as a stock "review widget" —
+   the boxes, borders and star ratings are exactly the kind of thing
+   that makes feedback look manufactured rather than said by a person.
+   This drops all of that: no card background, no border, no stars.
+   Just large-set pull-quote typography, a hairline rule between
+   entries, and a plain byline underneath — closer to a magazine's
+   pull-quote column than a testimonial widget. Alternating alignment
+   (odd entries left, even right) gives it rhythm without needing any
+   container to do it. Copy stays written the way a client would
+   actually type it: specific, uneven in length and warmth, not a
+   wall of uniform praise. */
+.testi-list{position:relative; z-index:1; margin-top:8px;}
+.testi-row{
+  padding:30px 0; border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex; flex-direction:column; gap:14px; max-width:720px;
 }
-.testi-card{
-  position:relative; padding:24px 24px 22px; border-radius:16px;
-  background:linear-gradient(165deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.09);
-  transition:transform .25s ease, border-color .25s ease, background .25s ease;
+.testi-row:first-child{padding-top:4px;}
+.testi-row:nth-child(even){margin-left:auto; text-align:right; align-items:flex-end;}
+.testi-quote{
+  font-size:clamp(17px,2vw,22px); line-height:1.5; font-weight:500; letter-spacing:-.01em;
+  color:#f0f1f5;
 }
-.testi-card:hover{
-  transform:translateY(-4px);
-  border-color:color-mix(in srgb, var(--violet) 38%, rgba(255,255,255,.09));
-  background:linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-}
-.testi-card-stars{display:flex; gap:3px; margin-bottom:14px;}
-.testi-card-stars svg{width:14px; height:14px; color:var(--teal);}
-.testi-card-stars svg.is-empty{color:rgba(255,255,255,.14);}
-.testi-card-quote{
-  font-size:15px; line-height:1.6; color:#dbdde3; letter-spacing:-.005em;
-}
-.testi-card-foot{display:flex; align-items:center; gap:11px; margin-top:20px;}
-.testi-card-avatar{
-  flex:0 0 auto; width:36px; height:36px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:700; color:#0d0d10;
+.testi-quote::before{content:'"'; color:var(--teal); opacity:.75;}
+.testi-quote::after{content:'"'; color:var(--teal); opacity:.75;}
+.testi-byline{display:flex; align-items:center; gap:10px;}
+.testi-row:nth-child(even) .testi-byline{flex-direction:row-reverse;}
+.testi-byline-mark{
+  flex:0 0 auto; width:7px; height:7px; border-radius:50%;
   background:linear-gradient(135deg, var(--teal), var(--violet));
 }
-.testi-card-who b{display:block; font-size:13.5px; font-weight:600; color:#f2f3f6;}
-.testi-card-who span{font-size:12px; color:#9299a8;}
+.testi-byline b{font-size:13.5px; font-weight:600; color:#e4e6ec;}
+.testi-byline span{font-size:12.5px; color:#8b92a3;}
+.testi-byline span::before{content:'— '; opacity:.6;}
 @media (max-width:640px){
-  .testi-grid{grid-template-columns:1fr;}
+  .testi-row, .testi-row:nth-child(even){
+    text-align:left; align-items:flex-start; margin-left:0; max-width:none;
+  }
+  .testi-row:nth-child(even) .testi-byline{flex-direction:row;}
 }
 
 
@@ -2090,8 +2088,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-151" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-151" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-152" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-152" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2468,102 +2466,61 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- Static review grid — no marquee, no scrolling ghost text. That
-         version was motion for its own sake and the copy underneath
-         read like taglines rather than something a client actually
-         said. This is still (readable at a glance) and the copy is
-         written the way a client types a WhatsApp update: specific,
-         a little uneven in length and tone, one card with a genuine
-         (small) gripe and one at 4 stars instead of a wall of perfect
-         5s — that unevenness is what reads as real instead of
-         written-for-the-site. Full-bleed ambient wash + the same grid
-         backdrop as Services &amp; Packages carries over unchanged.
-         Placeholder names: swap in real client quotes before go-live. -->
+    <!-- Editorial pull-quote list — no marquee, no boxed review cards,
+         no star ratings. Both of those read as decoration or as a
+         stock "review widget," which works against feedback actually
+         sounding real. This is just large-set quote typography, a
+         hairline rule between entries, alternating alignment for
+         rhythm, and a plain byline — closer to a magazine pull-quote
+         column. Copy stays written the way a client would actually
+         type it: specific, uneven in length and warmth, one with a
+         genuine small gripe, instead of a wall of uniform praise.
+         Full-bleed ambient wash + the same grid backdrop as Services
+         &amp; Packages carries over unchanged. Placeholder names:
+         swap in real client quotes before go-live. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">Sent the brief over on a Friday evening and honestly didn't expect anything before Monday. Had drafts back the same weekend — didn't even need a full revision round on the first one.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">RS</span>
-            <span class="testi-card-who"><b>Ritika Sharma</b><span>Founder, D2C beauty brand</span></span>
+      <div class="testi-list">
+        <div class="testi-row">
+          <p class="testi-quote">Sent the brief over on a Friday evening and honestly didn't expect anything before Monday. Had drafts back the same weekend — didn't even need a full revision round on the first one.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Ritika Sharma</b><span>Founder, D2C beauty brand</span>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg class="is-empty" viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">We'd been through two other agencies before this. This is the first time nobody's asked us to re-explain our brand guidelines from scratch. One round did run a couple days late during a festive week, but they flagged it early instead of going quiet.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">AM</span>
-            <span class="testi-card-who"><b>Arjun Mehta</b><span>Marketing Lead, fashion &amp; apparel</span></span>
+        <div class="testi-row">
+          <p class="testi-quote">We'd been through two other agencies before this. This is the first time nobody's asked us to re-explain our brand guidelines from scratch. One round did run a couple days late during a festive week, but they flagged it early instead of going quiet.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Arjun Mehta</b><span>Marketing Lead, fashion &amp; apparel</span>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">Was skeptical about outsourcing our reels honestly. First batch looked like something our in-house team would've taken two weeks on. We send raw footage, they send back something we'd actually post.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">SI</span>
-            <span class="testi-card-who"><b>Sana Iqbal</b><span>Founder, home &amp; living brand</span></span>
+        <div class="testi-row">
+          <p class="testi-quote">Was skeptical about outsourcing our reels honestly. First batch looked like something our in-house team would've taken two weeks on. We send raw footage, they send back something we'd actually post.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Sana Iqbal</b><span>Founder, home &amp; living brand</span>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">One thing I actually appreciate — they'll flag when something in the brief doesn't quite make sense instead of just running with it and handing back something off.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">KN</span>
-            <span class="testi-card-who"><b>Kabir Nair</b><span>Co-founder, wellness &amp; supplements</span></span>
+        <div class="testi-row">
+          <p class="testi-quote">One thing I actually appreciate — they'll flag when something in the brief doesn't quite make sense instead of just running with it and handing back something off.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Kabir Nair</b><span>Co-founder, wellness &amp; supplements</span>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">Our numbers moved within the first week of running the new creatives. I'm not going to pretend I know exactly why — could be the hook, could be the pacing — but I'm not going to argue with it either.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">MC</span>
-            <span class="testi-card-who"><b>Meera Chawla</b><span>Founder, jewellery &amp; accessories</span></span>
+        <div class="testi-row">
+          <p class="testi-quote">Our numbers moved within the first week of running the new creatives. I'm not going to pretend I know exactly why — could be the hook, could be the pacing — but I'm not going to argue with it either.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Meera Chawla</b><span>Founder, jewellery &amp; accessories</span>
           </div>
         </div>
-        <div class="testi-card">
-          <div class="testi-card-stars" aria-hidden="true">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-            <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-          </div>
-          <p class="testi-card-quote">We stopped juggling a separate video editor and designer once we moved everything here. One brief, one WhatsApp thread, one person to chase if something's off.</p>
-          <div class="testi-card-foot">
-            <span class="testi-card-avatar">DR</span>
-            <span class="testi-card-who"><b>Devansh Rao</b><span>Ops Lead, personal care brand</span></span>
+        <div class="testi-row">
+          <p class="testi-quote">We stopped juggling a separate video editor and designer once we moved everything here. One brief, one WhatsApp thread, one person to chase if something's off.</p>
+          <div class="testi-byline">
+            <span class="testi-byline-mark" aria-hidden="true"></span>
+            <b>Devansh Rao</b><span>Ops Lead, personal care brand</span>
           </div>
         </div>
       </div>
@@ -2668,8 +2625,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-151" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-151" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-152" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-152" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3022,10 +2979,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-151"></script>
-<script src="assets/app-v2.js?v=20260811-151"></script>
+<script src="assets/creative-data.js?v=20260811-152"></script>
+<script src="assets/app-v2.js?v=20260811-152"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-151"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-152"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
