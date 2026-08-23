@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-149" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-149" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-149" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-149" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-149" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-149" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-149" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-149" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-149" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-149" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-149" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-149" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-150" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-150" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-150" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-150" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-150" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-150" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-150" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-150" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-150" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-150" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-150" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-150" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1570,7 +1570,7 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    tilted testimonial notes. Only two colors (violet/teal) carry the
    glow throughout, same restraint as the rest of this redesign. */
 .testi-stage{
-  position:relative; isolation:isolate; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px);
+  position:relative; isolation:isolate; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px) clamp(20px,4vw,36px);
 }
 /* Full-bleed ambient wash, same technique as .footer-cta::before:
    sized to 100vw and centered independent of .wrap's max-width, and
@@ -1605,21 +1605,29 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    the real quotes at readable size scrolling in front over it,
    opposite direction, faster. Depth and motion come from type and
    layering alone. */
-.testi-kinetic{position:relative; z-index:1; margin-top:8px; height:clamp(220px,32vw,300px);}
+/* Ghost row and quote rows are now two clearly separated bands
+   (ghost near the top, quotes lower) instead of overlapping through
+   the same vertical center — the previous version had ghost glyphs
+   crossing directly through the readable quote text, which fought
+   for attention instead of just sitting behind it. Ghost is also
+   smaller and fainter now, so it reads as ambient texture rather than
+   competing typography. */
+.testi-kinetic{position:relative; z-index:1; margin-top:4px; height:clamp(190px,24vw,240px);}
 .testi-ghost-row{
-  position:absolute; top:8%; left:0; width:100%; overflow:hidden;
+  position:absolute; top:0; left:0; width:100%; height:44%; overflow:hidden;
+  display:flex; align-items:center;
   -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 .testi-ghost-track{
   display:flex; width:max-content; white-space:nowrap;
-  font-size:clamp(64px,11vw,148px); font-weight:800; letter-spacing:-.03em; text-transform:uppercase;
-  color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.09);
+  font-size:clamp(46px,7.5vw,96px); font-weight:800; letter-spacing:-.03em; text-transform:uppercase;
+  color:transparent; -webkit-text-stroke:1px rgba(255,255,255,.07);
   animation:testiGhostScroll 34s linear infinite;
 }
 .testi-ghost-track span{padding:0 .35em;}
 @keyframes testiGhostScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-.testi-quote-rows{position:absolute; top:50%; left:0; width:100%; transform:translateY(-50%); display:flex; flex-direction:column; gap:22px;}
+.testi-quote-rows{position:absolute; bottom:2%; left:0; width:100%; display:flex; flex-direction:column; gap:20px;}
 .testi-quote-row-mask{
   overflow:hidden;
   -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
@@ -2090,8 +2098,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-149" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-149" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-150" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-150" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2446,7 +2454,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
-<section class="section" id="testimonials">
+<section class="section" id="testimonials" style="padding-bottom:56px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">04 — What Clients Say</span>
@@ -2620,8 +2628,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-149" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-149" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-150" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-150" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2893,8 +2901,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-149"></script>
-<script src="assets/app.js?v=20260811-149"></script>
-<script type="module" src="assets/team.js?v=20260811-149"></script>
+<script src="assets/creative-data.js?v=20260811-150"></script>
+<script src="assets/app.js?v=20260811-150"></script>
+<script type="module" src="assets/team.js?v=20260811-150"></script>
 </body>
 </html>
