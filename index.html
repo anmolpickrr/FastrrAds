@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-154" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-154" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-154" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-154" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-154" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-154" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-154" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-154" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-154" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-154" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-154" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-154" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-155" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-155" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-155" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-155" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-155" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-155" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-155" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-155" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-155" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-155" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-155" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-155" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1516,6 +1516,187 @@ html.is-internal .oc-offer{display:none !important;}
 .gst-switch input:checked ~ .gst-switch-track .gst-switch-thumb{transform:translateX(13px); background:var(--teal);}
 #gstRow.is-muted{opacity:.5;}
 
+/* ---------- QUOTE & PRICE CALCULATOR — CRYSTAL REDESIGN ----------
+   Visual pass only: every rule below is scoped under #quote so it can't
+   leak onto classes this section shares with the rest of the site
+   (.field-row, .select-input, .text-input, .field-row-split, .lead-cta
+   are all reused elsewhere — Message Generator, the lead modal, the
+   internal team form). No markup was restructured, no IDs/classes
+   renamed, no JS touched — app.js/team.js still see the exact same
+   selectors and DOM shape they already read from and write into.
+   Concept: the whole builder sits on a faceted "crystal" stage — a
+   dual violet/teal ambient wash plus a 45°-rotated diamond lattice
+   behind it (same full-bleed/masked-grid techniques already used for
+   .pkg-stage and .testi-stage, just rotated), and the two panels read
+   as cut-glass slabs: blurred glass fill, a soft outer glow ring
+   instead of a flat border, a slow diagonal sheen drifting across
+   each one, and a bright top facet edge. Inputs, chips and buttons
+   get matching glass/glow treatment; the coupon stub and Final Amount
+   figure get a bit more shine since they're the section's payoff
+   moments. Colors stay on the theme's existing violet/teal tokens so
+   this still adapts correctly across light/dark. */
+#quote{position:relative; isolation:isolate;}
+#quote::before{
+  content:''; position:absolute; top:-120px; bottom:-80px; left:50%; width:100vw; transform:translateX(-50%);
+  z-index:-2; pointer-events:none;
+  background:
+    radial-gradient(ellipse 34% 46% at 14% 18%, color-mix(in srgb, var(--violet) 16%, transparent) 0%, transparent 68%),
+    radial-gradient(ellipse 34% 46% at 88% 78%, color-mix(in srgb, var(--teal) 14%, transparent) 0%, transparent 68%);
+}
+#quote::after{
+  content:''; position:absolute; inset:-40px 0 -40px; z-index:-1; pointer-events:none;
+  background-image:
+    linear-gradient(45deg, rgba(139,124,246,.05) 1px, transparent 1px),
+    linear-gradient(-45deg, rgba(47,217,196,.05) 1px, transparent 1px);
+  background-size:38px 38px;
+  -webkit-mask-image:radial-gradient(ellipse 62% 70% at 50% 45%, #000 24%, transparent 82%);
+  mask-image:radial-gradient(ellipse 62% 70% at 50% 45%, #000 24%, transparent 82%);
+}
+@media (max-width:900px){#quote::before{top:-70px; bottom:-40px;}}
+
+/* Crystal panels — glass fill, outer glow ring in place of a flat
+   border, a bright hairline along the top edge (the "table facet" of
+   a cut gem), and a slow diagonal sheen. Each panel's ::before/::after
+   are purely decorative and absolutely positioned, so they can't
+   affect the panel's own layout or its children's. */
+#quote .ob-panel,#quote .oc-panel{
+  position:relative; overflow:hidden; border-radius:24px; border-color:transparent;
+  background:
+    linear-gradient(165deg, rgba(255,255,255,.05), transparent 40%),
+    var(--glass);
+  backdrop-filter:blur(18px) saturate(150%); -webkit-backdrop-filter:blur(18px) saturate(150%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--violet) 22%, var(--line)),
+    0 30px 70px -34px color-mix(in srgb, var(--violet) 45%, transparent),
+    0 14px 40px -24px color-mix(in srgb, var(--teal) 30%, transparent),
+    var(--inset-hi);
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+#quote .oc-panel{
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--teal) 22%, var(--line)),
+    0 30px 70px -34px color-mix(in srgb, var(--teal) 40%, transparent),
+    0 14px 40px -24px color-mix(in srgb, var(--violet) 26%, transparent),
+    var(--inset-hi);
+}
+#quote .ob-panel:hover,#quote .oc-panel:hover{transform:translateY(-3px);}
+#quote .ob-panel::before,#quote .oc-panel::before{
+  content:''; position:absolute; top:0; left:14%; right:14%; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+}
+#quote .ob-panel::after,#quote .oc-panel::after{
+  content:''; position:absolute; top:-40%; bottom:-40%; width:34%; left:-50%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.06), transparent);
+  transform:skewX(-16deg); animation:quoteSheen 9s ease-in-out infinite;
+  pointer-events:none;
+}
+#quote .oc-panel::after{animation-delay:3.2s;}
+@keyframes quoteSheen{
+  0%,100%{left:-50%;} 50%{left:120%;}
+}
+@media (prefers-reduced-motion: reduce){
+  #quote .ob-panel::after,#quote .oc-panel::after{animation:none; display:none;}
+}
+
+#quote .ob-panel-label{display:flex; align-items:center; gap:7px;}
+#quote .ob-panel-label::before{
+  content:''; width:6px; height:6px; flex:0 0 auto; transform:rotate(45deg);
+  background:linear-gradient(135deg, var(--violet), var(--teal));
+  box-shadow:0 0 8px 1px color-mix(in srgb, var(--violet) 55%, transparent);
+}
+#quote .oc-head-label::before{
+  content:''; display:inline-block; width:6px; height:6px; margin-right:7px; transform:rotate(45deg);
+  background:linear-gradient(135deg, var(--teal), var(--violet));
+  box-shadow:0 0 8px 1px color-mix(in srgb, var(--teal) 55%, transparent);
+}
+
+/* Inputs — cut-glass fields: brighter inner top edge, neon dual-glow
+   ring on focus instead of a single flat outline color. */
+#quote .select-input,#quote .text-input{
+  border-radius:14px; background:var(--surface-1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color .25s ease, box-shadow .25s ease, background .25s ease;
+}
+#quote .select-input:focus,#quote .text-input:focus{
+  border-color:transparent;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--violet) 60%, transparent),
+    0 0 18px -2px color-mix(in srgb, var(--violet) 55%, transparent),
+    0 0 26px -4px color-mix(in srgb, var(--teal) 45%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+#quote .qty-btn{
+  border-radius:11px; background:var(--surface-1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  transition:background .2s ease, transform .2s ease, box-shadow .25s ease, border-color .2s ease;
+}
+#quote .qty-btn:hover{
+  border-color:color-mix(in srgb, var(--teal) 45%, var(--line));
+  box-shadow:0 0 14px -3px color-mix(in srgb, var(--teal) 55%, transparent), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* Package chips — glass pills; the active one carries a slow breathing
+   glow instead of a static flat highlight, echoing the panels' sheen
+   without competing with it (different rhythm, low amplitude). */
+#quote .qtier-chip{background:var(--surface-1); backdrop-filter:blur(6px);}
+#quote .qtier-chip.active{
+  background:linear-gradient(120deg, var(--violet), var(--teal)); border-color:transparent;
+  animation:quoteChipGlow 3.2s ease-in-out infinite;
+}
+@keyframes quoteChipGlow{
+  0%,100%{box-shadow:0 6px 14px -6px color-mix(in srgb, var(--violet) 55%, transparent);}
+  50%{box-shadow:0 6px 20px -4px color-mix(in srgb, var(--teal) 55%, transparent);}
+}
+@media (prefers-reduced-motion: reduce){#quote .qtier-chip.active{animation:none;}}
+
+/* Add to Order / Place Your Order — same .btn-primary base as the rest
+   of the site (untouched globally), plus a diagonal sheen sweep on
+   hover scoped to this section only. */
+#quote .ob-add-btn,#quote .lead-cta-btn{position:relative; overflow:hidden;}
+#quote .ob-add-btn::after,#quote .lead-cta-btn::after{
+  content:''; position:absolute; top:-60%; bottom:-60%; width:28%; left:-40%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.5), transparent);
+  transform:skewX(-16deg); transition:left .6s var(--ease); pointer-events:none;
+}
+#quote .ob-add-btn:hover::after,#quote .lead-cta-btn:hover::after{left:130%;}
+#quote .ob-add-btn svg{transition:transform .3s var(--ease);}
+#quote .ob-add-btn:hover svg{transform:rotate(90deg);}
+
+/* Coupon stub — a touch more shine on the locked/unlocked states than
+   the base .oc-offer rules give it; the unlock sheen/ring keyframes
+   themselves are untouched. */
+#quote .oc-offer{backdrop-filter:blur(10px);}
+#quote .oc-offer.is-unlocked .oc-offer-stub{
+  background:linear-gradient(135deg, var(--teal), color-mix(in srgb, var(--teal) 60%, var(--violet)));
+}
+
+/* Final Amount — the payoff number gets a quiet glow instead of flat
+   text, and the divider above the summary block carries a violet→teal
+   gradient instead of a flat line. */
+#quote .order-summary{border-top-color:transparent; position:relative;}
+#quote .order-summary::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--violet) 45%, transparent), color-mix(in srgb, var(--teal) 45%, transparent), transparent);
+}
+#quote .summary-row.total b{
+  background:linear-gradient(120deg, var(--text-0), var(--teal) 130%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 22px color-mix(in srgb, var(--teal) 35%, transparent);
+}
+
+/* Cart line items, GST switch, discount stepper, coupon code chip —
+   same glass/glow language, still scoped to #quote only. */
+#quote .cart-item{border-bottom-color:var(--line-soft); transition:background .2s ease;}
+#quote .cart-item:hover{background:color-mix(in srgb, var(--violet) 4%, transparent);}
+#quote .ci-qty-btn,#quote .ci-remove{box-shadow:inset 0 1px 0 rgba(255,255,255,.05);}
+#quote .ci-qty-btn:hover{box-shadow:0 0 10px -2px color-mix(in srgb, var(--teal) 55%, transparent), inset 0 1px 0 rgba(255,255,255,.05);}
+#quote .gst-switch-track{box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
+#quote .gst-switch input:checked ~ .gst-switch-track{box-shadow:0 0 10px -2px color-mix(in srgb, var(--teal) 60%, transparent), inset 0 1px 0 rgba(255,255,255,.04);}
+#quote .unit-toggle-btn.active{text-shadow:0 0 12px color-mix(in srgb, var(--violet) 40%, transparent);}
+#quote .summary-input:focus{box-shadow:0 0 10px -2px color-mix(in srgb, var(--teal) 55%, transparent);}
+#quote .oc-offer-code{background:var(--surface-1);}
+
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .brand-fields-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
@@ -2083,8 +2264,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-154" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-154" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-155" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-155" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2518,8 +2699,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-154" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-154" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-155" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-155" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2684,7 +2865,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-154"></script>
-<script src="assets/app.js?v=20260811-154"></script>
+<script src="assets/creative-data.js?v=20260811-155"></script>
+<script src="assets/app.js?v=20260811-155"></script>
 </body>
 </html>
