@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-146" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-146" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-146" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-146" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-146" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-146" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-146" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-146" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-146" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-146" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-146" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-146" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-148" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-148" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-148" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-148" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-148" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-148" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-148" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-148" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-148" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-148" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-148" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-148" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1597,83 +1597,84 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
   mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
 }
-/* ---- Scattered notes: each card sits at a slight, permanent tilt
-   like a candid photo/note wall, echoing the same floating-and-tilted
-   language the Services & Packages deck already uses elsewhere on
-   this page (so it feels consistent with the site rather than another
-   unrelated pattern) — a genuinely different read from the previous
-   uniform bento grid. Cards straighten, lift, and brighten on hover.
-   Staggered reveal-on-scroll fade-in; each card's resting tilt is set
-   per nth-child so the scatter is deliberate, not randomized on every
-   load. */
-.testi-scatter{
-  position:relative; z-index:1; margin-top:20px;
-  display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:30px 26px;
+/* ---- Chat-message wall: each testimonial as a real speech bubble
+   (avatar+name to the side, an asymmetric corner standing in for the
+   tail) instead of a flat card — a livelier, more "conversation
+   overheard" feel than a grid of quote cards. Scattered vertical
+   offsets + a gentle permanent tilt per bubble, and each bubble
+   continuously floats on its own slow, staggered cycle so the wall
+   never sits still — the "animated" part of the ask, layered on top
+   of the reveal-on-scroll fade-in the rest of the page already uses. */
+.testi-chat{
+  position:relative; z-index:1; margin-top:28px;
+  display:flex; flex-wrap:wrap; justify-content:center; gap:34px 24px;
 }
-.testi-scatter-item{--tilt:0deg; --lift:0px;}
-.testi-scatter-item:nth-child(1){--tilt:-2.5deg; --lift:10px;}
-.testi-scatter-item:nth-child(2){--tilt:1.8deg; --lift:-6px;}
-.testi-scatter-item:nth-child(3){--tilt:-1.2deg; --lift:14px;}
-.testi-scatter-item:nth-child(4){--tilt:2.6deg; --lift:-2px;}
-.testi-scatter-item:nth-child(5){--tilt:-2.2deg; --lift:8px;}
-.testi-scatter-item:nth-child(6){--tilt:1.4deg; --lift:-10px;}
-/* Same crystal-glass language as .pkg-card in Services & Packages
-   (frosted diagonal sheen, 60%-white border, soft layered shadow) so
-   this section still reads as one system with the rest of the page. */
-.testi-scatter-card{
-  position:relative; width:300px; padding:26px 26px 22px; border-radius:calc(var(--radius) + 6px);
-  display:flex; flex-direction:column; min-height:210px;
+.testi-chat-item{
+  --tilt:0deg; --shift:0px; --float-delay:0s;
+  display:flex; align-items:flex-end; gap:10px; max-width:300px;
+  transform:translateY(var(--shift));
+}
+.testi-chat-item:nth-child(1){--tilt:-1.6deg; --shift:6px; --float-delay:0s;}
+.testi-chat-item:nth-child(2){--tilt:1.2deg; --shift:-14px; --float-delay:.7s;}
+.testi-chat-item:nth-child(3){--tilt:-.8deg; --shift:16px; --float-delay:1.4s;}
+.testi-chat-item:nth-child(4){--tilt:1.6deg; --shift:-6px; --float-delay:2.1s;}
+.testi-chat-item:nth-child(5){--tilt:-1.4deg; --shift:10px; --float-delay:2.8s;}
+.testi-chat-item:nth-child(6){--tilt:1deg; --shift:-10px; --float-delay:3.5s;}
+@media (max-width:720px){.testi-chat-item{--shift:0px !important;}}
+.testi-chat-who{display:flex; flex-direction:column; align-items:center; gap:5px; flex:0 0 auto; padding-bottom:6px;}
+.testi-chat-avatar{
+  width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.24); color:#eef0f4; font-weight:600; font-size:13px;
+}
+.testi-chat-name{font-size:10.5px; color:var(--text-2); white-space:nowrap;}
+/* Same crystal-glass surface as everywhere else on the page, shaped
+   into a bubble via an asymmetric border-radius (the sharp lower-left
+   corner reads as the tail, pointing back toward the avatar) instead
+   of a separate pseudo-element triangle. */
+.testi-chat-bubble{
+  position:relative; padding:16px 19px 15px; border-radius:20px 20px 20px 5px;
   background:
     linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.015) 55%),
     color-mix(in srgb, var(--surface-1) 58%, transparent);
   backdrop-filter:blur(16px) saturate(1.35); -webkit-backdrop-filter:blur(16px) saturate(1.35);
-  border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 20px 42px -26px rgba(139,124,246,.18), 0 12px 28px -16px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
-  opacity:0; transform:translateY(var(--lift)) rotate(0deg) scale(.97);
-  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 18px 38px -24px rgba(139,124,246,.2), 0 10px 24px -14px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
+  opacity:0; transform:rotate(0deg) scale(.96);
+  transition:transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s ease, border-color .28s ease;
+  animation:testiChatFloat 5.5s ease-in-out infinite;
+  animation-delay:var(--float-delay);
+  animation-play-state:paused;
 }
-.testi-stage.revealed .testi-scatter-card{
-  opacity:1; transform:translateY(var(--lift)) rotate(var(--tilt)) scale(1);
-  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
+.testi-stage.revealed .testi-chat-bubble{
+  opacity:1; transform:rotate(var(--tilt)) scale(1);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), box-shadow .28s ease, border-color .28s ease;
+  animation-play-state:running;
 }
-.testi-scatter-item:nth-child(1) .testi-scatter-card{transition-delay:0s;}
-.testi-scatter-item:nth-child(2) .testi-scatter-card{transition-delay:.08s;}
-.testi-scatter-item:nth-child(3) .testi-scatter-card{transition-delay:.16s;}
-.testi-scatter-item:nth-child(4) .testi-scatter-card{transition-delay:.24s;}
-.testi-scatter-item:nth-child(5) .testi-scatter-card{transition-delay:.32s;}
-.testi-scatter-item:nth-child(6) .testi-scatter-card{transition-delay:.4s;}
+.testi-chat-item:nth-child(1) .testi-chat-bubble{transition-delay:0s;}
+.testi-chat-item:nth-child(2) .testi-chat-bubble{transition-delay:.08s;}
+.testi-chat-item:nth-child(3) .testi-chat-bubble{transition-delay:.16s;}
+.testi-chat-item:nth-child(4) .testi-chat-bubble{transition-delay:.24s;}
+.testi-chat-item:nth-child(5) .testi-chat-bubble{transition-delay:.32s;}
+.testi-chat-item:nth-child(6) .testi-chat-bubble{transition-delay:.4s;}
+@keyframes testiChatFloat{0%,100%{translate:0 0;}50%{translate:0 -7px;}}
 /* Scoped under .testi-stage.revealed so this out-specifies the reveal
-   rule above (which also sets its own resting transform) — otherwise
-   the reveal rule's higher selector specificity would silently win
-   over a plain .testi-scatter-card:hover and the hover state would
-   never show (caught the same bug in the previous bento-grid pass). */
-.testi-stage.revealed .testi-scatter-card:hover, .testi-scatter-card:hover{
-  transform:translateY(calc(var(--lift) - 8px)) rotate(0deg) scale(1.03);
-  z-index:5;
+   rule above (which also sets its own resting transform) — the same
+   specificity bug caught in the two earlier layout passes. Pausing
+   the float on hover keeps the bubble still while it's being read. */
+.testi-stage.revealed .testi-chat-bubble:hover, .testi-chat-bubble:hover{
+  transform:rotate(0deg) scale(1.04); z-index:5; animation-play-state:paused;
   border-color:rgba(255,255,255,.85);
-  box-shadow:0 30px 58px -24px rgba(139,124,246,.28), 0 16px 36px -18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
+  box-shadow:0 26px 48px -22px rgba(139,124,246,.3), 0 14px 30px -16px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
 }
 @media (prefers-reduced-motion: reduce){
-  .testi-scatter-card{opacity:1; transform:none; transition:box-shadow .3s ease, border-color .3s ease;}
-  .testi-stage.revealed .testi-scatter-card:hover, .testi-scatter-card:hover{transform:none;}
+  .testi-chat-bubble{opacity:1; transform:none; animation:none; transition:box-shadow .3s ease, border-color .3s ease;}
+  .testi-stage.revealed .testi-chat-bubble:hover, .testi-chat-bubble:hover{transform:none;}
 }
-@media (max-width:720px){
-  .testi-scatter-item{--tilt:0deg !important; --lift:0px !important;}
-  .testi-scatter-card{width:min(340px, 84vw);}
-}
-.testi-scatter-quote-mark{display:block; width:20px; height:15px; margin-bottom:12px; color:var(--violet); opacity:.65; flex:0 0 auto;}
-.testi-scatter-quote{
-  font-size:14px; font-weight:500; line-height:1.55; letter-spacing:-.1px; color:#e9eaee; flex:1 1 auto; min-height:0;
+.testi-chat-quote{
+  font-size:13.5px; font-weight:500; line-height:1.5; letter-spacing:-.1px; color:#e9eaee;
   overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:4;
 }
-.testi-scatter-author{display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.12); flex:0 0 auto;}
-.testi-scatter-avatar{
-  width:30px; height:30px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#e9eaee; font-weight:600; font-size:12px;
-}
-.testi-scatter-author-text{display:flex; flex-direction:column; gap:0; font-size:12px; min-width:0;}
-.testi-scatter-author-text b{color:#f4f5f7; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.testi-scatter-author-text span{color:#9299a8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.testi-chat-role{display:block; margin-top:9px; font-size:10.5px; color:#9299a8;}
 
 
 /* ---------- FOOTER ----------
@@ -2124,8 +2125,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-148" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-148" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2502,76 +2503,77 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- Asymmetric bento grid: one big featured quote plus five
-         smaller notes in explicit grid-template-areas, not a uniform
-         row or a one-at-a-time carousel — a bolder, more visually
-         varied composition. Cards fade/scale in with a staggered
-         delay as the section scrolls into view (.testi-stage.revealed,
-         set by the shared reveal-on-scroll observer). Full-bleed
+    <!-- Chat-message wall: each testimonial as a real speech bubble
+         (avatar+name beside it, an asymmetric corner standing in for
+         the tail) with a permanent gentle tilt and a slow continuous
+         float, staggered per bubble — not a static grid of cards.
+         Fades/scales in as the section scrolls into view
+         (.testi-stage.revealed, set by the shared reveal-on-scroll
+         observer), then the float animation takes over. Full-bleed
          ambient wash + the same grid backdrop as Services & Packages
          behind it. Placeholder copy + names: swap in real client
          quotes before this goes live. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
-      <div class="testi-scatter">
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">R</span>
-              <span class="testi-scatter-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
-            </div>
+      <div class="testi-chat">
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">R</span>
+            <span class="testi-chat-name">Ritika</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
+            <span class="testi-chat-role">Ritika Sharma &middot; Founder, D2C Beauty Brand</span>
           </div>
         </div>
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">A</span>
-              <span class="testi-scatter-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
-            </div>
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">A</span>
+            <span class="testi-chat-name">Arjun</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run."</p>
+            <span class="testi-chat-role">Arjun Mehta &middot; Marketing Lead, Fashion &amp; Apparel</span>
           </div>
         </div>
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">S</span>
-              <span class="testi-scatter-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
-            </div>
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">S</span>
+            <span class="testi-chat-name">Sana</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
+            <span class="testi-chat-role">Sana Iqbal &middot; Growth Manager, Home &amp; Living</span>
           </div>
         </div>
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">K</span>
-              <span class="testi-scatter-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness</span></span>
-            </div>
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">K</span>
+            <span class="testi-chat-name">Kabir</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around."</p>
+            <span class="testi-chat-role">Kabir Nair &middot; Performance Marketer, Wellness</span>
           </div>
         </div>
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"Carousel ads from these guys keep beating what our last two agencies gave us."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">M</span>
-              <span class="testi-scatter-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery</span></span>
-            </div>
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">M</span>
+            <span class="testi-chat-name">Meera</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"Carousel ads from these guys keep beating what our last two agencies gave us."</p>
+            <span class="testi-chat-role">Meera Chawla &middot; Brand Manager, Jewellery</span>
           </div>
         </div>
-        <div class="testi-scatter-item">
-          <div class="testi-scatter-card">
-            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-scatter-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
-            <div class="testi-scatter-author">
-              <span class="testi-scatter-avatar">D</span>
-              <span class="testi-scatter-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
-            </div>
+        <div class="testi-chat-item">
+          <div class="testi-chat-who">
+            <span class="testi-chat-avatar">D</span>
+            <span class="testi-chat-name">Devansh</span>
+          </div>
+          <div class="testi-chat-bubble">
+            <p class="testi-chat-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
+            <span class="testi-chat-role">Devansh Rao &middot; Founder, Personal Care</span>
           </div>
         </div>
       </div>
@@ -2676,8 +2678,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-148" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-148" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2734,7 +2736,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </button>
 
   <div class="fasty-hint" id="fastyHint">
-    <span>Need help? 👋</span>
+    <span>Need help?</span>
     <button type="button" class="fasty-hint-close" id="fastyHintClose" aria-label="Dismiss">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
@@ -3030,10 +3032,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-146"></script>
-<script src="assets/app.js?v=20260811-146"></script>
+<script src="assets/creative-data.js?v=20260811-148"></script>
+<script src="assets/app.js?v=20260811-148"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-146"></script>
+<script type="module" src="assets/team.js?v=20260811-148"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
