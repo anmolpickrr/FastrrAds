@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-138" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-138" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-138" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-138" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-138" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-138" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-138" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-138" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-138" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-138" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-138" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-138" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-139" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-139" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-139" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-139" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-139" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-139" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-139" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-139" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-139" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-139" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-139" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-139" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1556,20 +1556,21 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    it — one soft top-down spotlight glow, one quiet oversized ghost
    word sitting behind the cards, and a small handful of gently
    tilted testimonial notes. Only two colors (violet/teal) carry the
-   glow throughout, same restraint as the rest of this redesign —
-   no per-card accent hues, no extra shapes beyond the one pin dot
-   per card. */
+   glow throughout, same restraint as the rest of this redesign. */
 .testi-stage{
   position:relative; isolation:isolate; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px);
 }
-/* No boxed panel behind the cards anymore — instead a soft vignette
-   wash that fades to nothing well before it reaches its own bounds
-   (a big inset bleed + radial fade), so there's no visible edge or
-   "shape" to read as a background panel, just enough dark depth
-   under the cards to keep them legible regardless of site theme. */
+/* Full-bleed ambient wash, same technique as .footer-cta::before:
+   sized to 100vw and centered independent of .wrap's max-width, and
+   bled well past the section's own top/bottom edges. A glow confined
+   to .wrap's own box (the earlier approach here and in the footer)
+   always read as a floating rectangle with a visible edge wherever
+   .wrap ended or the section started/stopped — this has no boundary
+   for the fade to be cut against, so it completes on its own. */
 .testi-stage::before{
-  content:''; position:absolute; inset:-90px; z-index:-2; pointer-events:none;
-  background:radial-gradient(ellipse 82% 88% at 50% 48%, #0a0b0f 0%, rgba(10,11,15,.82) 42%, transparent 76%);
+  content:''; position:absolute; top:-160px; bottom:-140px; left:50%; width:100vw; transform:translateX(-50%);
+  z-index:-2; pointer-events:none;
+  background:radial-gradient(ellipse 40% 62% at 50% 50%, color-mix(in srgb, var(--violet) 12%, transparent) 0%, color-mix(in srgb, var(--violet) 6%, transparent) 32%, color-mix(in srgb, var(--teal) 4%, transparent) 58%, transparent 92%);
 }
 /* Same faded grid-wall as .pkg-stage in the Services & Packages
    section (identical size/opacity/mask values) so the two sections
@@ -1584,75 +1585,61 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
   mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
 }
-/* A soft light that drifts across the wall on its own (initTestiSpotlight()
-   in app-v2.js sets --spot-x/--spot-y on a slow interval) — purely
-   ambient now that the cards themselves move, not something a click
-   redirects. */
-.testi-spotlight{
-  position:absolute; top:var(--spot-y,28%); left:var(--spot-x,50%); z-index:0;
-  width:clamp(280px,34vw,460px); height:clamp(280px,34vw,460px);
-  transform:translate(-50%,-50%); border-radius:50%;
-  background:radial-gradient(circle, rgba(139,124,246,.22), rgba(94,213,196,.09) 45%, transparent 72%);
-  filter:blur(22px); pointer-events:none; opacity:.7;
-  transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1);
+/* ---- Spotlight carousel: one large quote at a time, not a scrolling
+   row of many cards — a genuinely different structure from every
+   earlier pass at this section, and one that sidesteps per-card
+   alignment entirely since only one card is ever on screen. ---- */
+.testi-spot{position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:20px; margin-top:12px;}
+.testi-spot-nav{
+  flex:0 0 auto; width:40px; height:40px; border-radius:50%; border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.04); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s ease, border-color .2s ease, transform .2s ease;
 }
-@media (prefers-reduced-motion: reduce){.testi-spotlight{transition:none;}}
-/* Single continuous row (not two), and a quieter palette than the
-   earlier version — one neutral glass surface throughout, no per-card
-   accent-color cycling, no colored glow lines. The only color left is
-   a single muted violet on the quote mark. Content is duplicated once
-   so the loop point is invisible; a left/right mask fades cards in
-   and out at the section's own edges. Hovering pauses the row so a
-   quote can actually be read. */
-.testi-marquee{
-  position:relative; z-index:1; margin-top:8px;
-  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-}
-.testi-row{display:flex; gap:20px; width:max-content; animation:testiScrollLeft 72s linear infinite; will-change:transform;}
-.testi-row:hover{animation-play-state:paused;}
-@keyframes testiScrollLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-@media (prefers-reduced-motion: reduce){.testi-row{animation:none;}}
-/* Same crystal-glass card language as .pkg-card in Services &
-   Packages (frosted diagonal sheen, 60%-white border, soft layered
-   shadow) so the two sections feel like one system. Fixed height +
-   flex column with the author row pushed to the bottom via
-   margin-top:auto — every card lines up its quote-mark at the same
-   top position and its author row at the same bottom position
-   regardless of how long any individual quote runs. */
-.testi-card{
-  position:relative; display:flex; flex-direction:column;
-  flex:0 0 auto; width:min(340px,80vw); height:246px; padding:26px 26px 22px; border-radius:calc(var(--radius) + 6px);
+.testi-spot-nav svg{width:16px; height:16px;}
+.testi-spot-nav:hover{background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.5); transform:scale(1.06);}
+.testi-spot-nav:active{transform:scale(.94);}
+@media (max-width:720px){.testi-spot-nav{display:none;}}
+/* Same crystal-glass language as .pkg-card in Services & Packages
+   (frosted diagonal sheen, 60%-white border, soft layered shadow) so
+   this section still reads as one system with the rest of the page.
+   A fixed min-height keeps the card (and everything below it) from
+   jumping as the quote length changes between slides. */
+.testi-spot-card{
+  position:relative; flex:1 1 auto; max-width:680px; min-height:224px; padding:44px 48px;
+  border-radius:calc(var(--radius) + 10px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
   background:
     linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.015) 55%),
-    color-mix(in srgb, var(--surface-1) 60%, transparent);
+    color-mix(in srgb, var(--surface-1) 58%, transparent);
   backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
   border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 24px 50px -28px rgba(139,124,246,.16), 0 14px 34px -18px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
-  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s cubic-bezier(.16,1,.3,1), border-color .3s ease, background .3s ease;
+  box-shadow:0 28px 56px -30px rgba(139,124,246,.2), 0 16px 36px -18px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
+  transition:opacity .26s ease, transform .26s ease;
 }
-.testi-card:hover{
-  transform:translateY(-6px);
-  border-color:rgba(255,255,255,.85);
-  background:
-    linear-gradient(160deg, rgba(255,255,255,.13), rgba(255,255,255,.02) 55%),
-    color-mix(in srgb, var(--surface-1) 68%, transparent);
-  box-shadow:0 30px 58px -26px rgba(139,124,246,.24), 0 16px 36px -18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
+.testi-spot-card.is-fading{opacity:0; transform:translateY(8px);}
+@media (prefers-reduced-motion: reduce){.testi-spot-card{transition:none;}}
+.testi-spot-quote-mark{display:block; width:26px; height:20px; margin-bottom:18px; color:var(--violet); opacity:.65;}
+.testi-spot-quote{font-size:clamp(17px,2vw,21px); font-weight:500; line-height:1.6; letter-spacing:-.1px; color:#eef0f4; max-width:52ch;}
+.testi-spot-author{display:flex; align-items:center; gap:12px; margin-top:26px;}
+.testi-spot-avatar{
+  width:38px; height:38px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#eef0f4; font-weight:600; font-size:14px;
 }
-.testi-quote-mark{display:block; width:20px; height:16px; margin-bottom:14px; color:var(--violet); opacity:.7; flex:0 0 auto;}
-.testi-quote{font-size:15px; font-weight:500; line-height:1.65; letter-spacing:-.1px; color:#e9eaee; overflow:hidden;}
-.testi-author{display:flex; align-items:center; gap:10px; margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,.12); flex:0 0 auto;}
-.testi-avatar{
-  width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#e9eaee; font-weight:600; font-size:13px;
+.testi-spot-author-text{display:flex; flex-direction:column; gap:1px; font-size:13px; text-align:left;}
+.testi-spot-author-text b{color:#f4f5f7; font-weight:600;}
+.testi-spot-author-text span{color:#9299a8;}
+/* Initial "dots" instead of plain circles — doubles as a jump-to-any
+   nav and a compact roster of who's speaking. */
+.testi-spot-dots{position:relative; z-index:1; display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-top:32px;}
+.testi-spot-dot{
+  width:36px; height:36px; border-radius:50%; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.04);
+  color:#9299a8; font-size:12px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color .25s ease, background .25s ease, color .25s ease, transform .25s ease;
 }
-.testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px; min-width:0;}
-.testi-author-text b{color:#f4f5f7; font-weight:600;}
-/* Single line, truncated with an ellipsis if it runs long — keeps
-   every author row exactly one line tall so the avatar (vertically
-   centered within the row) lands at the same height on every card,
-   regardless of how long any individual role label is. */
-.testi-author-text span{color:#9299a8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.testi-spot-dot:hover{border-color:rgba(255,255,255,.4); transform:translateY(-2px);}
+.testi-spot-dot.active{border-color:var(--violet); background:color-mix(in srgb, var(--violet) 20%, transparent); color:#fff;}
 
 
 /* ---------- FOOTER ----------
@@ -1814,7 +1801,7 @@ footer{padding:64px 0 0; margin-top:40px;}
    button still feels alive as a "close" control. */
 @property --fasty-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 .fasty-toggle{
-  position:relative; width:50px; height:50px; border-radius:50%; border:none; cursor:pointer;
+  position:relative; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
   display:flex; align-items:center; justify-content:center; color:#fff; overflow:visible;
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.6), transparent 42%),
@@ -1845,7 +1832,7 @@ footer{padding:64px 0 0; margin-top:40px;}
    actual expression, not just a static glyph — and still fades away
    into the close-X when the panel opens. */
 .fasty-face{
-  width:30px; height:30px; position:absolute; z-index:2; top:50%; left:50%;
+  width:32px; height:32px; position:absolute; z-index:2; top:50%; left:50%;
   display:flex; align-items:center; justify-content:center;
   transform:translate(-50%,-50%); transition:opacity .2s ease, transform .2s ease;
   animation:fastyLook 6.5s ease-in-out infinite;
@@ -1865,33 +1852,43 @@ footer{padding:64px 0 0; margin-top:40px;}
 /* Glowing white, softly. transform-box:fill-box lets each bar/path
    scale or fade around its own center instead of the SVG viewport's
    origin. */
-.fasty-face-svg{color:#fff; filter:drop-shadow(0 0 3px rgba(255,255,255,.6)) drop-shadow(0 0 1px rgba(255,255,255,.85));}
+.fasty-face-svg{color:#fff; filter:drop-shadow(0 0 3px rgba(255,255,255,.55)) drop-shadow(0 0 1px rgba(255,255,255,.8));}
 .fasty-eye-bar{transform-box:fill-box; transform-origin:center; animation:fastyBlink 3.6s ease-in-out infinite;}
 .fasty-eye-bar-2{animation-delay:.12s;}
 @keyframes fastyBlink{0%,34%,38%,100%{transform:scaleY(1);}36%{transform:scaleY(.18);}}
-/* Mostly a neutral flat mouth, curving into a brief smile every ~9s —
-   the crossfade (not a hard swap) between the two paths is what makes
-   the expression change read as natural rather than a glitch. */
-.fasty-mouth-neutral{transform-box:fill-box; transform-origin:center; animation:fastyMouthNeutral 9s ease-in-out infinite;}
-.fasty-mouth-smile{opacity:0; transform-box:fill-box; transform-origin:center; animation:fastyMouthSmile 9s ease-in-out infinite;}
-@keyframes fastyMouthNeutral{0%,74%,100%{opacity:1;}82%,92%{opacity:0;}}
-@keyframes fastyMouthSmile{0%,74%,100%{opacity:0;}82%,92%{opacity:1;}}
+/* The resting mouth is a soft relaxed curve, not a dead flat line, so
+   even the "neutral" state already reads as friendly rather than
+   static. On top of that a fuller smile pops in periodically with a
+   bouncy overshoot ease (not a flat crossfade), and the resting curve
+   itself breathes very slightly the whole time — between the
+   breathing, the bounce, and a duration that doesn't line up evenly
+   with the blink cycle, the expression never repeats in an obviously
+   mechanical way. */
+.fasty-mouth-neutral{
+  transform-box:fill-box; transform-origin:center;
+  animation:fastyMouthNeutral 11s ease-in-out infinite, fastyMouthBreathe 4.2s ease-in-out infinite;
+}
+.fasty-mouth-smile{
+  opacity:0; transform-box:fill-box; transform-origin:center;
+  animation:fastyMouthSmile 11s cubic-bezier(.34,1.56,.64,1) infinite;
+}
+@keyframes fastyMouthNeutral{0%,70%,100%{opacity:1;}80%,90%{opacity:0;}}
+@keyframes fastyMouthSmile{0%,70%,100%{opacity:0;}80%,90%{opacity:1;}}
+@keyframes fastyMouthBreathe{0%,100%{transform:scaleX(1);}50%{transform:scaleX(1.05);}}
 @media (prefers-reduced-motion: reduce){.fasty-eye-bar, .fasty-mouth-neutral, .fasty-mouth-smile{animation:none;}}
-/* A gentle continuous particle burst off the top of the ball — small
-   dots rising, drifting sideways, and fading, looping on staggered
-   delays so it never looks perfectly repeating. Runs all the time
-   (not just on hover) for the "real, moving" feel; hover just speeds
-   the loop up slightly via a shorter duration. */
+/* A gentle continuous particle burst off the top of the ball — two
+   small dots rising, drifting sideways, and fading (down from four,
+   which read as too busy against the now-cleaner face). Runs all the
+   time (not just on hover) for the "real, moving" feel; hover just
+   speeds the loop up slightly via a shorter duration. */
 .fasty-sparkle{
   position:absolute; top:30%; width:3px; height:3px; border-radius:50%;
   background:radial-gradient(circle, #fff, var(--fasty-c2)); opacity:0; pointer-events:none;
   box-shadow:0 0 4px 1px color-mix(in srgb, var(--fasty-c2) 70%, transparent);
   animation:fastyBurst 3.6s ease-in infinite;
 }
-.fasty-sparkle.s1{left:30%; animation-delay:0s; --dx:-8px;}
-.fasty-sparkle.s2{left:50%; width:2px; height:2px; animation-delay:.9s; --dx:4px;}
-.fasty-sparkle.s3{left:62%; animation-delay:1.8s; --dx:10px;}
-.fasty-sparkle.s4{left:42%; width:2px; height:2px; animation-delay:2.6s; --dx:-3px;}
+.fasty-sparkle.s1{left:28%; animation-delay:0s; --dx:-8px;}
+.fasty-sparkle.s3{left:66%; width:2px; height:2px; animation-delay:1.8s; --dx:8px;}
 @keyframes fastyBurst{
   0%{opacity:0; transform:translate(0,0) scale(.5);}
   12%{opacity:1;}
@@ -2093,8 +2090,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-138" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-138" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-139" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-139" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2457,117 +2454,34 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- A soft dark vignette wash regardless of site theme, no boxed
-         panel edge — one quiet ghost word behind the cards, an
-         ambient light drifting on its own, and 6 quiet glass
-         testimonial notes in a single row that scrolls continuously
-         left (content duplicated once for a seamless loop; hover to
-         pause). Placeholder copy + names: swap in real client quotes
-         before this goes live. -->
+    <!-- One large quote at a time in a crystal-glass card (rendered
+         by initTestiSpotlight() in app-v2.js from the TESTIMONIALS
+         array), not a scrolling row of many cards — prev/next arrows
+         plus a row of clickable initial "dots" to jump to any one,
+         auto-advancing every 6s and pausing on hover/focus. Full-bleed
+         ambient wash + the same grid backdrop as Services & Packages
+         behind it. Placeholder copy + names: swap in real client
+         quotes before this goes live. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
-      <span class="testi-spotlight" id="testiSpotlight" aria-hidden="true"></span>
-      <div class="testi-marquee">
-        <div class="testi-row">
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">R</span>
-              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
-            </div>
-          </div>
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run, barely any back and forth needed."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">A</span>
-              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
-            </div>
-          </div>
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">S</span>
-              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
-            </div>
-          </div>
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around for a second draft."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">K</span>
-              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
-            </div>
-          </div>
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Carousel ads from these guys keep beating what our last two agencies gave us, and we're paying less per creative too."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">M</span>
-              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
-            </div>
-          </div>
-          <div class="testi-card">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">D</span>
-              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">R</span>
-              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run, barely any back and forth needed."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">A</span>
-              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">S</span>
-              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around for a second draft."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">K</span>
-              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Carousel ads from these guys keep beating what our last two agencies gave us, and we're paying less per creative too."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">M</span>
-              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
-            </div>
-          </div>
-          <div class="testi-card" aria-hidden="true">
-            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
-            <div class="testi-author">
-              <span class="testi-avatar">D</span>
-              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
-            </div>
+      <div class="testi-spot">
+        <button type="button" class="testi-spot-nav" id="testiPrev" aria-label="Previous testimonial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="testi-spot-card" id="testiSpotCard">
+          <svg class="testi-spot-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+          <p class="testi-spot-quote" id="testiSpotQuote"></p>
+          <div class="testi-spot-author">
+            <span class="testi-spot-avatar" id="testiSpotAvatar"></span>
+            <span class="testi-spot-author-text"><b id="testiSpotName"></b><span id="testiSpotRole"></span></span>
           </div>
         </div>
+        <button type="button" class="testi-spot-nav" id="testiNext" aria-label="Next testimonial">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
       </div>
-</div>
+      <div class="testi-spot-dots" id="testiSpotDots" role="tablist" aria-label="Testimonials"></div>
+    </div>
   </div>
 </section>
 
@@ -2645,8 +2559,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-138" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-138" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-139" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-139" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2918,8 +2832,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-138"></script>
-<script src="assets/app-v2.js?v=20260811-138"></script>
-<script type="module" src="assets/team-v2.js?v=20260811-138"></script>
+<script src="assets/creative-data.js?v=20260811-139"></script>
+<script src="assets/app-v2.js?v=20260811-139"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-139"></script>
 </body>
 </html>

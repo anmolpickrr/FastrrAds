@@ -3231,34 +3231,87 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   /* ----------------------------------------------------------
      TESTIMONIALS SPOTLIGHT
-     One soft light drifting on its own across the grid-wall stage —
-     purely ambient now that the cards themselves scroll continuously
-     in two rows (see .testi-marquee in master-v2.html); there's no
-     single stable card position left to focus on click, so this is
-     just a slow randomized idle drift, nothing more.
+     One large quote at a time in a crystal-glass card, auto-advancing
+     on an interval with a crossfade, plus prev/next arrows and a row
+     of clickable initial "dots" to jump straight to any testimonial —
+     replaces the earlier scrolling-marquee-of-many-cards layout with
+     a single focused read. Pauses on hover/focus and skips autoplay
+     entirely under prefers-reduced-motion (manual nav still works).
   ---------------------------------------------------------- */
+  const TESTIMONIALS = [
+    { initial: "R", name: "Ritika Sharma", role: "Founder, D2C Beauty Brand", quote: "Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions." },
+    { initial: "A", name: "Arjun Mehta", role: "Marketing Lead, Fashion & Apparel", quote: "We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run, barely any back and forth needed." },
+    { initial: "S", name: "Sana Iqbal", role: "Growth Manager, Home & Living", quote: "The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast." },
+    { initial: "K", name: "Kabir Nair", role: "Performance Marketer, Wellness & Supplements", quote: "Static creatives come back same day and they just work. No revision loop, no waiting around for a second draft." },
+    { initial: "M", name: "Meera Chawla", role: "Brand Manager, Jewellery & Accessories", quote: "Carousel ads from these guys keep beating what our last two agencies gave us, and we're paying less per creative too." },
+    { initial: "D", name: "Devansh Rao", role: "Founder, Personal Care", quote: "Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone." },
+  ];
+
   function initTestiSpotlight() {
     const stage = document.getElementById("testiStage");
-    if (!stage) return;
-    const spotlight = document.getElementById("testiSpotlight");
+    const card = document.getElementById("testiSpotCard");
+    const dotsWrap = document.getElementById("testiSpotDots");
+    if (!stage || !card || !dotsWrap) return;
 
-    function setSpot(xPct, yPct) {
-      spotlight.style.setProperty("--spot-x", xPct + "%");
-      spotlight.style.setProperty("--spot-y", yPct + "%");
+    const quoteEl = document.getElementById("testiSpotQuote");
+    const avatarEl = document.getElementById("testiSpotAvatar");
+    const nameEl = document.getElementById("testiSpotName");
+    const roleEl = document.getElementById("testiSpotRole");
+    const prevBtn = document.getElementById("testiPrev");
+    const nextBtn = document.getElementById("testiNext");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let idx = 0;
+    let timer = null;
+
+    dotsWrap.innerHTML = TESTIMONIALS.map(
+      (t, i) => `<button type="button" class="testi-spot-dot${i === 0 ? " active" : ""}" data-i="${i}" aria-label="${t.name}"><span>${t.initial}</span></button>`
+    ).join("");
+    const dots = Array.from(dotsWrap.querySelectorAll(".testi-spot-dot"));
+
+    function paint(i) {
+      const t = TESTIMONIALS[i];
+      quoteEl.textContent = `"${t.quote}"`;
+      avatarEl.textContent = t.initial;
+      nameEl.textContent = t.name;
+      roleEl.textContent = t.role;
+      dots.forEach((d, di) => d.classList.toggle("active", di === i));
     }
 
-    function idleDrift() {
-      const x = 22 + Math.random() * 56;
-      const y = 20 + Math.random() * 55;
-      setSpot(x, y);
-      setTimeout(idleDrift, 3800 + Math.random() * 1600);
+    function goTo(nextIdx) {
+      idx = (nextIdx + TESTIMONIALS.length) % TESTIMONIALS.length;
+      if (reduceMotion) {
+        paint(idx);
+        return;
+      }
+      card.classList.add("is-fading");
+      setTimeout(() => {
+        paint(idx);
+        card.classList.remove("is-fading");
+      }, 260);
     }
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setSpot(50, 30);
-    } else {
-      idleDrift();
+    function resetTimer() {
+      if (timer) clearInterval(timer);
+      if (reduceMotion) return;
+      timer = setInterval(() => goTo(idx + 1), 6000);
     }
+
+    dotsWrap.addEventListener("click", (e) => {
+      const btn = e.target.closest(".testi-spot-dot");
+      if (!btn) return;
+      goTo(Number(btn.dataset.i));
+      resetTimer();
+    });
+    if (prevBtn) prevBtn.addEventListener("click", () => { goTo(idx - 1); resetTimer(); });
+    if (nextBtn) nextBtn.addEventListener("click", () => { goTo(idx + 1); resetTimer(); });
+    stage.addEventListener("mouseenter", () => { if (timer) clearInterval(timer); });
+    stage.addEventListener("mouseleave", resetTimer);
+    stage.addEventListener("focusin", () => { if (timer) clearInterval(timer); });
+    stage.addEventListener("focusout", resetTimer);
+
+    paint(0);
+    resetTimer();
   }
 
   /* ----------------------------------------------------------
