@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-118" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-118" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-118" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-134" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-134" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-134" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-134" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-134" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-134" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-134" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-134" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-134" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-134" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-134" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-134" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -585,62 +585,140 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    same accent for its glow and reuses the exact panel content/IDs
    the section always had (svcName/tier-row/svc-glance/scope-panel),
    so none of the underlying rendering logic changed. */
-.pkg-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:16px;}
+/* The cards float directly on the page background now — no boxed
+   "stage" panel behind them — matching the reference video's open
+   feel. What reads as premium instead is per-card: a soft static
+   color-matched glow + shadow (box-shadow, so it isn't clipped by
+   the card's own overflow:hidden) and a quiet gradient ring, neither
+   of which move on their own — see the notes below on why the
+   ambient drift and spinning ring were both removed. */
+.pkg-stage{position:relative; z-index:1; margin-bottom:16px; min-height:520px; isolation:isolate;}
+/* A faint, edgeless grid behind the cards — masked to fade out well
+   before it reaches the stage's own bounds, so it reads as ambient
+   texture rather than a panel with a visible boundary (the "no
+   background rectangle" request from earlier still holds; this is
+   just a soft pattern, not a filled box). */
+.pkg-stage::before{
+  content:''; position:absolute; inset:-48px; z-index:-1; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
+  mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
+}
+/* Crystal card: a frosted glass surface (backdrop-filter blur, a
+   translucent tint rather than a flat opaque fill) with a diagonal
+   facet sheen and a slim gradient edge, the same "crystal" language
+   as the Fasty panel and testimonial cards — replacing the earlier
+   flat banner-style card, which read as too plain/blocky. */
 .pkg-card{
-  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:14px;
-  padding:26px 22px; border-radius:var(--radius); background:var(--surface-1); border:1px solid transparent;
-  text-align:left; cursor:pointer; color:inherit; overflow:hidden;
-  transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease;
+  position:absolute; left:var(--deck-x); top:var(--deck-y); z-index:1;
+  display:flex; flex-direction:column; align-items:flex-start; gap:13px;
+  width:234px; min-height:238px; padding:28px 22px 24px; border-radius:calc(var(--radius) + 6px);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.015) 55%),
+    color-mix(in srgb, var(--surface-1) 60%, transparent);
+  backdrop-filter:blur(18px) saturate(1.4);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.6);
+  text-align:left; cursor:grab; color:inherit; overflow:hidden; touch-action:none; user-select:none;
+  transform:translate(-50%,-50%) rotate(var(--deck-rot));
+  transition:box-shadow .35s ease, border-color .35s ease, left 1.1s cubic-bezier(.16,1,.3,1), top 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
+  transition-delay:var(--fan-delay,0s);
+  box-shadow:
+    0 24px 50px -28px color-mix(in srgb, var(--accent) 22%, transparent),
+    0 14px 34px -18px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.14);
 }
+/* Entrance choreography matching the reference video: the 4 cards
+   start bunched into one tight, slightly fanned "deck" near the
+   bottom (--deck-x/--deck-y/--deck-rot), then — once the section
+   scrolls into view (.pkg-stage.revealed, set by the shared
+   reveal-on-scroll observer) — each glides out to its own scattered
+   resting spot (--x/--y/--rot), staggered per card via --fan-delay,
+   and stays put once settled. No ongoing ambient drift or spinning
+   light afterwards — a single deliberate motion, then still, reads
+   calmer and more premium than a perpetually jittering layout. */
+.pkg-stage.revealed .pkg-card{left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));}
+@media (prefers-reduced-motion: reduce){
+  .pkg-card{transition:box-shadow .3s ease; left:var(--x); top:var(--y); transform:translate(-50%,-50%) rotate(var(--rot));}
+}
+/* Diagonal facet sheen only — a plain light catching one corner of
+   the glass, no accent-colored bloom mixed into it, so the card reads
+   as clear crystal rather than tinted. */
 .pkg-card::before{
-  content:''; position:absolute; inset:0; z-index:0; opacity:0; pointer-events:none;
-  background:radial-gradient(140px 140px at 26% -10%, var(--accent), transparent 72%);
-  transition:opacity .35s ease;
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(125deg, rgba(255,255,255,.14) 0%, transparent 30%, transparent 72%, rgba(255,255,255,.04) 100%);
+  opacity:.8; transition:opacity .35s ease;
 }
-/* A slim, always-on spinning gradient ring instead of a flat 1px
-   border — quiet at rest, brighter on hover, same masked-border
-   technique as the Fasty toggle/panel so the whole page's "glowing
-   outline" language reads as one system rather than two unrelated
-   effects. */
-.pkg-card::after{
-  content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
-  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.35; pointer-events:none; animation:pkgSpin 6s linear infinite;
-  transition:opacity .3s ease;
+.pkg-card:hover{z-index:3; border-color:rgba(255,255,255,.8); box-shadow:
+    0 28px 56px -26px color-mix(in srgb, var(--accent) 30%, transparent),
+    0 16px 38px -14px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.2);
 }
-@property --pkg-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
-@keyframes pkgSpin{to{--pkg-spin:360deg;}}
-@media (prefers-reduced-motion: reduce){.pkg-card::after{animation:none;}}
-.pkg-card:hover{transform:translateY(-4px); box-shadow:0 18px 36px -20px var(--accent), var(--shadow-sm);}
-.pkg-card:hover::before{opacity:.16;}
-.pkg-card:hover::after{opacity:.9;}
-.pkg-card:active{transform:translateY(-1px) scale(.99);}
+.pkg-card:hover::before{opacity:1;}
 .pkg-card:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);}
-/* A glowing gradient orb, not a flat-tinted box holding a thin
-   lineart glyph — bold, filled icon shapes (see the SVGs in markup)
-   sit on a radial-gradient badge with a soft color-matched glow
-   behind it, the same "orb" language the Fasty toggle uses. */
-.pkg-card-icon{
-  position:relative; z-index:1; width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--violet), var(--teal));
-  color:#0c0d10; box-shadow:0 8px 18px -6px var(--accent), 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+/* Persistent "picked" state — kept in sync with state.service by
+   renderServiceNav() so whichever card was last opened still reads
+   as selected after the modal closes. The accent ring here is a
+   state indicator, not decoration, so it's the one place color still
+   outlines the card. */
+.pkg-card.selected{z-index:2; border-color:transparent; box-shadow:0 0 0 2px var(--accent), 0 26px 50px -20px color-mix(in srgb, var(--accent) 45%, transparent);}
+/* While being dragged: lift above the others and swap the cursor —
+   position is then driven directly by pointer coordinates (see
+   initPkgDrag() in app-v2.js) instead of the --x/--y base position. */
+.pkg-card.dragging{z-index:50; cursor:grabbing; transition:none; box-shadow:0 30px 60px -18px color-mix(in srgb, var(--accent) 45%, transparent);}
+/* A plain minimal glyph, not a colored icon tile — keeps the card
+   reading as clean glass+line rather than a card with a decorated
+   badge stuck on it. The glow line beneath it is the one deliberate
+   neon touch: a slim gradient bar with a soft blurred bloom under it,
+   kept subtle (low opacity, gentle blur) rather than a bright strip. */
+.pkg-card-icon-plain{position:relative; z-index:1; width:26px; height:26px; flex:0 0 auto; color:var(--text-0);}
+.pkg-card-icon-plain svg{width:100%; height:100%;}
+.pkg-card-glowline{
+  position:relative; z-index:1; width:34px; height:2px; border-radius:2px; flex:0 0 auto;
+  background:linear-gradient(90deg, var(--violet), var(--teal));
+  opacity:.75; box-shadow:0 0 8px 1px color-mix(in srgb, var(--violet) 45%, transparent), 0 0 8px 1px color-mix(in srgb, var(--teal) 35%, transparent);
+  transition:width .3s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
 }
-.pkg-card-icon svg{width:22px; height:22px;}
-.pkg-card:hover .pkg-card-icon{transform:scale(1.1) rotate(-4deg); box-shadow:0 10px 24px -6px var(--accent), 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);}
+.pkg-card:hover .pkg-card-glowline{width:46px; opacity:1;}
+.pkg-card-badge{
+  position:absolute; top:19px; right:19px; z-index:1;
+  padding:4px 10px; border-radius:100px; font-size:10.5px; font-weight:700; letter-spacing:.01em;
+  color:var(--text-1); background:color-mix(in srgb, var(--surface-2) 65%, transparent);
+  border:1px solid var(--line-soft); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
+}
 .pkg-card-name{position:relative; z-index:1; font-family:var(--font-display); font-size:16.5px; font-weight:700; letter-spacing:-0.01em; color:var(--text-0);}
 .pkg-card-desc{position:relative; z-index:1; font-size:12.5px; line-height:1.55; color:var(--text-2); flex:1 1 auto;}
 .pkg-card-foot{
   position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; width:100%;
-  padding-top:14px; border-top:1px solid var(--line-soft);
+  padding-top:13px; border-top:1px solid var(--line-soft);
 }
 .pkg-card-price{font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--accent);}
-.pkg-card-arrow{width:15px; height:15px; color:var(--text-2); transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease;}
-.pkg-card:hover .pkg-card-arrow{transform:translateX(4px); color:var(--accent);}
-@media (max-width:900px){.pkg-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:520px){.pkg-grid{grid-template-columns:1fr;}}
+.pkg-card-arrow{
+  width:30px; height:30px; border-radius:50%; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid var(--line); color:var(--text-2);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease, border-color .25s ease, background .25s ease;
+}
+.pkg-card-arrow svg{width:13px; height:13px;}
+.pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg); color:var(--accent); border-color:var(--accent);}
+/* Base scattered layout for each card — a loose cloud, not a grid,
+   per the reference video (cards fanned out and independently
+   tilted, rather than aligned columns). */
+.pkg-card[data-svc="reels"]{--x:16%; --y:34%; --rot:-6deg; --deck-x:44%; --deck-y:82%; --deck-rot:-11deg; --fan-delay:0s;}
+.pkg-card[data-svc="catalogue"]{--x:40%; --y:64%; --rot:4deg; --deck-x:49%; --deck-y:85%; --deck-rot:-4deg; --fan-delay:.12s;}
+.pkg-card[data-svc="static"]{--x:64%; --y:30%; --rot:-3deg; --deck-x:54%; --deck-y:82%; --deck-rot:3deg; --fan-delay:.24s;}
+.pkg-card[data-svc="carousel"]{--x:86%; --y:60%; --rot:7deg; --deck-x:59%; --deck-y:85%; --deck-rot:10deg; --fan-delay:.36s;}
+/* Below the breakpoint dragging stops being practical (no hover, one
+   thumb), so the stage folds into a plain static stacked list —
+   same cards, same click-to-open behaviour, no floating/drag, no fan
+   entrance (they're already stacked as a list, nothing to fan out of). */
+@media (max-width:760px){
+  .pkg-stage{min-height:0; display:flex; flex-direction:column; gap:14px; padding:18px; background:var(--surface-1); border-radius:var(--radius);}
+  .pkg-card, .pkg-stage.revealed .pkg-card{position:static; left:auto; top:auto; width:100%; transform:none; cursor:pointer; transition:box-shadow .3s ease;}
+}
 
 /* Modal — flex-centered inside the backdrop rather than centered via
    its own transform, so .pkg-modal's transform stays entirely free
@@ -657,21 +735,19 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
   overflow:hidden; transform-origin:center center;
 }
-/* Same slim spinning gradient ring the package cards use, carried
-   over into the detail view they morph into — the accent keeps
-   traveling around the modal's edge instead of settling into a flat
-   static border once it opens. */
+/* Same quiet gradient ring the package cards use, carried over into
+   the detail view they morph into — held still, not spinning, for a
+   calmer, more premium edge. */
 .pkg-modal::after{
   content:''; position:absolute; inset:0; z-index:2; border-radius:inherit; padding:1.5px;
-  background:conic-gradient(from var(--pkg-spin), var(--violet), transparent 30%, var(--teal) 55%, transparent 85%);
+  background:linear-gradient(135deg, var(--violet), transparent 45%, var(--teal) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
-  opacity:.8; pointer-events:none; animation:pkgSpin 8s linear infinite;
+  opacity:.55; pointer-events:none;
 }
-@media (prefers-reduced-motion: reduce){.pkg-modal::after{animation:none;}}
 .pkg-modal-glow{
   position:absolute; top:-70px; right:-70px; width:260px; height:260px; border-radius:50%; filter:blur(70px);
-  background:var(--accent, var(--violet)); opacity:.2; pointer-events:none; z-index:0;
+  background:var(--accent, var(--violet)); opacity:.14; pointer-events:none; z-index:0;
 }
 .pkg-modal-close{
   position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%;
@@ -682,7 +758,25 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .pkg-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
 .pkg-modal-close:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent, var(--violet)) 40%, transparent);}
 .pkg-modal-scroll{position:relative; z-index:1; max-height:min(84vh, 820px); overflow-y:auto;}
+/* For AI Reels, the 4 tier chips have different amounts of included/
+   excluded copy, so the panel's natural content height differs per
+   tier — left alone, switching tiers would resize (and, since the
+   modal is flex-centered in its backdrop, reposition) the whole
+   modal. openPkgModal() pre-measures all 4 tiers' content once at
+   open time and locks the scroll region to the tallest one via this
+   class + --modal-locked-h, so the modal's footprint never moves
+   while switching tiers, only its content updates. */
+.pkg-modal-scroll.height-locked{height:var(--modal-locked-h, auto);}
 @media (max-width:640px){.pkg-modal{width:100%;}}
+/* body.overflow:hidden alone doesn't actually lock scrolling — the
+   <html> element is the real scrolling context in standards mode, so
+   without this the page behind the modal could still shift (e.g. a
+   tier-chip click changing content height elsewhere on the page)
+   even while the modal itself stayed visually still, since the
+   modal's own position:fixed backdrop never reflects that drift.
+   scrollbar-gutter keeps the content from shifting sideways by the
+   width of the now-hidden scrollbar. */
+html.pkg-modal-open{overflow:hidden; scrollbar-gutter:stable;}
 body.pkg-modal-open{overflow:hidden;}
 
 .svc-panel-inner{padding:26px clamp(20px,4vw,40px) 30px;}
@@ -1466,47 +1560,80 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
    no per-card accent hues, no extra shapes beyond the one pin dot
    per card. */
 .testi-stage{
-  position:relative; overflow:hidden; border-radius:var(--radius);
-  background:#08090c; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px);
+  position:relative; isolation:isolate; padding:clamp(56px,8vw,88px) clamp(20px,4vw,48px);
 }
+/* No boxed panel behind the cards anymore — instead a soft vignette
+   wash that fades to nothing well before it reaches its own bounds
+   (a big inset bleed + radial fade), so there's no visible edge or
+   "shape" to read as a background panel, just enough dark depth
+   under the cards to keep them legible regardless of site theme. */
+.testi-stage::before{
+  content:''; position:absolute; inset:-90px; z-index:-2; pointer-events:none;
+  background:radial-gradient(ellipse 82% 88% at 50% 48%, #0a0b0f 0%, rgba(10,11,15,.82) 42%, transparent 76%);
+}
+/* A faded grid-wall backdrop: a fine hairline grid, masked so it
+   fades out toward the stage edges instead of tiling flat all the
+   way across — reads as ambient texture, not a bounded panel. */
+.testi-gridwall{
+  position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size:42px 42px;
+  -webkit-mask-image:radial-gradient(ellipse 78% 78% at 50% 42%, #000 38%, transparent 92%);
+  mask-image:radial-gradient(ellipse 78% 78% at 50% 42%, #000 38%, transparent 92%);
+}
+/* A soft light that drifts across the wall on its own (initTestiSpotlight()
+   in app-v2.js sets --spot-x/--spot-y on a slow interval) — purely
+   ambient now that the cards themselves move, not something a click
+   redirects. */
 .testi-spotlight{
-  position:absolute; top:-20%; left:50%; width:70%; height:70%; transform:translateX(-50%);
-  background:radial-gradient(ellipse at top, rgba(139,124,246,.28), transparent 65%);
-  pointer-events:none; z-index:0;
+  position:absolute; top:var(--spot-y,28%); left:var(--spot-x,50%); z-index:0;
+  width:clamp(280px,34vw,460px); height:clamp(280px,34vw,460px);
+  transform:translate(-50%,-50%); border-radius:50%;
+  background:radial-gradient(circle, rgba(139,124,246,.22), rgba(94,213,196,.09) 45%, transparent 72%);
+  filter:blur(22px); pointer-events:none; opacity:.7;
+  transition:left 2.4s cubic-bezier(.4,0,.2,1), top 2.4s cubic-bezier(.4,0,.2,1);
 }
-.testi-ghost{
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-family:var(--font-display); font-weight:800; font-size:clamp(80px,14vw,180px); letter-spacing:-0.03em;
-  color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.14); white-space:nowrap; pointer-events:none; z-index:0;
+@media (prefers-reduced-motion: reduce){.testi-spotlight{transition:none;}}
+/* Single continuous row (not two), and a quieter palette than the
+   earlier version — one neutral glass surface throughout, no per-card
+   accent-color cycling, no colored glow lines. The only color left is
+   a single muted violet on the quote mark. Content is duplicated once
+   so the loop point is invisible; a left/right mask fades cards in
+   and out at the section's own edges. Hovering pauses the row so a
+   quote can actually be read. */
+.testi-marquee{
+  position:relative; z-index:1; margin-top:8px;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-.testi-grid{position:relative; z-index:1; display:grid; grid-template-columns:repeat(3,1fr); gap:28px 22px;}
+.testi-row{display:flex; gap:18px; width:max-content; animation:testiScrollLeft 58s linear infinite;}
+.testi-row:hover{animation-play-state:paused;}
+@keyframes testiScrollLeft{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion: reduce){.testi-row{animation:none;}}
 .testi-card{
-  position:relative; transform:rotate(var(--tilt,0deg)); padding:26px 22px 22px; border-radius:14px;
-  background:#111319; border:1px solid rgba(255,255,255,.08); box-shadow:0 20px 40px -22px rgba(0,0,0,.7);
-  transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s ease, border-color .35s ease;
+  position:relative; flex:0 0 auto; width:min(340px,80vw); padding:26px 26px 22px; border-radius:14px;
+  background:color-mix(in srgb, var(--surface-1) 46%, transparent);
+  backdrop-filter:blur(14px) saturate(1.1); -webkit-backdrop-filter:blur(14px) saturate(1.1);
+  border:1px solid rgba(255,255,255,.5);
+  transition:transform .3s cubic-bezier(.16,1,.3,1), border-color .3s ease, background .3s ease;
 }
-.testi-card:hover{transform:rotate(0deg) translateY(-6px); border-color:color-mix(in srgb, var(--violet) 45%, rgba(255,255,255,.08)); box-shadow:0 26px 50px -20px rgba(139,124,246,.35);}
-.testi-pin{
-  position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:12px; height:12px; border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #fff, var(--violet) 60%, var(--teal) 130%);
-  box-shadow:0 0 10px 2px color-mix(in srgb, var(--violet) 55%, transparent);
+.testi-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,255,255,.8);
+  background:color-mix(in srgb, var(--surface-1) 60%, transparent);
 }
-.testi-quote{font-size:14px; line-height:1.65; color:#d7d9de;}
-.testi-author{display:flex; align-items:center; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(255,255,255,.08);}
+.testi-quote-mark{display:block; width:20px; height:16px; margin-bottom:14px; color:var(--violet); opacity:.7;}
+.testi-quote{font-size:15px; font-weight:500; line-height:1.65; letter-spacing:-.1px; color:#e9eaee;}
+.testi-author{display:flex; align-items:center; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.12);}
 .testi-avatar{
   width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#0c0d10; font-weight:700; font-size:13px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#e9eaee; font-weight:600; font-size:13px;
 }
-.testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px;}
+.testi-author-text{display:flex; flex-direction:column; gap:1px; font-size:12px; min-width:0;}
 .testi-author-text b{color:#f4f5f7; font-weight:600;}
-.testi-author-text span{color:#83899a;}
-@media (max-width:900px){.testi-grid{grid-template-columns:1fr 1fr;}}
-@media (max-width:640px){
-  .testi-grid{grid-template-columns:1fr; gap:22px;}
-  .testi-card{transform:none;}
-  .testi-card:hover{transform:translateY(-4px);}
-  .testi-ghost{font-size:22vw;}
-}
+.testi-author-text span{color:#9299a8;}
 
 
 /* ---------- FOOTER ----------
@@ -1525,32 +1652,102 @@ footer{padding:64px 0 0; margin-top:40px;}
    minimal text link underneath: an animated underline + arrow, not a
    filled pill. This is the calmest, least "componentized" this
    section can be while still reading as a deliberate closing moment. */
-.footer-cta{text-align:center; padding:0 20px; margin-bottom:56px;}
-.footer-cta .eyebrow{justify-content:center; margin-bottom:18px;}
+/* A calm closing stage — simplified after feedback that the previous
+   version had too many competing elements (corner labels, floating
+   mock cards, a dual-column copy block) and small "bokeh disc"
+   highlights whose fade radius was too tight for their size, so they
+   read as hard-edged circles rather than soft light. What's left:
+   one smooth, generously-sized glow wash (a gentle opacity breathe,
+   not position drift, so there's no motion to ever look clipped) and
+   a handful of quiet drifting particles. No real photography behind
+   it — nothing in the asset library is an appropriate generic
+   backdrop (every real shot here is either a specific person's face
+   or another brand's branded/text creative). */
+/* The glow is painted directly on .footer-cta's own background using
+   percentages of its own box (0–100%), the same technique the
+   testimonials vignette uses — not a separate inset/overflow-hidden
+   child layer. That combination kept producing a visible clip edge
+   (either the child's own inset boundary, or .footer-cta's box
+   clipping the child's bleed) no matter how the fade was tuned;
+   painting straight on the box removes the clip boundary entirely, so
+   there's nothing left for the gradient's fade to be cut against —
+   it just completes on its own, fully within the box, by design. */
+.footer-cta{
+  position:relative; text-align:center; padding:88px 20px 70px; margin-bottom:56px; isolation:isolate;
+  min-height:clamp(440px,52vh,560px); display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+/* The breathing opacity animates only this pseudo-element's own
+   background, not .footer-cta itself — animating opacity on the
+   section directly would also dim the headline/CTA text on every
+   pulse, which isn't the intent. */
+.footer-cta::before{
+  content:''; position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background:radial-gradient(ellipse 85% 80% at 50% 48%, color-mix(in srgb, var(--violet) 15%, transparent) 0%, color-mix(in srgb, var(--teal) 11%, transparent) 45%, transparent 78%);
+  animation:footerGlowBreathe 14s ease-in-out infinite;
+}
+@keyframes footerGlowBreathe{0%,100%{opacity:.85;}50%{opacity:1;}}
+@media (prefers-reduced-motion: reduce){.footer-cta::before{animation:none;}}
+.footer-cta-scene{position:absolute; inset:0; z-index:-1; pointer-events:none;}
+/* Drifting motes, not fixed twinkling dots — a slow fall-and-fade
+   (translateY + a little rotate) reads as gentle ambient life; two of
+   the five carry a warm amber tint matching the glow wash. */
+.footer-cta-particle{
+  position:absolute; width:3px; height:3px; border-radius:50%; background:#fff;
+  box-shadow:0 0 6px 1.5px rgba(255,255,255,.7); animation:footerDrift 7s ease-in-out infinite;
+}
+.footer-cta-particle.p1{top:16%; left:16%; animation-delay:0s;}
+.footer-cta-particle.p2{top:66%; left:24%; width:2px; height:2px; animation-delay:1.6s;}
+.footer-cta-particle.p3{top:26%; left:80%; animation-delay:3.2s;}
+.footer-cta-particle.p4{top:20%; left:52%; width:2px; height:2px; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:4.8s;}
+.footer-cta-particle.p5{top:70%; left:78%; background:#ffc98a; box-shadow:0 0 6px 1.5px rgba(255,201,138,.65); animation-delay:2.4s;}
+@keyframes footerDrift{
+  0%{opacity:0; transform:translateY(-8px) rotate(0deg) scale(.5);}
+  15%{opacity:1;}
+  85%{opacity:1;}
+  100%{opacity:0; transform:translateY(22px) rotate(50deg) scale(.8);}
+}
+@media (prefers-reduced-motion: reduce){.footer-cta-particle{animation:none; opacity:.5;}}
+/* A small pill badge above the headline, same crystal-glass surface
+   as the package cards — echoes the reference's "Founder member sale
+   special" tag instead of a plain inline eyebrow label. */
+.footer-cta-badge{
+  display:inline-flex; align-items:center; gap:6px; margin-bottom:22px; padding:7px 16px 7px 13px;
+  border-radius:100px; font-size:12px; font-weight:600; letter-spacing:.02em; color:var(--text-1);
+  background:color-mix(in srgb, var(--surface-1) 55%, transparent);
+  border:1px solid rgba(255,255,255,.6);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  box-shadow:0 10px 26px -16px var(--violet);
+}
+.footer-cta-badge svg{width:13px; height:13px; color:var(--violet); flex:0 0 auto;}
 .footer-cta h3{
-  font-size:clamp(28px,4.2vw,44px); font-weight:700; letter-spacing:-0.02em; line-height:1.15;
-  max-width:680px; margin:0 auto; color:var(--text-0);
+  position:relative; z-index:1;
+  font-size:clamp(34px,5.4vw,56px); font-weight:800; letter-spacing:-0.02em; line-height:1.12;
+  max-width:720px; margin:0 auto; color:var(--text-0);
 }
 .footer-cta h3 .accent{
   background:linear-gradient(100deg,var(--violet),var(--teal));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
+.footer-cta-sub{
+  position:relative; z-index:1; max-width:480px; margin:16px auto 0; font-size:15px; line-height:1.6; color:var(--text-2);
+}
+/* A filled crystal-glass pill, not a plain underline link — matches
+   the reference's rounded CTA button instead of a minimal text link. */
 .footer-cta-link{
-  position:relative; display:inline-flex; align-items:center; gap:8px; margin-top:30px;
-  font-size:15px; font-weight:600; color:var(--text-0);
-  background:none; border:none; padding:2px 0; cursor:pointer;
+  position:relative; z-index:1; display:inline-flex; align-items:center; gap:9px; margin-top:32px;
+  padding:14px 26px; border-radius:100px; font-size:15px; font-weight:700; color:var(--text-0);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.02) 60%),
+    color-mix(in srgb, var(--surface-1) 55%, transparent);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.75); cursor:pointer;
+  box-shadow:0 18px 40px -20px var(--violet), inset 0 1px 0 rgba(255,255,255,.2);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease, border-color .3s ease;
 }
-.footer-cta-link::after{
-  content:''; position:absolute; left:0; right:24px; bottom:-5px; height:1.5px;
-  background:linear-gradient(100deg,var(--violet),var(--teal)); transform:scaleX(0); transform-origin:left;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);
-}
-.footer-cta-link:hover::after{transform:scaleX(1);}
+.footer-cta-link:hover{transform:translateY(-2px); border-color:#fff; box-shadow:0 22px 46px -18px var(--violet), inset 0 1px 0 rgba(255,255,255,.28);}
 .footer-cta-link svg{width:16px; height:16px; transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
 .footer-cta-link:hover svg{transform:translateX(4px);}
-.footer-cta-link:focus-visible{outline:none;}
-.footer-cta-link:focus-visible::after{transform:scaleX(1);}
-
+.footer-cta-link:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 45%, transparent);}
 /* Minimal, compact close to the page — brand + tagline anchor the
    left, a plain horizontal link row sits on the right (not a labeled
    stacked column), and a thin divider hands off to a single-line
@@ -1568,7 +1765,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 .footer-bottom{padding:20px 0 28px; border-top:1px solid var(--line-soft);}
 .footer-bottom p{color:var(--text-2); font-size:12px; letter-spacing:.02em;}
 @media (max-width:640px){
-  .footer-cta::before{width:340px; height:200px;}
+  .footer-cta{padding:48px 20px 70px;}
   .footer-top{gap:20px; padding:4px 0 28px;}
   .footer-links{gap:20px;}
 }
@@ -1580,46 +1777,105 @@ footer{padding:64px 0 0; margin-top:40px;}
    the panel visually grows out of the button rather than appearing as
    an unrelated overlay. See initFasty() in app.js for the answer
    engine; this file only owns how it looks. */
-.fasty-widget{position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;}
-/* A glowing orb, not a flat filled circle — a slowly spinning
-   conic-gradient ring blurred behind the button (::before) reads as
-   a soft ambient glow rather than a hard-edged halo, a gentle pulse
-   breathes it in and out, and three tiny sparkle dots drift in and
-   out around the rim. All of it dims (not vanishes) once the panel
-   is open, so the button still feels alive as a "close" control. */
+.fasty-widget{
+  --fasty-c1:#8B7CFA; --fasty-c2:#4F8DFF;
+  position:fixed; right:max(20px, env(safe-area-inset-right)); bottom:max(20px, env(safe-area-inset-bottom)); z-index:500;
+}
+/* A glass sphere with a glowing "LED-matrix" face patch embedded in
+   it, matching the Behance showreel reference — not a flat 2D ring.
+   The ball itself is layered radial-gradients (a bright highlight
+   top-left, a darker rim bottom-right, inset shadows for the glass
+   edge) rather than a single flat fill, so it reads as a lit,
+   semi-translucent orb. The face is its own small rounded-rect glow
+   (.fasty-face) with a fine dot-grid overlay standing in for the
+   reference's pixel/LED texture, holding the two pause-bar "eyes".
+   A handful of particles burst gently upward off the top of the ball
+   on a continuous loop (not just on hover) for the "real animation"
+   feel the reference has, intensifying a little on hover. Everything
+   dims (not vanishes) once the panel is open, so the button still
+   feels alive as a "close" control. */
 @property --fasty-spin{syntax:'<angle>'; inherits:false; initial-value:0deg;}
 .fasty-toggle{
   position:relative; width:54px; height:54px; border-radius:50%; border:none; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; color:#fff;
-  background:radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--violet) 55%, #fff), var(--violet) 55%, var(--teal) 135%);
-  box-shadow:0 8px 22px -8px var(--violet), 0 2px 8px rgba(0,0,0,.25);
+  display:flex; align-items:center; justify-content:center; color:#fff; overflow:visible;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.4), transparent 40%),
+    radial-gradient(circle at 68% 80%, rgba(0,0,0,.4), transparent 58%),
+    radial-gradient(circle at 50% 48%, #211f2c, #08080c 88%);
+  box-shadow:
+    inset 0 -6px 10px rgba(0,0,0,.5), inset 0 4px 7px rgba(255,255,255,.14),
+    0 8px 22px -8px var(--fasty-c1), 0 2px 8px rgba(0,0,0,.4);
   transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
 }
 .fasty-toggle::before{
-  content:''; position:absolute; inset:-7px; border-radius:50%; z-index:-1;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet));
-  filter:blur(9px); opacity:.55;
+  content:''; position:absolute; inset:-13px; border-radius:50%; z-index:-1;
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1));
+  filter:blur(15px); opacity:.55;
   animation:fastySpin 7s linear infinite, fastyPulse 3.4s ease-in-out infinite;
   transition:opacity .3s ease;
 }
 .fasty-widget.open .fasty-toggle::before{opacity:.22; animation-play-state:paused;}
 @keyframes fastySpin{to{--fasty-spin:360deg;}}
-@keyframes fastyPulse{0%,100%{filter:blur(9px);}50%{filter:blur(13px);}}
+@keyframes fastyPulse{0%,100%{filter:blur(11px);}50%{filter:blur(15px);}}
 @media (prefers-reduced-motion: reduce){.fasty-toggle::before{animation:none;}}
-.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:0 12px 28px -8px var(--violet), 0 2px 6px rgba(0,0,0,.28);}
+.fasty-toggle:hover{transform:translateY(-2px) scale(1.04); box-shadow:inset 0 -6px 10px rgba(0,0,0,.5), inset 0 4px 7px rgba(255,255,255,.14), 0 12px 28px -8px var(--fasty-c1), 0 2px 6px rgba(0,0,0,.4);}
 .fasty-toggle:active{transform:scale(.96);}
-.fasty-toggle-icon{width:19px; height:19px; position:absolute; transition:opacity .2s ease, transform .2s ease;}
-.fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
-.fasty-widget.open .fasty-icon-chat{opacity:0; transform:rotate(45deg) scale(.6);}
-.fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
-.fasty-sparkle{
-  position:absolute; width:3px; height:3px; border-radius:50%; background:#fff; opacity:0; pointer-events:none;
-  box-shadow:0 0 4px 1px rgba(255,255,255,.8); animation:fastySparkle 3.6s ease-in-out infinite;
+/* No separate face "panel" anymore — the two glowing eye bars sit
+   directly on the dark glass sphere, matching the reference exactly
+   (no rectangle, no border, no texture, nothing reading as a distinct
+   shape besides the eyes themselves). A soft white drop-shadow gives
+   them their own gentle glow. The whole face container drifts a
+   little side to side ("looking around") on top of the existing
+   blink, so it reads as an actual expression, not just a static
+   glyph — and still fades away into the close-X when the panel opens. */
+.fasty-face{
+  width:19px; height:19px; position:absolute; z-index:2; top:50%; left:50%;
+  display:flex; align-items:center; justify-content:center;
+  transform:translate(-50%,-50%); transition:opacity .2s ease, transform .2s ease;
+  animation:fastyLook 5.5s ease-in-out infinite;
 }
-.fasty-sparkle.s1{top:-3px; left:10px; animation-delay:0s;}
-.fasty-sparkle.s2{bottom:-1px; right:-3px; animation-delay:1.2s;}
-.fasty-sparkle.s3{top:8px; right:-6px; width:2px; height:2px; animation-delay:2.4s;}
-@keyframes fastySparkle{0%,100%{opacity:0; transform:scale(.3);}50%{opacity:1; transform:scale(1);}}
+.fasty-widget.open .fasty-face{opacity:0; transform:translate(-50%,-50%) rotate(45deg) scale(.6); animation-play-state:paused;}
+@keyframes fastyLook{
+  0%,12%{transform:translate(-50%,-50%) translateX(0);}
+  30%{transform:translate(-50%,-50%) translateX(-2.5px);}
+  50%,58%{transform:translate(-50%,-50%) translateX(0);}
+  76%{transform:translate(-50%,-50%) translateX(2.5px);}
+  100%{transform:translate(-50%,-50%) translateX(0);}
+}
+@media (prefers-reduced-motion: reduce){.fasty-face{animation:none;}}
+.fasty-toggle-icon{width:19px; height:19px; position:absolute; z-index:2; transition:opacity .2s ease, transform .2s ease;}
+.fasty-icon-close{opacity:0; transform:rotate(-45deg) scale(.6);}
+.fasty-widget.open .fasty-icon-close{opacity:1; transform:rotate(0) scale(1);}
+/* The two bars read as a simple robot face/pause-glyph, matching the
+   reference — glowing white with a soft blink. transform-box:fill-box
+   lets each bar scale around its own center instead of the SVG
+   viewport's origin. */
+.fasty-eyes-svg{color:#fff; filter:drop-shadow(0 0 4px rgba(255,255,255,.75)) drop-shadow(0 0 1px rgba(255,255,255,.9));}
+.fasty-eye-bar{transform-box:fill-box; transform-origin:center; animation:fastyBlink 3.2s ease-in-out infinite;}
+.fasty-eye-bar-2{animation-delay:.15s;}
+@keyframes fastyBlink{0%,38%,100%{transform:scaleY(1);}46%{transform:scaleY(.22);}}
+@media (prefers-reduced-motion: reduce){.fasty-eye-bar{animation:none;}}
+/* A gentle continuous particle burst off the top of the ball — small
+   dots rising, drifting sideways, and fading, looping on staggered
+   delays so it never looks perfectly repeating. Runs all the time
+   (not just on hover) for the "real, moving" feel; hover just speeds
+   the loop up slightly via a shorter duration. */
+.fasty-sparkle{
+  position:absolute; top:30%; width:3px; height:3px; border-radius:50%;
+  background:radial-gradient(circle, #fff, var(--fasty-c2)); opacity:0; pointer-events:none;
+  box-shadow:0 0 4px 1px color-mix(in srgb, var(--fasty-c2) 70%, transparent);
+  animation:fastyBurst 3.6s ease-in infinite;
+}
+.fasty-sparkle.s1{left:30%; animation-delay:0s; --dx:-8px;}
+.fasty-sparkle.s2{left:50%; width:2px; height:2px; animation-delay:.9s; --dx:4px;}
+.fasty-sparkle.s3{left:62%; animation-delay:1.8s; --dx:10px;}
+.fasty-sparkle.s4{left:42%; width:2px; height:2px; animation-delay:2.6s; --dx:-3px;}
+@keyframes fastyBurst{
+  0%{opacity:0; transform:translate(0,0) scale(.5);}
+  12%{opacity:1;}
+  100%{opacity:0; transform:translate(var(--dx),-30px) scale(1.1);}
+}
+.fasty-toggle:hover .fasty-sparkle{animation-duration:2.2s;}
 .fasty-widget.open .fasty-sparkle{opacity:0; animation-play-state:paused;}
 @media (prefers-reduced-motion: reduce){.fasty-sparkle{animation:none; opacity:0;}}
 .fasty-toggle-badge{
@@ -1699,19 +1955,35 @@ footer{padding:64px 0 0; margin-top:40px;}
 
 .fasty-panel::before{
   content:''; position:absolute; inset:-2px; border-radius:calc(var(--radius) + 2px); padding:1.5px;
-  background:conic-gradient(from var(--fasty-spin), var(--violet), var(--teal) 50%, var(--violet) 100%);
+  background:conic-gradient(from var(--fasty-spin), var(--fasty-c1), var(--fasty-c2) 50%, var(--fasty-c1) 100%);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor; mask-composite:exclude;
   opacity:.85; pointer-events:none; animation:fastySpin 9s linear infinite;
 }
 @media (prefers-reduced-motion: reduce){.fasty-panel::before{animation:none;}}
+/* "Crystal" surface: a frosted, translucent glass panel rather than a
+   flat opaque card — backdrop-filter blurs whatever sits behind the
+   widget through it, a soft diagonal sheen (::before) reads as light
+   catching a facet, and the border/inset highlight stay bright
+   enough to sell the glass edge. color-mix against var(--bg-1) keeps
+   it working in both themes instead of hardcoding a dark tint. */
 .fasty-panel-body{
   position:relative; z-index:1; display:flex; flex-direction:column; width:100%; height:100%;
-  border-radius:var(--radius); background:var(--bg-1); border:1px solid var(--line);
-  box-shadow:var(--shadow-md), var(--inset-hi); overflow:hidden;
+  border-radius:var(--radius);
+  background:color-mix(in srgb, var(--bg-1) 74%, transparent);
+  backdrop-filter:blur(24px) saturate(1.5);
+  -webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:var(--shadow-md), 0 1px 0 rgba(255,255,255,.06) inset, 0 0 40px -18px var(--violet);
+  overflow:hidden;
 }
+.fasty-panel-body::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(125deg, rgba(255,255,255,.10) 0%, transparent 32%, transparent 68%, color-mix(in srgb, var(--teal) 12%, transparent) 100%);
+}
+.fasty-panel-body > *{position:relative; z-index:1;}
 
-.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 10px 13px 16px; background:var(--violet-soft); border-bottom:1px solid var(--line-soft); flex:0 0 auto;}
+.fasty-head{display:flex; align-items:center; gap:11px; padding:13px 10px 13px 16px; background:linear-gradient(180deg, rgba(255,255,255,.06), transparent); border-bottom:1px solid rgba(255,255,255,.1); flex:0 0 auto;}
 .fasty-avatar{
   width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
   background:var(--violet); color:#fff;
@@ -1761,25 +2033,18 @@ footer{padding:64px 0 0; margin-top:40px;}
 .fasty-typing span:nth-child(3){animation-delay:.3s;}
 @keyframes fastyTypingBounce{0%,60%,100%{opacity:.35; transform:translateY(0);}30%{opacity:1; transform:translateY(-3px);}}
 
-/* An action grid, not a row of pills — icon tiles for "Services &
-   pricing / How ordering works / Turnaround / Talk to the team" read
-   as a real launcher (closer to the reference's app-like feel) and
-   only ever show before the first real message, same as the old
-   chip row did. */
+/* A "Suggested topics" grid — text only, no icons, per explicit
+   request. Compact rounded tiles rather than pills so they still read
+   as a real launcher, just without an icon glyph inside each one. */
 .fasty-quick{display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:2px 16px 14px; flex:0 0 auto;}
 .fasty-quick:empty{display:none;}
 .fasty-quick-chip{
-  display:flex; flex-direction:column; align-items:flex-start; gap:8px; padding:12px 12px 11px;
-  border-radius:14px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
+  display:flex; align-items:center; padding:12px 14px; border-radius:12px;
+  border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
   text-align:left; cursor:pointer;
   transition:background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 .fasty-quick-chip:hover{background:var(--surface-hover); border-color:var(--violet); transform:translateY(-2px); box-shadow:0 12px 22px -16px var(--violet);}
-.fasty-quick-icon{
-  width:26px; height:26px; border-radius:8px; flex:0 0 auto;
-  display:flex; align-items:center; justify-content:center; background:var(--violet-soft); color:var(--violet);
-}
-.fasty-quick-icon svg{width:14px; height:14px;}
 .fasty-quick-label{font-size:12px; font-weight:600; line-height:1.35; color:var(--text-0);}
 @media (max-width:400px){.fasty-quick{grid-template-columns:1fr;}}
 
@@ -1813,8 +2078,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-134" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-134" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -1967,41 +2232,49 @@ footer{padding:64px 0 0; margin-top:40px;}
          the exact same content/IDs the old inline panel used
          (svcName/svcGlance/tier-row/scope-panel), so all rendering
          logic is untouched — only how it's revealed changed. -->
-    <div class="pkg-grid reveal-on-scroll" id="svcNav">
+    <div class="pkg-stage reveal-on-scroll" id="svcNav">
       <button type="button" class="pkg-card" data-svc="reels" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
+        <span class="pkg-card-badge">4 tiers</span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">AI Reels</span>
         <span class="pkg-card-desc">Script-to-screen AI reels across 4 package tiers.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹2,500</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8Zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3Z"/></svg></span>
+        <span class="pkg-card-badge">360°</span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="4.2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path fill="currentColor" d="M19.5 8.2c.9.9 1.4 1.85 1.4 2.8 0 2.65-4.2 4.8-9.4 4.8v-2c4.4 0 7.4-1.7 7.4-2.8 0-.4-.3-.9-.9-1.5l1.5-1.3Z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,800</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
+        <span class="pkg-card-badge">1 frame</span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">Static Creative</span>
         <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹499</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
-        <span class="pkg-card-icon"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 4.5A1.5 1.5 0 0 1 4.5 3h5A1.5 1.5 0 0 1 11 4.5v5A1.5 1.5 0 0 1 9.5 11h-5A1.5 1.5 0 0 1 3 9.5v-5Zm10 0A1.5 1.5 0 0 1 14.5 3h5A1.5 1.5 0 0 1 21 4.5v5A1.5 1.5 0 0 1 19.5 11h-5a1.5 1.5 0 0 1-1.5-1.5v-5ZM3 14.5A1.5 1.5 0 0 1 4.5 13h5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 9.5 21h-5A1.5 1.5 0 0 1 3 19.5v-5Zm10 0a1.5 1.5 0 0 1 1.5-1.5h5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-5Z"/></svg></span>
+        <span class="pkg-card-badge">5 slides</span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/><rect x="9.7" y="3.5" width="4.6" height="17" rx="1.4" fill="currentColor"/><rect x="17" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/></svg></span>
+        <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">Carousel Creative</span>
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,499</span>
-          <svg class="pkg-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
     </div>
@@ -2012,7 +2285,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <button type="button" class="pkg-modal-close" id="pkgModalClose" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <div class="pkg-modal-scroll">
+        <div class="pkg-modal-scroll" id="pkgModalScroll">
           <div class="svc-panel-inner" id="svcPanelInner">
             <div class="svc-panel-head">
               <div>
@@ -2047,42 +2320,6 @@ footer{padding:64px 0 0; margin-top:40px;}
       </div>
     </div>
 
-    <details class="rules-panel reveal-on-scroll">
-      <summary class="rules-panel-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-        Good to know before you quote
-        <svg class="rules-panel-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </summary>
-      <div class="rules-general">
-        <span class="rules-general-label">General terms that apply across every service and package</span>
-        <ul class="rules-list">
-          <li><b>₹10,000 minimum order.</b> You can mix and match any services or cuts to reach it, and the calculator always shows your full order total.</li>
-          <li><b>Turnaround is per creative.</b> For bulk orders, actual delivery time depends on quantity, creative type, cut, and complexity, not the single-creative number shown.</li>
-          <li><b>The turnaround clock starts on handoff.</b> That means once we've received all the assets and details we need from you, not on your payment date.</li>
-          <li><b>New concepts mean a new quote.</b> Major creative rework or extras beyond what's included are quoted separately.</li>
-          <li><b>AI output can vary slightly</b> between runs, but we always match your brief as closely as possible.</li>
-          <li><b>GST is optional at checkout:</b> included by default at 18% on the order total after any discount, or switch it off in the calculator for a non-GST invoice. Prices elsewhere on the page are pre-GST.</li>
-          <li><b>One discount applies to the whole order.</b> It's calculated on the combined total, not on each creative type individually, and can be either a percentage or a flat ₹ amount.</li>
-        </ul>
-      </div>
-      <details class="rules-compare-toggle" id="rulesCompareToggle">
-        <summary>Compare all 4 AI Reel packages at a glance</summary>
-        <div class="compare-wrap">
-          <table class="compare-table" id="reelCompareTable">
-            <thead>
-              <tr><th>Package</th><th data-tier-col="1">Quick Cut</th><th data-tier-col="2">Story Cut</th><th data-tier-col="3">Director's Cut</th><th data-tier-col="4">Studio Cut</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Price</td><td data-tier-col="1">₹2,500</td><td data-tier-col="2">₹3,500</td><td data-tier-col="3">₹5,000</td><td data-tier-col="4">₹8,000</td></tr>
-              <tr><td>Max duration</td><td data-tier-col="1">Up to 25 sec</td><td data-tier-col="2">25 sec</td><td data-tier-col="3">30 sec</td><td data-tier-col="4">35 sec</td></tr>
-              <tr><td>Script</td><td data-tier-col="1">From brief, no approval step</td><td data-tier-col="2">From brief, no approval step</td><td data-tier-col="3">1 option, for approval</td><td data-tier-col="4">1 + 2 hooks, for approval</td></tr>
-              <tr><td>Revision</td><td data-tier-col="1">1 (minor, in-frame)</td><td data-tier-col="2">1 (wording, hook length)</td><td data-tier-col="3">1 (small script changes)</td><td data-tier-col="4">1 (small script changes)</td></tr>
-              <tr><td>Delivery</td><td data-tier-col="1">1–2 working days</td><td data-tier-col="2">Up to 3 working days</td><td data-tier-col="3">Up to 4 working days</td><td data-tier-col="4">Up to 5 working days</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </details>
-    </details>
   </div>
 </section>
 
@@ -2219,43 +2456,117 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- A single dark "spotlight" stage regardless of site theme (like
-         the reference board) — one soft top-down glow, one quiet
-         ghost word behind the cards, and 3 slightly tilted testimonial
-         notes, each with a small glowing pin dot instead of a literal
-         3D pushpin graphic, keeping the same restrained violet/teal
-         glow language the rest of the redesign uses. Placeholder
-         copy: swap in real client quotes before this goes live. -->
-    <div class="testi-stage reveal-on-scroll">
-      <span class="testi-spotlight" aria-hidden="true"></span>
-      <span class="testi-ghost" aria-hidden="true">Trusted</span>
-      <div class="testi-grid">
-        <div class="testi-card" style="--tilt:-4deg;">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">F</span>
-            <span class="testi-author-text"><b>Founder</b><span>D2C Beauty Brand</span></span>
+    <!-- A soft dark vignette wash regardless of site theme, no boxed
+         panel edge — one quiet ghost word behind the cards, an
+         ambient light drifting on its own, and 6 quiet glass
+         testimonial notes in a single row that scrolls continuously
+         left (content duplicated once for a seamless loop; hover to
+         pause). Placeholder copy + names: swap in real client quotes
+         before this goes live. -->
+    <div class="testi-stage reveal-on-scroll" id="testiStage">
+      <span class="testi-gridwall" aria-hidden="true"></span>
+      <span class="testi-spotlight" id="testiSpotlight" aria-hidden="true"></span>
+      <div class="testi-marquee">
+        <div class="testi-row">
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">R</span>
+              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:3deg;">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">M</span>
-            <span class="testi-author-text"><b>Marketing Lead</b><span>Fashion &amp; Apparel</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">A</span>
+              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+            </div>
           </div>
-        </div>
-        <div class="testi-card" style="--tilt:-2deg;">
-          <span class="testi-pin" aria-hidden="true"></span>
-          <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
-          <div class="testi-author">
-            <span class="testi-avatar">G</span>
-            <span class="testi-author-text"><b>Growth Manager</b><span>Home &amp; Living</span></span>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">S</span>
+              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">K</span>
+              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">M</span>
+              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
+            </div>
+          </div>
+          <div class="testi-card">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">D</span>
+              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Fastrr Ads turned our brief into a finished reel faster than our old agency took to review a first draft. The quality held up too."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">R</span>
+              <span class="testi-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"We stopped brainstorming ad concepts in-house entirely. Every batch comes back on-brand and ready to run, no back-and-forth."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">A</span>
+              <span class="testi-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"The 360° catalogue videos alone paid for themselves in the first week of running on our product pages."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">S</span>
+              <span class="testi-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Static creatives come back same-day and just work — no revision loop, no waiting around for a second draft."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">K</span>
+              <span class="testi-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness &amp; Supplements</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Carousel ads from Fastrr consistently outperform what our last two agencies delivered, and cost less per creative."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">M</span>
+              <span class="testi-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery &amp; Accessories</span></span>
+            </div>
+          </div>
+          <div class="testi-card" aria-hidden="true">
+            <svg class="testi-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-quote">"Having AI voiceover in Hindi and English built into the reel package alone saved us a separate vendor relationship."</p>
+            <div class="testi-author">
+              <span class="testi-avatar">D</span>
+              <span class="testi-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+</div>
   </div>
 </section>
 
@@ -2335,9 +2646,18 @@ footer{padding:64px 0 0; margin-top:40px;}
     <!-- Cold-lead prompt — makes sense for a public visitor browsing
          on their own, not for a client already mid-order on a live
          call with the team, so it's public-only. -->
-    <div class="footer-cta reveal-on-scroll">
-      <span class="eyebrow">Let's create something great</span>
+    <div class="footer-cta">
+      <span class="footer-cta-glowwash" aria-hidden="true"></span>
+      <span class="footer-cta-scene" aria-hidden="true">
+        <span class="footer-cta-particle p1"></span>
+        <span class="footer-cta-particle p2"></span>
+        <span class="footer-cta-particle p3"></span>
+        <span class="footer-cta-particle p4"></span>
+        <span class="footer-cta-particle p5"></span>
+      </span>
+      <span class="footer-cta-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z"/></svg>Let's create something great</span>
       <h3>Got a campaign to put into <span class="accent">production</span>?</h3>
+      <p class="footer-cta-sub">Tell us the brief, the brand, and the deadline — we'll scope a clear, itemized quote and get creative moving the same day.</p>
       <button type="button" class="footer-cta-link js-open-lead-modal">
         Share your requirement
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -2348,8 +2668,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-118" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-134" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-134" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2395,12 +2715,13 @@ footer{padding:64px 0 0; margin-top:40px;}
     <span class="fasty-sparkle s1" aria-hidden="true"></span>
     <span class="fasty-sparkle s2" aria-hidden="true"></span>
     <span class="fasty-sparkle s3" aria-hidden="true"></span>
-    <svg class="fasty-toggle-icon fasty-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
-      <circle cx="8.5" cy="12" r="1" fill="currentColor" stroke="none"/>
-      <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
-      <circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/>
-    </svg>
+    <span class="fasty-sparkle s4" aria-hidden="true"></span>
+    <span class="fasty-face" aria-hidden="true">
+      <svg class="fasty-eyes-svg" viewBox="0 0 24 24" fill="none" width="14" height="14">
+        <rect class="fasty-eye-bar" x="8.4" y="6.2" width="3" height="11.6" rx="1.5" fill="currentColor"/>
+        <rect class="fasty-eye-bar fasty-eye-bar-2" x="12.6" y="6.2" width="3" height="11.6" rx="1.5" fill="currentColor"/>
+      </svg>
+    </span>
     <svg class="fasty-toggle-icon fasty-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     <span class="fasty-toggle-badge" id="fastyToggleBadge" hidden>1</span>
   </button>
@@ -2702,10 +3023,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-118"></script>
-<script src="assets/app-v2.js?v=20260811-118"></script>
+<script src="assets/creative-data.js?v=20260811-134"></script>
+<script src="assets/app-v2.js?v=20260811-134"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-118"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-134"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
