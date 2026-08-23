@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-157" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-157" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-157" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-157" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-157" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-157" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-157" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-157" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-157" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-157" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-157" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-157" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-158" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-158" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-158" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-158" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-158" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-158" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-158" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-158" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-158" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-158" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-158" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-158" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1516,90 +1516,111 @@ html.is-internal .oc-offer{display:none !important;}
 .gst-switch input:checked ~ .gst-switch-track .gst-switch-thumb{transform:translateX(13px); background:var(--teal);}
 #gstRow.is-muted{opacity:.5;}
 
-/* ---------- QUOTE & PRICE CALCULATOR ----------
+/* ---------- QUOTE & PRICE CALCULATOR — PAPER RECEIPT ----------
    Visual pass only, scoped under #quote so it can't leak onto classes
    this section shares with the rest of the site (.field-row,
    .select-input, .text-input, .field-row-split, .lead-cta are all
    reused elsewhere — Message Generator, the lead modal, the internal
    team form). No markup restructured, no IDs/classes renamed, no JS
    touched — app.js/team.js still read/write the exact same selectors.
-   Third pass. The first was too loud (dual neon glow rings, a looping
-   sheen, a pulsing chip). The second walked that back so far it just
-   read as the untouched original again — no actual redesign. This one
-   takes an editorial/ledger angle instead of a glass-panel one: a
-   large low-opacity numeral (01/02) bleeding off the bottom corner of
-   each panel ties the two halves back to the site's own numbered-
-   section language; the package tiers are underline tabs instead of
-   filled pills; quantity is one bordered stepper unit instead of three
-   separate floating buttons; cart lines read like a receipt (hairline
-   rules, mono price, muted controls). Flat surfaces, no blur, no glow,
-   one accent color per panel used only as a thin line or small dot —
-   distinct from both the original and the neon pass, and still calm. */
+   Fourth pass, and a genuinely different metaphor rather than another
+   variation on a glass panel: the builder reads as an order ticket
+   and the order panel as the actual printed receipt torn off it — a
+   zigzag torn edge along the top of both, dashed rather than solid
+   dividers throughout, monospace line items, tier options as small
+   dashed stub choices with a checkmark instead of a filled pill or an
+   underline tab, and a large serif grand-total stacked under a
+   dashed rule the way a receipt prints its total. A muted barcode
+   flourish closes out the order panel. Flat paper surfaces, minimal
+   radius, no blur, no glow — color shows up only as the checkmark
+   stub, the unlock state on the coupon, and the totals rule. */
 #quote .ob-panel,#quote .oc-panel{
-  position:relative; overflow:hidden; border-radius:16px; padding:28px 26px;
+  position:relative; overflow:visible; border-radius:6px; padding:30px 26px 26px;
   background:var(--bg-1); border:1px solid var(--line); box-shadow:var(--shadow-sm);
-  transition:box-shadow .2s ease;
 }
-#quote .ob-panel:hover,#quote .oc-panel:hover{box-shadow:var(--shadow-md);}
 #quote .ob-panel::before,#quote .oc-panel::before{
-  position:absolute; right:14px; bottom:-30px; z-index:0; pointer-events:none;
-  font-family:var(--font-mono); font-size:112px; font-weight:700; line-height:1;
-  color:var(--text-2); opacity:.06;
+  content:''; position:absolute; left:0; right:0; top:0; height:11px; transform:translateY(-50%);
+  background-image:
+    linear-gradient(135deg, var(--bg-0) 50%, transparent 50%),
+    linear-gradient(-135deg, var(--bg-0) 50%, transparent 50%);
+  background-position:left top; background-repeat:repeat-x; background-size:14px 11px;
+  pointer-events:none;
 }
-#quote .ob-panel::before{content:'01';}
-#quote .oc-panel::before{content:'02';}
-#quote .ob-panel>*,#quote .oc-panel>*{position:relative; z-index:1;}
 
-/* One small static accent dot before each panel's label — violet for
-   the builder, teal for the order. No glow, no animation. */
-#quote .ob-panel-label,#quote .oc-head-label{display:inline-flex; align-items:center; gap:7px;}
-#quote .ob-panel-label::after{content:''; width:5px; height:5px; border-radius:50%; background:var(--violet);}
-#quote .oc-head-label::after{content:''; width:5px; height:5px; border-radius:50%; background:var(--teal);}
+/* Panel label — a dashed rule underneath, like a ticket header
+   perforation, instead of a colored dot or glow. */
+#quote .ob-panel-label{padding-bottom:13px; border-bottom:1px dashed var(--line); margin-bottom:16px;}
+#quote .oc-head{padding-bottom:13px; border-bottom:1px dashed var(--line); margin-bottom:16px;}
 
-#quote .select-input,#quote .text-input{background:var(--surface-1);}
+#quote .select-input,#quote .text-input{background:var(--surface-1); border-radius:6px;}
+#quote #qUnitPrice{font-family:var(--font-mono); font-weight:700;}
 
-/* Package tiers — underline tabs instead of filled pills, a plainer,
-   more editorial control. */
-#quote .tier-mini-row{gap:2px; border-bottom:1px solid var(--line-soft);}
+/* Package tiers — small dashed stub choices, not a filled pill or an
+   underline tab. The active one gets a solid border and a checkmark,
+   like a ticked box on a form. */
+#quote .tier-mini-row{gap:8px;}
 #quote .qtier-chip{
-  padding:7px 12px 10px; border-radius:0; border:none; background:transparent;
-  opacity:1; color:var(--text-2); position:relative;
+  border-radius:5px; border:1px dashed var(--line); background:transparent;
+  opacity:1; color:var(--text-2); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.03em;
 }
-#quote .qtier-chip::after{
-  content:''; position:absolute; left:12px; right:12px; bottom:-1px; height:2px;
-  background:transparent; transition:background .2s ease;
+#quote .qtier-chip:hover{background:var(--surface-1); opacity:1; transform:none; box-shadow:none;}
+#quote .qtier-chip.active{
+  border:1px solid var(--text-0); background:transparent; color:var(--text-0); box-shadow:none;
 }
-#quote .qtier-chip:hover{background:transparent; color:var(--text-0); transform:none;}
-#quote .qtier-chip.active{background:transparent; color:var(--text-0); border-color:transparent; box-shadow:none;}
-#quote .qtier-chip.active::after{background:var(--violet);}
+#quote .qtier-chip.active::before{content:'✓ ';}
 
-/* Quantity — one bordered stepper unit (matching the site's other
-   segmented/grouped controls) instead of two separate round buttons
-   floating either side of the field. */
-#quote .qty-row{border:1px solid var(--line); border-radius:10px; overflow:hidden; gap:0;}
-#quote .qty-btn{border-radius:0; background:var(--surface-1); box-shadow:none;}
-#quote .qty-btn:hover{background:var(--surface-hover); transform:none;}
-#quote .qty-btn:first-child{border-right:1px solid var(--line);}
-#quote .qty-btn:last-child{border-left:1px solid var(--line);}
-#quote #qQtyInput{border:none; border-radius:0; text-align:center; background:var(--bg-1);}
+/* Quantity — dashed dividers instead of solid borders, mono numeral. */
+#quote .qty-row{border:1px dashed var(--line); border-radius:6px; overflow:hidden; gap:0;}
+#quote .qty-btn{border-radius:0; background:transparent; box-shadow:none;}
+#quote .qty-btn:hover{background:var(--surface-1); transform:none;}
+#quote .qty-btn:first-child{border-right:1px dashed var(--line);}
+#quote .qty-btn:last-child{border-left:1px dashed var(--line);}
+#quote #qQtyInput{border:none; border-radius:0; text-align:center; background:transparent; font-family:var(--font-mono); font-weight:700;}
 #quote #qQtyInput:focus{box-shadow:none;}
 
-/* Cart lines — a receipt, not a card list: hairline rules, monospace
-   price, quiet controls that only firm up on hover. */
-#quote .cart-item{border-bottom-color:var(--line-soft);}
+/* Cart lines and summary — dashed rules throughout, monospace prices,
+   like an itemized receipt. */
+#quote .cart-item{border-bottom:1px dashed var(--line-soft);}
 #quote .cart-item-price{font-family:var(--font-mono);}
-#quote .ci-qty-btn{border-radius:5px; background:transparent; border-color:var(--line-soft);}
+#quote .ci-qty-btn{border-radius:4px; background:transparent; border-color:var(--line-soft);}
 #quote .ci-remove{opacity:.5;}
 #quote .ci-remove:hover{opacity:1;}
+#quote .order-summary{border-top:1px dashed var(--line);}
+#quote .order-breakdown .summary-row{border-bottom:1px dashed var(--line-soft); font-family:var(--font-mono);}
 
-/* Coupon stub — a thin accent edge instead of a filled block, so the
-   unlocked state reads as a status change (colored code, colored
-   edge) rather than a bright banner. */
-#quote .oc-offer{border-left:3px solid color-mix(in srgb, var(--violet) 45%, var(--line));}
-#quote .oc-offer.is-unlocked{border-left-color:var(--teal);}
-#quote .oc-offer.is-unlocked .oc-offer-stub{background:var(--surface-2);}
-#quote .oc-offer.is-unlocked .oc-offer-code{background:var(--surface-1); color:var(--teal); border-color:var(--teal);}
+/* Grand total — stacked label-over-figure under a dashed rule, the
+   way a receipt prints its total, in the display serif rather than
+   flat inline text. */
+#quote .summary-row.total{
+  flex-direction:column; align-items:flex-start; gap:4px;
+  border-top:1px dashed var(--text-1); padding-top:16px; margin-top:2px;
+}
+#quote .summary-row.total span{font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.08em; font-size:11px;}
+#quote .summary-row.total b{font-family:var(--font-display); font-size:clamp(28px,3vw,34px); font-weight:700;}
+
+/* Coupon — a dashed voucher outline; unlocked state turns the code
+   into a small rotated stamp instead of a filled color block. */
+#quote .oc-offer{border:1px dashed var(--line); background:transparent; border-radius:6px;}
+#quote .oc-offer-stub{background:transparent; border-left:1px dashed var(--line);}
+#quote .oc-offer-code{font-family:var(--font-mono);}
+#quote .oc-offer.is-unlocked{border-style:solid; border-color:var(--teal);}
+#quote .oc-offer.is-unlocked .oc-offer-stub{background:transparent;}
+#quote .oc-offer.is-unlocked .oc-offer-code{
+  display:inline-block; background:transparent; color:var(--teal); border-color:var(--teal);
+  transform:rotate(-4deg);
+}
 #quote .oc-offer.is-unlocked .oc-offer-code-status{color:var(--teal);}
+
+/* A muted barcode flourish closing out the order panel — purely
+   decorative, low-opacity, the one unmistakably "receipt" touch. */
+#quote .oc-panel::after{
+  content:''; display:block; height:26px; margin-top:22px; opacity:.22;
+  background-image:repeating-linear-gradient(90deg,
+    var(--text-0) 0 2px, transparent 2px 5px,
+    var(--text-0) 5px 6px, transparent 6px 12px,
+    var(--text-0) 12px 15px, transparent 15px 19px,
+    var(--text-0) 19px 20px, transparent 20px 26px);
+}
 
 /* ---------- MESSAGES ---------- */
 .brand-fields-panel{margin-bottom:24px; padding:24px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
@@ -2168,8 +2189,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-157" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-157" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-158" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-158" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2727,8 +2748,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-157" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-157" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-158" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-158" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3081,10 +3102,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-157"></script>
-<script src="assets/app-v2.js?v=20260811-157"></script>
+<script src="assets/creative-data.js?v=20260811-158"></script>
+<script src="assets/app-v2.js?v=20260811-158"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-157"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-158"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
