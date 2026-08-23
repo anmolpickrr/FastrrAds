@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-144" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-144" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-144" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-144" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-144" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-144" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-144" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-144" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-144" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-144" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-144" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-144" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-146" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-146" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-146" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-146" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-146" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-146" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-146" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-146" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-146" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-146" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-146" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-146" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1597,101 +1597,83 @@ textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 
   -webkit-mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
   mask-image:radial-gradient(ellipse 68% 62% at 50% 46%, #000 32%, transparent 82%);
 }
-/* ---- Bento grid: one big featured quote plus five smaller notes in
-   an asymmetric CSS-grid layout — bolder and more visually varied
-   than a uniform row/carousel, which is the "fresh, catchy" ask here.
-   Explicit grid-template-areas (not auto-placement) so the composition
-   is deliberate and identical across renders, and each cell has a
-   fixed height with -webkit-line-clamp on the quote so no card can
-   grow and break the grid regardless of quote length. Staggered
-   reveal-on-scroll + a hover tilt give it some life without leaning
-   on continuous motion (which the last two passes already tried). */
-.testi-bento{
-  position:relative; z-index:1; margin-top:16px;
-  display:grid; gap:20px; grid-auto-rows:180px;
-  grid-template-columns:repeat(4, 1fr);
-  grid-template-areas:
-    "feat feat b c"
-    "feat feat d c"
-    "e f  f  c";
+/* ---- Scattered notes: each card sits at a slight, permanent tilt
+   like a candid photo/note wall, echoing the same floating-and-tilted
+   language the Services & Packages deck already uses elsewhere on
+   this page (so it feels consistent with the site rather than another
+   unrelated pattern) — a genuinely different read from the previous
+   uniform bento grid. Cards straighten, lift, and brighten on hover.
+   Staggered reveal-on-scroll fade-in; each card's resting tilt is set
+   per nth-child so the scatter is deliberate, not randomized on every
+   load. */
+.testi-scatter{
+  position:relative; z-index:1; margin-top:20px;
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-start; gap:30px 26px;
 }
-.testi-bento-item{grid-area:var(--area);}
-.testi-bento-item:nth-child(1){--area:feat;}
-.testi-bento-item:nth-child(2){--area:b;}
-.testi-bento-item:nth-child(3){--area:c;}
-.testi-bento-item:nth-child(4){--area:d;}
-.testi-bento-item:nth-child(5){--area:e;}
-.testi-bento-item:nth-child(6){--area:f;}
-@media (max-width:860px){
-  .testi-bento{grid-template-columns:1fr 1fr; grid-auto-rows:auto; grid-template-areas:none;}
-  .testi-bento-item{grid-area:auto !important; grid-column:span 2;}
-  .testi-bento-item:nth-child(1){grid-column:span 2;}
-}
-@media (max-width:560px){
-  .testi-bento{grid-template-columns:1fr;}
-  .testi-bento-item{grid-column:span 1 !important;}
-}
+.testi-scatter-item{--tilt:0deg; --lift:0px;}
+.testi-scatter-item:nth-child(1){--tilt:-2.5deg; --lift:10px;}
+.testi-scatter-item:nth-child(2){--tilt:1.8deg; --lift:-6px;}
+.testi-scatter-item:nth-child(3){--tilt:-1.2deg; --lift:14px;}
+.testi-scatter-item:nth-child(4){--tilt:2.6deg; --lift:-2px;}
+.testi-scatter-item:nth-child(5){--tilt:-2.2deg; --lift:8px;}
+.testi-scatter-item:nth-child(6){--tilt:1.4deg; --lift:-10px;}
 /* Same crystal-glass language as .pkg-card in Services & Packages
    (frosted diagonal sheen, 60%-white border, soft layered shadow) so
    this section still reads as one system with the rest of the page. */
-.testi-bento-card{
-  position:relative; height:100%; padding:24px 26px; border-radius:calc(var(--radius) + 6px);
-  display:flex; flex-direction:column;
+.testi-scatter-card{
+  position:relative; width:300px; padding:26px 26px 22px; border-radius:calc(var(--radius) + 6px);
+  display:flex; flex-direction:column; min-height:210px;
   background:
     linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.015) 55%),
     color-mix(in srgb, var(--surface-1) 58%, transparent);
   backdrop-filter:blur(16px) saturate(1.35); -webkit-backdrop-filter:blur(16px) saturate(1.35);
   border:1px solid rgba(255,255,255,.6);
   box-shadow:0 20px 42px -26px rgba(139,124,246,.18), 0 12px 28px -16px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
+  opacity:0; transform:translateY(var(--lift)) rotate(0deg) scale(.97);
   transition:transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
-  opacity:0; transform:translateY(18px) scale(.98);
 }
-.testi-stage.revealed .testi-bento-card{
-  opacity:1; transform:translateY(0) scale(1);
+.testi-stage.revealed .testi-scatter-card{
+  opacity:1; transform:translateY(var(--lift)) rotate(var(--tilt)) scale(1);
   transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), box-shadow .3s ease, border-color .3s ease;
 }
-.testi-bento-item:nth-child(1) .testi-bento-card{transition-delay:0s;}
-.testi-bento-item:nth-child(2) .testi-bento-card{transition-delay:.08s;}
-.testi-bento-item:nth-child(3) .testi-bento-card{transition-delay:.16s;}
-.testi-bento-item:nth-child(4) .testi-bento-card{transition-delay:.24s;}
-.testi-bento-item:nth-child(5) .testi-bento-card{transition-delay:.32s;}
-.testi-bento-item:nth-child(6) .testi-bento-card{transition-delay:.4s;}
+.testi-scatter-item:nth-child(1) .testi-scatter-card{transition-delay:0s;}
+.testi-scatter-item:nth-child(2) .testi-scatter-card{transition-delay:.08s;}
+.testi-scatter-item:nth-child(3) .testi-scatter-card{transition-delay:.16s;}
+.testi-scatter-item:nth-child(4) .testi-scatter-card{transition-delay:.24s;}
+.testi-scatter-item:nth-child(5) .testi-scatter-card{transition-delay:.32s;}
+.testi-scatter-item:nth-child(6) .testi-scatter-card{transition-delay:.4s;}
 /* Scoped under .testi-stage.revealed so this out-specifies the reveal
    rule above (which also sets its own resting transform) — otherwise
-   the reveal rule's higher selector specificity silently wins over a
-   plain .testi-bento-card:hover and the hover lift never shows. */
-.testi-stage.revealed .testi-bento-card:hover, .testi-bento-card:hover{
-  transform:translateY(-5px) rotate(-.3deg);
+   the reveal rule's higher selector specificity would silently win
+   over a plain .testi-scatter-card:hover and the hover state would
+   never show (caught the same bug in the previous bento-grid pass). */
+.testi-stage.revealed .testi-scatter-card:hover, .testi-scatter-card:hover{
+  transform:translateY(calc(var(--lift) - 8px)) rotate(0deg) scale(1.03);
+  z-index:5;
   border-color:rgba(255,255,255,.85);
-  box-shadow:0 26px 50px -24px rgba(139,124,246,.26), 0 14px 32px -16px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
+  box-shadow:0 30px 58px -24px rgba(139,124,246,.28), 0 16px 36px -18px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.16);
 }
 @media (prefers-reduced-motion: reduce){
-  .testi-bento-card{opacity:1; transform:none; transition:box-shadow .3s ease, border-color .3s ease;}
-  .testi-stage.revealed .testi-bento-card:hover, .testi-bento-card:hover{transform:none;}
+  .testi-scatter-card{opacity:1; transform:none; transition:box-shadow .3s ease, border-color .3s ease;}
+  .testi-stage.revealed .testi-scatter-card:hover, .testi-scatter-card:hover{transform:none;}
 }
-.testi-bento-quote-mark{display:block; width:20px; height:15px; margin-bottom:12px; color:var(--violet); opacity:.65; flex:0 0 auto;}
-.testi-bento-quote{
-  font-weight:500; line-height:1.5; letter-spacing:-.1px; color:#e9eaee; flex:1 1 auto; min-height:0;
-  overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical;
-  font-size:14px; -webkit-line-clamp:3;
+@media (max-width:720px){
+  .testi-scatter-item{--tilt:0deg !important; --lift:0px !important;}
+  .testi-scatter-card{width:min(340px, 84vw);}
 }
-.testi-bento-author{display:flex; align-items:center; gap:9px; margin-top:14px; flex:0 0 auto;}
-.testi-bento-avatar{
-  width:28px; height:28px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#e9eaee; font-weight:600; font-size:11px;
+.testi-scatter-quote-mark{display:block; width:20px; height:15px; margin-bottom:12px; color:var(--violet); opacity:.65; flex:0 0 auto;}
+.testi-scatter-quote{
+  font-size:14px; font-weight:500; line-height:1.55; letter-spacing:-.1px; color:#e9eaee; flex:1 1 auto; min-height:0;
+  overflow:hidden; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:4;
 }
-.testi-bento-author-text{display:flex; flex-direction:column; gap:0; font-size:11px; min-width:0;}
-.testi-bento-author-text b{color:#f4f5f7; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.testi-bento-author-text span{color:#9299a8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-/* The featured cell gets a bigger, bolder treatment — larger quote
-   mark and type, a touch more padding — so it reads as the anchor of
-   the composition rather than just a bigger box of the same thing. */
-.testi-bento-item:nth-child(1) .testi-bento-card{padding:34px 36px;}
-.testi-bento-item:nth-child(1) .testi-bento-quote-mark{width:30px; height:23px; margin-bottom:18px;}
-.testi-bento-item:nth-child(1) .testi-bento-quote{font-size:clamp(17px,1.7vw,20px); line-height:1.55; -webkit-line-clamp:5;}
-.testi-bento-item:nth-child(1) .testi-bento-author{margin-top:20px;}
-.testi-bento-item:nth-child(1) .testi-bento-avatar{width:36px; height:36px; font-size:13px;}
-.testi-bento-item:nth-child(1) .testi-bento-author-text{font-size:13px;}
+.testi-scatter-author{display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.12); flex:0 0 auto;}
+.testi-scatter-avatar{
+  width:30px; height:30px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2); color:#e9eaee; font-weight:600; font-size:12px;
+}
+.testi-scatter-author-text{display:flex; flex-direction:column; gap:0; font-size:12px; min-width:0;}
+.testi-scatter-author-text b{color:#f4f5f7; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.testi-scatter-author-text span{color:#9299a8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 
 /* ---------- FOOTER ----------
@@ -2142,8 +2124,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-144" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-144" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2310,7 +2292,7 @@ footer{padding:64px 0 0; margin-top:40px;}
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
         <span class="pkg-card-badge">360°</span>
-        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="4.2" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path fill="currentColor" d="M19.5 8.2c.9.9 1.4 1.85 1.4 2.8 0 2.65-4.2 4.8-9.4 4.8v-2c4.4 0 7.4-1.7 7.4-2.8 0-.4-.3-.9-.9-1.5l1.5-1.3Z"/></svg></span>
+        <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <span class="pkg-card-glowline" aria-hidden="true"></span>
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
@@ -2531,64 +2513,64 @@ footer{padding:64px 0 0; margin-top:40px;}
          quotes before this goes live. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
-      <div class="testi-bento">
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">R</span>
-              <span class="testi-bento-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
+      <div class="testi-scatter">
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"Honestly didn't expect much from the first draft. Turned out it was already better than what our old agency sent after two rounds of revisions."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">R</span>
+              <span class="testi-scatter-author-text"><b>Ritika Sharma</b><span>Founder, D2C Beauty Brand</span></span>
             </div>
           </div>
         </div>
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">A</span>
-              <span class="testi-bento-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"We just don't sit around brainstorming ad concepts anymore. Whatever comes back is already on-brand and ready to run."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">A</span>
+              <span class="testi-scatter-author-text"><b>Arjun Mehta</b><span>Marketing Lead, Fashion &amp; Apparel</span></span>
             </div>
           </div>
         </div>
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">S</span>
-              <span class="testi-bento-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"The 360° catalogue videos paid for themselves in about a week once they were live on our product pages. Wasn't expecting that fast."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">S</span>
+              <span class="testi-scatter-author-text"><b>Sana Iqbal</b><span>Growth Manager, Home &amp; Living</span></span>
             </div>
           </div>
         </div>
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">K</span>
-              <span class="testi-bento-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness</span></span>
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"Static creatives come back same day and they just work. No revision loop, no waiting around."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">K</span>
+              <span class="testi-scatter-author-text"><b>Kabir Nair</b><span>Performance Marketer, Wellness</span></span>
             </div>
           </div>
         </div>
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"Carousel ads from these guys keep beating what our last two agencies gave us."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">M</span>
-              <span class="testi-bento-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery</span></span>
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"Carousel ads from these guys keep beating what our last two agencies gave us."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">M</span>
+              <span class="testi-scatter-author-text"><b>Meera Chawla</b><span>Brand Manager, Jewellery</span></span>
             </div>
           </div>
         </div>
-        <div class="testi-bento-item">
-          <div class="testi-bento-card">
-            <svg class="testi-bento-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
-            <p class="testi-bento-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
-            <div class="testi-bento-author">
-              <span class="testi-bento-avatar">D</span>
-              <span class="testi-bento-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
+        <div class="testi-scatter-item">
+          <div class="testi-scatter-card">
+            <svg class="testi-scatter-quote-mark" viewBox="0 0 24 18" fill="currentColor" aria-hidden="true"><path d="M0 18V9.6C0 4.2 3.4.7 8.6 0l.9 2.7C6.4 3.7 4.7 5.7 4.4 8.4H9V18H0Zm13 0V9.6c0-5.4 3.4-8.9 8.6-9.6l.9 2.7c-3.1 1-4.8 3-5.1 5.7H22V18h-9Z"/></svg>
+            <p class="testi-scatter-quote">"Having AI voiceover in both Hindi and English built into the package saved us from having to manage a separate vendor for that alone."</p>
+            <div class="testi-scatter-author">
+              <span class="testi-scatter-avatar">D</span>
+              <span class="testi-scatter-author-text"><b>Devansh Rao</b><span>Founder, Personal Care</span></span>
             </div>
           </div>
         </div>
@@ -2694,8 +2676,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-144" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-144" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-146" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3048,10 +3030,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-144"></script>
-<script src="assets/app-v2.js?v=20260811-144"></script>
+<script src="assets/creative-data.js?v=20260811-146"></script>
+<script src="assets/app-v2.js?v=20260811-146"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-144"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-146"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
