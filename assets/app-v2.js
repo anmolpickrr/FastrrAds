@@ -2841,7 +2841,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     if (!widget) return;
 
     const toggle = document.getElementById("fastyToggle");
-    const badge = document.getElementById("fastyToggleBadge");
     const hint = document.getElementById("fastyHint");
     const hintClose = document.getElementById("fastyHintClose");
     const panel = document.getElementById("fastyPanel");
@@ -3165,7 +3164,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function openPanel() {
       widget.classList.add("open");
       toggle.setAttribute("aria-expanded", "true");
-      if (badge) badge.hidden = true;
       hideHint();
       seedGreeting();
       setTimeout(() => input.focus(), 150);
@@ -3227,7 +3225,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // chat or dismisses it directly.
     setTimeout(() => {
       if (widget.classList.contains("open")) return;
-      if (badge) badge.hidden = false;
       if (hint) hint.classList.add("visible");
     }, 4000);
   }
