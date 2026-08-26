@@ -2850,6 +2850,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const quickEl = document.getElementById("fastyQuick");
     const form = document.getElementById("fastyForm");
     const input = document.getElementById("fastyInput");
+    const micBtn = document.getElementById("fastyMicBtn");
     if (!toggle || !panel || !messagesEl || !form || !input) return;
 
     const START_PRICE = { catalogue: DATA.catalogue.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
@@ -2869,6 +2870,85 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
     function escapeHtml(s) {
       return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+    function stripHtml(html) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || "";
+    }
+
+    /* ---- Voice — Web Speech API, feature-detected. Recognition turns
+       a spoken question into the same sendUserMessage() path a typed
+       one takes (so it goes through the identical KB matching, no
+       separate voice-only logic to drift out of sync); synthesis
+       speaks the reply back, but only for turns that started as voice
+       — a typed question still gets a silent text reply, so voice
+       stays something the visitor opts into rather than a surprise
+       the first time Fasty answers. Removed entirely (not just
+       disabled) on browsers without support. */
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const canSpeak = "speechSynthesis" in window;
+    let recognition = null;
+    let isListening = false;
+    let voiceTurn = false;
+
+    function speak(text) {
+      if (!canSpeak || !text) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1;
+      window.speechSynthesis.speak(utter);
+    }
+
+    if (micBtn) {
+      if (!SpeechRecognitionCtor) {
+        micBtn.remove();
+      } else {
+        recognition = new SpeechRecognitionCtor();
+        recognition.lang = "en-IN";
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
+
+        recognition.addEventListener("start", () => {
+          isListening = true;
+          micBtn.classList.add("is-listening");
+          micBtn.setAttribute("aria-pressed", "true");
+          input.placeholder = "Listening…";
+        });
+        const stopListeningUI = () => {
+          isListening = false;
+          micBtn.classList.remove("is-listening");
+          micBtn.setAttribute("aria-pressed", "false");
+          input.placeholder = "Ask about services, pricing, or ordering…";
+        };
+        recognition.addEventListener("end", stopListeningUI);
+        recognition.addEventListener("error", stopListeningUI);
+        recognition.addEventListener("result", (e) => {
+          let transcript = "";
+          for (let i = e.resultIndex; i < e.results.length; i++) transcript += e.results[i][0].transcript;
+          input.value = transcript;
+          if (e.results[e.results.length - 1].isFinal && transcript.trim()) {
+            voiceTurn = true;
+            sendUserMessage(transcript);
+          }
+        });
+
+        micBtn.addEventListener("click", () => {
+          if (canSpeak && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+          if (isListening) {
+            recognition.stop();
+            return;
+          }
+          openPanel();
+          try {
+            recognition.start();
+          } catch (err) {
+            // start() throws if already running (e.g. a fast double
+            // click) — the existing session continues, nothing to do.
+          }
+        });
+      }
     }
 
     // AI Reel cuts, keyed the same way DATA is (reel1..reel4) — used
@@ -3096,16 +3176,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       setTimeout(() => {
         hideTyping();
         const match = findAnswer(text);
+        let replyHtml;
         if (match) {
           consecutiveMisses = 0;
-          addMessage("bot", match.reply(text), match.actions ? match.actions() : null);
+          replyHtml = match.reply(text);
+          addMessage("bot", replyHtml, match.actions ? match.actions() : null);
         } else {
           consecutiveMisses++;
-          const html =
+          replyHtml =
             consecutiveMisses > 1
               ? `<p>Still not quite catching that, sorry. Want to try asking in a different way, or should I just connect you with the team?</p>`
               : `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works. Happy to help if you'd like to try again, or I can connect you with the team directly.</p>`;
-          addMessage("bot", html, [ACTION_SERVICES, ACTION_TALK]);
+          addMessage("bot", replyHtml, [ACTION_SERVICES, ACTION_TALK]);
+        }
+        // Only speak the reply when this exchange started as voice —
+        // a typed question still gets a silent text reply.
+        if (voiceTurn) {
+          voiceTurn = false;
+          speak(stripHtml(replyHtml));
         }
       }, delay);
     }
@@ -3171,6 +3259,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function closePanel() {
       widget.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
+      if (isListening) recognition.stop();
+      if (canSpeak) window.speechSynthesis.cancel();
     }
     function togglePanel() {
       if (widget.classList.contains("open")) closePanel();
