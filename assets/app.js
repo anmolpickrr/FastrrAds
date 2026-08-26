@@ -3283,7 +3283,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to|baat karni hai|team se baat|sampark)\b/i,
         reply: (text, lang) =>
           lang === "hi"
-            ? `<p>Bilkul, connect karwa dete hain 🙂 Contact form khol raha hoon jahan aap apni requirement bata sakte hain. Hamari team aage sambhal legi.</p>`
+            ? `<p>Bilkul, connect karwa dete hain 🙂 Contact form khol rahi hoon jahan aap apni requirement bata sakte hain. Hamari team aage sambhal legi.</p>`
             : `<p>Of course, happy to connect you 🙂 Let me open our contact form so you can share a bit about what you need. Our team will take it from there.</p>`,
         actions: (text, lang) => [ACTION_TALK(lang)],
       },
@@ -3375,7 +3375,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
                 ? `<p>Abhi bhi samajh nahi paaya, sorry. Kisi aur tarah se poochh ke dekhna chahenge, ya main seedha team se connect kar doon?</p>`
                 : `<p>Still not quite catching that, sorry. Want to try asking in a different way, or should I just connect you with the team?</p>`
               : isHi
-                ? `<p>Sorry, mujhe theek se samajh nahi aaya 🤔 Main services, pricing, ya ordering se related sawaalon mein sabse acha hoon. Dobara try karna chahenge, ya main aapko seedha team se connect kar doon?</p>`
+                ? `<p>Sorry, mujhe theek se samajh nahi aaya 🤔 Main services, pricing, ya ordering se related sawaalon mein sabse achi hoon. Dobara try karna chahenge, ya main aapko seedha team se connect kar doon?</p>`
                 : `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works. Happy to help if you'd like to try again, or I can connect you with the team directly.</p>`;
           addMessage("bot", replyHtml, [ACTION_SERVICES(uiLang), ACTION_TALK(uiLang)]);
         }
@@ -3449,7 +3449,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       addMessage(
         "bot",
         uiLang === "hi"
-          ? `<p>Namaste, main Fasty hoon 👋 Hamari services, pricing, aur ordering process mein madad ke liye yahan hoon. Aapki kya madad kar sakta hoon?</p>`
+          ? `<p>Namaste, main Fasty hoon 👋 Hamari services, pricing, aur ordering process mein madad ke liye yahan hoon. Aapki kya madad kar sakti hoon?</p>`
           : `<p>Hi there, I'm Fasty 👋 I'm here to help you find your way around our services, pricing, and the ordering process. What can I help you with today?</p>`
       );
       renderQuickChips();
