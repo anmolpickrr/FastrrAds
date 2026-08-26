@@ -2901,13 +2901,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       [/कितन[ेाी]/g, "kitna"],
       [/ऑर्डर/g, "order"],
       [/कैसे/g, "kaise"],
-      [/करना है|करूं|करें|करदो/g, "karna hai"],
+      [/करना है|करूं|करें|करदो|करो/g, "karna hai"],
       [/डिलीवरी/g, "delivery"],
       [/कब तक/g, "kab tak"],
       [/समय/g, "samay"],
       [/बदलाव|रिवीजन/g, "revision"],
       [/संपर्क|सम्पर्क/g, "contact"],
+      [/कनेक्ट/g, "connect"],
       [/टीम से बात|बात करनी है/g, "team se baat"],
+      [/टीम से/g, "team se"],
       [/शुक्रिया|धन्यवाद/g, "shukriya"],
       [/अलविदा/g, "alvida"],
       [/दिखाएं|दिखाओ|दिखा/g, "dekhein"],
@@ -3321,7 +3323,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       },
       {
         id: "contact",
-        test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to|baat karni hai|team se baat|sampark)\b/i,
+        test: /\b(contact|connect|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to|baat karni hai|team se|sampark)\b/i,
         reply: (text, lang) =>
           lang === "hi"
             ? `<p>Bilkul, connect karwa dete hain 🙂 Contact form khol rahi hoon jahan aap apni requirement bata sakte hain. Hamari team aage sambhal legi.</p>`
