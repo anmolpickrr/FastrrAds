@@ -2932,22 +2932,28 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       loadVoices();
       window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
     }
-    // Prefers an Indian-accented, young-sounding female voice for the
-    // given language — searched by name since the Web Speech API
-    // exposes no age/gender field, only whatever hints a voice's own
-    // name carries. Deliberately tiered rather than a single filter:
-    // an exact-region voice that happens to be male-named (e.g.
-    // Windows' only Hindi voice is often "Microsoft Ravi", a man) used
-    // to win outright just for matching the region — now an explicitly
-    // female voice in the same *language family* outranks a male-named
-    // one in the exact region, and an unlabeled/ambiguous voice (no
-    // gender cue either way — common for Google's network voices,
-    // which for hi-IN/en-IN default to a female-sounding voice anyway)
-    // ranks above a voice that's explicitly male-named. Only when
-    // nothing in the language family carries any usable signal does it
-    // fall through to "whatever's in that region" and finally to null
-    // (browser default). Voice packs vary hugely by OS/browser, so
-    // this degrades gracefully rather than assuming any tier exists.
+    // Prefers an Indian-accented female voice for the given language,
+    // and — since "robotic" is almost always a quality-tier problem,
+    // not a gender one — a higher-quality voice within that language
+    // family before a lower one. The Web Speech API exposes no
+    // quality/age/gender field, only whatever a voice's own name
+    // carries, so this reads a few real-world naming patterns: OS
+    // vendors increasingly ship both a legacy "Desktop"/compact voice
+    // (fast, robotic, always-available offline) and a much better
+    // network/neural one for the same language — Windows' "...Online
+    // (Natural)" voices, and Chrome/Android's "Google ..." voices are
+    // both meaningfully more natural-sounding than the legacy default,
+    // so those are preferred first, ahead of even gender-matching a
+    // lower-quality voice. An exact-region voice that happens to be
+    // male-named (e.g. Windows' only Hindi voice is often "Microsoft
+    // Ravi", a man) no longer wins outright just for matching the
+    // region — a female or unlabeled (gender-neutral name, common for
+    // network voices, which for hi-IN/en-IN already default to a
+    // female-sounding voice) voice in the same language family
+    // outranks it. Voice packs vary hugely by OS/browser, so this
+    // degrades gracefully through each tier rather than assuming any
+    // of them exist, down to null (browser default) at the very end.
+    const QUALITY_HINTS = /natural|neural|enhanced|premium|online|wavenet|google/i;
     const FEMALE_HINTS = /female|woman|girl|zira|heera|lekha|veena|priya|kalpana|shreya|neerja|swara|aditi|ananya|kavya|samantha|kate|karen|susan|moira|tessa|salli|joanna|kimberly|ivy/i;
     const MALE_HINTS = /\bmale\b|\bman\b|david|ravi\b|rishi|hemant|prabhat|daniel|george|mark|james|matthew|justin|kevin|brian|joey/i;
     function pickVoice(lang) {
@@ -2955,11 +2961,16 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       if (!voices.length) return null;
       const wantLang = lang === "hi" ? "hi-in" : "en-in";
       const wantFamily = lang === "hi" ? "hi" : "en";
+      const isQuality = (v) => QUALITY_HINTS.test(v.name);
       const isFemale = (v) => FEMALE_HINTS.test(v.name);
       const isMale = (v) => MALE_HINTS.test(v.name);
       const exact = voices.filter((v) => (v.lang || "").toLowerCase() === wantLang);
       const family = voices.filter((v) => (v.lang || "").toLowerCase().startsWith(wantFamily));
       return (
+        exact.find((v) => isQuality(v) && isFemale(v)) ||
+        exact.find((v) => isQuality(v) && !isMale(v)) ||
+        family.find((v) => isQuality(v) && isFemale(v)) ||
+        family.find((v) => isQuality(v) && !isMale(v)) ||
         exact.find(isFemale) ||
         exact.find((v) => !isMale(v)) ||
         family.find(isFemale) ||
@@ -2970,28 +2981,43 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       );
     }
 
+    // Split into sentences and queue them as separate utterances
+    // (speechSynthesis plays consecutive speak() calls back to back)
+    // instead of one long utterance — most engines pace and breathe a
+    // run of short utterances more naturally than a single dense
+    // paragraph, where they tend to rush or flatten out partway
+    // through. Falls back to the whole string as one sentence if the
+    // split finds nothing (short replies, no terminal punctuation).
+    function splitSentences(text) {
+      const parts = text.match(/[^.!?]+[.!?]*/g);
+      return parts && parts.length ? parts.map((s) => s.trim()).filter(Boolean) : [text];
+    }
+
     function speak(text) {
       if (!canSpeak || !text) return;
       window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = uiLang === "hi" ? "hi-IN" : "en-IN";
+      const lang = uiLang === "hi" ? "hi-IN" : "en-IN";
       const voice = pickVoice(uiLang);
-      if (voice) {
-        try {
-          utter.voice = voice;
-        } catch (err) {
-          // Falls back to the browser's own default voice for
-          // utter.lang — still correct-language, just not necessarily
-          // the specific voice picked above.
+      splitSentences(text).forEach((sentence) => {
+        const utter = new SpeechSynthesisUtterance(sentence);
+        utter.lang = lang;
+        if (voice) {
+          try {
+            utter.voice = voice;
+          } catch (err) {
+            // Falls back to the browser's own default voice for
+            // utter.lang — still correct-language, just not
+            // necessarily the specific voice picked above.
+          }
         }
-      }
-      // A touch faster and higher than default reads as younger/more
-      // energetic — useful fallback when no explicit female voice is
-      // installed and the browser's default flat/monotone voice is
-      // all that's available.
-      utter.rate = 1.04;
-      utter.pitch = 1.12;
-      window.speechSynthesis.speak(utter);
+        // Left at the engine's own natural rate/pitch rather than
+        // sped up or pitch-shifted — synthetic pitch-shifting is
+        // exactly what pushes a voice from "natural" to "robotic",
+        // since it's simple signal processing, not real re-synthesis.
+        utter.rate = 1;
+        utter.pitch = 1;
+        window.speechSynthesis.speak(utter);
+      });
     }
 
     if (micBtn) {
