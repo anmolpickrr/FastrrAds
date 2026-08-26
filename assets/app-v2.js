@@ -2855,6 +2855,35 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
     const START_PRICE = { catalogue: DATA.catalogue.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
 
+    /* ---- Language — English or Hindi (written the way people
+       actually type/read it here: Devanagari grammar with common
+       English/brand words like "reel", "GST", "order" left as-is,
+       i.e. natural Hinglish rather than a purist translation), fully
+       auto-detected — no visible toggle. One flag drives all three
+       surfaces at once: which reply text renders, what language voice
+       recognition listens for next, and what language speech
+       synthesis speaks in, so a visitor never gets Hindi text read
+       back in an English voice or vice versa. Detected fresh from
+       every typed or spoken message, so it follows the conversation
+       rather than needing to be set up front — the one limitation is
+       the very first voice turn of a session, before any language has
+       been detected yet, which listens in English (best all-rounder
+       for Hinglish/Indian-accented speech) until a message signals
+       otherwise. */
+    let uiLang = "en";
+    const HINGLISH_RE = /\b(kya|kaise|kitna|kitne|kitni|hai|hain|kripya|chahiye|karo|kardo|bhejo|batao|paisa|rupaye|rupees|samay|turant|abhi|madad|dhanyavaad|shukriya|namaste|namaskar|theek|accha|bhai|kimat|keemat|daam|chhoot|milega|karna|karni|sakte|mujhe|aap|hamare|humein)\b/i;
+    function detectLang(text) {
+      if (/[ऀ-ॿ]/.test(text)) return "hi";
+      if (HINGLISH_RE.test(text)) return "hi";
+      return "en";
+    }
+    function setLang(lang) {
+      uiLang = lang;
+      const isHi = lang === "hi";
+      if (recognition) recognition.lang = isHi ? "hi-IN" : "en-IN";
+      if (!isListening) input.placeholder = isHi ? "Services, pricing ya ordering ke baare mein poochein…" : "Ask about services, pricing, or ordering…";
+    }
+
     function scrollToSelector(sel) {
       const el = document.querySelector(sel);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2864,9 +2893,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const btn = document.querySelector(".js-open-lead-modal");
       if (btn) btn.click();
     }
-    const ACTION_QUOTE = { label: "Open quote builder", onClick: () => scrollToSelector("#quote") };
-    const ACTION_SERVICES = { label: "See Services", onClick: () => scrollToSelector("#services") };
-    const ACTION_TALK = { label: "Talk to the team", onClick: () => openLead() };
+    const ACTION_QUOTE = (lang) => ({ label: lang === "hi" ? "Quote banayein" : "Open quote builder", onClick: () => scrollToSelector("#quote") });
+    const ACTION_SERVICES = (lang) => ({ label: lang === "hi" ? "Services dekhein" : "See Services", onClick: () => scrollToSelector("#services") });
+    const ACTION_TALK = (lang) => ({ label: lang === "hi" ? "Team se baat karein" : "Talk to the team", onClick: () => openLead() });
 
     function escapeHtml(s) {
       return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -2892,12 +2921,50 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     let isListening = false;
     let voiceTurn = false;
 
+    // Voice list loads async in most browsers (empty on the first call,
+    // populated once "voiceschanged" fires), so it's cached and kept
+    // fresh rather than read fresh inside speak() every time.
+    let cachedVoices = [];
+    if (canSpeak) {
+      const loadVoices = () => {
+        cachedVoices = window.speechSynthesis.getVoices();
+      };
+      loadVoices();
+      window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
+    }
+    // Prefers an Indian-accented, young-sounding female voice for the
+    // given language — searched by name/voiceURI since the Web Speech
+    // API exposes no age/gender field, only whatever hints a voice's
+    // own name carries (installed voice packs vary a lot by OS/browser,
+    // so this degrades gracefully: exact lang + female name > exact
+    // lang, any voice > any Indian-flagged voice > browser default).
+    const FEMALE_HINTS = /female|woman|girl|zira|heera|lekha|veena|priya|kalpana|shreya|neerja|swara|aditi|ananya|kavya/i;
+    function pickVoice(lang) {
+      const voices = cachedVoices.length ? cachedVoices : (canSpeak ? window.speechSynthesis.getVoices() : []);
+      const wantLang = lang === "hi" ? "hi-in" : "en-in";
+      const exact = voices.filter((v) => v.lang && v.lang.toLowerCase() === wantLang);
+      const female = exact.find((v) => FEMALE_HINTS.test(v.name));
+      if (female) return female;
+      if (exact.length) return exact[0];
+      const indianFlagged = voices.find((v) => /india|hindi|en-in|hi-in/i.test(v.lang + " " + v.name));
+      if (indianFlagged) return indianFlagged;
+      const anyFemale = voices.find((v) => FEMALE_HINTS.test(v.name));
+      return anyFemale || null;
+    }
+
     function speak(text) {
       if (!canSpeak || !text) return;
       window.speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = 1;
-      utter.pitch = 1;
+      utter.lang = uiLang === "hi" ? "hi-IN" : "en-IN";
+      const voice = pickVoice(uiLang);
+      if (voice) utter.voice = voice;
+      // A touch faster and higher than default reads as younger/more
+      // energetic — useful fallback when no explicit female voice is
+      // installed and the browser's default flat/monotone voice is
+      // all that's available.
+      utter.rate = 1.04;
+      utter.pitch = 1.12;
       window.speechSynthesis.speak(utter);
     }
 
@@ -2961,25 +3028,33 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       { key: "reel3", label: "Director's Cut" },
       { key: "reel4", label: "Studio Cut" },
     ];
-    function reelReply(d) {
+    function reelReply(d, lang) {
       const cut = d.name.replace("AI Reel — ", "");
       const deliveryRaw = d.turnaround.split(" after")[0];
       const delivery = deliveryRaw.charAt(0).toLowerCase() + deliveryRaw.slice(1);
+      if (lang === "hi")
+        return `<p>Badhiya choice 🙂 Hamara <b>${escapeHtml(cut)}</b> ${fmtINR(d.basePrice)} per reel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually ${escapeHtml(delivery)} mein deliver ho jaata hai.</p>`;
       return `<p>Good pick 🙂 Our <b>${escapeHtml(cut)}</b> is ${fmtINR(d.basePrice)} per reel. ${escapeHtml(d.short)}</p><p>You're looking at ${d.duration.toLowerCase()}, with ${d.revisions.toLowerCase()} included, and it's usually delivered in ${escapeHtml(delivery)}.</p>`;
     }
 
     // Matches "reel"/"reels" together with a pricing, turnaround, or
     // revisions word in the same message, in either order — e.g. "how
-    // long does a reel take" or "revisions on a reel". Used to make
-    // the reel-cut clarifying question actually acknowledge what was
-    // asked instead of a one-size-fits-all "which one sounds right".
-    const INTENT_WORDS = "(price|pricing|cost|how much|rate|rates|charges|turnaround|delivery|deliver|how long|how fast|revision|revisions|edits?|changes)";
+    // long does a reel take" or "revisions on a reel" — including the
+    // common Hinglish phrasing of the same questions. Used to make the
+    // reel-cut clarifying question actually acknowledge what was asked
+    // instead of a one-size-fits-all "which one sounds right".
+    const INTENT_WORDS =
+      "(price|pricing|cost|how much|rate|rates|charges|kitna|kitne|kimat|keemat|daam|paisa|turnaround|delivery|deliver|how long|how fast|kab tak|samay|revision|revisions|edits?|changes|badlaav)";
     const REEL_INTENT_RE = new RegExp("\\breel\\w*\\b.*\\b" + INTENT_WORDS + "\\b|\\b" + INTENT_WORDS + "\\b.*\\breel\\w*\\b", "i");
-    function reelIntentHint(text) {
-      if (/price|pricing|cost|how much|rate|rates|charges/i.test(text)) return "Pricing depends on which cut you go with";
-      if (/turnaround|delivery|deliver|how long|how fast/i.test(text)) return "Turnaround depends on which cut you go with";
-      if (/revision|revisions|edits?|changes/i.test(text)) return "The number of revisions depends on which cut you go with";
-      return "That depends a bit on which cut you go with";
+    function reelIntentHint(text, lang) {
+      const isHi = lang === "hi";
+      if (/price|pricing|cost|how much|rate|rates|charges|kitna|kimat|keemat|daam|paisa/i.test(text))
+        return isHi ? "Pricing us baat par depend karti hai ki aap kaunsa cut lete hain" : "Pricing depends on which cut you go with";
+      if (/turnaround|delivery|deliver|how long|how fast|kab tak|samay/i.test(text))
+        return isHi ? "Turnaround is baat par depend karta hai ki aap kaunsa cut lete hain" : "Turnaround depends on which cut you go with";
+      if (/revision|revisions|edits?|changes|badlaav/i.test(text))
+        return isHi ? "Revisions ki number cut ke hisaab se alag hoti hai" : "The number of revisions depends on which cut you go with";
+      return isHi ? "Ye thoda is baat par depend karta hai ki aap kaunsa cut lete hain" : "That depends a bit on which cut you go with";
     }
 
     /* ---- knowledge base ----
@@ -2995,61 +3070,76 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const KB = [
       {
         id: "greeting",
-        test: /\b(hi|hii+|hello+|hey+|yo|namaste)\b/i,
-        reply: () => `<p>Hey there! 👋 Happy to help. Feel free to ask me anything about our services, pricing, or how ordering works.</p>`,
+        test: /\b(hi|hii+|hello+|hey+|yo|namaste|namaskar)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Namaste! 👋 Aapse baat karke khushi hui. Hamari services, pricing, ya ordering ke baare mein kuch bhi poochh sakte hain.</p>`
+            : `<p>Hey there! 👋 Happy to help. Feel free to ask me anything about our services, pricing, or how ordering works.</p>`,
       },
       {
         id: "reelSpecific",
         test: /\b(quick cut|story cut|director'?s cut|studio cut)\b/i,
-        reply: (text) => {
+        reply: (text, lang) => {
           const hit = REEL_TIERS.find((t) => new RegExp(t.label.replace("'", "'?"), "i").test(text));
-          return reelReply(DATA[hit.key]);
+          return reelReply(DATA[hit.key], lang);
         },
-        actions: () => [ACTION_QUOTE],
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "reelIntent",
         test: REEL_INTENT_RE,
-        reply: (text) => `<p>${reelIntentHint(text)}. Which one are you looking at?</p>`,
+        reply: (text, lang) => `<p>${reelIntentHint(text, lang)}. ${lang === "hi" ? "Aap kaunsa dekh rahe hain" : "Which one are you looking at"}?</p>`,
         actions: () => REEL_TIERS.map((t) => ({ label: t.label, onClick: () => sendUserMessage(t.label) })),
       },
       {
         id: "reelsGeneric",
         test: /\b(reel|reels|ai reel)\b/i,
-        reply: () => `<p>AI Reels are one of our most popular formats 😊 We've got a few cuts depending on how much creative input you'd like. Which one sounds right for you?</p>`,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>AI Reels hamare sabse popular formats mein se ek hain 😊 Aapko kitna creative input dena hai uske hisaab se kuch cuts available hain. Aapke liye kaunsa sahi rahega?</p>`
+            : `<p>AI Reels are one of our most popular formats 😊 We've got a few cuts depending on how much creative input you'd like. Which one sounds right for you?</p>`,
         actions: () => REEL_TIERS.map((t) => ({ label: t.label, onClick: () => sendUserMessage(t.label) })),
       },
       {
         id: "catalogue",
         test: /\b(catalogue|catalog|360)\b/i,
-        reply: () => {
+        reply: (text, lang) => {
           const d = DATA.catalogue;
+          if (lang === "hi")
+            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per SKU hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur hum usually 24 se 48 ghante mein deliver kar dete hain.</p>`;
           return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24 to 48 hours.</p>`;
         },
-        actions: () => [ACTION_QUOTE],
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "static",
         test: /\bstatic\b/i,
-        reply: () => {
+        reply: (text, lang) => {
           const d = DATA.static;
+          if (lang === "hi")
+            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per creative hai. ${escapeHtml(d.short)}</p><p>Ye ${escapeHtml(d.format)} mein aata hai, ${d.revisions.toLowerCase()} included hai, aur karib 24 ghante mein deliver ho jaata hai.</p>`;
           return `<p>Of course! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per creative. ${escapeHtml(d.short)}</p><p>It comes in ${escapeHtml(d.format)}, with ${d.revisions.toLowerCase()} included, and delivers within about 24 hours.</p>`;
         },
-        actions: () => [ACTION_QUOTE],
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "carousel",
         test: /\bcarousel\b/i,
-        reply: () => {
+        reply: (text, lang) => {
           const d = DATA.carousel;
+          if (lang === "hi")
+            return `<p>Zaroor madad karenge! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per carousel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually 24 se 48 ghante mein deliver ho jaata hai.</p>`;
           return `<p>Happy to help! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per carousel. ${escapeHtml(d.short)}</p><p>It's ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and usually takes 24 to 48 hours to deliver.</p>`;
         },
-        actions: () => [ACTION_QUOTE],
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "services",
-        test: /\b(service|services|what do you (offer|do)|options|packages)\b/i,
-        reply: () => `<p>We'd love to help with that 🎬 We work across 4 formats: AI Reels, 360° Catalogue Videos, Statics, and Carousels. I'm happy to walk you through any of them.</p><p>Which one would you like to know more about?</p>`,
+        test: /\b(service|services|what do you (offer|do)|options|packages|kya services|kya milta hai|kya karte ho)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Zaroor madad karenge 🎬 Hum 4 formats mein kaam karte hain: AI Reels, 360° Catalogue Videos, Statics, aur Carousels. Kisi bhi ek ke baare mein bata sakte hain.</p><p>Aap kis baare mein jaanna chahenge?</p>`
+            : `<p>We'd love to help with that 🎬 We work across 4 formats: AI Reels, 360° Catalogue Videos, Statics, and Carousels. I'm happy to walk you through any of them.</p><p>Which one would you like to know more about?</p>`,
         actions: () => [
           { label: "AI Reels", onClick: () => sendUserMessage("AI Reels") },
           { label: "Catalogue Video", onClick: () => sendUserMessage("Catalogue Video") },
@@ -3059,25 +3149,37 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       },
       {
         id: "minOrder",
-        test: /\b(minimum|min\.?\s?order)\b/i,
-        reply: () => `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go.</p>`,
-        actions: () => [ACTION_QUOTE],
+        test: /\b(minimum|min\.?\s?order|kam se kam)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Accha sawaal! Hum ₹10,000 minimum per order rakhte hain, lekin aap kuch bhi mix-and-match karke wahan tak pahunch sakte hain. Calculator aapke liye running total dikhata rehta hai.</p>`
+            : `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go.</p>`,
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "discount",
-        test: /\b(discount|coupon|save10|offer|deal)\b/i,
-        reply: () => `<p>You're in luck ✨ Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically get <b>${PUBLIC_OFFER_CODE}</b> applied for ${PUBLIC_OFFER_PCT}% off. Nothing you need to do, it just kicks in for you.</p>`,
-        actions: () => [ACTION_QUOTE],
+        test: /\b(discount|coupon|save10|offer|deal|chhoot)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Aap lucky hain ✨ ${fmtINR(PUBLIC_OFFER_THRESHOLD)} se zyada ke orders par automatically <b>${PUBLIC_OFFER_CODE}</b> apply ho jaata hai aur ${PUBLIC_OFFER_PCT}% off milta hai. Kuch karne ki zaroorat nahi, khud hi lag jaata hai.</p>`
+            : `<p>You're in luck ✨ Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically get <b>${PUBLIC_OFFER_CODE}</b> applied for ${PUBLIC_OFFER_PCT}% off. Nothing you need to do, it just kicks in for you.</p>`,
+        actions: (text, lang) => [ACTION_QUOTE(lang)],
       },
       {
         id: "gst",
         test: /\b(gst|tax|taxes)\b/i,
-        reply: () => `<p>No surprises there. GST (18%) is already included in your total, so what you see at checkout is exactly what you'll pay.</p>`,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Koi surprise nahi hoga. GST (18%) already aapke total mein included hai, toh checkout par jo dikhega wahi aapko pay karna hoga.</p>`
+            : `<p>No surprises there. GST (18%) is already included in your total, so what you see at checkout is exactly what you'll pay.</p>`,
       },
       {
         id: "pricing",
-        test: /\b(price|pricing|cost|how much|rate|rates|charges)\b/i,
-        reply: () => `<p>Happy to break that down 🙂 Roughly, we start from ${fmtINR(START_PRICE.reels)} for Reels, ${fmtINR(START_PRICE.catalogue)} for Catalogue Videos, ${fmtINR(START_PRICE.static)} for Statics, and ${fmtINR(START_PRICE.carousel)} for Carousels.</p><p>Would you like the exact price for one of these?</p>`,
+        test: /\b(price|pricing|cost|how much|rate|rates|charges|kitna|kitne|kimat|keemat|daam)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Zaroor batate hain 🙂 Roughly, Reels ${fmtINR(START_PRICE.reels)} se, Catalogue Videos ${fmtINR(START_PRICE.catalogue)} se, Statics ${fmtINR(START_PRICE.static)} se, aur Carousels ${fmtINR(START_PRICE.carousel)} se shuru hote hain.</p><p>Inme se kisi ek ki exact price chahiye?</p>`
+            : `<p>Happy to break that down 🙂 Roughly, we start from ${fmtINR(START_PRICE.reels)} for Reels, ${fmtINR(START_PRICE.catalogue)} for Catalogue Videos, ${fmtINR(START_PRICE.static)} for Statics, and ${fmtINR(START_PRICE.carousel)} for Carousels.</p><p>Would you like the exact price for one of these?</p>`,
         actions: () => [
           { label: "AI Reels", onClick: () => sendUserMessage("AI Reels") },
           { label: "Catalogue Video", onClick: () => sendUserMessage("Catalogue Video") },
@@ -3087,36 +3189,54 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       },
       {
         id: "orderProcess",
-        test: /\b(order process|how (do|to) (i|you) order|place (an|my) order|how does ordering work|how to buy|how do i buy)\b/i,
-        reply: () => `<p>It's pretty straightforward, happy to walk you through it 🙂</p><p>You'd start by picking a service and setting your quantity below, then add it to your order. Feel free to do that for anything else you need too. Once you're ready, just hit Place Your Order and share a few details, and we'll take it from there.</p>`,
-        actions: () => [ACTION_QUOTE, ACTION_SERVICES],
+        test: /\b(order process|how (do|to) (i|you) order|place (an|my) order|how does ordering work|how to buy|how do i buy|order kaise|kaise order|order karna hai|order karu)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Bilkul simple hai, bata dete hain 🙂</p><p>Pehle ek service choose karein aur quantity set karein, phir apne order mein add karein. Aur kuch chahiye toh wahi karte rahiye. Ready hone par bas Place Your Order dabayein aur thodi details share karein, baaki hum sambhal lenge.</p>`
+            : `<p>It's pretty straightforward, happy to walk you through it 🙂</p><p>You'd start by picking a service and setting your quantity below, then add it to your order. Feel free to do that for anything else you need too. Once you're ready, just hit Place Your Order and share a few details, and we'll take it from there.</p>`,
+        actions: (text, lang) => [ACTION_QUOTE(lang), ACTION_SERVICES(lang)],
       },
       {
         id: "turnaround",
-        test: /\b(turnaround|delivery time|how long|how fast|when will|days? to deliver)\b/i,
-        reply: () => `<p>That really depends on what you're going for. Reels usually take 1 to 5 working days depending on the cut, while everything else is typically 24 to 48 hours. Just so you know, the clock starts once we've received everything we need from you, not from the payment date.</p>`,
+        test: /\b(turnaround|delivery time|how long|how fast|when will|days? to deliver|kab tak|kitna samay|kitne din)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Ye is baat par depend karta hai ki aap kya chahte hain. Reels usually cut ke hisaab se 1 se 5 working days lete hain, baaki sab typically 24 se 48 ghante mein ho jaata hai. Waise, clock tab shuru hota hai jab hume aapse sab kuch mil jaata hai, payment date se nahi.</p>`
+            : `<p>That really depends on what you're going for. Reels usually take 1 to 5 working days depending on the cut, while everything else is typically 24 to 48 hours. Just so you know, the clock starts once we've received everything we need from you, not from the payment date.</p>`,
       },
       {
         id: "revisions",
-        test: /\b(revision|revisions|edits?|changes)\b/i,
-        reply: () => `<p>That varies a bit by service, anywhere from no revisions on Catalogue Video up to 2 on our Studio Cut reel. Which one did you have in mind? I can give you the exact number.</p>`,
-        actions: () => [ACTION_SERVICES],
+        test: /\b(revision|revisions|edits?|changes|badlaav)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Ye service ke hisaab se thoda alag hota hai, Catalogue Video mein koi revision nahi to Studio Cut reel mein 2 tak. Aapke dimaag mein kaunsa hai? Main exact number bata dunga.</p>`
+            : `<p>That varies a bit by service, anywhere from no revisions on Catalogue Video up to 2 on our Studio Cut reel. Which one did you have in mind? I can give you the exact number.</p>`,
+        actions: (text, lang) => [ACTION_SERVICES(lang)],
       },
       {
         id: "contact",
-        test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to)\b/i,
-        reply: () => `<p>Of course, happy to connect you 🙂 Let me open our contact form so you can share a bit about what you need. Our team will take it from there.</p>`,
-        actions: () => [ACTION_TALK],
+        test: /\b(contact|talk to (a|the)? ?(human|team|sales|someone)|call (you|us)|whatsapp|email you|reach you|speak to|baat karni hai|team se baat|sampark)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Bilkul, connect karwa dete hain 🙂 Contact form khol raha hoon jahan aap apni requirement bata sakte hain. Hamari team aage sambhal legi.</p>`
+            : `<p>Of course, happy to connect you 🙂 Let me open our contact form so you can share a bit about what you need. Our team will take it from there.</p>`,
+        actions: (text, lang) => [ACTION_TALK(lang)],
       },
       {
         id: "thanks",
-        test: /\b(thank|thanks|thx|thankyou)\b/i,
-        reply: () => `<p>You're very welcome! Happy to help anytime, just let me know if anything else comes to mind 🙂</p>`,
+        test: /\b(thank|thanks|thx|thankyou|shukriya|dhanyavaad)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Bilkul, swagat hai! Kabhi bhi madad chahiye toh bata dijiyega 🙂</p>`
+            : `<p>You're very welcome! Happy to help anytime, just let me know if anything else comes to mind 🙂</p>`,
       },
       {
         id: "bye",
-        test: /\b(bye|goodbye|see ya|cya)\b/i,
-        reply: () => `<p>Take care, and thanks for stopping by! 👋 I'll be right here if you need anything else.</p>`,
+        test: /\b(bye|goodbye|see ya|cya|alvida)\b/i,
+        reply: (text, lang) =>
+          lang === "hi"
+            ? `<p>Dhyan rakhiyega, aane ke liye shukriya! 👋 Kuch bhi chahiye ho toh main yahin hoon.</p>`
+            : `<p>Take care, and thanks for stopping by! 👋 I'll be right here if you need anything else.</p>`,
       },
     ];
 
@@ -3179,15 +3299,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         let replyHtml;
         if (match) {
           consecutiveMisses = 0;
-          replyHtml = match.reply(text);
-          addMessage("bot", replyHtml, match.actions ? match.actions() : null);
+          replyHtml = match.reply(text, uiLang);
+          addMessage("bot", replyHtml, match.actions ? match.actions(text, uiLang) : null);
         } else {
           consecutiveMisses++;
+          const isHi = uiLang === "hi";
           replyHtml =
             consecutiveMisses > 1
-              ? `<p>Still not quite catching that, sorry. Want to try asking in a different way, or should I just connect you with the team?</p>`
-              : `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works. Happy to help if you'd like to try again, or I can connect you with the team directly.</p>`;
-          addMessage("bot", replyHtml, [ACTION_SERVICES, ACTION_TALK]);
+              ? isHi
+                ? `<p>Abhi bhi samajh nahi paaya, sorry. Kisi aur tarah se poochh ke dekhna chahenge, ya main seedha team se connect kar doon?</p>`
+                : `<p>Still not quite catching that, sorry. Want to try asking in a different way, or should I just connect you with the team?</p>`
+              : isHi
+                ? `<p>Sorry, mujhe theek se samajh nahi aaya 🤔 Main services, pricing, ya ordering se related sawaalon mein sabse acha hoon. Dobara try karna chahenge, ya main aapko seedha team se connect kar doon?</p>`
+                : `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works. Happy to help if you'd like to try again, or I can connect you with the team directly.</p>`;
+          addMessage("bot", replyHtml, [ACTION_SERVICES(uiLang), ACTION_TALK(uiLang)]);
         }
         // Only speak the reply when this exchange started as voice —
         // a typed question still gets a silent text reply.
@@ -3201,16 +3326,27 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // Icon SVGs kept as plain markup strings (not a shared icon map
     // elsewhere) since these four are only ever used here, in the
     // action-grid launcher shown before the first real message.
-    const QUICK_STARTERS = [
-      { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
-      { label: "How ordering works", text: "How does the order process work?" },
-      { label: "Turnaround time", text: "What's the turnaround time?" },
-      { label: "Discounts & GST", text: "Tell me about discounts and GST" },
-      { label: "Talk to the team", text: "I'd like to talk to the team" },
-    ];
+    function getQuickStarters(lang) {
+      if (lang === "hi") {
+        return [
+          { label: "Services aur pricing", text: "Aap kya services dete hain aur unki cost kya hai?" },
+          { label: "Order kaise karein", text: "Order process kaise kaam karta hai?" },
+          { label: "Turnaround time", text: "Turnaround time kya hai?" },
+          { label: "Discount aur GST", text: "Discount aur GST ke baare mein batayein" },
+          { label: "Team se baat karein", text: "Mujhe team se baat karni hai" },
+        ];
+      }
+      return [
+        { label: "Services & pricing", text: "What services do you offer and what do they cost?" },
+        { label: "How ordering works", text: "How does the order process work?" },
+        { label: "Turnaround time", text: "What's the turnaround time?" },
+        { label: "Discounts & GST", text: "Tell me about discounts and GST" },
+        { label: "Talk to the team", text: "I'd like to talk to the team" },
+      ];
+    }
     function renderQuickChips() {
       quickEl.innerHTML = "";
-      QUICK_STARTERS.forEach((q) => {
+      getQuickStarters(uiLang).forEach((q) => {
         const b = document.createElement("button");
         b.type = "button";
         b.className = "fasty-quick-chip";
@@ -3223,6 +3359,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     function sendUserMessage(text) {
       const trimmed = text.trim();
       if (!trimmed) return;
+      // Auto-switch the active language to match what was just typed
+      // or spoken, so the reply (and, for a voice turn, the spoken-
+      // back audio) lands in the same language without needing a
+      // manual toggle every time — the toggle stays there for getting
+      // ahead of it before speaking, since recognition needs a
+      // language set up front and can't guess.
+      setLang(detectLang(trimmed));
       // The starter chips only earn their space before the conversation
       // has actually started — once someone's asked anything (typed or
       // tapped a starter itself), that row is just eating room the
@@ -3240,7 +3383,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       seeded = true;
       addMessage(
         "bot",
-        `<p>Hi there, I'm Fasty 👋 I'm here to help you find your way around our services, pricing, and the ordering process. What can I help you with today?</p>`
+        uiLang === "hi"
+          ? `<p>Namaste, main Fasty hoon 👋 Hamari services, pricing, aur ordering process mein madad ke liye yahan hoon. Aapki kya madad kar sakta hoon?</p>`
+          : `<p>Hi there, I'm Fasty 👋 I'm here to help you find your way around our services, pricing, and the ordering process. What can I help you with today?</p>`
       );
       renderQuickChips();
     }
