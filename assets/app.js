@@ -2877,6 +2877,46 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       if (HINGLISH_RE.test(text)) return "hi";
       return "en";
     }
+    // The KB below matches on Latin/Hinglish keywords, but hi-IN speech
+    // recognition transcribes spoken Hindi as Devanagari script, and a
+    // fair share of typed Hindi comes in Devanagari too — so without
+    // this, every intent match would silently fail for anyone actually
+    // speaking or typing native Hindi, always falling through to the
+    // generic "didn't understand" reply. This maps the common Devanagari
+    // words for each intent onto the Hinglish keyword the KB already
+    // recognizes, so matching (not the displayed message) runs against
+    // the normalized text.
+    const DEVANAGARI_KEYWORD_MAP = [
+      [/नमस्ते|नमस्कार|हाय+|हेलो+/g, "namaste"],
+      [/सर्विस|सेवा/g, "services"],
+      [/रील/g, "reel"],
+      [/कैटलॉग|कैटालॉग/g, "catalogue"],
+      [/स्टैटिक/g, "static"],
+      [/कैरोसेल/g, "carousel"],
+      [/न्यूनतम/g, "kam se kam"],
+      [/डिस्काउंट|छूट|कूपन|ऑफर/g, "discount"],
+      [/जीएसटी/g, "gst"],
+      [/टैक्स/g, "tax"],
+      [/कीमत|दाम|प्राइस|रेट|क़ीमत/g, "price"],
+      [/कितन[ेाी]/g, "kitna"],
+      [/ऑर्डर/g, "order"],
+      [/कैसे/g, "kaise"],
+      [/करना है|करूं|करें|करदो/g, "karna hai"],
+      [/डिलीवरी/g, "delivery"],
+      [/कब तक/g, "kab tak"],
+      [/समय/g, "samay"],
+      [/बदलाव|रिवीजन/g, "revision"],
+      [/संपर्क|सम्पर्क/g, "contact"],
+      [/टीम से बात|बात करनी है/g, "team se baat"],
+      [/शुक्रिया|धन्यवाद/g, "shukriya"],
+      [/अलविदा/g, "alvida"],
+      [/दिखाएं|दिखाओ|दिखा/g, "dekhein"],
+    ];
+    function normalizeForMatch(text) {
+      let out = text;
+      for (const [re, repl] of DEVANAGARI_KEYWORD_MAP) out = out.replace(re, repl);
+      return out;
+    }
     function setLang(lang) {
       uiLang = lang;
       const isHi = lang === "hi";
@@ -3112,6 +3152,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       "(price|pricing|cost|how much|rate|rates|charges|kitna|kitne|kimat|keemat|daam|paisa|turnaround|delivery|deliver|how long|how fast|kab tak|samay|revision|revisions|edits?|changes|badlaav)";
     const REEL_INTENT_RE = new RegExp("\\breel\\w*\\b.*\\b" + INTENT_WORDS + "\\b|\\b" + INTENT_WORDS + "\\b.*\\breel\\w*\\b", "i");
     function reelIntentHint(text, lang) {
+      text = normalizeForMatch(text);
       const isHi = lang === "hi";
       if (/price|pricing|cost|how much|rate|rates|charges|kitna|kimat|keemat|daam|paisa/i.test(text))
         return isHi ? "Pricing us baat par depend karti hai ki aap kaunsa cut lete hain" : "Pricing depends on which cut you go with";
@@ -3306,8 +3347,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     ];
 
     function findAnswer(text) {
+      const norm = normalizeForMatch(text);
       for (const entry of KB) {
-        if (entry.test.test(text)) return entry;
+        if (entry.test.test(norm)) return entry;
       }
       return null;
     }
