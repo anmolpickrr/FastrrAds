@@ -2890,9 +2890,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       [/नमस्ते|नमस्कार|हाय+|हेलो+/g, "namaste"],
       [/सर्विस|सेवा/g, "services"],
       [/रील/g, "reel"],
-      [/कैटलॉग|कैटालॉग/g, "catalogue"],
-      [/स्टैटिक/g, "static"],
-      [/कैरोसेल/g, "carousel"],
+      [/कैटलॉग|कैटालॉग|कैटलोग/g, "catalogue"],
+      [/स्टैटिक|स्टेटिक/g, "static"],
+      [/कैरोसेल|केरोसेल/g, "carousel"],
       [/न्यूनतम/g, "kam se kam"],
       [/डिस्काउंट|छूट|कूपन|ऑफर/g, "discount"],
       [/जीएसटी/g, "gst"],
@@ -2937,7 +2937,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
     const ACTION_QUOTE = (lang) => ({ label: lang === "hi" ? "Quote banayein" : "Open quote builder", onClick: () => scrollToSelector("#quote") });
     const ACTION_SERVICES = (lang) => ({ label: lang === "hi" ? "Services dekhein" : "See Services", onClick: () => scrollToSelector("#services") });
-    const ACTION_TALK = (lang) => ({ label: lang === "hi" ? "Team se baat karein" : "Talk to the team", onClick: () => openLead() });
+    const ACTION_TALK = (lang) => ({ label: lang === "hi" ? "Team se baat karein" : "Talk to the team", onClick: () => { closePanel(); openLead(); } });
 
     function escapeHtml(s) {
       return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -3030,18 +3030,64 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // paragraph, where they tend to rush or flatten out partway
     // through. Falls back to the whole string as one sentence if the
     // split finds nothing (short replies, no terminal punctuation).
+    // Splits on sentence-enders AND commas — commas get a shorter pause
+    // than full stops (below), which is what makes the queued chunks
+    // read as one paced delivery instead of one run-on breath per
+    // sentence.
     function splitSentences(text) {
-      const parts = text.match(/[^.!?]+[.!?]*/g);
+      const parts = text.match(/[^.!?,;:]+[.!?,;:]*/g);
       return parts && parts.length ? parts.map((s) => s.trim()).filter(Boolean) : [text];
     }
 
-    function speak(text) {
-      if (!canSpeak || !text) return;
+    // Emoji are visual punctuation for the chat bubble, not something
+    // meant to be heard — most engines either announce the glyph's
+    // name or mangle it, both of which break the "natural voice"
+    // illusion the rest of this file works to build. Stripped from the
+    // spoken copy only; the on-screen message keeps them.
+    const EMOJI_RE = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
+    function stripEmoji(text) {
+      return text.replace(EMOJI_RE, "").replace(/\s{2,}/g, " ").trim();
+    }
+
+    // Queued and chained through onend rather than fired at
+    // speechSynthesis.speak() back-to-back — that leaves the gap
+    // between chunks up to whatever the engine feels like, which on
+    // some browsers is instant and reads as one breathless run-on.
+    // Explicit pauses (longer after a full stop, shorter after a
+    // comma) are what makes it sound like someone actually pausing to
+    // speak rather than a wall of text being read at it.
+    let speakToken = 0;
+    function speak(text, onDone) {
+      if (!canSpeak || !text) {
+        if (onDone) onDone();
+        return;
+      }
       window.speechSynthesis.cancel();
+      // cancel() fires 'error' on whatever utterance was mid-flight,
+      // and that utterance's own onerror handler would otherwise chain
+      // into speakNext() and keep queuing chunks from a call this one
+      // just superseded. A token stamped per speak() call, checked
+      // before every chunk, keeps a stale chain from continuing once a
+      // newer one has started.
+      const myToken = ++speakToken;
       const lang = uiLang === "hi" ? "hi-IN" : "en-IN";
       const voice = pickVoice(uiLang);
-      splitSentences(text).forEach((sentence) => {
-        const utter = new SpeechSynthesisUtterance(sentence);
+      const chunks = splitSentences(stripEmoji(text))
+        .map((c) => stripEmoji(c))
+        .filter(Boolean);
+      if (!chunks.length) {
+        if (onDone) onDone();
+        return;
+      }
+      let i = 0;
+      function speakNext() {
+        if (myToken !== speakToken) return;
+        if (i >= chunks.length) {
+          if (onDone) onDone();
+          return;
+        }
+        const chunk = chunks[i++];
+        const utter = new SpeechSynthesisUtterance(chunk);
         utter.lang = lang;
         if (voice) {
           try {
@@ -3058,8 +3104,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         // since it's simple signal processing, not real re-synthesis.
         utter.rate = 1;
         utter.pitch = 1;
+        const pause = /[.!?]$/.test(chunk) ? 260 : 120;
+        utter.onend = () => setTimeout(speakNext, pause);
+        utter.onerror = () => setTimeout(speakNext, 80);
         window.speechSynthesis.speak(utter);
-      });
+      }
+      speakNext();
     }
 
     if (micBtn) {
@@ -3423,11 +3473,23 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
                 : `<p>Sorry, I'm not quite sure I caught that 🤔 I'm best with questions about our services, pricing, or how ordering works. Happy to help if you'd like to try again, or I can connect you with the team directly.</p>`;
           addMessage("bot", replyHtml, [ACTION_SERVICES(uiLang), ACTION_TALK(uiLang)]);
         }
+        // The contact reply tells the visitor their form is being
+        // opened right now — so it actually needs to open, instead of
+        // leaving that to a chip click. Otherwise asking again (or
+        // rephrasing) just replays the same claim with nothing to show
+        // for it, which is what reads as Fasty being stuck on repeat.
+        const opensContactForm = match && match.id === "contact";
         // Only speak the reply when this exchange started as voice —
         // a typed question still gets a silent text reply.
         if (voiceTurn) {
           voiceTurn = false;
-          speak(stripHtml(replyHtml));
+          if (opensContactForm) {
+            speak(stripHtml(replyHtml), () => { closePanel(); openLead(); });
+          } else {
+            speak(stripHtml(replyHtml));
+          }
+        } else if (opensContactForm) {
+          setTimeout(() => { closePanel(); openLead(); }, 900);
         }
       }, delay);
     }
