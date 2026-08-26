@@ -2933,23 +2933,41 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       window.speechSynthesis.addEventListener("voiceschanged", loadVoices);
     }
     // Prefers an Indian-accented, young-sounding female voice for the
-    // given language — searched by name/voiceURI since the Web Speech
-    // API exposes no age/gender field, only whatever hints a voice's
-    // own name carries (installed voice packs vary a lot by OS/browser,
-    // so this degrades gracefully: exact lang + female name > exact
-    // lang, any voice > any Indian-flagged voice > browser default).
-    const FEMALE_HINTS = /female|woman|girl|zira|heera|lekha|veena|priya|kalpana|shreya|neerja|swara|aditi|ananya|kavya/i;
+    // given language — searched by name since the Web Speech API
+    // exposes no age/gender field, only whatever hints a voice's own
+    // name carries. Deliberately tiered rather than a single filter:
+    // an exact-region voice that happens to be male-named (e.g.
+    // Windows' only Hindi voice is often "Microsoft Ravi", a man) used
+    // to win outright just for matching the region — now an explicitly
+    // female voice in the same *language family* outranks a male-named
+    // one in the exact region, and an unlabeled/ambiguous voice (no
+    // gender cue either way — common for Google's network voices,
+    // which for hi-IN/en-IN default to a female-sounding voice anyway)
+    // ranks above a voice that's explicitly male-named. Only when
+    // nothing in the language family carries any usable signal does it
+    // fall through to "whatever's in that region" and finally to null
+    // (browser default). Voice packs vary hugely by OS/browser, so
+    // this degrades gracefully rather than assuming any tier exists.
+    const FEMALE_HINTS = /female|woman|girl|zira|heera|lekha|veena|priya|kalpana|shreya|neerja|swara|aditi|ananya|kavya|samantha|kate|karen|susan|moira|tessa|salli|joanna|kimberly|ivy/i;
+    const MALE_HINTS = /\bmale\b|\bman\b|david|ravi\b|rishi|hemant|prabhat|daniel|george|mark|james|matthew|justin|kevin|brian|joey/i;
     function pickVoice(lang) {
       const voices = cachedVoices.length ? cachedVoices : (canSpeak ? window.speechSynthesis.getVoices() : []);
+      if (!voices.length) return null;
       const wantLang = lang === "hi" ? "hi-in" : "en-in";
-      const exact = voices.filter((v) => v.lang && v.lang.toLowerCase() === wantLang);
-      const female = exact.find((v) => FEMALE_HINTS.test(v.name));
-      if (female) return female;
-      if (exact.length) return exact[0];
-      const indianFlagged = voices.find((v) => /india|hindi|en-in|hi-in/i.test(v.lang + " " + v.name));
-      if (indianFlagged) return indianFlagged;
-      const anyFemale = voices.find((v) => FEMALE_HINTS.test(v.name));
-      return anyFemale || null;
+      const wantFamily = lang === "hi" ? "hi" : "en";
+      const isFemale = (v) => FEMALE_HINTS.test(v.name);
+      const isMale = (v) => MALE_HINTS.test(v.name);
+      const exact = voices.filter((v) => (v.lang || "").toLowerCase() === wantLang);
+      const family = voices.filter((v) => (v.lang || "").toLowerCase().startsWith(wantFamily));
+      return (
+        exact.find(isFemale) ||
+        exact.find((v) => !isMale(v)) ||
+        family.find(isFemale) ||
+        exact[0] ||
+        family.find((v) => !isMale(v)) ||
+        family[0] ||
+        null
+      );
     }
 
     function speak(text) {
@@ -2958,7 +2976,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = uiLang === "hi" ? "hi-IN" : "en-IN";
       const voice = pickVoice(uiLang);
-      if (voice) utter.voice = voice;
+      if (voice) {
+        try {
+          utter.voice = voice;
+        } catch (err) {
+          // Falls back to the browser's own default voice for
+          // utter.lang — still correct-language, just not necessarily
+          // the specific voice picked above.
+        }
+      }
       // A touch faster and higher than default reads as younger/more
       // energetic — useful fallback when no explicit female voice is
       // installed and the browser's default flat/monotone voice is
@@ -2973,7 +2999,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         micBtn.remove();
       } else {
         recognition = new SpeechRecognitionCtor();
-        recognition.lang = "en-IN";
+        // Starts listening in Hindi, not English. There's no way to
+        // detect spoken language before recognition has already
+        // decoded something (the Web Speech API takes one fixed
+        // language per session, it can't guess), and English speech
+        // fed to an en-IN model with no Hindi in it yet transcribes
+        // fine either way — but Hindi/Hinglish speech fed to en-IN
+        // comes out as mangled English word-salad instead of
+        // Devanagari or a recognizable Hinglish transcript, which
+        // then can't be language-detected at all and silently answers
+        // in English. hi-IN's model is built around Hindi-English
+        // code-switching (the norm for how this audience actually
+        // talks) and handles clear English within it fine too, so it's
+        // the safer default until a typed message says otherwise.
+        recognition.lang = "hi-IN";
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
 
