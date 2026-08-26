@@ -3190,8 +3190,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       const deliveryRaw = d.turnaround.split(" after")[0];
       const delivery = deliveryRaw.charAt(0).toLowerCase() + deliveryRaw.slice(1);
       if (lang === "hi")
-        return `<p>Badhiya choice 🙂 Hamara <b>${escapeHtml(cut)}</b> ${fmtINR(d.basePrice)} per reel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually ${escapeHtml(delivery)} mein deliver ho jaata hai.</p>`;
-      return `<p>Good pick 🙂 Our <b>${escapeHtml(cut)}</b> is ${fmtINR(d.basePrice)} per reel. ${escapeHtml(d.short)}</p><p>You're looking at ${d.duration.toLowerCase()}, with ${d.revisions.toLowerCase()} included, and it's usually delivered in ${escapeHtml(delivery)}.</p>`;
+        return `<p>Badhiya choice 🙂 Hamara <b>${escapeHtml(cut)}</b> ${fmtINR(d.basePrice)} per reel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually ${escapeHtml(delivery)} mein deliver ho jaata hai. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+      return `<p>Good pick 🙂 Our <b>${escapeHtml(cut)}</b> is ${fmtINR(d.basePrice)} per reel. ${escapeHtml(d.short)}</p><p>You're looking at ${d.duration.toLowerCase()}, with ${d.revisions.toLowerCase()} included, and it's usually delivered in ${escapeHtml(delivery)}. Let me take you to the calculator so you can add it right away.</p>`;
     }
 
     // Matches "reel"/"reels" together with a pricing, turnaround, or
@@ -3242,6 +3242,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           return reelReply(DATA[hit.key], lang);
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "reelIntent",
@@ -3264,10 +3265,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         reply: (text, lang) => {
           const d = DATA.catalogue;
           if (lang === "hi")
-            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per SKU hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur hum usually 24 se 48 ghante mein deliver kar dete hain.</p>`;
-          return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24 to 48 hours.</p>`;
+            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per SKU hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur hum usually 24 se 48 ghante mein deliver kar dete hain. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+          return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24 to 48 hours. Let me take you to the calculator so you can add it right away.</p>`;
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "static",
@@ -3275,10 +3277,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         reply: (text, lang) => {
           const d = DATA.static;
           if (lang === "hi")
-            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per creative hai. ${escapeHtml(d.short)}</p><p>Ye ${escapeHtml(d.format)} mein aata hai, ${d.revisions.toLowerCase()} included hai, aur karib 24 ghante mein deliver ho jaata hai.</p>`;
-          return `<p>Of course! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per creative. ${escapeHtml(d.short)}</p><p>It comes in ${escapeHtml(d.format)}, with ${d.revisions.toLowerCase()} included, and delivers within about 24 hours.</p>`;
+            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per creative hai. ${escapeHtml(d.short)}</p><p>Ye ${escapeHtml(d.format)} mein aata hai, ${d.revisions.toLowerCase()} included hai, aur karib 24 ghante mein deliver ho jaata hai. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+          return `<p>Of course! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per creative. ${escapeHtml(d.short)}</p><p>It comes in ${escapeHtml(d.format)}, with ${d.revisions.toLowerCase()} included, and delivers within about 24 hours. Let me take you to the calculator so you can add it right away.</p>`;
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "carousel",
@@ -3286,10 +3289,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         reply: (text, lang) => {
           const d = DATA.carousel;
           if (lang === "hi")
-            return `<p>Zaroor madad karenge! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per carousel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually 24 se 48 ghante mein deliver ho jaata hai.</p>`;
-          return `<p>Happy to help! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per carousel. ${escapeHtml(d.short)}</p><p>It's ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and usually takes 24 to 48 hours to deliver.</p>`;
+            return `<p>Zaroor madad karenge! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per carousel hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur usually 24 se 48 ghante mein deliver ho jaata hai. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+          return `<p>Happy to help! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per carousel. ${escapeHtml(d.short)}</p><p>It's ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and usually takes 24 to 48 hours to deliver. Let me take you to the calculator so you can add it right away.</p>`;
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "services",
@@ -3310,18 +3314,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\b(minimum|min\.?\s?order|kam se kam)\b/i,
         reply: (text, lang) =>
           lang === "hi"
-            ? `<p>Accha sawaal! Hum ₹10,000 minimum per order rakhte hain, lekin aap kuch bhi mix-and-match karke wahan tak pahunch sakte hain. Calculator aapke liye running total dikhata rehta hai.</p>`
-            : `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go.</p>`,
+            ? `<p>Accha sawaal! Hum ₹10,000 minimum per order rakhte hain, lekin aap kuch bhi mix-and-match karke wahan tak pahunch sakte hain. Calculator aapke liye running total dikhata rehta hai, wahin le chalta hoon.</p>`
+            : `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go, let me take you there.</p>`,
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "discount",
         test: /\b(discount|coupon|save10|offer|deal|chhoot)\b/i,
         reply: (text, lang) =>
           lang === "hi"
-            ? `<p>Aap lucky hain ✨ ${fmtINR(PUBLIC_OFFER_THRESHOLD)} se zyada ke orders par automatically <b>${PUBLIC_OFFER_CODE}</b> apply ho jaata hai aur ${PUBLIC_OFFER_PCT}% off milta hai. Kuch karne ki zaroorat nahi, khud hi lag jaata hai.</p>`
-            : `<p>You're in luck ✨ Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically get <b>${PUBLIC_OFFER_CODE}</b> applied for ${PUBLIC_OFFER_PCT}% off. Nothing you need to do, it just kicks in for you.</p>`,
+            ? `<p>Aap lucky hain ✨ ${fmtINR(PUBLIC_OFFER_THRESHOLD)} se zyada ke orders par automatically <b>${PUBLIC_OFFER_CODE}</b> apply ho jaata hai aur ${PUBLIC_OFFER_PCT}% off milta hai. Kuch karne ki zaroorat nahi, khud hi lag jaata hai. Calculator mein dikha deta hoon.</p>`
+            : `<p>You're in luck ✨ Orders over ${fmtINR(PUBLIC_OFFER_THRESHOLD)} automatically get <b>${PUBLIC_OFFER_CODE}</b> applied for ${PUBLIC_OFFER_PCT}% off. Nothing you need to do, it just kicks in for you. Let me show you in the calculator.</p>`,
         actions: (text, lang) => [ACTION_QUOTE(lang)],
+        autoNav: "#quote",
       },
       {
         id: "gst",
@@ -3350,9 +3356,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\b(order process|how (do|to) (i|you) order|place (an|my) order|how does ordering work|how to buy|how do i buy|order kaise|kaise order|order karna hai|order karu)\b/i,
         reply: (text, lang) =>
           lang === "hi"
-            ? `<p>Bilkul simple hai, bata dete hain 🙂</p><p>Pehle ek service choose karein aur quantity set karein, phir apne order mein add karein. Aur kuch chahiye toh wahi karte rahiye. Ready hone par bas Place Your Order dabayein aur thodi details share karein, baaki hum sambhal lenge.</p>`
-            : `<p>It's pretty straightforward, happy to walk you through it 🙂</p><p>You'd start by picking a service and setting your quantity below, then add it to your order. Feel free to do that for anything else you need too. Once you're ready, just hit Place Your Order and share a few details, and we'll take it from there.</p>`,
+            ? `<p>Bilkul simple hai, bata dete hain 🙂</p><p>Pehle ek service choose karein aur quantity set karein, phir apne order mein add karein. Aur kuch chahiye toh wahi karte rahiye. Ready hone par bas Place Your Order dabayein aur thodi details share karein, baaki hum sambhal lenge. Calculator par hi le chalta hoon.</p>`
+            : `<p>It's pretty straightforward, happy to walk you through it 🙂</p><p>You'd start by picking a service and setting your quantity below, then add it to your order. Feel free to do that for anything else you need too. Once you're ready, just hit Place Your Order and share a few details, and we'll take it from there. Let's head to the calculator now.</p>`,
         actions: (text, lang) => [ACTION_QUOTE(lang), ACTION_SERVICES(lang)],
+        autoNav: "#quote",
       },
       {
         id: "turnaround",
@@ -3479,17 +3486,32 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         // rephrasing) just replays the same claim with nothing to show
         // for it, which is what reads as Fasty being stuck on repeat.
         const opensContactForm = match && match.id === "contact";
+        // Same idea for any KB entry naming one specific, unambiguous
+        // service/package/action (a named reel cut, catalogue, static,
+        // carousel, min order, discount, order process): the reply
+        // text now says it's taking the visitor to the calculator, so
+        // it should actually scroll them there instead of just talking
+        // about it and waiting for a chip click. Entries where the
+        // intent is still ambiguous (a bare "services" or "pricing"
+        // question, "reels" with no cut named) deliberately have no
+        // autoNav — those show option chips and wait for the visitor
+        // to pick one, since auto-navigating would just be guessing.
+        const autoNavTarget = match && match.autoNav;
         // Only speak the reply when this exchange started as voice —
         // a typed question still gets a silent text reply.
         if (voiceTurn) {
           voiceTurn = false;
           if (opensContactForm) {
             speak(stripHtml(replyHtml), () => { closePanel(); openLead(); });
+          } else if (autoNavTarget) {
+            speak(stripHtml(replyHtml), () => scrollToSelector(autoNavTarget));
           } else {
             speak(stripHtml(replyHtml));
           }
         } else if (opensContactForm) {
           setTimeout(() => { closePanel(); openLead(); }, 900);
+        } else if (autoNavTarget) {
+          setTimeout(() => scrollToSelector(autoNavTarget), 900);
         }
       }, delay);
     }
