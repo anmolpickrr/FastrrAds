@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-175" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-175" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-175" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-175" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-175" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-175" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-175" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-175" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-175" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-175" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-175" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-175" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-176" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-176" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-176" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-176" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-176" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-176" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-176" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-176" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-176" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-176" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-176" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-176" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -179,8 +179,17 @@ img{max-width:100%; display:block;}
 .site-nav{
   position:sticky; top:0; z-index:60; padding:14px 0 0;
 }
+/* Anchored to the pill's true midpoint, not flex leftover-space: a
+   grid or space-between layout only centers .nav-links relative to
+   whatever room is left between the two side blocks, and that room
+   itself shifts with their widths — which differ by build (public
+   gets a "Get a Quote" button and 3 links, team gets an avatar/
+   profile trigger and 4, with Messages added). Taking .nav-links out
+   of flow and centering it on the pill's actual midpoint means it
+   lands in the same spot on both builds regardless of what either
+   side weighs, instead of two different "centered-ish" positions. */
 .nav-pill{
-  display:flex; align-items:center; justify-content:space-between; height:60px;
+  position:relative; display:flex; align-items:center; justify-content:space-between; height:60px;
   padding:0 10px 0 14px; border-radius:100px; background:var(--nav-bg);
   border:1px solid var(--line-soft); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   box-shadow:var(--shadow-md), var(--inset-hi); transition:box-shadow .3s ease, border-color .3s ease;
@@ -194,16 +203,13 @@ html[data-theme="dark"] .brand-logo-light{display:none;}
 html[data-theme="dark"] .brand-logo-dark{display:block;}
 .brand:hover .brand-logo{transform:scale(1.04);}
 footer .brand-logo{height:24px;}
-.nav-links{display:flex; gap:6px; font-size:13.5px; color:var(--text-1);}
+.nav-links{
+  display:flex; gap:6px; font-size:13.5px; color:var(--text-1);
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+}
 .nav-links a{transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;}
 .nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
 .nav-right{display:flex; align-items:center; gap:14px;}
-/* On the public build .nav-right previously held only the theme
-   toggle once the team-only profile trigger was stripped, leaving it
-   visually stranded against the wider .brand on the left and pulling
-   .nav-links off-center (space-between splits by item width, not
-   visual center). This CTA gives the right side real weight again —
-   a proper action, not just an icon — and rebalances the whole pill. */
 .nav-cta{padding:9px 20px; font-size:13px; white-space:nowrap;}
 @media (max-width:600px){.nav-cta{padding:8px 14px; font-size:12px;}}
 @media (max-width:380px){.nav-cta{display:none;}}
@@ -2146,8 +2152,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-175" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-175" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-176" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-176" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2581,8 +2587,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-175" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-175" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-176" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-176" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2757,7 +2763,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-175"></script>
-<script src="assets/app-v2.js?v=20260811-175"></script>
+<script src="assets/creative-data.js?v=20260811-176"></script>
+<script src="assets/app-v2.js?v=20260811-176"></script>
 </body>
 </html>
