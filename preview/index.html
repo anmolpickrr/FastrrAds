@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-180" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-180" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-180" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-180" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-180" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-180" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-180" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-180" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-180" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-180" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-180" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-180" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-181" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-181" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-181" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-181" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-181" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-181" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-181" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-181" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-181" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-181" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-181" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-181" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1737,16 +1737,57 @@ textarea.msg-box{
 @keyframes testiTickRight{from{transform:translateX(-50%);}to{transform:translateX(0);}}
 .testi-tick-row:hover .testi-tick-track{animation-play-state:paused;}
 @media (prefers-reduced-motion: reduce){.testi-tick-track{animation:none;}}
-.testi-tick-entry{display:flex; align-items:baseline; gap:16px; padding:0 32px; flex:0 0 auto;}
-.testi-tick-star{color:var(--teal); opacity:.7; font-size:15px; flex:0 0 auto;}
-.testi-tick-entry b{
-  font-size:clamp(18px,2.2vw,25px); font-weight:600; letter-spacing:-.01em; color:#f2f3f6; white-space:nowrap;
-}
-.testi-tick-entry span{font-size:13px; color:#8b92a3; white-space:nowrap;}
+.testi-tick-entry{flex:0 0 auto; padding:0 12px;}
 @media (max-width:640px){
   .testi-tick-row{padding:16px 0;}
-  .testi-tick-entry{gap:12px; padding:0 22px;}
+  .testi-tick-entry{padding:0 8px;}
 }
+
+/* ---- WhatsApp-style feedback cards ----
+   Real client sign-off happens in a WhatsApp group, so the section
+   leans into that instead of a generic quote line: each card is a
+   small mock-up of an actual chat bubble — sender name, a masked
+   number (the realistic-authenticity detail, not a real one — this
+   whole set is placeholder content until real screenshots replace
+   it), the message itself, and a timestamp + read ticks. Slight
+   alternating tilt reads as a handful of screenshots rather than a
+   uniform component grid; hovering one straightens and lifts it,
+   same "pick this one up" gesture a physical pinboard would give. */
+.wa-card{
+  --tilt:-1.6deg;
+  position:relative; width:300px; padding:13px 13px 11px; border-radius:16px;
+  background-color:#e9e2d3;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><g fill="none" stroke="%23000" stroke-opacity="0.05" stroke-width="1.1"><path d="M8 8h7M8 19h11M38 13h9M47 42h7M18 47h11M56 18h7M27 56h9M60 56h10"/></g></svg>');
+  background-size:72px 72px;
+  box-shadow:0 16px 32px -16px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.28);
+  transform:rotate(var(--tilt));
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+}
+.testi-tick-entry:nth-child(even) .wa-card{--tilt:1.4deg;}
+.wa-card:hover{transform:rotate(0deg) translateY(-5px) scale(1.015); box-shadow:0 22px 42px -18px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.32); z-index:2;}
+.wa-card-head{display:flex; align-items:flex-start; gap:9px; margin-bottom:8px;}
+.wa-avatar{
+  width:30px; height:30px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:12.5px; color:#fff;
+}
+.wa-head-text{display:flex; flex-direction:column; gap:2px; min-width:0; flex:1 1 auto;}
+.wa-name{font-size:13.5px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wa-number{
+  font-family:var(--font-mono); font-size:10px; color:rgba(0,0,0,.45); filter:blur(2.6px); user-select:none; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%;
+}
+.wa-teal{color:#0a998f;}
+.wa-avatar.wa-teal{background:#0a998f;}
+.wa-blue{color:#3f7fd1;}
+.wa-avatar.wa-blue{background:#3f7fd1;}
+.wa-purple{color:#9163c9;}
+.wa-avatar.wa-purple{background:#9163c9;}
+.wa-bubble{position:relative; background:#fff; border-radius:8px 8px 8px 2px; padding:9px 11px 17px; box-shadow:0 1px 1px rgba(0,0,0,.15);}
+.wa-bubble p{font-size:13.5px; line-height:1.42; color:#111; margin:0;}
+.wa-meta{position:absolute; right:9px; bottom:5px; display:flex; align-items:center; gap:3px;}
+.wa-time{font-size:10px; color:rgba(0,0,0,.42);}
+.wa-ticks{width:14px; height:9px; flex:0 0 auto;}
+@media (max-width:640px){.wa-card{width:250px; padding:11px 11px 9px;}}
 
 
 /* ---------- FOOTER ----------
@@ -2218,8 +2259,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-180" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-180" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-181" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-181" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2543,82 +2584,243 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
     </div>
 
-    <!-- Two-row scrolling quote ticker — same layout the client liked
-         from an earlier pass, refined rather than replaced. No ghost
-         word behind it (that read as filler), copy is written the way
-         a client would actually type an update rather than a tagline.
-         Hover a row to pause and read it fully. Full-bleed ambient
-         wash + the same grid backdrop as Services &amp; Packages
-         carries over unchanged. Placeholder names: swap in real
-         client quotes before go-live. -->
+    <!-- Two-row scrolling ticker, same proven mechanic as before
+         (scroll opposite directions, hover a row to pause and read),
+         but each entry is now a small WhatsApp-screenshot mock-up
+         instead of a plain quote line — leans into where this
+         feedback actually happens instead of dressing it up as a
+         tagline. Numbers are masked + blurred and every name/quote
+         here is still placeholder content (per the earlier note this
+         replaces): swap in real screenshots' text before go-live, and
+         when real numbers are involved keep them masked exactly like
+         this — the digits shown are fake either way, never real
+         client numbers cut into the page. Full-bleed ambient wash +
+         the same grid backdrop as Services &amp; Packages carries over
+         unchanged. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
       <div class="testi-ticker">
         <div class="testi-tick-row">
           <div class="testi-tick-track testi-tick-track-a">
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Had drafts back the same weekend, no revision needed."</b>
-              <span>Ritika Sharma, D2C Beauty Brand</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-teal" aria-hidden="true">R</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-teal">~ Ritika · D2C Beauty</span>
+                    <span class="wa-number" aria-hidden="true">+91 90••• ••128</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Had drafts back the same weekend, no revision needed."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">11:24 AM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Nobody's asked us to re-explain our brand guidelines."</b>
-              <span>Arjun Mehta, Fashion &amp; Apparel</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-blue" aria-hidden="true">A</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-blue">~ Arjun · Fashion &amp; Apparel</span>
+                    <span class="wa-number" aria-hidden="true">+91 98••• ••403</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Nobody's asked us to re-explain our brand guidelines."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">9:47 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"First batch looked like something in-house would've taken weeks."</b>
-              <span>Sana Iqbal, Home &amp; Living</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-purple" aria-hidden="true">S</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-purple">~ Sana · Home &amp; Living</span>
+                    <span class="wa-number" aria-hidden="true">+91 97••• ••856</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"First batch looked like something in-house would've taken weeks."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">6:12 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Had drafts back the same weekend, no revision needed."</b>
-              <span>Ritika Sharma, D2C Beauty Brand</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-teal" aria-hidden="true">R</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-teal">~ Ritika · D2C Beauty</span>
+                    <span class="wa-number" aria-hidden="true">+91 90••• ••128</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Had drafts back the same weekend, no revision needed."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">11:24 AM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Nobody's asked us to re-explain our brand guidelines."</b>
-              <span>Arjun Mehta, Fashion &amp; Apparel</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-blue" aria-hidden="true">A</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-blue">~ Arjun · Fashion &amp; Apparel</span>
+                    <span class="wa-number" aria-hidden="true">+91 98••• ••403</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Nobody's asked us to re-explain our brand guidelines."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">9:47 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"First batch looked like something in-house would've taken weeks."</b>
-              <span>Sana Iqbal, Home &amp; Living</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-purple" aria-hidden="true">S</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-purple">~ Sana · Home &amp; Living</span>
+                    <span class="wa-number" aria-hidden="true">+91 97••• ••856</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"First batch looked like something in-house would've taken weeks."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">6:12 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="testi-tick-row">
           <div class="testi-tick-track testi-tick-track-b">
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"They flag when the brief doesn't add up, instead of guessing."</b>
-              <span>Kabir Nair, Wellness &amp; Supplements</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-blue" aria-hidden="true">K</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-blue">~ Kabir · Wellness</span>
+                    <span class="wa-number" aria-hidden="true">+91 96••• ••291</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"They flag when the brief doesn't add up, instead of guessing."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">2:38 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Numbers moved in the first week — not sure why, not arguing."</b>
-              <span>Meera Chawla, Jewellery &amp; Accessories</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-teal" aria-hidden="true">M</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-teal">~ Meera · Jewellery</span>
+                    <span class="wa-number" aria-hidden="true">+91 93••• ••570</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Numbers moved in the first week — not sure why, not arguing."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">10:05 AM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15" aria-hidden="true"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"One thread, one person to chase, no separate vendor."</b>
-              <span>Devansh Rao, Personal Care</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-purple" aria-hidden="true">D</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-purple">~ Devansh · Personal Care</span>
+                    <span class="wa-number" aria-hidden="true">+91 99••• ••637</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"One thread, one person to chase, no separate vendor."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">7:52 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"They flag when the brief doesn't add up, instead of guessing."</b>
-              <span>Kabir Nair, Wellness &amp; Supplements</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-blue" aria-hidden="true">K</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-blue">~ Kabir · Wellness</span>
+                    <span class="wa-number" aria-hidden="true">+91 96••• ••291</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"They flag when the brief doesn't add up, instead of guessing."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">2:38 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"Numbers moved in the first week — not sure why, not arguing."</b>
-              <span>Meera Chawla, Jewellery &amp; Accessories</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-teal" aria-hidden="true">M</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-teal">~ Meera · Jewellery</span>
+                    <span class="wa-number" aria-hidden="true">+91 93••• ••570</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"Numbers moved in the first week — not sure why, not arguing."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">10:05 AM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
             <div class="testi-tick-entry" aria-hidden="true">
-              <svg class="testi-tick-star" viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M8 0l1.4 5.1L14.5 6l-4.2 3.3L11.6 14 8 10.9 4.4 14l1.3-4.7L1.5 6l5.1-.9L8 0Z"/></svg>
-              <b>"One thread, one person to chase, no separate vendor."</b>
-              <span>Devansh Rao, Personal Care</span>
+              <div class="wa-card">
+                <div class="wa-card-head">
+                  <span class="wa-avatar wa-purple" aria-hidden="true">D</span>
+                  <div class="wa-head-text">
+                    <span class="wa-name wa-purple">~ Devansh · Personal Care</span>
+                    <span class="wa-number" aria-hidden="true">+91 99••• ••637</span>
+                  </div>
+                </div>
+                <div class="wa-bubble">
+                  <p>"One thread, one person to chase, no separate vendor."</p>
+                  <span class="wa-meta">
+                    <span class="wa-time">7:52 PM</span>
+                    <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="#4fc3f7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2653,8 +2855,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-180" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-180" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-181" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-181" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -2829,7 +3031,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-180"></script>
-<script src="assets/app-v2.js?v=20260811-180"></script>
+<script src="assets/creative-data.js?v=20260811-181"></script>
+<script src="assets/app-v2.js?v=20260811-181"></script>
 </body>
 </html>
