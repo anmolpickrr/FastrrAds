@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-182" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-182" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-182" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-182" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-182" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-182" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-182" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-182" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-182" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-182" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-182" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-182" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-183" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-183" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-183" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-183" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-183" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-183" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-183" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-183" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-183" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-183" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-183" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-183" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1568,6 +1568,25 @@ html.is-internal .oc-offer{display:none !important;}
    wireCopyButton()'s textContent swap, and the input-error/copied/
    copy-error toggles all still land on exactly the elements they did
    before. */
+/* Numbered flow above the panel/cards — makes explicit what was
+   previously left for the reader to infer from three stacked blocks:
+   this is one linear task (fill in details, then copy two messages
+   out), not three unrelated widgets sharing a section. Purely a
+   visual label for that flow, not an interactive stepper — every
+   field below is usable regardless of which "step" is highlighted. */
+.msg-flow{display:flex; align-items:center; gap:10px; margin-bottom:22px; flex-wrap:wrap;}
+.msg-flow-step{display:flex; align-items:center; gap:9px; opacity:.5; transition:opacity .3s ease;}
+.msg-flow-step-active{opacity:1;}
+.msg-flow-num{
+  width:26px; height:26px; flex:0 0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:12px; color:#fff;
+  background:linear-gradient(135deg, var(--violet), var(--teal));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--violet) 14%, transparent);
+}
+.msg-flow-label{font-size:12.5px; font-weight:600; color:var(--text-1); white-space:nowrap;}
+.msg-flow-line{flex:1 1 24px; min-width:24px; max-width:56px; height:1.5px; background:linear-gradient(90deg, var(--violet), var(--teal)); opacity:.35; border-radius:2px;}
+@media (max-width:640px){.msg-flow-label{display:none;}}
+
 .brand-fields-panel{position:relative; overflow:hidden; margin-bottom:24px; padding:26px 28px; border-radius:var(--radius); background:var(--glass); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);}
 .brand-fields-panel::before{
   content:''; position:absolute; top:0; left:0; right:0; height:2.5px;
@@ -1634,19 +1653,43 @@ html.is-internal .oc-offer{display:none !important;}
 .pdf-btn:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
 .pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none;}
 .msg-inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
-textarea.msg-box{
-  width:100%; min-height:340px; resize:vertical; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1);
-  color:var(--text-0); font-family:var(--font-body); font-size:13.5px; line-height:1.65; padding:18px; flex:1;
-  box-shadow:var(--inset-hi); transition:border-color .2s ease, box-shadow .2s ease;
+/* Phone-preview frame — a gradient "bezel" plus a tiny decorative
+   status bar around the textarea, so it reads as a screen this text
+   is about to land on rather than a plain text field. Wraps the
+   textarea without touching its id, readonly state, or any attribute
+   app.js relies on. */
+.msg-preview-frame{
+  position:relative; flex:1; display:flex; flex-direction:column; border-radius:20px; padding:5px;
+  background:linear-gradient(160deg, var(--violet), var(--teal)); box-shadow:var(--shadow-md);
 }
-.msg-card-client textarea.msg-box:focus{outline:none; border-color:var(--violet); box-shadow:0 0 10px 1px var(--violet-soft), var(--inset-hi);}
-.msg-card-internal textarea.msg-box:focus{outline:none; border-color:var(--teal); box-shadow:0 0 10px 1px var(--teal-soft), var(--inset-hi);}
+.msg-card-internal .msg-preview-frame{background:linear-gradient(160deg, var(--teal), var(--violet));}
+.msg-preview-statusbar{
+  display:flex; align-items:center; justify-content:space-between; padding:9px 16px 4px;
+  font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.02em; color:rgba(255,255,255,.85);
+}
+.msg-preview-dots{letter-spacing:2px; font-size:8px;}
+textarea.msg-box{
+  width:100%; min-height:310px; resize:vertical; border-radius:16px; border:none; background:var(--surface-1);
+  color:var(--text-0); font-family:var(--font-body); font-size:13.5px; line-height:1.65; padding:14px 18px 18px; flex:1;
+  box-shadow:var(--inset-hi); transition:box-shadow .2s ease;
+}
+.msg-card-client textarea.msg-box:focus{outline:none; box-shadow:0 0 0 2px rgba(255,255,255,.55) inset, var(--inset-hi);}
+.msg-card-internal textarea.msg-box:focus{outline:none; box-shadow:0 0 0 2px rgba(255,255,255,.55) inset, var(--inset-hi);}
 .copy-btn{
   position:relative; margin-top:14px; align-self:flex-start; display:inline-flex; align-items:center; gap:9px;
   padding:11px 20px 11px 16px; border-radius:var(--radius-sm); border:1px solid var(--line);
   background:var(--surface-2); color:var(--text-0); font-weight:600; font-size:13.5px;
   box-shadow:var(--shadow-sm); transition:background .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
+/* Primary treatment for the client-facing copy action — the one that
+   usually goes out first — so the two buttons read as an intentional
+   primary/secondary pair rather than two identically-weighted ones. */
+.copy-btn.copy-btn-primary{
+  border-color:transparent; background:linear-gradient(120deg, var(--violet), var(--teal)); color:#fff;
+  box-shadow:0 10px 24px -10px color-mix(in srgb, var(--violet) 55%, transparent);
+}
+.copy-btn.copy-btn-primary:hover{background:linear-gradient(120deg, var(--violet), var(--teal)); filter:brightness(1.08); box-shadow:0 14px 30px -10px color-mix(in srgb, var(--violet) 60%, transparent);}
+.copy-btn-primary::before{opacity:.95;}
 .copy-btn::before{
   content:''; width:15px; height:15px; flex:0 0 auto; background:currentColor;
   -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>') center/contain no-repeat;
@@ -2295,8 +2338,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-182" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-182" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2810,6 +2853,23 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>Both messages are generated from the exact same quote, so you can drop them straight into the client and Creative Team WhatsApp groups with nothing miscommunicated.</p>
     </div>
 
+    <div class="msg-flow reveal-on-scroll" aria-hidden="true">
+      <div class="msg-flow-step msg-flow-step-active">
+        <span class="msg-flow-num">1</span>
+        <span class="msg-flow-label">Fill in order details</span>
+      </div>
+      <span class="msg-flow-line"></span>
+      <div class="msg-flow-step">
+        <span class="msg-flow-num">2</span>
+        <span class="msg-flow-label">Copy for client</span>
+      </div>
+      <span class="msg-flow-line"></span>
+      <div class="msg-flow-step">
+        <span class="msg-flow-num">3</span>
+        <span class="msg-flow-label">Copy for team</span>
+      </div>
+    </div>
+
     <div class="brand-fields-panel reveal-on-scroll">
       <div class="brand-fields-head">
         <span class="brand-fields-head-icon" aria-hidden="true">
@@ -2881,8 +2941,11 @@ footer{padding:64px 0 0; margin-top:40px;}
             <span id="downloadPdfBtnLabel">Download PDF</span>
           </button>
         </div>
-        <textarea class="msg-box" id="clientMsg" readonly></textarea>
-        <button class="copy-btn copy-btn-client" id="copyClientBtn">Copy Package Summary</button>
+        <div class="msg-preview-frame">
+          <div class="msg-preview-statusbar" aria-hidden="true"><span>9:41</span><span class="msg-preview-dots">●●●</span></div>
+          <textarea class="msg-box" id="clientMsg" readonly></textarea>
+        </div>
+        <button class="copy-btn copy-btn-client copy-btn-primary" id="copyClientBtn">Copy Package Summary</button>
       </div>
 
       <div class="msg-card msg-card-internal">
@@ -2890,7 +2953,10 @@ footer{padding:64px 0 0; margin-top:40px;}
         <div class="msg-inputs">
           <input class="text-input" id="specialReqInput" placeholder="Special requirements (optional)" style="grid-column:1 / -1;">
         </div>
-        <textarea class="msg-box" id="internalMsg" readonly></textarea>
+        <div class="msg-preview-frame">
+          <div class="msg-preview-statusbar" aria-hidden="true"><span>9:41</span><span class="msg-preview-dots">●●●</span></div>
+          <textarea class="msg-box" id="internalMsg" readonly></textarea>
+        </div>
         <button class="copy-btn copy-btn-internal" id="copyInternalBtn">Copy Requirements Message</button>
       </div>
     </div>
@@ -2903,8 +2969,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-182" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-182" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3182,8 +3248,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-182"></script>
-<script src="assets/app-v2.js?v=20260811-182"></script>
-<script type="module" src="assets/team-v2.js?v=20260811-182"></script>
+<script src="assets/creative-data.js?v=20260811-183"></script>
+<script src="assets/app-v2.js?v=20260811-183"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-183"></script>
 </body>
 </html>
