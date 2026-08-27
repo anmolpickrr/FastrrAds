@@ -11,7 +11,12 @@
      since /teamfastrr/ is one directory deeper. -->
 <base href="/">
 <title>Fastrr Ads</title>
-<meta name="description" content="Internal creative agency showcase, service scope, price calculator and message generator.">
+<!-- TEAM:STRIP:START -->
+<meta name="description" content="Fastrr Ads — AI-powered creative production for performance marketing. Browse real delivered work, see service pricing, and get a quote for your next campaign.">
+<!-- TEAM:STRIP:END -->
+<!-- PUBLIC:STRIP:START -->
+<meta name="description" content="Fastrr Ads internal team portal — order builder, price calculator, and message generator for the sales team.">
+<!-- PUBLIC:STRIP:END -->
 <!-- Matches the actual browser tab background, not the site's own
      theme toggle — those are two different things (the site defaults
      to dark regardless of OS preference, but a visitor's tab chrome
@@ -19,18 +24,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-194" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-194" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-194" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-194" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-194" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-194" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-194" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-194" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-194" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-194" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-194" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-194" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-195" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-195" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-195" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-195" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-195" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-195" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-195" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-195" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-195" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-195" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-195" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-195" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -2429,13 +2434,18 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-195" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-195" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
-        <a href="#quote">Quote</a>
+        <!-- TEAM:STRIP:START -->
+        <a href="#quote">Pricing</a>
+        <!-- TEAM:STRIP:END -->
+        <!-- PUBLIC:STRIP:START -->
+        <a href="#quote">Build Order</a>
+        <!-- PUBLIC:STRIP:END -->
         <!-- PUBLIC:STRIP:START -->
         <a href="#messages">Messages</a>
         <!-- PUBLIC:STRIP:END -->
@@ -2483,16 +2493,30 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="hero-stage" id="heroStage">
       <div class="hero-head">
+        <!-- TEAM:STRIP:START -->
         <span class="eyebrow">● Fastrr Ads — Live Creative Portfolio</span>
+        <!-- TEAM:STRIP:END -->
+        <!-- PUBLIC:STRIP:START -->
+        <span class="eyebrow">● Fastrr Ads — Team Workspace</span>
+        <!-- PUBLIC:STRIP:END -->
         <h1 class="hero-title">
           <span class="word" style="--w:0"><span>Real</span></span> <span class="word" style="--w:1"><span>AI</span></span> <span class="word" style="--w:2"><span>creative</span></span><br>
           <span class="word" style="--w:3"><span>that</span></span> <span class="word" style="--w:4"><span class="accent">grows</span></span> <span class="word" style="--w:5"><span class="accent">your</span></span> <span class="word" style="--w:6"><span class="accent">brand.</span></span>
         </h1>
+        <!-- TEAM:STRIP:START -->
         <p class="hero-sub">Fastrr Ads is a creative service for brands. We make real AI reels, videos, statics, and carousels engineered to convert, not stock or mockups. Every piece below is delivered work. Browse the portfolio, then we'll scope a clear, itemized quote for your project.</p>
         <div class="hero-cta-row">
           <a href="#showcase" class="btn btn-primary">See the Work ↓</a>
           <a href="#quote" class="btn btn-ghost">Build a Quote</a>
         </div>
+        <!-- TEAM:STRIP:END -->
+        <!-- PUBLIC:STRIP:START -->
+        <p class="hero-sub">Everything you need to run a client through Fastrr Ads: browse the delivered portfolio for reference, build and price their order below, and send them a clean summary in seconds.</p>
+        <div class="hero-cta-row">
+          <a href="#showcase" class="btn btn-primary">See the Work ↓</a>
+          <a href="#quote" class="btn btn-ghost">Go to Order Builder</a>
+        </div>
+        <!-- PUBLIC:STRIP:END -->
       </div>
       <div class="hero-visual" id="heroVisual">
         <div class="hero-orbit" id="heroOrbit" aria-hidden="true"></div>
@@ -2677,9 +2701,16 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="quote" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
+      <!-- TEAM:STRIP:START -->
       <span class="eyebrow">03 — Quote &amp; Price Calculator</span>
       <h2>Add your creatives.<br>Watch the price update live.</h2>
-      <p>Add every creative type the client needs, with a quantity for each, and a cut too if it's an AI Reel. Your order total updates live as you build.</p>
+      <p>Add every creative type you need, with a quantity for each, and a cut too if it's an AI Reel. Your total updates live as you build.</p>
+      <!-- TEAM:STRIP:END -->
+      <!-- PUBLIC:STRIP:START -->
+      <span class="eyebrow">03 — Order Builder</span>
+      <h2>Build the order.<br>Watch the total update live.</h2>
+      <p>Add every creative type the client needs, with a quantity for each, and a cut too if it's an AI Reel. The order total updates live as you build.</p>
+      <!-- PUBLIC:STRIP:END -->
     </div>
 
     <div class="order-builder reveal-on-scroll">
@@ -3172,16 +3203,19 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-195" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-195" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
       <nav class="footer-links" aria-label="Footer">
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
-        <a href="#quote">Quote</a>
+        <!-- TEAM:STRIP:START -->
+        <a href="#quote">Pricing</a>
+        <!-- TEAM:STRIP:END -->
         <!-- PUBLIC:STRIP:START -->
+        <a href="#quote">Build Order</a>
         <a href="#messages">Messages</a>
         <!-- PUBLIC:STRIP:END -->
       </nav>
@@ -3539,10 +3573,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-194"></script>
-<script src="assets/app.js?v=20260811-194"></script>
+<script src="assets/creative-data.js?v=20260811-195"></script>
+<script src="assets/app.js?v=20260811-195"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-194"></script>
+<script type="module" src="assets/team.js?v=20260811-195"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
