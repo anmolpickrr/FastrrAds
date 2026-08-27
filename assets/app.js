@@ -2843,14 +2843,26 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
 
     /* ---- Continuous back-to-back reveal loop ----
-       Every message row, in document order, typed in one after
-       another; once the last one lands, pause to let it be read,
-       clear the thread, and start again from the top — a live feed
-       that never just stops, rather than a one-time reveal gated
-       behind a "view more" click. Stays running for as long as the
-       panel is scrolled into view; pauses (not destroyed) while
-       scrolled away so it doesn't run invisibly in the background. */
+       Messages type in three at a time — enough to fill the panel
+       without ever needing to scroll it — hold on screen, fade out,
+       then the next three take their place; once the last group has
+       had its turn, it wraps back to the first. A live feed that
+       never just stops, rather than a one-time reveal gated behind a
+       "view more" click, but deliberately NOT an auto-scrolling one:
+       an earlier version kept nudging body.scrollTo() to follow a
+       thread of all 9 rows at once, and that constant scroll — right
+       next to a static page — read as the whole section "moving."
+       Batching to a fixed set that always fits removes the scroll
+       call entirely. Stays running for as long as the panel is
+       scrolled into view; pauses (not destroyed) while scrolled away
+       so it doesn't run invisibly in the background. */
     const allRows = Array.from(body.querySelectorAll("[data-wa-msg]"));
+    function chunk(arr, size) {
+      const out = [];
+      for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+      return out;
+    }
+    const batches = chunk(allRows, 3);
 
     function wait(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -2861,13 +2873,6 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       await wait(650);
       typingRow.classList.remove("wa-shown");
     }
-    function resetRows() {
-      allRows.forEach((r) => {
-        r.hidden = true;
-        r.classList.remove("wa-shown");
-      });
-      body.scrollTo({ top: 0, behavior: "auto" });
-    }
     async function revealSequence(rows) {
       for (const row of rows) {
         row.hidden = false;
@@ -2876,9 +2881,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           await showTypingBeat();
         }
         row.classList.add("wa-shown");
-        body.scrollTo({ top: body.scrollHeight, behavior: prefersReducedMotion ? "auto" : "smooth" });
         if (!prefersReducedMotion) await wait(420);
       }
+    }
+    function hideBatch(rows) {
+      rows.forEach((r) => r.classList.remove("wa-shown"));
+    }
+    function resetBatch(rows) {
+      rows.forEach((r) => {
+        r.hidden = true;
+        r.classList.remove("wa-shown");
+      });
     }
     function showAllImmediately(rows) {
       rows.forEach((r) => {
@@ -2892,19 +2905,25 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     async function loop() {
       if (running) return;
       running = true;
+      if (prefersReducedMotion) {
+        // Nothing left to animate — one static pass of every message
+        // is the correct end state under reduced motion, not an
+        // invisible infinite loop still ticking in the background.
+        showAllImmediately(allRows);
+        running = false;
+        return;
+      }
+      let batchIndex = 0;
       while (visible) {
-        if (prefersReducedMotion) {
-          showAllImmediately(allRows);
-          // Nothing left to animate — one static pass is the correct
-          // end state under reduced motion, not an invisible infinite
-          // loop still ticking in the background.
-          break;
-        }
-        await revealSequence(allRows);
-        await wait(3400); // hold the full thread on screen before it recycles
+        const batch = batches[batchIndex % batches.length];
+        await revealSequence(batch);
+        await wait(2600); // hold this group on screen before swapping
         if (!visible) break;
-        resetRows();
-        await wait(500);
+        hideBatch(batch);
+        await wait(450); // let the fade-out transition finish
+        resetBatch(batch);
+        batchIndex++;
+        await wait(300); // brief pause before the next group starts
       }
       running = false;
     }
