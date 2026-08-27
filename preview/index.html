@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-190" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-190" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-190" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-190" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-190" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-190" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-190" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-190" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-190" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-190" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-190" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-190" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-191" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-191" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-191" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-191" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-191" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-191" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-191" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-191" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-191" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-191" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-191" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-191" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1781,13 +1781,15 @@ textarea.msg-box{
    Drag, the continuous typing→message loop, and the crystal shift
    animation are handled by initTestimonialWindow() in app.js. */
 .wa-window{
+  /* Static gradient border, not animated: an animated background-size/
+     position on a backdrop-filter:blur() element repaints every frame,
+     which visibly "swims" whatever's behind it (the section's grid
+     pattern, the page background) rather than staying put — reads as
+     the whole page moving, not a nice shimmer. */
   position:relative; z-index:1; width:min(560px,100%); margin:20px auto 0; border-radius:20px; padding:1.6px;
   background:linear-gradient(135deg, var(--violet), var(--teal), var(--violet));
-  background-size:220% 220%; animation:waCrystalShift 9s ease-in-out infinite;
   box-shadow:0 30px 60px -24px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.28), 0 0 46px -16px color-mix(in srgb, var(--violet) 50%, transparent);
 }
-@keyframes waCrystalShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
-@media (prefers-reduced-motion: reduce){.wa-window{animation:none;}}
 .wa-window.wa-dragging{box-shadow:0 40px 76px -22px rgba(0,0,0,.6), 0 10px 28px rgba(0,0,0,.34), 0 0 54px -12px color-mix(in srgb, var(--teal) 55%, transparent);}
 .wa-window-surface{
   position:relative; border-radius:18.5px; overflow:hidden;
@@ -1851,15 +1853,15 @@ textarea.msg-box{
 }
 .wa-msg-col{display:flex; flex-direction:column; gap:2px; max-width:78%;}
 .wa-msg-name{font-size:12.5px; font-weight:700;}
-.wa-teal{color:#0a998f;}
+.wa-teal{color:#06b6a4;}
 .wa-msg-avatar.wa-teal,.wa-head-avatar.wa-teal{background:#0a998f; color:#fff;}
-.wa-blue{color:#3f7fd1;}
+.wa-blue{color:#3b82f6;}
 .wa-msg-avatar.wa-blue,.wa-head-avatar.wa-blue{background:#3f7fd1; color:#fff;}
-.wa-purple{color:#9163c9;}
+.wa-purple{color:#9333ea;}
 .wa-msg-avatar.wa-purple,.wa-head-avatar.wa-purple{background:#9163c9; color:#fff;}
-.wa-amber{color:#c99a3f;}
+.wa-amber{color:#f59e0b;}
 .wa-msg-avatar.wa-amber,.wa-head-avatar.wa-amber{background:#c99a3f; color:#fff;}
-.wa-pink{color:#d1608f;}
+.wa-pink{color:#db2777;}
 .wa-msg-avatar.wa-pink,.wa-head-avatar.wa-pink{background:#d1608f; color:#fff;}
 .wa-bubble{position:relative; background:var(--surface-2); border:1px solid var(--line); border-radius:8px 8px 8px 2px; padding:8px 10px 16px; box-shadow:var(--inset-hi);}
 .wa-bubble p{font-size:13.5px; line-height:1.42; color:var(--text-0); margin:0;}
@@ -2405,8 +2407,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-190" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-190" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-191" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-191" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2754,29 +2756,29 @@ footer{padding:64px 0 0; margin-top:40px;}
       <div class="wa-float wa-float-left" aria-hidden="true">
         <div class="wa-float-item" style="--wa-float-delay:0s;">
           <span class="wa-float-avatar wa-pink">P</span>
-          <div class="wa-float-text"><b>Priya· Skincare</b><span>"these are amazing 🔥"</span></div>
+          <div class="wa-float-text"><b>Priya· Skincare</b><span>these are amazing 🔥</span></div>
         </div>
         <div class="wa-float-item" style="--wa-float-delay:4s;">
           <span class="wa-float-avatar wa-amber">V</span>
-          <div class="wa-float-text"><b>Vikram· F&amp;B</b><span>"team's obsessed with this edit 👀"</span></div>
+          <div class="wa-float-text"><b>Vikram· F&amp;B</b><span>team's obsessed with this edit 👀</span></div>
         </div>
         <div class="wa-float-item" style="--wa-float-delay:8s;">
           <span class="wa-float-avatar wa-teal">A</span>
-          <div class="wa-float-text"><b>Ananya· Wellness</b><span>"as fast as always 🙌"</span></div>
+          <div class="wa-float-text"><b>Ananya· Wellness</b><span>as fast as always 🙌</span></div>
         </div>
       </div>
       <div class="wa-float wa-float-right" aria-hidden="true">
         <div class="wa-float-item" style="--wa-float-delay:2s;">
           <span class="wa-float-avatar wa-blue">R</span>
-          <div class="wa-float-text"><b>Rohan· Electronics</b><span>"yesss let's go live with this 🚀"</span></div>
+          <div class="wa-float-text"><b>Rohan· Electronics</b><span>yesss let's go live with this 🚀</span></div>
         </div>
         <div class="wa-float-item" style="--wa-float-delay:6s;">
           <span class="wa-float-avatar wa-purple">N</span>
-          <div class="wa-float-text"><b>Neha· Fashion</b><span>"this is exactly it ✨"</span></div>
+          <div class="wa-float-text"><b>Neha· Fashion</b><span>this is exactly it ✨</span></div>
         </div>
         <div class="wa-float-item" style="--wa-float-delay:10s;">
           <span class="wa-float-avatar wa-amber">K</span>
-          <div class="wa-float-text"><b>Karan· Home Decor</b><span>"🔥🔥 ship it"</span></div>
+          <div class="wa-float-text"><b>Karan· Home Decor</b><span>🔥🔥 ship it</span></div>
         </div>
       </div>
 
@@ -2806,7 +2808,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-teal">Ritika· D2C Beauty</span>
               <div class="wa-bubble">
-                <p>"omg these are so good, sending to the whole team rn 😍"</p>
+                <p>omg these are so good, sending to the whole team rn 😍</p>
                 <span class="wa-meta">
                   <span class="wa-time">11:24 AM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2820,7 +2822,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-blue">Arjun· Fashion &amp; Apparel</span>
               <div class="wa-bubble">
-                <p>"finally someone who gets our brand without 10 rounds of explaining lol 😅"</p>
+                <p>finally someone who gets our brand without 10 rounds of explaining lol 😅</p>
                 <span class="wa-meta">
                   <span class="wa-time">9:47 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2834,7 +2836,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-purple">Sana· Home &amp; Living</span>
               <div class="wa-bubble">
-                <p>"not gonna lie thought this would take way longer, so good ✨"</p>
+                <p>not gonna lie thought this would take way longer, so good ✨</p>
                 <span class="wa-meta">
                   <span class="wa-time">6:12 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2848,7 +2850,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-blue">Kabir· Wellness</span>
               <div class="wa-bubble">
-                <p>"appreciate you guys flagging the brief issue instead of just running with it 🙏"</p>
+                <p>appreciate you guys flagging the brief issue instead of just running with it 🙏</p>
                 <span class="wa-meta">
                   <span class="wa-time">2:38 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2862,7 +2864,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-amber">Meera· Jewellery</span>
               <div class="wa-bubble">
-                <p>"sales literally picked up this week, wild timing 📈"</p>
+                <p>sales literally picked up this week, wild timing 📈</p>
                 <span class="wa-meta">
                   <span class="wa-time">10:05 AM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2876,7 +2878,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-purple">Devansh· Personal Care</span>
               <div class="wa-bubble">
-                <p>"so nice having one person to go to instead of juggling 3 vendors 🙌"</p>
+                <p>so nice having one person to go to instead of juggling 3 vendors 🙌</p>
                 <span class="wa-meta">
                   <span class="wa-time">7:52 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2890,7 +2892,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-pink">Aisha· Pet Care</span>
               <div class="wa-bubble">
-                <p>"my dog is officially more photogenic than me lol, love it 🐶😂"</p>
+                <p>my dog is officially more photogenic than me lol, love it 🐶😂</p>
                 <span class="wa-meta">
                   <span class="wa-time">4:16 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2904,7 +2906,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-teal">Yash· Baby &amp; Kids</span>
               <div class="wa-bubble">
-                <p>"had parents asking where we shot this in the comments 😂"</p>
+                <p>had parents asking where we shot this in the comments 😂</p>
                 <span class="wa-meta">
                   <span class="wa-time">1:09 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2918,7 +2920,7 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="wa-msg-col">
               <span class="wa-msg-name wa-blue">Simran· UGC / Lifestyle</span>
               <div class="wa-bubble">
-                <p>"this feels so real, exactly the vibe we were going for ✨"</p>
+                <p>this feels so real, exactly the vibe we were going for ✨</p>
                 <span class="wa-meta">
                   <span class="wa-time">8:33 PM</span>
                   <svg class="wa-ticks" viewBox="0 0 16 11" fill="none" aria-hidden="true"><path d="M1 5.7 4.4 9.1 10.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 5.7 8.8 9.1 14.9 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2974,8 +2976,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-190" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-190" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-191" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-191" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3150,7 +3152,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-190"></script>
-<script src="assets/app-v2.js?v=20260811-190"></script>
+<script src="assets/creative-data.js?v=20260811-191"></script>
+<script src="assets/app-v2.js?v=20260811-191"></script>
 </body>
 </html>
