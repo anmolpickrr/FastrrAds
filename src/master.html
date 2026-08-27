@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-192" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-192" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-192" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-192" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-192" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-192" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-192" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-192" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-192" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-192" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-192" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-192" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-194" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-194" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-194" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-194" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-194" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-194" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-194" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-194" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-194" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-194" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-194" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-194" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1890,16 +1890,30 @@ textarea.msg-box{
   .wa-msg-row{transition:opacity .15s ease;}
   .wa-typing-bubble span{animation:none; opacity:.7;}
 }
-.wa-window-input{display:flex; align-items:center; gap:10px; padding:10px 14px; border-top:1px solid var(--line);}
+/* Deliberately non-functional footer bar (no live chat behind this
+   panel) — restyled to read as an intentional "more is on the way"
+   status strip rather than a generic messaging-app input clone: a
+   glassy pill with a soft inset instead of a flat fill, a slow-pulsing
+   dot standing in for the usual emoji-picker icon, and a gently
+   glowing send button that stays quiet, not distracting. */
+.wa-window-input{display:flex; align-items:center; gap:10px; padding:11px 14px; border-top:1px solid var(--line);}
 .wa-input-pill{
-  flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:9px; padding:9px 14px; border-radius:100px;
-  background:var(--surface-2); color:var(--text-2); font-size:13px;
+  flex:1 1 auto; min-width:0; display:flex; align-items:center; gap:10px; padding:9px 15px; border-radius:100px;
+  background:var(--surface-2); border:1px solid var(--line); box-shadow:var(--inset-hi);
+  color:var(--text-2); font-size:13px; font-style:italic;
 }
 .wa-input-pill span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.wa-input-icon{width:18px; height:18px; flex:0 0 auto; color:var(--text-2);}
+.wa-input-dot{
+  width:7px; height:7px; border-radius:50%; flex:0 0 auto;
+  background:linear-gradient(135deg, var(--violet), var(--teal));
+  animation:waInputPulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce){.wa-input-dot{animation:none; opacity:.7;}}
+@keyframes waInputPulse{0%,100%{opacity:.45; transform:scale(.85);}50%{opacity:1; transform:scale(1);}}
 .wa-send-btn{
   width:34px; height:34px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
   background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff;
+  box-shadow:0 4px 14px -4px color-mix(in srgb, var(--violet) 55%, transparent), inset 0 1px 1px rgba(255,255,255,.3);
 }
 .wa-send-btn svg{width:16px; height:16px;}
 @media (max-width:640px){
@@ -2415,8 +2429,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-192" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-192" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2788,9 +2802,9 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="testimonials" style="padding-bottom:16px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">04 — What Clients Say</span>
-      <h2>Real feedback.<br>From real campaigns.</h2>
-      <p>A few notes from brands we've shipped creative for — always on-brand, always on time.</p>
+      <span class="eyebrow">04 — What Brands Say</span>
+      <h2>Loved by brands.<br>Built to perform.</h2>
+      <p>Real conversations. Real feedback. Real creative impact.</p>
     </div>
 
     <!-- Draggable WhatsApp mock window (see initTestimonialWindow() in
@@ -2997,10 +3011,10 @@ footer{padding:64px 0 0; margin-top:40px;}
         </div>
 
         <div class="wa-window-input">
-          <span class="wa-input-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+          <span class="wa-input-pill">
+            <span class="wa-input-dot" aria-hidden="true"></span>
+            <span>More real client feedback coming soon…</span>
           </span>
-          <span class="wa-input-pill"><span>More real client feedback coming soon…</span></span>
           <span class="wa-send-btn" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
           </span>
@@ -3158,8 +3172,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-192" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-192" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-194" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3525,10 +3539,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-192"></script>
-<script src="assets/app.js?v=20260811-192"></script>
+<script src="assets/creative-data.js?v=20260811-194"></script>
+<script src="assets/app.js?v=20260811-194"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-192"></script>
+<script type="module" src="assets/team.js?v=20260811-194"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
