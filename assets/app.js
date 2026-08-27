@@ -2777,6 +2777,149 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   })();
 
   /* ----------------------------------------------------------
+     11b. WHATSAPP MOCK WINDOW (testimonials) — drag, a staggered
+     typing→bubble reveal once it scrolls into view, and "view more"
+     revealing the rest of the thread the same way. Pointer Events
+     unify mouse/touch/pen for the drag so there's no separate touch
+     path to keep in sync. Reveal sequencing is skipped (everything
+     shown immediately) under prefers-reduced-motion, same convention
+     as every other animation on this page.
+  ---------------------------------------------------------- */
+  (function initTestimonialWindow() {
+    const win = document.getElementById("waWindow");
+    const head = document.getElementById("waWindowHead");
+    const body = document.getElementById("waWindowBody");
+    const typingRow = document.getElementById("waTypingRow");
+    const moreBtn = document.getElementById("waMoreBtn");
+    const stage = document.getElementById("testiStage");
+    const statusEl = document.getElementById("waHeadStatus");
+    if (!win || !head || !body || !moreBtn || !stage) return;
+
+    /* ---- Drag: clamped to a generous offset range around the
+       window's natural (centered) position rather than measuring
+       exact stage/window rects — simpler, and just as effective at
+       keeping it from being dragged off-section. Double-click/tap the
+       header resets it. ---- */
+    const MAX_DX = 160;
+    const MAX_DY = 100;
+    let curX = 0;
+    let curY = 0;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let originX = 0;
+    let originY = 0;
+    function clampNum(v, min, max) {
+      return Math.max(min, Math.min(max, v));
+    }
+    function applyTransform() {
+      win.style.transform = curX || curY ? `translate(${curX}px, ${curY}px)` : "";
+    }
+    function onPointerMove(e) {
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      curX = clampNum(originX + dx, -MAX_DX, MAX_DX);
+      curY = clampNum(originY + dy, -MAX_DY, MAX_DY);
+      applyTransform();
+    }
+    function onPointerUp() {
+      win.classList.remove("wa-dragging");
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+    }
+    head.addEventListener("pointerdown", (e) => {
+      if (e.button != null && e.button !== 0) return; // primary button/touch only
+      win.classList.add("wa-dragging");
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      originX = curX;
+      originY = curY;
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp, { once: true });
+      e.preventDefault();
+    });
+    head.addEventListener("dblclick", () => {
+      curX = 0;
+      curY = 0;
+      applyTransform();
+    });
+
+    /* ---- Staggered typing → bubble reveal ---- */
+    const primaryRows = Array.from(body.querySelectorAll("[data-wa-msg]:not([data-wa-extra])"));
+    const extraRows = Array.from(body.querySelectorAll("[data-wa-msg][data-wa-extra]"));
+
+    function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    async function showTypingBeat() {
+      if (!typingRow) return;
+      typingRow.classList.add("wa-shown");
+      await wait(650);
+      typingRow.classList.remove("wa-shown");
+    }
+    async function revealSequence(rows) {
+      for (const row of rows) {
+        row.hidden = false;
+        if (!prefersReducedMotion) {
+          await wait(220);
+          await showTypingBeat();
+        }
+        row.classList.add("wa-shown");
+        body.scrollTo({ top: body.scrollHeight, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        if (!prefersReducedMotion) await wait(420);
+      }
+    }
+    function showAllImmediately(rows) {
+      rows.forEach((r) => {
+        r.hidden = false;
+        r.classList.add("wa-shown");
+      });
+    }
+
+    let started = false;
+    function startInitialSequence() {
+      if (started) return;
+      started = true;
+      if (prefersReducedMotion) showAllImmediately(primaryRows);
+      else revealSequence(primaryRows);
+    }
+    if ("IntersectionObserver" in window) {
+      const wio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              startInitialSequence();
+              wio.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.25 }
+      );
+      wio.observe(win);
+    } else {
+      startInitialSequence();
+    }
+
+    moreBtn.addEventListener("click", async () => {
+      moreBtn.disabled = true;
+      if (prefersReducedMotion) showAllImmediately(extraRows);
+      else await revealSequence(extraRows);
+      moreBtn.hidden = true;
+    });
+
+    /* ---- Status line cycles for a bit of life, paused under
+       prefers-reduced-motion since it's decorative, not informative. ---- */
+    if (statusEl && !prefersReducedMotion) {
+      const dot = '<span class="wa-head-status-dot" aria-hidden="true"></span>';
+      const statuses = [dot + "online", "typing…", dot + "online", "last seen just now"];
+      let si = 0;
+      setInterval(() => {
+        si = (si + 1) % statuses.length;
+        statusEl.innerHTML = statuses[si];
+      }, 4200);
+    }
+  })();
+
+  /* ----------------------------------------------------------
      12. NAV: smooth scroll + active link highlight
   ---------------------------------------------------------- */
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
