@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-188" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-188" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-188" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-188" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-188" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-188" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-188" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-188" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-188" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-188" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-188" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-188" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-189" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-189" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-189" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-189" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-189" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-189" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-189" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-189" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-189" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-189" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-189" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-189" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -461,28 +461,6 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    despite the gap technically being nonzero. */
 .section-head h2{font-size:clamp(28px,3.4vw,40px); margin-top:28px; line-height:1.08; letter-spacing:-0.015em;}
 .section-head p{margin-top:16px; color:var(--text-1); font-size:15.5px; line-height:1.65;}
-
-/* Stacked-pill tag cluster — the one place on the page a punchier,
-   warm-to-cool gradient sticker style earns its spot: filling the
-   otherwise-empty space beside the Services intro with the actual
-   format names, not an invented stat. Scoped to #services so it
-   doesn't leak into any other .section-head; hidden below the width
-   where there's no longer real room beside the 640px-capped text
-   column without crowding the package cards underneath. */
-#services .section-head{position:relative;}
-.tag-cluster{display:none; position:absolute; top:4px; left:calc(100% + 36px); width:280px; height:190px; pointer-events:none;}
-@media (min-width:1180px){.tag-cluster{display:block;}}
-.tag-chip{
-  position:absolute; padding:11px 20px; border-radius:100px; font-family:var(--font-display); font-weight:700; font-size:15px;
-  white-space:nowrap; box-shadow:0 14px 28px -12px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.15);
-  transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease; pointer-events:auto;
-}
-.tag-chip:hover{transform:scale(1.08) rotate(0deg) !important; box-shadow:0 18px 34px -12px rgba(0,0,0,.45), 0 4px 10px rgba(0,0,0,.2); z-index:10;}
-.tag-chip-1{background:linear-gradient(135deg,#ffd66b,#ffb648); color:#3a2405; top:0; left:44px; transform:rotate(-6deg); z-index:5;}
-.tag-chip-2{background:linear-gradient(135deg,#ff9d6b,#ff7043); color:#3a1503; top:36px; left:120px; transform:rotate(4deg); z-index:4;}
-.tag-chip-3{background:linear-gradient(135deg,#ffb6c9,#ff8fa8); color:#3a1220; top:78px; left:24px; transform:rotate(-3deg); z-index:3;}
-.tag-chip-4{background:linear-gradient(135deg,#8ec8ff,#5a9dfb); color:#0d1f38; top:116px; left:104px; transform:rotate(5deg); z-index:2;}
-.tag-chip-5{background:linear-gradient(135deg,#7ee0d0,#3fc9b0); color:#06241d; top:154px; left:28px; transform:rotate(-4deg); z-index:1;}
 
 /* ---------- SHOWCASE ---------- */
 .showcase-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:26px;}
@@ -1951,25 +1929,6 @@ textarea.msg-box{
 .wa-float-text span{font-size:12px; color:var(--text-0); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 @media (prefers-reduced-motion: reduce){.wa-float-item{animation:none; opacity:.85;}}
 
-.reaction-sticker{
-  display:none; position:absolute; z-index:0; width:52px; height:52px; border-radius:16px 16px 16px 4px;
-  background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-  font-size:24px; align-items:center; justify-content:center;
-  animation:reactionBob 4.5s ease-in-out infinite;
-}
-@media (min-width:900px){.reaction-sticker{display:flex;}}
-.reaction-sticker-a{top:18px; left:8%; transform:rotate(-8deg);}
-.reaction-sticker-b{top:64px; right:10%; transform:rotate(7deg); animation-delay:1.4s;}
-@keyframes reactionBob{
-  0%,100%{transform:translateY(0) rotate(var(--rot,-8deg));}
-  50%{transform:translateY(-9px) rotate(var(--rot,-8deg));}
-}
-.reaction-sticker-a{--rot:-8deg;}
-.reaction-sticker-b{--rot:7deg;}
-@media (prefers-reduced-motion: reduce){.reaction-sticker{animation:none;}}
-
-
 /* ---------- FOOTER ----------
    Three movements instead of one flat link block: a CTA that gives the
    footer a reason to exist beyond "here are some links," the actual
@@ -2439,8 +2398,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-188" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-188" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-189" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-189" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2553,13 +2512,6 @@ footer{padding:64px 0 0; margin-top:40px;}
       <span class="eyebrow">02 — Services &amp; Package Scope</span>
       <h2>Pick a service.<br>See the exact scope.</h2>
       <p>Pick a package below to see the exact scope open up — price, deliverables, and delivery details, all in one place.</p>
-      <div class="tag-cluster" aria-hidden="true">
-        <span class="tag-chip tag-chip-1">AI Reels</span>
-        <span class="tag-chip tag-chip-2">Catalogue</span>
-        <span class="tag-chip tag-chip-3">Static</span>
-        <span class="tag-chip tag-chip-4">Carousel</span>
-        <span class="tag-chip tag-chip-5">On-brand</span>
-      </div>
     </div>
 
     <!-- A grid of package cards (#svcNav); clicking one opens a modal
@@ -2785,15 +2737,6 @@ footer{padding:64px 0 0; margin-top:40px;}
          thrown off-section. -->
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
-
-      <!-- Two reaction stickers, no counts attached — an emoji chip
-           reading as "someone reacted" is fine as ambient decoration;
-           a specific number next to it would read as a real, verified
-           stat, which this placeholder content isn't and shouldn't
-           imply. Fills what was previously dead space above the
-           window on wide screens. -->
-      <span class="reaction-sticker reaction-sticker-a" aria-hidden="true">😍</span>
-      <span class="reaction-sticker reaction-sticker-b" aria-hidden="true">🔥</span>
 
       <!-- Ambient pop-ups either side of the window — short client
            snippets that fade in/out on a loop (own CSS animation,
@@ -3024,8 +2967,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-188" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-188" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-189" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-189" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3200,7 +3143,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-188"></script>
-<script src="assets/app.js?v=20260811-188"></script>
+<script src="assets/creative-data.js?v=20260811-189"></script>
+<script src="assets/app.js?v=20260811-189"></script>
 </body>
 </html>
