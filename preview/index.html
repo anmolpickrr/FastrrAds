@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-183" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-183" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-183" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-183" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-183" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-183" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-183" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-183" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-183" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-183" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-183" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-183" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-185" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-185" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-185" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-185" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-185" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-185" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-185" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-185" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-185" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-185" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-185" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-185" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1653,28 +1653,42 @@ html.is-internal .oc-offer{display:none !important;}
 .pdf-btn:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
 .pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none;}
 .msg-inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
-/* Phone-preview frame — a gradient "bezel" plus a tiny decorative
-   status bar around the textarea, so it reads as a screen this text
-   is about to land on rather than a plain text field. Wraps the
+/* Preview frame — a hairline gradient border and a quiet status bar,
+   not a fill: the first pass drenched the whole message in a
+   violet→teal gradient, which fought the text for attention instead
+   of framing it. Accent color now lives only in the thin border and
+   the tiny dot on the status bar; the textarea itself stays the
+   page's normal dark surface so the message reads cleanly, same
+   contrast/legibility bar as everywhere else on the site. Wraps the
    textarea without touching its id, readonly state, or any attribute
    app.js relies on. */
 .msg-preview-frame{
-  position:relative; flex:1; display:flex; flex-direction:column; border-radius:20px; padding:5px;
-  background:linear-gradient(160deg, var(--violet), var(--teal)); box-shadow:var(--shadow-md);
+  position:relative; flex:1; display:flex; flex-direction:column; border-radius:16px; padding:1.5px;
+  background:linear-gradient(160deg, color-mix(in srgb, var(--violet) 60%, transparent), color-mix(in srgb, var(--teal) 50%, transparent));
+  box-shadow:var(--shadow-sm);
 }
-.msg-card-internal .msg-preview-frame{background:linear-gradient(160deg, var(--teal), var(--violet));}
+.msg-card-internal .msg-preview-frame{background:linear-gradient(160deg, color-mix(in srgb, var(--teal) 60%, transparent), color-mix(in srgb, var(--violet) 50%, transparent));}
 .msg-preview-statusbar{
-  display:flex; align-items:center; justify-content:space-between; padding:9px 16px 4px;
-  font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.02em; color:rgba(255,255,255,.85);
+  display:flex; align-items:center; justify-content:space-between; padding:10px 16px 8px;
+  font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:.04em; color:var(--text-2);
+  background:var(--bg-2); border-radius:14.5px 14.5px 0 0;
 }
-.msg-preview-dots{letter-spacing:2px; font-size:8px;}
+.msg-preview-statusbar span:first-child{display:flex; align-items:center; gap:6px;}
+.msg-preview-statusbar span:first-child::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--violet); flex:0 0 auto;}
+.msg-card-internal .msg-preview-statusbar span:first-child::before{background:var(--teal);}
+.msg-preview-dots{letter-spacing:2px; font-size:8px; opacity:.5;}
 textarea.msg-box{
-  width:100%; min-height:310px; resize:vertical; border-radius:16px; border:none; background:var(--surface-1);
-  color:var(--text-0); font-family:var(--font-body); font-size:13.5px; line-height:1.65; padding:14px 18px 18px; flex:1;
-  box-shadow:var(--inset-hi); transition:box-shadow .2s ease;
+  /* Opaque, not the glass --surface-1 token: the frame around this is
+     a solid gradient, and a near-transparent textarea background let
+     it bleed straight through, recreating the exact full-gradient-fill
+     look this was meant to move away from. */
+  width:100%; min-height:310px; resize:vertical; border-radius:0 0 14.5px 14.5px; border:none; background:var(--bg-2);
+  color:var(--text-0); font-family:var(--font-body); font-size:13.5px; line-height:1.65; padding:8px 18px 18px; flex:1;
+  transition:background .2s ease;
 }
-.msg-card-client textarea.msg-box:focus{outline:none; box-shadow:0 0 0 2px rgba(255,255,255,.55) inset, var(--inset-hi);}
-.msg-card-internal textarea.msg-box:focus{outline:none; box-shadow:0 0 0 2px rgba(255,255,255,.55) inset, var(--inset-hi);}
+.msg-preview-frame:focus-within{box-shadow:var(--shadow-md);}
+.msg-card-client .msg-preview-frame:focus-within{background:linear-gradient(160deg, var(--violet), color-mix(in srgb, var(--teal) 60%, var(--violet)));}
+.msg-card-internal .msg-preview-frame:focus-within{background:linear-gradient(160deg, var(--teal), color-mix(in srgb, var(--violet) 60%, var(--teal)));}
 .copy-btn{
   position:relative; margin-top:14px; align-self:flex-start; display:inline-flex; align-items:center; gap:9px;
   padding:11px 20px 11px 16px; border-radius:var(--radius-sm); border:1px solid var(--line);
@@ -1867,6 +1881,41 @@ html[data-theme="dark"] .wa-window-body{
   .wa-window-body{max-height:360px; padding:14px 11px 4px;}
   .wa-msg-col{max-width:85%;}
 }
+
+/* Ambient floating snippets either side of the window — pure CSS,
+   own animation-delay per item so they blink in and out on a loop
+   independent of each other and of the window's own reveal sequence.
+   Only shown once there's genuinely room beside the window (window
+   itself caps at 560px) so they never crowd or overlap it. */
+.wa-float{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:0;
+  display:none; flex-direction:column; gap:54px; width:210px; pointer-events:none;
+}
+.wa-float-left{left:clamp(0px, 3vw, 36px);}
+.wa-float-right{right:clamp(0px, 3vw, 36px);}
+@media (min-width:1180px){.wa-float{display:flex;}}
+.wa-float-item{
+  display:flex; align-items:center; gap:10px; padding:10px 13px; border-radius:14px;
+  background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  opacity:0; animation:waFloatBlink 12s ease-in-out infinite; animation-delay:var(--wa-float-delay, 0s);
+}
+@keyframes waFloatBlink{
+  0%, 100% { opacity:0; transform:translateY(6px) scale(.96); }
+  8%, 25% { opacity:1; transform:translateY(0) scale(1); }
+  35% { opacity:0; transform:translateY(-6px) scale(.96); }
+}
+.wa-float-avatar{
+  width:28px; height:28px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:11px; color:#fff;
+}
+.wa-float-avatar.wa-teal{background:#0a998f;}
+.wa-float-avatar.wa-blue{background:#3f7fd1;}
+.wa-float-avatar.wa-purple{background:#9163c9;}
+.wa-float-text{display:flex; flex-direction:column; gap:1px; min-width:0;}
+.wa-float-text b{font-size:11.5px; font-weight:700; color:var(--text-1); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wa-float-text span{font-size:12px; color:var(--text-0); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+@media (prefers-reduced-motion: reduce){.wa-float-item{animation:none; opacity:.85;}}
 
 
 /* ---------- FOOTER ----------
@@ -2338,8 +2387,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-185" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-185" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2678,6 +2727,41 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="testi-stage reveal-on-scroll" id="testiStage">
       <span class="testi-gridwall" aria-hidden="true"></span>
 
+      <!-- Ambient pop-ups either side of the window — short client
+           snippets that fade in/out on a loop (own CSS animation,
+           no JS), reinforcing "this is one thread among many"
+           without competing with the actual conversation for
+           attention. Hidden below ~1180px, where there's no longer
+           room beside the window without crowding it. -->
+      <div class="wa-float wa-float-left" aria-hidden="true">
+        <div class="wa-float-item" style="--wa-float-delay:0s;">
+          <span class="wa-float-avatar wa-blue">P</span>
+          <div class="wa-float-text"><b>Priya · Skincare</b><span>"This looks amazing 🔥"</span></div>
+        </div>
+        <div class="wa-float-item" style="--wa-float-delay:4s;">
+          <span class="wa-float-avatar wa-teal">V</span>
+          <div class="wa-float-text"><b>Vikram · F&amp;B</b><span>"Team loved the edit"</span></div>
+        </div>
+        <div class="wa-float-item" style="--wa-float-delay:8s;">
+          <span class="wa-float-avatar wa-purple">A</span>
+          <div class="wa-float-text"><b>Ananya · Wellness</b><span>"Quick turnaround as always"</span></div>
+        </div>
+      </div>
+      <div class="wa-float wa-float-right" aria-hidden="true">
+        <div class="wa-float-item" style="--wa-float-delay:2s;">
+          <span class="wa-float-avatar wa-purple">R</span>
+          <div class="wa-float-text"><b>Rohan · Electronics</b><span>"Let's take this live 👍"</span></div>
+        </div>
+        <div class="wa-float-item" style="--wa-float-delay:6s;">
+          <span class="wa-float-avatar wa-blue">N</span>
+          <div class="wa-float-text"><b>Neha · Fashion</b><span>"Exactly what we needed"</span></div>
+        </div>
+        <div class="wa-float-item" style="--wa-float-delay:10s;">
+          <span class="wa-float-avatar wa-teal">K</span>
+          <div class="wa-float-text"><b>Karan · Home Decor</b><span>"This is 🔥, ship it"</span></div>
+        </div>
+      </div>
+
       <div class="wa-window" id="waWindow">
         <div class="wa-window-head" id="waWindowHead">
           <span class="wa-head-avatar wa-teal" aria-hidden="true">FA</span>
@@ -2832,8 +2916,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-183" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-185" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-185" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3008,7 +3092,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-183"></script>
-<script src="assets/app-v2.js?v=20260811-183"></script>
+<script src="assets/creative-data.js?v=20260811-185"></script>
+<script src="assets/app-v2.js?v=20260811-185"></script>
 </body>
 </html>
