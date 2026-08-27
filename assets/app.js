@@ -2790,10 +2790,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const head = document.getElementById("waWindowHead");
     const body = document.getElementById("waWindowBody");
     const typingRow = document.getElementById("waTypingRow");
-    const moreBtn = document.getElementById("waMoreBtn");
     const stage = document.getElementById("testiStage");
     const statusEl = document.getElementById("waHeadStatus");
-    if (!win || !head || !body || !moreBtn || !stage) return;
+    if (!win || !head || !body || !stage) return;
 
     /* ---- Drag: clamped to a generous offset range around the
        window's natural (centered) position rather than measuring
@@ -2843,9 +2842,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       applyTransform();
     });
 
-    /* ---- Staggered typing → bubble reveal ---- */
-    const primaryRows = Array.from(body.querySelectorAll("[data-wa-msg]:not([data-wa-extra])"));
-    const extraRows = Array.from(body.querySelectorAll("[data-wa-msg][data-wa-extra]"));
+    /* ---- Continuous back-to-back reveal loop ----
+       Every message row, in document order, typed in one after
+       another; once the last one lands, pause to let it be read,
+       clear the thread, and start again from the top — a live feed
+       that never just stops, rather than a one-time reveal gated
+       behind a "view more" click. Stays running for as long as the
+       panel is scrolled into view; pauses (not destroyed) while
+       scrolled away so it doesn't run invisibly in the background. */
+    const allRows = Array.from(body.querySelectorAll("[data-wa-msg]"));
 
     function wait(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -2855,6 +2860,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       typingRow.classList.add("wa-shown");
       await wait(650);
       typingRow.classList.remove("wa-shown");
+    }
+    function resetRows() {
+      allRows.forEach((r) => {
+        r.hidden = true;
+        r.classList.remove("wa-shown");
+      });
+      body.scrollTo({ top: 0, behavior: "auto" });
     }
     async function revealSequence(rows) {
       for (const row of rows) {
@@ -2875,36 +2887,42 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     }
 
-    let started = false;
-    function startInitialSequence() {
-      if (started) return;
-      started = true;
-      if (prefersReducedMotion) showAllImmediately(primaryRows);
-      else revealSequence(primaryRows);
+    let running = false;
+    let visible = false;
+    async function loop() {
+      if (running) return;
+      running = true;
+      while (visible) {
+        if (prefersReducedMotion) {
+          showAllImmediately(allRows);
+          // Nothing left to animate — one static pass is the correct
+          // end state under reduced motion, not an invisible infinite
+          // loop still ticking in the background.
+          break;
+        }
+        await revealSequence(allRows);
+        await wait(3400); // hold the full thread on screen before it recycles
+        if (!visible) break;
+        resetRows();
+        await wait(500);
+      }
+      running = false;
     }
     if ("IntersectionObserver" in window) {
       const wio = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              startInitialSequence();
-              wio.unobserve(entry.target);
-            }
+            visible = entry.isIntersecting;
+            if (visible) loop();
           });
         },
         { threshold: 0.25 }
       );
       wio.observe(win);
     } else {
-      startInitialSequence();
+      visible = true;
+      loop();
     }
-
-    moreBtn.addEventListener("click", async () => {
-      moreBtn.disabled = true;
-      if (prefersReducedMotion) showAllImmediately(extraRows);
-      else await revealSequence(extraRows);
-      moreBtn.hidden = true;
-    });
 
     /* ---- Status line cycles for a bit of life, paused under
        prefers-reduced-motion since it's decorative, not informative. ---- */
