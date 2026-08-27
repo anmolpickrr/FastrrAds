@@ -3030,12 +3030,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // paragraph, where they tend to rush or flatten out partway
     // through. Falls back to the whole string as one sentence if the
     // split finds nothing (short replies, no terminal punctuation).
-    // Splits on sentence-enders AND commas — commas get a shorter pause
-    // than full stops (below), which is what makes the queued chunks
-    // read as one paced delivery instead of one run-on breath per
-    // sentence.
+    // Sentence-level only — an earlier version also split on commas,
+    // but every extra chunk costs a real utterance's worth of engine
+    // startup latency on top of the deliberate pause below, and with
+    // multi-sentence replies that added up to a slow, halting delivery
+    // instead of a natural one. Full stops are where a spoken reply
+    // actually benefits from a breath; commas read fine left inside
+    // the sentence they're already part of.
     function splitSentences(text) {
-      const parts = text.match(/[^.!?,;:]+[.!?,;:]*/g);
+      const parts = text.match(/[^.!?]+[.!?]*/g);
       return parts && parts.length ? parts.map((s) => s.trim()).filter(Boolean) : [text];
     }
 
@@ -3052,9 +3055,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // Queued and chained through onend rather than fired at
     // speechSynthesis.speak() back-to-back — that leaves the gap
     // between chunks up to whatever the engine feels like, which on
-    // some browsers is instant and reads as one breathless run-on.
-    // Explicit pauses (longer after a full stop, shorter after a
-    // comma) are what makes it sound like someone actually pausing to
+    // some browsers is instant and reads as one breathless run-on. A
+    // short, fixed pause between sentences (see the onend handler
+    // below) is what makes it sound like someone actually pausing to
     // speak rather than a wall of text being read at it.
     let speakToken = 0;
     function speak(text, onDone) {
@@ -3104,8 +3107,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         // since it's simple signal processing, not real re-synthesis.
         utter.rate = 1;
         utter.pitch = 1;
-        const pause = /[.!?]$/.test(chunk) ? 260 : 120;
-        utter.onend = () => setTimeout(speakNext, pause);
+        // A brief beat between sentences, not a hold — long enough to
+        // read as an actual breath, short enough that a multi-sentence
+        // reply still sounds like one continuous answer rather than a
+        // string of separate statements.
+        utter.onend = () => setTimeout(speakNext, 140);
         utter.onerror = () => setTimeout(speakNext, 80);
         window.speechSynthesis.speak(utter);
       }
