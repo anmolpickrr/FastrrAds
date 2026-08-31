@@ -243,7 +243,7 @@
       name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
       short: "Script and 2 hook options shared for approval, with creative input throughout.",
       benefit: "Creative guidance and content writer involvement for a stronger direction.",
-      duration: "Max 35 sec", format: "9:16 (1 dimension)",
+      duration: "Max 45 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
@@ -251,7 +251,7 @@
         "AI voiceover, in Hindi or English",
         "Reel built with content writer involvement and editor input",
         "Creative guidance, suggestions, and input on the script and direction",
-        "Single 9:16 export, max 35 sec",
+        "Single 9:16 export, max 45 sec",
         "1 script plus 2 hook options shared for approval",
         "1 revision for small script or communication changes",
       ],
@@ -261,7 +261,7 @@
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 35 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 45 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // Adds a second hook option and hands-on creative guidance on top of
       // Story Cut's single script approval. Still short of Studio Cut's
@@ -272,7 +272,7 @@
       name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
       short: "Script and 2 hook options shared for approval, with full Creative Director involvement.",
       benefit: "Full creative oversight, custom brand music, and the most revision room.",
-      duration: "Max 45 sec", format: "9:16 (1 dimension)",
+      duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
@@ -280,7 +280,7 @@
         "AI voiceover, in Hindi or English",
         "Reel built with full Writer, Editor, and Creative Director involvement",
         "Creative Director guidance, suggestions, and input throughout",
-        "Single 9:16 export, max 45 sec",
+        "Single 9:16 export, max 1 min",
         "1 script plus 2 hook options shared for approval",
         "Custom music composed for your brand (music only, no lip sync with the model)",
         "Call support for requirement discussions",
@@ -292,7 +292,7 @@
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 45 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 1 min, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // Top tier: full Writer, Editor, and Creative Director involvement, 2
       // revisions instead of 1, and custom brand music alongside the longest
