@@ -24,18 +24,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-204" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-204" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-204" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-204" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-204" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-204" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-204" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-204" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-204" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-204" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-204" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-204" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-205" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-205" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-205" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-205" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-205" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-205" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-205" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-205" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-205" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-205" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-205" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-205" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -704,24 +704,21 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   padding-top:13px; border-top:1px solid var(--line-soft);
 }
 .pkg-card-price{font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--accent);}
-/* Labeled, not icon-only: a bare circular arrow read as decoration
-   rather than an actionable control, leaving it unclear the whole
-   card is clickable and opens the full scope. Pairing it with a
-   short text label turns it into a legible mini-CTA. */
-.pkg-card-cta{
-  display:flex; align-items:center; gap:7px; flex:0 0 auto;
-  font-size:12px; font-weight:600; color:var(--text-2);
-  transition:color .25s ease;
-}
-.pkg-card:hover .pkg-card-cta{color:var(--accent);}
+/* A solid, always-on filled circle (not a bare outlined icon, and not
+   a text label — a "View scope" caption read as clutter) is the
+   clearer cue here: a filled floating-action-button look is an
+   immediately recognizable "tap for more" affordance on its own,
+   filled from the start rather than only coloring in on hover so it
+   doesn't depend on a hover state touch users never see. */
 .pkg-card-arrow{
-  width:30px; height:30px; border-radius:50%; flex:0 0 auto;
+  width:34px; height:34px; border-radius:50%; flex:0 0 auto;
   display:flex; align-items:center; justify-content:center;
-  border:1px solid var(--line); color:var(--text-2);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1), color .25s ease, border-color .25s ease, background .25s ease;
+  background:linear-gradient(135deg, var(--violet), var(--teal)); color:#fff;
+  box-shadow:0 6px 16px -6px color-mix(in srgb, var(--violet) 55%, transparent), var(--inset-hi);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
 }
-.pkg-card-arrow svg{width:13px; height:13px;}
-.pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg); color:var(--accent); border-color:var(--accent);}
+.pkg-card-arrow svg{width:14px; height:14px;}
+.pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg) scale(1.06); box-shadow:0 8px 20px -6px color-mix(in srgb, var(--violet) 65%, transparent), var(--inset-hi);}
 /* Base scattered layout for each card — a loose cloud, not a grid,
    per the reference video (cards fanned out and independently
    tilted, rather than aligned columns). */
@@ -2450,8 +2447,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-204" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-204" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-205" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-205" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2632,10 +2629,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">Script-to-screen AI reels across 4 package tiers.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹2,500</span>
-          <span class="pkg-card-cta">
-            View scope
-            <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
-          </span>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
@@ -2646,10 +2640,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,800</span>
-          <span class="pkg-card-cta">
-            View scope
-            <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
-          </span>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
@@ -2660,10 +2651,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">Single-frame, on-brand design creative.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹499</span>
-          <span class="pkg-card-cta">
-            View scope
-            <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
-          </span>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
@@ -2674,10 +2662,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-desc">Up to 5-slide narrative carousel.</span>
         <span class="pkg-card-foot">
           <span class="pkg-card-price">From ₹1,499</span>
-          <span class="pkg-card-cta">
-            View scope
-            <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
-          </span>
+          <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
     </div>
@@ -3300,8 +3285,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-204" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-204" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-205" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-205" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3670,10 +3655,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-204"></script>
-<script src="assets/app.js?v=20260811-204"></script>
+<script src="assets/creative-data.js?v=20260811-205"></script>
+<script src="assets/app.js?v=20260811-205"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-204"></script>
+<script type="module" src="assets/team.js?v=20260811-205"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
