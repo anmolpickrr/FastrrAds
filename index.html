@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-208" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-208" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-208" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-208" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-208" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-208" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-208" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-208" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-208" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-208" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-208" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-208" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-209" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-209" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-209" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-209" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-209" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-209" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-209" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-209" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-209" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-209" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-209" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-209" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -707,24 +707,42 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .pkg-card-arrow svg{width:13px; height:13px;}
 .pkg-card:hover .pkg-card-arrow{transform:translateX(3px) rotate(-45deg); color:var(--accent); border-color:var(--accent);}
-/* Hover tooltip — the clearer "this is clickable" cue: a small
-   speech-bubble label that appears on hover, instead of restyling
-   the arrow icon itself (a filled button read as too heavy, a text
-   label next to the arrow read as clutter). Centered within the
-   card's own bounds rather than floating above it: .pkg-card has
-   overflow:hidden (needed to clip its own glow-line/icon effects),
-   so anything positioned outside the box would just get clipped and
-   never actually show. Purely a mouse-hover affordance; touch users
-   get the same understanding from the modal opening on first tap. */
+/* Hover tooltip — the clearer "this is clickable" cue: dim/blur the
+   card's own content on hover so it recedes, and let a small
+   speech-bubble label pop forward against that dimmed backdrop
+   instead of competing with the card's own text and colors for
+   attention. Centered within the card's own bounds rather than
+   floating above it: .pkg-card has overflow:hidden (needed to clip
+   its own glow-line/icon effects), so anything positioned outside
+   the box would just get clipped and never actually show. Purely a
+   mouse-hover affordance; touch users get the same understanding
+   from the modal opening on first tap. */
+.pkg-card-dim{
+  position:absolute; inset:0; z-index:2; border-radius:inherit;
+  background:rgba(4,4,10,.62); backdrop-filter:blur(2.5px); -webkit-backdrop-filter:blur(2.5px);
+  opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+.pkg-card:hover .pkg-card-dim{opacity:1;}
+/* Gradient-hairline pill, the same padding-border technique used
+   throughout the site (.msg-preview-frame, .wa-window) — a thin
+   violet→teal edge around a solid, always-dark chip. Deliberately
+   theme-independent (not var(--bg-*)/var(--text-*)) since a tooltip
+   reads best at consistent max contrast regardless of which theme
+   the page itself is in. */
 .pkg-card-tooltip{
-  position:absolute; z-index:4; left:50%; top:50%; display:flex; align-items:center; gap:6px;
+  position:absolute; z-index:5; left:50%; top:50%;
   transform:translate(-50%,-50%) translateY(8px) scale(.9); opacity:0; pointer-events:none;
-  padding:7px 15px 7px 12px; border-radius:100px; border:1px solid var(--line);
-  background:var(--bg-1); color:var(--text-0); font-size:12px; font-weight:600; white-space:nowrap;
+  padding:1.5px; border-radius:100px;
+  background:linear-gradient(120deg, var(--violet), var(--teal));
   box-shadow:var(--shadow-lg);
   transition:opacity .2s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
 }
-.pkg-card-tooltip svg{width:13px; height:13px; flex:0 0 auto; color:var(--accent);}
+.pkg-card-tooltip-inner{
+  display:flex; align-items:center; gap:6px; white-space:nowrap;
+  padding:8px 16px 8px 13px; border-radius:100px;
+  background:#0b0b12; color:#fff; font-size:12.5px; font-weight:600;
+}
+.pkg-card-tooltip-inner svg{width:13px; height:13px; flex:0 0 auto; color:var(--teal);}
 .pkg-card:hover .pkg-card-tooltip{
   opacity:1; transform:translate(-50%,-50%) translateY(0) scale(1);
   animation:pkgTooltipBob 1.6s ease-in-out .35s infinite;
@@ -733,7 +751,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   0%,100%{transform:translate(-50%,-50%) translateY(0) scale(1);}
   50%{transform:translate(-50%,-50%) translateY(-3px) scale(1);}
 }
-@media (hover:none){.pkg-card-tooltip{display:none;}}
+@media (hover:none){.pkg-card-dim,.pkg-card-tooltip{display:none;}}
 @media (prefers-reduced-motion: reduce){.pkg-card:hover .pkg-card-tooltip{animation:none;}}
 /* Base scattered layout for each card — a loose cloud, not a grid,
    per the reference video (cards fanned out and independently
@@ -2459,8 +2477,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-208" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-208" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-209" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-209" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2587,7 +2605,8 @@ footer{padding:64px 0 0; margin-top:40px;}
          logic is untouched — only how it's revealed changed. -->
     <div class="pkg-stage reveal-on-scroll" id="svcNav">
       <button type="button" class="pkg-card" data-svc="reels" style="--accent:var(--violet);">
-        <span class="pkg-card-tooltip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span>
+        <span class="pkg-card-dim" aria-hidden="true"></span>
+        <span class="pkg-card-tooltip" aria-hidden="true"><span class="pkg-card-tooltip-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span></span>
         <span class="pkg-card-badge">4 tiers</span>
         <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg></span>
         <span class="pkg-card-glowline" aria-hidden="true"></span>
@@ -2599,7 +2618,8 @@ footer{padding:64px 0 0; margin-top:40px;}
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="catalogue" style="--accent:var(--violet);">
-        <span class="pkg-card-tooltip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span>
+        <span class="pkg-card-dim" aria-hidden="true"></span>
+        <span class="pkg-card-tooltip" aria-hidden="true"><span class="pkg-card-tooltip-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span></span>
         <span class="pkg-card-badge">360°</span>
         <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <span class="pkg-card-glowline" aria-hidden="true"></span>
@@ -2611,7 +2631,8 @@ footer{padding:64px 0 0; margin-top:40px;}
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="static" style="--accent:var(--violet);">
-        <span class="pkg-card-tooltip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span>
+        <span class="pkg-card-dim" aria-hidden="true"></span>
+        <span class="pkg-card-tooltip" aria-hidden="true"><span class="pkg-card-tooltip-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span></span>
         <span class="pkg-card-badge">1 frame</span>
         <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4Zm12.5 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 18l4.5-6 3 3.5L15 12l4 6H5Z"/></svg></span>
         <span class="pkg-card-glowline" aria-hidden="true"></span>
@@ -2623,7 +2644,8 @@ footer{padding:64px 0 0; margin-top:40px;}
         </span>
       </button>
       <button type="button" class="pkg-card" data-svc="carousel" style="--accent:var(--violet);">
-        <span class="pkg-card-tooltip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span>
+        <span class="pkg-card-dim" aria-hidden="true"></span>
+        <span class="pkg-card-tooltip" aria-hidden="true"><span class="pkg-card-tooltip-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>See full scope</span></span>
         <span class="pkg-card-badge">5 slides</span>
         <span class="pkg-card-icon-plain"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/><rect x="9.7" y="3.5" width="4.6" height="17" rx="1.4" fill="currentColor"/><rect x="17" y="6" width="4.5" height="12" rx="1.3" fill="currentColor" opacity=".55"/></svg></span>
         <span class="pkg-card-glowline" aria-hidden="true"></span>
@@ -3116,8 +3138,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-208" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-208" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-209" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-209" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3292,7 +3314,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-208"></script>
-<script src="assets/app.js?v=20260811-208"></script>
+<script src="assets/creative-data.js?v=20260811-209"></script>
+<script src="assets/app.js?v=20260811-209"></script>
 </body>
 </html>
