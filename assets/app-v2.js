@@ -328,7 +328,14 @@
   ];
   const COMMON_NEED = [...BRAND_NEED, ...PER_PRODUCT_NEED];
 
+  // Temporary pricing hide — set to false to restore all prices site-wide.
+  // Every price shown on the page (calculator, PDF quote, chat assistant,
+  // package cards) is formatted through fmtINR/fmtINRPdf, so this single
+  // flag is the only thing that needs to flip back.
+  const HIDE_PRICING = true;
+
   function fmtINR(n) {
+    if (HIDE_PRICING) return "₹****";
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
 
@@ -336,6 +343,7 @@
   // back to an unrelated glyph — so the PDF path formats amounts with
   // "Rs." instead. Everywhere else on the page keeps the ₹ symbol.
   function fmtINRPdf(n) {
+    if (HIDE_PRICING) return "Rs. ****";
     return "Rs. " + Math.round(n).toLocaleString("en-IN");
   }
 
@@ -3500,8 +3508,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         test: /\b(minimum|min\.?\s?order|kam se kam)\b/i,
         reply: (text, lang) =>
           lang === "hi"
-            ? `<p>Accha sawaal! Hum ₹10,000 minimum per order rakhte hain, lekin aap kuch bhi mix-and-match karke wahan tak pahunch sakte hain. Calculator aapke liye running total dikhata rehta hai, wahin le chalta hoon.</p>`
-            : `<p>Good question! We work with a ₹10,000 minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go, let me take you there.</p>`,
+            ? `<p>Accha sawaal! Hum ${fmtINR(PUBLIC_OFFER_THRESHOLD)} minimum per order rakhte hain, lekin aap kuch bhi mix-and-match karke wahan tak pahunch sakte hain. Calculator aapke liye running total dikhata rehta hai, wahin le chalta hoon.</p>`
+            : `<p>Good question! We work with a ${fmtINR(PUBLIC_OFFER_THRESHOLD)} minimum per order, but you're welcome to mix and match anything you like to get there. The calculator keeps a running total for you as you go, let me take you there.</p>`,
         actions: (text, lang) => [ACTION_QUOTE(lang)],
         autoNav: "#quote",
       },
