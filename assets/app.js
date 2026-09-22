@@ -328,14 +328,16 @@
   ];
   const COMMON_NEED = [...BRAND_NEED, ...PER_PRODUCT_NEED];
 
-  // Temporary pricing hide — set to false to restore all prices site-wide.
-  // Every price shown on the page (calculator, PDF quote, chat assistant,
-  // package cards) is formatted through fmtINR/fmtINRPdf, so this single
-  // flag is the only thing that needs to flip back.
+  // Temporary pricing hide — set to false to restore all prices
+  // everywhere, including the public site. Scoped to the public build
+  // only (isInternal() below, true only on /teamfastrr): every price
+  // shown on the page (calculator, PDF quote, chat assistant, package
+  // cards) is formatted through fmtINR/fmtINRPdf, so this single flag
+  // is the only thing that needs to flip back.
   const HIDE_PRICING = true;
 
   function fmtINR(n) {
-    if (HIDE_PRICING) return "₹****";
+    if (HIDE_PRICING && !isInternal()) return "₹****";
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
 
@@ -343,7 +345,7 @@
   // back to an unrelated glyph — so the PDF path formats amounts with
   // "Rs." instead. Everywhere else on the page keeps the ₹ symbol.
   function fmtINRPdf(n) {
-    if (HIDE_PRICING) return "Rs. ****";
+    if (HIDE_PRICING && !isInternal()) return "Rs. ****";
     return "Rs. " + Math.round(n).toLocaleString("en-IN");
   }
 
