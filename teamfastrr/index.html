@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-225" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-225" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-225" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-225" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-225" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-225" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-225" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-225" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-225" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-225" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-225" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-225" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-227" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-227" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-227" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-227" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-227" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-227" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-227" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-227" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-227" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-227" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-227" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-227" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -548,13 +548,18 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    override below keeps this pill's own dark photo-safe backdrop
    rather than inheriting tq-1..4's own light tinted background,
    which reads fine on a solid chip but would wash out over a photo. */
+/* Deliberately quieter than the category pill — smaller, lighter
+   weight, lower-contrast dark chip with a hairline border instead of
+   a solid fill, so it reads as a light secondary note rather than
+   competing for attention with the thumbnail itself. */
 .wc-band-pill{
-  position:absolute; bottom:10px; right:10px; z-index:2;
-  display:flex; align-items:center; gap:4px; padding:4px 9px; border-radius:100px;
-  background:rgba(10,10,13,0.55) !important; backdrop-filter:blur(6px);
-  font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  position:absolute; bottom:8px; right:8px; z-index:2;
+  display:flex; align-items:center; gap:3px; padding:2.5px 7px; border-radius:100px;
+  background:rgba(10,10,13,0.4) !important; border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(4px);
+  font-size:8.5px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
+  opacity:.82;
 }
-.wc-band-pill svg{width:9px; height:9px; flex:0 0 auto;}
+.wc-band-pill svg{width:7.5px; height:7.5px; flex:0 0 auto;}
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
 .nav-arrow{
@@ -814,7 +819,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .pkg-modal-backdrop.open{opacity:1; visibility:visible; transition:opacity .35s ease, visibility 0s linear 0s;}
 .pkg-modal{
-  position:relative; width:min(720px, 100%); max-height:min(84vh, 820px); border-radius:var(--radius);
+  position:relative; width:min(880px, 100%); max-height:min(84vh, 820px); border-radius:var(--radius);
   background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
   overflow:hidden; transform-origin:center center;
 }
@@ -862,7 +867,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 html.pkg-modal-open{overflow:hidden; scrollbar-gutter:stable;}
 body.pkg-modal-open{overflow:hidden;}
 
-.svc-panel-inner{padding:26px clamp(20px,4vw,40px) 30px;}
+.svc-panel-inner{padding:22px clamp(20px,4vw,40px) 26px;}
 /* Title+subtitle stacked above price, always — never a left/right
    split that flex-wraps. The row layout used to put the price at
    top-right whenever the subtitle was short enough to leave room next
@@ -872,8 +877,8 @@ body.pkg-modal-open{overflow:hidden;}
    happened to be open. Stacking removes that wrap threshold entirely
    so all four tiers share one identical structure. */
 .svc-panel-head{
-  display:flex; flex-direction:column; gap:16px;
-  padding-bottom:26px; border-bottom:1px solid var(--line-soft);
+  display:flex; flex-direction:column; gap:13px;
+  padding-bottom:20px; border-bottom:1px solid var(--line-soft);
 }
 .svc-panel-head h3{font-size:clamp(24px,3vw,32px); letter-spacing:-0.015em;}
 .svc-panel-price-wrap{display:flex; align-items:baseline; gap:12px;}
@@ -952,7 +957,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    card/box treatment, so it reads as one continuous fact strip. */
 .svc-glance{
   display:grid; grid-template-columns:repeat(4,1fr); gap:0;
-  margin-top:26px; padding-top:22px; border-top:1px solid var(--line-soft);
+  margin-top:20px; padding-top:18px; border-top:1px solid var(--line-soft);
 }
 .svc-glance-item{padding:0 22px; border-left:1px solid var(--line-soft);}
 .svc-glance-item:first-child{padding-left:0; border-left:none;}
@@ -961,7 +966,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    give it the full row's width below the first 4 (grid-column:1/-1),
    which also suits its longer sentence-length value better than a
    quarter-width column would. */
-.svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:18px; margin-top:4px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
+.svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
 .svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
 .svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
 @media (max-width:760px){
@@ -973,7 +978,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
   .svc-glance-item{border-left:none !important; padding-left:0 !important;}
 }
 
-.scope-panel{margin-top:28px;}
+.scope-panel{margin-top:22px;}
 /* Segmented pill switch — the selected list gets a filled, full-
    contrast segment while the other two fade back, so which of the
    three lists is currently on screen is obvious at a glance instead
@@ -1006,7 +1011,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
 .scope-spec-row b{color:var(--text-0); font-weight:600; line-height:1.5;}
 @media (max-width:480px){.scope-spec-row{flex-direction:column; gap:2px;} .scope-spec-row span{flex:none;}}
 
-.scope-list li{position:relative; padding-left:28px; margin-bottom:14px; font-size:14.5px; color:var(--text-1); line-height:1.55;}
+.scope-list li{position:relative; padding-left:28px; margin-bottom:11px; font-size:14.5px; color:var(--text-1); line-height:1.5;}
 .scope-list li:last-child{margin-bottom:0;}
 .scope-list li::before{
   content:'✓'; position:absolute; left:0; top:1px; width:18px; height:18px; border-radius:50%;
@@ -1071,7 +1076,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-list li:last-child{border-bottom:none; padding-bottom:0;}
 .rules-list li b{color:var(--text-0);}
 
-.rules-compare-toggle,.mini-toggle{margin-top:22px; padding-top:18px; border-top:1px solid var(--line-soft);}
+.rules-compare-toggle,.mini-toggle{margin-top:18px; padding-top:14px; border-top:1px solid var(--line-soft);}
 .rules-compare-toggle summary,.mini-toggle summary{
   cursor:pointer; list-style:none; user-select:none; font-size:12.5px; font-weight:600; color:var(--text-1);
   display:flex; align-items:center; gap:6px;
@@ -1080,7 +1085,7 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .rules-compare-toggle summary::before,.mini-toggle summary::before{content:'›'; display:inline-block; font-size:15px; color:var(--text-2); transition:transform .2s ease;}
 .rules-compare-toggle[open] summary::before,.mini-toggle[open] summary::before{transform:rotate(90deg);}
 .rules-compare-toggle summary:hover,.mini-toggle summary:hover{color:var(--text-0);}
-.mini-toggle{margin-top:14px; margin-bottom:14px; padding-top:14px;}
+.mini-toggle{margin-top:12px; margin-bottom:12px; padding-top:12px;}
 .mini-toggle[open]>summary{margin-bottom:12px;}
 .mini-toggle .ob-facts{margin:0;}
 
@@ -2569,8 +2574,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-225" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-225" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3453,8 +3458,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-225" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-225" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3732,8 +3737,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-225"></script>
-<script src="assets/app.js?v=20260811-225"></script>
-<script type="module" src="assets/team.js?v=20260811-225"></script>
+<script src="assets/creative-data.js?v=20260811-227"></script>
+<script src="assets/app.js?v=20260811-227"></script>
+<script type="module" src="assets/team.js?v=20260811-227"></script>
 </body>
 </html>
