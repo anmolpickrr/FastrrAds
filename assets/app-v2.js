@@ -2179,11 +2179,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   let activeShowcaseCat = "reels";
   let activeShowcaseList = [];
+  let activeReelBand = "all"; // all | simple | premium — see item.band below
   let lbIndex = 0;
   let lbSlideIndex = 0;
 
   const showcaseTrack = document.getElementById("showcaseTrack");
   const showcaseTabs = document.querySelectorAll(".showcase-tab");
+  const showcaseBandTabs = document.getElementById("showcaseBandTabs");
+
+  // Loose production-style grouping for AI Reel samples only — not a
+  // claim about which package tier produced a given video (we don't
+  // have that record, see the note above the showcase tabs). Icons
+  // match the bolt/crown language already used for the Starter/Premium
+  // tier badges elsewhere, kept visually distinct (different pill
+  // style, no tq-* classes) so it doesn't read as the same claim.
+  const BAND_LABEL = {
+    simple: { label: "Simple & Fast", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>' },
+    premium: { label: "Premium & Cinematic", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>' },
+  };
 
   function cardMediaSrc(item) {
     return item.type === "carousel" ? item.slides[0] : item.thumb;
@@ -2233,7 +2246,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // Static/Carousel cards drop the category pill overlay entirely,
     // by request — Reels/Catalogue keep it.
     if (activeShowcaseCat === "static" || activeShowcaseCat === "carousel") return "";
-    return `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
+    const catPill = `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
+    const band = activeShowcaseCat === "reels" && BAND_LABEL[item.band];
+    const bandPill = band
+      ? `<span class="wc-band-pill band-${item.band}">${band.icon}${escapeHtml(band.label)}</span>`
+      : "";
+    return catPill + bandPill;
   }
 
   function workCardHTML(item, idx) {
@@ -2278,7 +2296,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   function renderShowcase(cat) {
     activeShowcaseCat = cat;
-    const list = SHOWCASE_SOURCES[cat] || [];
+    const isReels = cat === "reels";
+    if (showcaseBandTabs) showcaseBandTabs.classList.toggle("is-hidden", !isReels);
+    if (!isReels) activeReelBand = "all";
+    let list = SHOWCASE_SOURCES[cat] || [];
+    if (isReels && activeReelBand !== "all") list = list.filter((item) => item.band === activeReelBand);
     activeShowcaseList = list;
     showcaseTabs.forEach((t) => t.classList.toggle("active", t.dataset.cat === cat));
     if (!list.length) {
@@ -2366,6 +2388,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   showcaseTabs.forEach((tab) => {
     tab.addEventListener("click", () => withScrollAnchor(() => renderShowcase(tab.dataset.cat)));
   });
+  if (showcaseBandTabs) {
+    showcaseBandTabs.querySelectorAll(".showcase-band-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activeReelBand = tab.dataset.band;
+        showcaseBandTabs.querySelectorAll(".showcase-band-tab").forEach((t) => t.classList.toggle("active", t === tab));
+        withScrollAnchor(() => renderShowcase("reels"));
+      });
+    });
+  }
   function switchShowcaseCat(svc) {
     // 'reels' | 'catalogue' | 'static' | 'carousel'
     if (SHOWCASE_SOURCES[svc]) renderShowcase(svc);
