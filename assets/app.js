@@ -867,15 +867,14 @@
 
     // Reel comparison table (nested inside "Good to know") only makes
     // sense for AI Reels — hide the whole toggle, not just the table,
-    // for tier-less services.
+    // for tier-less services. It ships open by default (the `open`
+    // attribute in the markup) for both builds now, so the tier specs
+    // are visible without an extra click — this only hides it outright
+    // for tier-less services; it deliberately does NOT force .open
+    // back to true on every render, so a visitor who collapses it
+    // manually stays collapsed instead of being fought by re-renders.
     const compareToggle = document.getElementById("rulesCompareToggle");
-    if (compareToggle) {
-      compareToggle.style.display = state.service === "reels" ? "" : "none";
-      // Team reps are pitching off this table live on calls — default
-      // it open there so they don't have to click to reveal it every
-      // time the modal opens. Public visitors still get it collapsed.
-      if (state.service === "reels" && isInternal()) compareToggle.open = true;
-    }
+    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
     const table = document.getElementById("reelCompareTable");
     if (table) {
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
@@ -1504,76 +1503,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // drag and a tap stay clearly distinct gestures. Below the 760px
   // breakpoint the stage becomes a static stacked list (see the CSS
   // media query) and dragging is skipped entirely.
-  function initPkgDrag() {
-    const THRESHOLD = 6;
+  // Package cards sit in a plain static grid now (no more
+  // drag-to-reposition deck), so this is just a click handler.
+  function initPkgCardClicks() {
     svcNav.querySelectorAll(".pkg-card").forEach((card) => {
-      let tracking = false;
-      let dragging = false;
-      let suppressNextClick = false;
-      let pointerId = null;
-      let startX = 0;
-      let startY = 0;
-      let originLeft = 0;
-      let originTop = 0;
-
-      card.addEventListener("pointerdown", (e) => {
-        if (e.pointerType === "mouse" && e.button !== 0) return;
-        if (getComputedStyle(card).position !== "absolute") return;
-        tracking = true;
-        dragging = false;
-        pointerId = e.pointerId;
-        const stageRect = svcNav.getBoundingClientRect();
-        const cardRect = card.getBoundingClientRect();
-        startX = e.clientX;
-        startY = e.clientY;
-        originLeft = cardRect.left - stageRect.left + cardRect.width / 2;
-        originTop = cardRect.top - stageRect.top + cardRect.height / 2;
-        card.setPointerCapture(pointerId);
-      });
-
-      card.addEventListener("pointermove", (e) => {
-        if (!tracking) return;
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        if (!dragging && Math.hypot(dx, dy) > THRESHOLD) {
-          dragging = true;
-          card.classList.add("dragging");
-        }
-        if (!dragging) return;
-        const stageRect = svcNav.getBoundingClientRect();
-        const left = Math.max(0, Math.min(stageRect.width, originLeft + dx));
-        const top = Math.max(0, Math.min(stageRect.height, originTop + dy));
-        card.style.left = left + "px";
-        card.style.top = top + "px";
-      });
-
-      const endDrag = () => {
-        if (!tracking) return;
-        tracking = false;
-        if (dragging) {
-          dragging = false;
-          suppressNextClick = true;
-          card.classList.remove("dragging");
-        }
-        if (pointerId !== null) {
-          try {
-            card.releasePointerCapture(pointerId);
-          } catch (err) {
-            /* pointer already released */
-          }
-        }
-        pointerId = null;
-      };
-      card.addEventListener("pointerup", endDrag);
-      card.addEventListener("pointercancel", endDrag);
-
-      card.addEventListener("click", (e) => {
-        if (suppressNextClick) {
-          suppressNextClick = false;
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
+      card.addEventListener("click", () => {
         state.service = card.dataset.svc;
         render();
         switchShowcaseCat(state.service === "reels" ? "reels" : state.service);
@@ -1581,7 +1515,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     });
   }
-  initPkgDrag();
+  initPkgCardClicks();
 
   pkgModalClose.addEventListener("click", closePkgModal);
   pkgModalBackdrop.addEventListener("click", (e) => {
