@@ -184,19 +184,22 @@
     },
     reel1: {
       name: "AI Reel — Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
-      short: "Script from your brief, with one minor revision included.",
-      benefit: "The quickest, most affordable way into AI reels.",
+      short: "Basic creative execution with KAM support — the fastest, most affordable way into AI reels.",
+      benefit: "Simple, clean reels with the quickest turnaround, for high-volume or budget-first orders.",
+      quality: "Basic edit — straightforward cuts and standard transitions, no advanced visual detailing.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
+        "Basic edit — straightforward cuts and standard transitions",
         "Script written from the brief we discuss together, with no separate approval step",
         "Single 9:16 export, max 25 sec",
         "1 revision for minor, in frame changes such as text or element placement",
+        "Dedicated KAM (Key Account Manager) support from our Design team",
       ],
-      excluded: ["Script shared for approval", "Major creative changes or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
+      excluded: ["Script shared for approval", "Advanced transitions or cinematic editing", "Content Writer / Creative Director involvement", "Major creative changes or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
         "A clear, fully discussed brief before work starts",
         "Key selling points & tone direction",
@@ -204,86 +207,97 @@
       ],
       deliver: "1 MP4, 9:16, max 25 sec, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Quick Cut is the only reel tier with no client-facing script approval
-      // step — every tier from Story Cut up shares the script for approval
-      // before the reel is built. Writer and Editor are still involved here,
-      // just working from the discussed brief rather than an approved script.
-      support: ["writer", "editor", "call"],
+      // Entry tier: basic edit quality, fastest turnaround, no
+      // client-facing script approval step — every tier from Story Cut
+      // up shares the script for approval before the reel is built.
+      // Support here is KAM-only (Design team account management), not
+      // a dedicated editor/writer — those start from Story Cut and
+      // Director's Cut respectively.
+      support: ["kam"],
     },
     reel2: {
       name: "AI Reel — Story Cut", tier: 2, unit: "reel", basePrice: 3500,
-      short: "Script shared for approval, with one small revision included.",
-      benefit: "A safety net to get the script and hook right before we build.",
-      duration: "Max 30 sec", format: "9:16 (1 dimension)",
+      short: "Improved creative quality with additional editing and visual detailing, backed by our Design team.",
+      benefit: "A step up in polish and pacing, with a script approval step to get the story right before we build.",
+      quality: "Enhanced edit — smoother pacing, improved transitions, and additional visual detailing.",
+      duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built with Writer and Editor input",
-        "Single 9:16 export, max 30 sec",
+        "Enhanced edit — smoother pacing, improved transitions, and additional visual detailing",
+        "Reel built with a dedicated video editor",
+        "Single 9:16 export, max 35 sec",
         "1 script shared for approval",
         "1 revision for small script or communication changes, such as the hook, CTA, or minor additions and removals",
+        "Design-team support via your KAM, plus a dedicated video editor",
       ],
-      excluded: ["Additional hook options", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
+      excluded: ["Additional hook options", "Content Writer / Creative Director involvement", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
         "A clear, fully discussed brief before work starts",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 30 sec, plus 1 script shared for approval, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 35 sec, plus 1 script shared for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
       // First tier with an actual script approval step — the client sees
       // and signs off on the script before the reel is built, with room for
       // one small revision afterward. Still a single hook, not the 2 that
-      // Director's Cut and up include.
-      support: ["writer", "editor", "call"],
+      // Director's Cut and up include. Adds a dedicated editor on top of
+      // Quick Cut's KAM-only support.
+      support: ["kam", "editor"],
     },
     reel3: {
       name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
-      short: "Script and 2 hook options shared for approval, with creative input throughout.",
-      benefit: "Creative guidance and content writer involvement for a stronger direction.",
-      duration: "Max 45 sec", format: "9:16 (1 dimension)",
+      short: "Premium creative execution with Content Writer and Creative Director involvement for stronger storytelling.",
+      benefit: "Cinematic editing and advanced transitions, with dedicated creative direction behind the script and visuals.",
+      quality: "Premium edit — cinematic pacing, advanced transitions, and richer visual detailing.",
+      duration: "Max 50 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built with content writer involvement and editor input",
+        "Premium edit — cinematic pacing, advanced transitions, and richer visual detailing",
+        "Reel built with Content Writer involvement and Creative Director oversight",
         "Creative guidance, suggestions, and input on the script and direction",
-        "Single 9:16 export, max 45 sec",
+        "Single 9:16 export, max 50 sec",
         "1 script plus 2 hook options shared for approval",
         "1 revision for small script or communication changes",
       ],
-      excluded: ["Creative Director oversight", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
+      excluded: ["Custom brand music", "Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately"],
       need: [
         "A clear, discussed brief before work starts",
         "Key selling points & tone direction",
         "Preferred voiceover language (Hindi/English)",
       ],
-      deliver: "1 MP4, 9:16, max 45 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
+      deliver: "1 MP4, 9:16, max 50 sec, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Adds a second hook option and hands-on creative guidance on top of
-      // Story Cut's single script approval. Still short of Studio Cut's
-      // dedicated Creative Director oversight and custom music.
-      support: ["writer", "editor", "call"],
+      // Adds a second hook option, Content Writer involvement, and
+      // Creative Director oversight on top of Story Cut's editor-only
+      // support — the first tier with dedicated storytelling/scripting
+      // direction, not just execution. Still short of Studio Cut's
+      // custom music and extra revision.
+      support: ["kam", "editor", "writer", "director"],
     },
     reel4: {
       name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
-      short: "Script and 2 hook options shared for approval, with full Creative Director involvement.",
-      benefit: "Full creative oversight, custom brand music, and the most revision room.",
+      short: "Highest-quality production with enhanced creative direction, advanced storytelling, and premium editing.",
+      benefit: "Full creative oversight, custom brand music, and the most revision room — built for flagship, hero content.",
+      quality: "Highest-quality edit — cinematic transitions, advanced detailing, and the most polished finish.",
       duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Reel built with full Writer, Editor, and Creative Director involvement",
-        "Creative Director guidance, suggestions, and input throughout",
+        "Highest-quality edit — cinematic transitions, advanced detailing, and the most polished finish",
+        "Reel built with dedicated Content Writer and Creative Director involvement throughout",
+        "Enhanced creative direction and advanced storytelling guidance",
         "Single 9:16 export, max 1 min",
         "1 script plus 2 hook options shared for approval",
         "Custom music composed for your brand (music only, no lip sync with the model)",
-        "Call support for requirement discussions",
         "2 revisions for small script or communication changes",
       ],
       excluded: ["Major creative rework or new concepts, which would be a new order", "Additional dimensions, quoted separately", "Lip sync of the model to the custom music"],
@@ -294,10 +308,11 @@
       ],
       deliver: "1 MP4, 9:16, max 1 min, plus 1 script and 2 hook options for approval, delivered via shared drive folder",
       dimNote: "Includes 1 dimension (9:16). Additional dimensions can be added and are quoted separately depending on requirement.",
-      // Top tier: full Writer, Editor, and Creative Director involvement, 2
-      // revisions instead of 1, and custom brand music alongside the longest
-      // duration and turnaround window of any reel tier.
-      support: ["writer", "editor", "director", "call", "music"],
+      // Top tier: dedicated (not just involved) Content Writer and
+      // Creative Director support, 2 revisions instead of 1, and custom
+      // brand music alongside the longest duration and turnaround
+      // window of any reel tier.
+      support: ["kam", "editor", "writer", "director", "music"],
     },
   };
 
@@ -768,6 +783,7 @@
   }
 
   const SUPPORT_ROLES = [
+    { key: "kam", label: "Dedicated KAM (Key Account Manager) Support" },
     { key: "writer", label: "Dedicated Content Writer" },
     { key: "editor", label: "Dedicated Video Editor" },
     { key: "director", label: "Creative Director Oversight" },
@@ -806,6 +822,7 @@
       ["Format", d.format],
       ["Turnaround", d.turnaround],
       ["Revisions", d.revisions],
+      ["Quality", d.quality],
     ].filter(([, v]) => v);
     document.getElementById("svcGlance").innerHTML = items
       .map(([k, v]) => `<div class="svc-glance-item"><span>${k}</span><b>${v}</b></div>`)
