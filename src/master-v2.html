@@ -24,18 +24,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-227" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-227" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-227" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-227" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-227" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-227" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-227" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-227" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-227" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-227" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-227" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-227" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-228" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-228" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-228" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-228" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-228" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-228" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-228" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-228" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-228" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-228" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-228" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-228" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -473,13 +473,25 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .showcase-tab:hover{background:var(--surface-hover); color:var(--text-0); transform:translateY(-1px);}
 .showcase-tab.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet); box-shadow:0 4px 14px -6px var(--violet-soft);}
-/* Smaller, quieter second row than .showcase-tabs — a sub-filter of
-   the already-selected "AI Reels" tab, not a peer of it. */
-.showcase-band-tabs{display:flex; gap:7px; flex-wrap:wrap; margin:-10px 0 24px;}
+/* Smaller, quieter second row than .showcase-tabs, with its own
+   explicit "AI Reel style" label (not just implied by being hidden on
+   other tabs) and a left rule hanging it visually under the AI Reels
+   tab above — both added because a bare unlabeled row of pills read
+   as 8 equal-weight tabs at a glance, ambiguous about whether it
+   applied to the whole showcase or just reels. */
+.showcase-band-tabs{
+  display:flex; align-items:center; gap:7px; flex-wrap:wrap;
+  margin:-6px 0 24px; padding-left:13px; border-left:2px solid var(--line-soft);
+}
 .showcase-band-tabs.is-hidden{display:none;}
+.showcase-band-label{
+  display:inline-flex; align-items:center; gap:5px; margin-right:2px;
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2);
+}
+.showcase-band-label svg{width:11px; height:11px; flex:0 0 auto;}
 .showcase-band-tab{
-  padding:6px 14px; border-radius:100px; border:1px solid var(--line-soft); background:transparent;
-  color:var(--text-2); font-size:12px; font-weight:600; transition:background .2s ease, color .2s ease, border-color .2s ease;
+  padding:5px 12px; border-radius:100px; border:1px solid var(--line-soft); background:transparent;
+  color:var(--text-2); font-size:11.5px; font-weight:600; transition:background .2s ease, color .2s ease, border-color .2s ease;
 }
 .showcase-band-tab:hover{color:var(--text-0); border-color:var(--line);}
 .showcase-band-tab.active{background:var(--surface-2); color:var(--text-0); border-color:var(--line);}
@@ -544,27 +556,23 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   padding:5px 10px; border-radius:10px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px);
   font-size:10.5px; color:#fff; font-style:italic; line-height:1.4;
 }
-/* Style-band pill — reels only, bottom-right so it never fights the
-   category pill (top-left) for width on narrower cards, where both
-   sharing the top row was crowding the category label into an
-   ellipsis after just one word. A visible-production-style estimate
-   (see item.band in creative-data.js), reusing the same 4 names and
-   tq-1..tq-4 text colors as the package-tier badges by request — the
-   override below keeps this pill's own dark photo-safe backdrop
-   rather than inheriting tq-1..4's own light tinted background,
-   which reads fine on a solid chip but would wash out over a photo. */
-/* Deliberately quieter than the category pill — smaller, lighter
-   weight, lower-contrast dark chip with a hairline border instead of
-   a solid fill, so it reads as a light secondary note rather than
-   competing for attention with the thumbnail itself. */
+/* Style-band label — reels only, bottom-right so it never fights the
+   category pill (top-left) for width on narrower cards. A
+   visible-production-style estimate (see item.band in
+   creative-data.js), naming the same 4 tiers as the package badges —
+   but rendered as plain small text with no pill/background/border and
+   no tq-1..4 color at all (overridden below) rather than a second
+   badge next to the category pill, since two colored chips per card
+   read as more going on than a quiet style note warrants. Text-shadow
+   carries the legibility a background chip would otherwise provide. */
 .wc-band-pill{
-  position:absolute; bottom:8px; right:8px; z-index:2;
-  display:flex; align-items:center; gap:3px; padding:2.5px 7px; border-radius:100px;
-  background:rgba(10,10,13,0.4) !important; border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(4px);
-  font-size:8.5px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
-  opacity:.82;
+  position:absolute; bottom:7px; right:9px; z-index:2;
+  display:flex; align-items:center; gap:3px;
+  font-size:8px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
+  color:rgba(255,255,255,.72); text-shadow:0 1px 2px rgba(0,0,0,.85), 0 0 6px rgba(0,0,0,.5);
 }
-.wc-band-pill svg{width:7.5px; height:7.5px; flex:0 0 auto;}
+.wc-band-pill.tq-1, .wc-band-pill.tq-2, .wc-band-pill.tq-3, .wc-band-pill.tq-4{background:none; color:rgba(255,255,255,.72);}
+.wc-band-pill svg{width:7px; height:7px; flex:0 0 auto; opacity:.85;}
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
 .nav-arrow{
@@ -2579,8 +2587,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2711,7 +2719,8 @@ footer{padding:64px 0 0; margin-top:40px;}
          as the package tiers — not a record of which tier each sample
          was actually made under, see the note above. -->
     <div class="showcase-band-tabs reveal-on-scroll" id="showcaseBandTabs">
-      <button class="showcase-band-tab active" data-band="all">All styles</button>
+      <span class="showcase-band-label" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>AI Reel style</span>
+      <button class="showcase-band-tab active" data-band="all">All</button>
       <button class="showcase-band-tab" data-band="starter">Starter</button>
       <button class="showcase-band-tab" data-band="standard">Standard</button>
       <button class="showcase-band-tab" data-band="popular">Popular</button>
@@ -3556,8 +3565,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-227" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3926,10 +3935,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-227"></script>
-<script src="assets/app-v2.js?v=20260811-227"></script>
+<script src="assets/creative-data.js?v=20260811-228"></script>
+<script src="assets/app-v2.js?v=20260811-228"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-227"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-228"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
