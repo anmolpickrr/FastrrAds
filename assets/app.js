@@ -869,7 +869,13 @@
     // sense for AI Reels — hide the whole toggle, not just the table,
     // for tier-less services.
     const compareToggle = document.getElementById("rulesCompareToggle");
-    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
+    if (compareToggle) {
+      compareToggle.style.display = state.service === "reels" ? "" : "none";
+      // Team reps are pitching off this table live on calls — default
+      // it open there so they don't have to click to reveal it every
+      // time the modal opens. Public visitors still get it collapsed.
+      if (state.service === "reels" && isInternal()) compareToggle.open = true;
+    }
     const table = document.getElementById("reelCompareTable");
     if (table) {
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
@@ -1602,6 +1608,42 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     });
   });
+
+  // Team-only pitch aids (stripped from the public build — see
+  // PUBLIC:STRIP around their markup). Rule-based, not AI-generated: a
+  // fixed need -> tier mapping, with the explanation pulled straight
+  // from that tier's own DATA.short/benefit copy so it can't drift out
+  // of sync with what the scope panel above it already says.
+  const tierRecommend = document.getElementById("tierRecommend");
+  if (tierRecommend) {
+    tierRecommend.querySelectorAll(".tier-recommend-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tier = Number(btn.dataset.rec);
+        tierRecommend.querySelectorAll(".tier-recommend-btn").forEach((b) => b.classList.toggle("active", b === btn));
+        const table = document.getElementById("reelCompareTable");
+        if (table) {
+          table.querySelectorAll("[data-tier-col]").forEach((cell) => {
+            cell.classList.toggle("ct-rec", Number(cell.dataset.tierCol) === tier);
+          });
+        }
+        const d = DATA["reel" + tier];
+        const note = document.getElementById("tierRecommendNote");
+        if (note && d) note.textContent = `${d.name.replace(/^AI Reel — /, "")} — ${d.short} ${d.benefit}`;
+      });
+    });
+  }
+
+  const reelCompareTable = document.getElementById("reelCompareTable");
+  if (reelCompareTable) {
+    reelCompareTable.querySelectorAll(".ct-add-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.service = "reels";
+        state.tier = Number(btn.dataset.addTier);
+        addToOrder();
+        document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
+  }
 
   const qQtyInput = document.getElementById("qQtyInput");
   qQtyInput.addEventListener("input", () => {
