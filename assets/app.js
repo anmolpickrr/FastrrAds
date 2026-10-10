@@ -343,13 +343,11 @@
   ];
   const COMMON_NEED = [...BRAND_NEED, ...PER_PRODUCT_NEED];
 
-  // Temporary pricing hide — set to false to restore all prices
-  // everywhere, including the public site. Scoped to the public build
-  // only (isInternal() below, true only on /teamfastrr): every price
-  // shown on the page (calculator, PDF quote, chat assistant, package
-  // cards) is formatted through fmtINR/fmtINRPdf, so this single flag
-  // is the only thing that needs to flip back.
-  const HIDE_PRICING = true;
+  // Temporary pricing hide, now switched back off — every price shown
+  // on the page (calculator, PDF quote, chat assistant, package cards)
+  // is formatted through fmtINR/fmtINRPdf, so this single flag was the
+  // only thing that needed to flip back to restore prices publicly.
+  const HIDE_PRICING = false;
 
   function fmtINR(n) {
     if (HIDE_PRICING && !isInternal()) return "₹****";
