@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-214" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-214" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-214" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-214" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-214" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-214" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-214" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-214" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-214" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-214" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-214" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-214" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-215" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-215" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-215" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-215" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-215" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-215" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-215" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-215" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-215" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-215" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-215" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-215" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -460,6 +460,7 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 .section-head p{margin-top:16px; color:var(--text-1); font-size:15.5px; line-height:1.65;}
 
 /* ---------- SHOWCASE ---------- */
+.showcase-tier-note{margin-top:10px; font-size:13.5px; color:var(--text-2); line-height:1.6; max-width:62ch;}
 .showcase-tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:26px;}
 .showcase-tab{
   padding:9px 18px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1);
@@ -1014,6 +1015,28 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 .mini-toggle{margin-top:14px; margin-bottom:14px; padding-top:14px;}
 .mini-toggle[open]>summary{margin-bottom:12px;}
 .mini-toggle .ob-facts{margin:0;}
+
+/* Team-only pitch aids nested inside the reel compare table (see
+   PUBLIC:STRIP markers around them in the markup) — a rule-based tier
+   suggestion for reps to use on a call, and a quick-add row so adding
+   the tier they just pitched doesn't mean leaving this panel to go
+   find the order builder below. */
+.tier-recommend{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:18px 0 16px;}
+.tier-recommend-label{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-2);}
+.tier-recommend-btn{
+  padding:6px 13px; border-radius:100px; border:1px solid var(--line); background:var(--surface-1);
+  font-size:12px; color:var(--text-1); transition:background .2s ease, border-color .2s ease, color .2s ease;
+}
+.tier-recommend-btn:hover{background:var(--surface-hover); color:var(--text-0);}
+.tier-recommend-btn.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet);}
+.tier-recommend-note{flex-basis:100%; margin-top:2px; font-size:12.5px; color:var(--text-2); line-height:1.55; min-height:1em;}
+table.compare-table td.ct-rec, table.compare-table th.ct-rec{background:var(--violet-soft);}
+table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
+.ct-add-btn{
+  padding:6px 14px; border-radius:8px; border:1px solid var(--violet); background:transparent;
+  font-size:12px; font-weight:600; color:var(--violet); transition:background .2s ease, color .2s ease;
+}
+.ct-add-btn:hover{background:var(--violet); color:var(--btn-ink);}
 
 /* ---------- ORDER BUILDER / CALCULATOR ----------
    Two-panel layout: a left "configure a creative" builder that feeds
@@ -2478,8 +2501,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-214" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-214" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-215" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-215" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2549,6 +2572,7 @@ footer{padding:64px 0 0; margin-top:40px;}
       <span class="eyebrow">01 — Creative Showcase</span>
       <h2>Real work.<br>Not mockups.</h2>
       <p>Every thumbnail below is a delivered Fastrr creative. Browse by category, preview carousels inline, and click any card to open the full viewer.</p>
+      <p class="showcase-tier-note">AI Reel examples below span the full range of what our 4 package tiers can produce — they're not sorted by tier. Script/hook approval steps, revisions, turnaround, and creative-team involvement all differ by tier: compare all 4 in the Services section below before you pick one.</p>
     </div>
     <div class="showcase-tabs reveal-on-scroll">
       <button class="showcase-tab active" data-cat="reels">AI Reels</button>
@@ -2690,6 +2714,75 @@ footer{padding:64px 0 0; margin-top:40px;}
               </div>
               <div class="scope-body" id="scopeBody"></div>
             </div>
+
+            <!-- Side-by-side tier comparison, AI Reels only (see the
+                 compareToggle/reelCompareTable logic in renderScopePanel()
+                 in app.js, which only toggles visibility/highlighting —
+                 the actual rows below are static, hand-written from the
+                 same DATA.reel1-4 values the scope panel above renders
+                 from, so the two can't drift out of sync with each other). -->
+            <details class="rules-compare-toggle" id="rulesCompareToggle">
+              <summary>Compare all 4 AI Reel tiers</summary>
+
+              
+              <div class="compare-wrap">
+                <table class="compare-table" id="reelCompareTable">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th data-tier-col="1">Quick Cut</th>
+                      <th data-tier-col="2">Story Cut</th>
+                      <th data-tier-col="3">Director's Cut</th>
+                      <th data-tier-col="4">Studio Cut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Price</td>
+                                                                  <td data-tier-col="1">₹****</td>
+                      <td data-tier-col="2">₹****</td>
+                      <td data-tier-col="3">₹****</td>
+                      <td data-tier-col="4">₹****</td>
+                                          </tr>
+                    <tr>
+                      <td>Max length</td>
+                      <td data-tier-col="1">25 sec</td>
+                      <td data-tier-col="2">30 sec</td>
+                      <td data-tier-col="3">45 sec</td>
+                      <td data-tier-col="4">1 min</td>
+                    </tr>
+                    <tr>
+                      <td>Script / hook approval</td>
+                      <td data-tier-col="1">No separate approval step</td>
+                      <td data-tier-col="2">1 script shared for approval</td>
+                      <td data-tier-col="3">1 script + 2 hook options</td>
+                      <td data-tier-col="4">1 script + 2 hook options</td>
+                    </tr>
+                    <tr>
+                      <td>Revisions</td>
+                      <td data-tier-col="1">1 (minor, in-frame only)</td>
+                      <td data-tier-col="2">1 (small script/comms changes)</td>
+                      <td data-tier-col="3">1 (small script/comms changes)</td>
+                      <td data-tier-col="4">2 (small script/comms changes)</td>
+                    </tr>
+                    <tr>
+                      <td>Turnaround</td>
+                      <td data-tier-col="1">1–2 working days</td>
+                      <td data-tier-col="2">Up to 3 working days</td>
+                      <td data-tier-col="3">Up to 4 working days</td>
+                      <td data-tier-col="4">Up to 5 working days</td>
+                    </tr>
+                    <tr>
+                      <td>Team involvement</td>
+                      <td data-tier-col="1">Writer + Editor</td>
+                      <td data-tier-col="2">Writer + Editor</td>
+                      <td data-tier-col="3">Writer + Editor + creative guidance</td>
+                      <td data-tier-col="4">Writer + Editor + Creative Director + custom music</td>
+                    </tr>
+                  </tbody>
+                                  </table>
+              </div>
+            </details>
           </div>
         </div>
       </div>
@@ -3134,8 +3227,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-214" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-214" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-215" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-215" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3310,7 +3403,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-214"></script>
-<script src="assets/app.js?v=20260811-214"></script>
+<script src="assets/creative-data.js?v=20260811-215"></script>
+<script src="assets/app.js?v=20260811-215"></script>
 </body>
 </html>
