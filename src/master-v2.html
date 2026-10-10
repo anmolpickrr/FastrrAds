@@ -24,18 +24,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-228" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-228" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-228" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-228" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-228" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-228" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-228" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-228" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-228" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-228" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-228" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-228" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-231" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-231" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-231" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-231" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-231" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-231" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-231" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-231" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-231" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-231" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-231" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-231" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -473,28 +473,29 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .showcase-tab:hover{background:var(--surface-hover); color:var(--text-0); transform:translateY(-1px);}
 .showcase-tab.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet); box-shadow:0 4px 14px -6px var(--violet-soft);}
-/* Smaller, quieter second row than .showcase-tabs, with its own
-   explicit "AI Reel style" label (not just implied by being hidden on
-   other tabs) and a left rule hanging it visually under the AI Reels
-   tab above — both added because a bare unlabeled row of pills read
-   as 8 equal-weight tabs at a glance, ambiguous about whether it
-   applied to the whole showcase or just reels. */
-.showcase-band-tabs{
-  display:flex; align-items:center; gap:7px; flex-wrap:wrap;
-  margin:-6px 0 24px; padding-left:13px; border-left:2px solid var(--line-soft);
-}
+/* Reuses the same quiet "segmented switch" language as
+   .scope-tab-bar/.scope-tab-btn elsewhere on the page (one pill-shaped
+   track, no individual button borders, active state is just a filled
+   inner pill) instead of a row of separately-bordered chips — reads
+   as one small, familiar control rather than a second tab row
+   competing with .showcase-tabs above it. The plain lowercase "Style"
+   label (not an icon + uppercase heading) is enough to scope it to
+   the already-selected AI Reels tab without adding its own visual
+   weight. */
+.showcase-band-tabs{display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin:-6px 0 24px;}
 .showcase-band-tabs.is-hidden{display:none;}
-.showcase-band-label{
-  display:inline-flex; align-items:center; gap:5px; margin-right:2px;
-  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2);
+.showcase-band-label{font-size:12.5px; color:var(--text-2);}
+.showcase-band-switch{
+  display:inline-flex; gap:2px; padding:3px; border-radius:100px;
+  background:var(--surface-1); border:1px solid var(--line-soft);
 }
-.showcase-band-label svg{width:11px; height:11px; flex:0 0 auto;}
 .showcase-band-tab{
-  padding:5px 12px; border-radius:100px; border:1px solid var(--line-soft); background:transparent;
-  color:var(--text-2); font-size:11.5px; font-weight:600; transition:background .2s ease, color .2s ease, border-color .2s ease;
+  padding:5px 12px; border-radius:100px; background:none; border:none;
+  color:var(--text-2); font-size:11.5px; font-weight:600; opacity:.65;
+  transition:opacity .2s ease, color .2s ease, background .2s ease;
 }
-.showcase-band-tab:hover{color:var(--text-0); border-color:var(--line);}
-.showcase-band-tab.active{background:var(--surface-2); color:var(--text-0); border-color:var(--line);}
+.showcase-band-tab:hover{opacity:.9;}
+.showcase-band-tab.active{opacity:1; background:var(--surface-2); color:var(--text-0); box-shadow:var(--inset-hi), var(--shadow-sm);}
 .showcase-row-wrap{position:relative;}
 .showcase-track{
   display:flex; align-items:flex-start; gap:14px; overflow-x:auto; scroll-snap-type:x proximity; padding:6px 4px 18px;
@@ -560,19 +561,24 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    category pill (top-left) for width on narrower cards. A
    visible-production-style estimate (see item.band in
    creative-data.js), naming the same 4 tiers as the package badges —
-   but rendered as plain small text with no pill/background/border and
-   no tq-1..4 color at all (overridden below) rather than a second
-   badge next to the category pill, since two colored chips per card
-   read as more going on than a quiet style note warrants. Text-shadow
-   carries the legibility a background chip would otherwise provide. */
+   rendered as plain small text with no pill/background/border (two
+   colored chips per card read as more going on than a quiet style
+   note warrants). Text-shadow carries the legibility a background
+   chip would otherwise provide. The label text itself stays one
+   neutral color across all 4 tiers; only the icon picks up that
+   tier's own tq-1..4 color, via `color` set on the <svg> specifically
+   so it doesn't cascade back onto the text next to it. */
 .wc-band-pill{
   position:absolute; bottom:7px; right:9px; z-index:2;
   display:flex; align-items:center; gap:3px;
   font-size:8px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
   color:rgba(255,255,255,.72); text-shadow:0 1px 2px rgba(0,0,0,.85), 0 0 6px rgba(0,0,0,.5);
 }
-.wc-band-pill.tq-1, .wc-band-pill.tq-2, .wc-band-pill.tq-3, .wc-band-pill.tq-4{background:none; color:rgba(255,255,255,.72);}
-.wc-band-pill svg{width:7px; height:7px; flex:0 0 auto; opacity:.85;}
+.wc-band-pill svg{width:7px; height:7px; flex:0 0 auto;}
+.wc-band-pill.tq-1 svg{color:var(--sky);}
+.wc-band-pill.tq-2 svg{color:var(--teal);}
+.wc-band-pill.tq-3 svg{color:var(--violet);}
+.wc-band-pill.tq-4 svg{color:var(--gold);}
 .work-empty{display:flex; flex-direction:column; align-items:center; gap:12px; padding:60px 20px; text-align:center; color:var(--text-2); width:100%;}
 .showcase-nav{position:absolute; top:-58px; right:0; display:flex; gap:8px;}
 .nav-arrow{
@@ -1123,6 +1129,63 @@ table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
   font-size:12px; font-weight:600; color:var(--violet); transition:background .2s ease, color .2s ease;
 }
 .ct-add-btn:hover{background:var(--violet); color:var(--btn-ink);}
+
+/* ---------- HOW WE WORK (process rail) ----------
+   A journey, not a row of equal boxes: cards float on alternating rows
+   (even steps nudged down) along one connecting line that draws itself
+   left-to-right as the section reveals (transform:scaleX, not a static
+   gradient) — the staggered heights plus a line that visibly "arrives"
+   read as a path being walked, not 5 interchangeable tiles. Each step
+   carries its own --accent (cycling sky/teal/violet/gold), set inline
+   per card, so the ghost numeral, icon tint, and hover glow all key
+   off one variable instead of four separate hardcoded color sets.
+   No background card at all below the breakpoint collapse — see the
+   980px rule — just icon+text in a plain vertical timeline, since a
+   zigzag has nothing to zigzag against in a single column. */
+.process-rail{
+  position:relative; display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-top:12px; padding-top:8px;
+}
+.process-rail::before{
+  content:''; position:absolute; top:34px; left:6%; right:6%; height:2px; transform-origin:left center; transform:scaleX(0);
+  background:linear-gradient(90deg, var(--sky), var(--teal), var(--violet), var(--gold)); border-radius:2px;
+  transition:transform 1.2s cubic-bezier(.16,1,.3,1) .15s;
+}
+.process-rail.revealed::before{transform:scaleX(1);}
+@media (prefers-reduced-motion: reduce){.process-rail::before{transition:none; transform:scaleX(1);}}
+.process-step{
+  position:relative; z-index:1; display:flex; flex-direction:column; gap:9px;
+  opacity:0; transform:translateY(16px); transition:opacity .5s var(--ease), transform .5s var(--ease);
+  transition-delay:calc(var(--i, 0) * .1s + .1s);
+}
+.process-rail.revealed .process-step{opacity:1; transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){.process-step{opacity:1; transform:none; transition:none;}}
+/* The zigzag: every other card drops below the line instead of
+   sitting on it, so the row reads as a path with motion rather than
+   a flat shelf of cards — purely desktop, where there's a shared line
+   to stagger against. */
+.process-step:nth-child(even){margin-top:46px;}
+.process-step-ghost{
+  position:absolute; top:-30px; right:2px; z-index:-1; font-family:var(--font-mono); font-weight:800;
+  font-size:52px; line-height:1; color:var(--accent); opacity:.1; pointer-events:none; user-select:none;
+}
+.process-step-icon{
+  width:38px; height:38px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+  background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent);
+  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+}
+.process-step-icon svg{width:18px; height:18px;}
+.process-step:hover .process-step-icon{transform:scale(1.1) rotate(-6deg); box-shadow:0 8px 20px -8px var(--accent);}
+.process-step h3{font-size:15.5px; font-weight:700; letter-spacing:-0.01em;}
+.process-step p{font-size:13px; color:var(--text-1); line-height:1.55; max-width:95%;}
+@media (max-width:980px){
+  .process-rail{display:flex; flex-direction:column; gap:28px; padding-top:0; padding-left:21px; border-left:1px solid var(--line-soft);}
+  .process-rail::before{display:none;}
+  .process-step{margin-top:0 !important;}
+  .process-step-icon{position:absolute; left:-21px; top:0; transform:translateX(-50%); background:var(--bg-1);}
+  .process-step{padding-left:30px;}
+  .process-step-ghost{display:none;}
+}
 
 /* ---------- ORDER BUILDER / CALCULATOR ----------
    Two-panel layout: a left "configure a creative" builder that feeds
@@ -2587,12 +2650,13 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-231" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-231" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
+        <a href="#process">How We Work</a>
         <!-- TEAM:STRIP:START -->
         <a href="#quote">Pricing</a>
         <!-- TEAM:STRIP:END -->
@@ -2719,12 +2783,14 @@ footer{padding:64px 0 0; margin-top:40px;}
          as the package tiers — not a record of which tier each sample
          was actually made under, see the note above. -->
     <div class="showcase-band-tabs reveal-on-scroll" id="showcaseBandTabs">
-      <span class="showcase-band-label" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>AI Reel style</span>
-      <button class="showcase-band-tab active" data-band="all">All</button>
-      <button class="showcase-band-tab" data-band="starter">Starter</button>
-      <button class="showcase-band-tab" data-band="standard">Standard</button>
-      <button class="showcase-band-tab" data-band="popular">Popular</button>
-      <button class="showcase-band-tab" data-band="premium">Premium</button>
+      <span class="showcase-band-label">AI Reel style</span>
+      <div class="showcase-band-switch">
+        <button class="showcase-band-tab active" data-band="all">All</button>
+        <button class="showcase-band-tab" data-band="starter">Starter</button>
+        <button class="showcase-band-tab" data-band="standard">Standard</button>
+        <button class="showcase-band-tab" data-band="popular">Popular</button>
+        <button class="showcase-band-tab" data-band="premium">Premium</button>
+      </div>
     </div>
     <div class="showcase-row-wrap reveal-on-scroll">
       <div class="showcase-nav" id="showcaseNav">
@@ -2991,16 +3057,58 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
+<section class="section" id="process">
+  <div class="wrap">
+    <div class="section-head reveal-on-scroll">
+      <span class="eyebrow">03 — How We Work</span>
+      <h2>From brief.<br>To finished creative.</h2>
+      <p>Every order moves through the same five steps — here's exactly what happens at each one, from the moment you share your requirement to the finished file landing in your drive.</p>
+    </div>
+    <div class="process-rail reveal-on-scroll" id="processRail">
+      <div class="process-step" style="--i:0; --accent:var(--sky);">
+        <span class="process-step-ghost" aria-hidden="true">01</span>
+        <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
+        <h3>Share your brief</h3>
+        <p>Brand assets, product details, key selling points, and tone — the one-time brief that kicks off every order.</p>
+      </div>
+      <div class="process-step" style="--i:1; --accent:var(--teal);">
+        <span class="process-step-ghost" aria-hidden="true">02</span>
+        <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 10 2 2 4-4"/></svg></span>
+        <h3>Script &amp; direction</h3>
+        <p>For AI Reels, Story Cut and up get the script — and Director's Cut and up get 2 hook options too — shared back for your approval before we build.</p>
+      </div>
+      <div class="process-step" style="--i:2; --accent:var(--violet);">
+        <span class="process-step-ghost" aria-hidden="true">03</span>
+        <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18 9l-4.1 1.4L12 15l-1.9-4.6L6 9l4.1-1.4L12 3Z"/><path d="M19 15.5 19.8 17.5 22 18.3 19.8 19.1 19 21.1 18.2 19.1 16 18.3 18.2 17.5 19 15.5Z"/></svg></span>
+        <h3>AI production</h3>
+        <p>Our team builds it — AI voiceover, editing, and transitions scaled to your package, with Content Writer and Creative Director input on Director's Cut and Studio Cut.</p>
+      </div>
+      <div class="process-step" style="--i:3; --accent:var(--gold);">
+        <span class="process-step-ghost" aria-hidden="true">04</span>
+        <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
+        <h3>Review &amp; revise</h3>
+        <p>Every package includes revision rounds for script or communication changes, so you're not stuck with the first cut.</p>
+      </div>
+      <div class="process-step" style="--i:4; --accent:var(--sky);">
+        <span class="process-step-ghost" aria-hidden="true">05</span>
+        <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
+        <h3>Delivery</h3>
+        <p>Your finished creative lands in a shared drive folder — turnaround depends on the package, shown clearly before you order.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="quote" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <!-- TEAM:STRIP:START -->
-      <span class="eyebrow">03 — Quote &amp; Price Calculator</span>
+      <span class="eyebrow">04 — Quote &amp; Price Calculator</span>
       <h2>Add your creatives.<br>Watch the price update live.</h2>
       <p>Add every creative type you need, with a quantity for each, and a cut too if it's an AI Reel. Your total updates live as you build.</p>
       <!-- TEAM:STRIP:END -->
       <!-- PUBLIC:STRIP:START -->
-      <span class="eyebrow">03 — Order Builder</span>
+      <span class="eyebrow">04 — Order Builder</span>
       <h2>Build the order.<br>Watch the total update live.</h2>
       <p>Add every creative type the client needs, with a quantity for each, and a cut too if it's an AI Reel. The order total updates live as you build.</p>
       <!-- PUBLIC:STRIP:END -->
@@ -3126,7 +3234,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="testimonials" style="padding-bottom:16px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">04 — What Brands Say</span>
+      <span class="eyebrow">05 — What Brands Say</span>
       <h2>Loved by brands.<br>Built to perform.</h2>
       <p>Real conversations. Real feedback. Real creative impact.</p>
     </div>
@@ -3437,7 +3545,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="messages" style="padding-top:64px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">05 — Message Generator</span>
+      <span class="eyebrow">06 — Message Generator</span>
       <h2>One message for the package. One for what's needed next.</h2>
       <p>Both messages are generated from the exact same quote, so you can drop them straight into the client and Creative Team WhatsApp groups with nothing miscommunicated.</p>
     </div>
@@ -3565,14 +3673,15 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-228" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-231" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-231" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
       <nav class="footer-links" aria-label="Footer">
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
+        <a href="#process">How We Work</a>
         <!-- TEAM:STRIP:START -->
         <a href="#quote">Pricing</a>
         <!-- TEAM:STRIP:END -->
@@ -3935,10 +4044,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-228"></script>
-<script src="assets/app-v2.js?v=20260811-228"></script>
+<script src="assets/creative-data.js?v=20260811-231"></script>
+<script src="assets/app-v2.js?v=20260811-231"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team-v2.js?v=20260811-228"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-231"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
