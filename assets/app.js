@@ -2187,15 +2187,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   const showcaseTabs = document.querySelectorAll(".showcase-tab");
   const showcaseBandTabs = document.getElementById("showcaseBandTabs");
 
-  // Loose production-style grouping for AI Reel samples only — not a
-  // claim about which package tier produced a given video (we don't
-  // have that record, see the note above the showcase tabs). Icons
-  // match the bolt/crown language already used for the Starter/Premium
-  // tier badges elsewhere, kept visually distinct (different pill
-  // style, no tq-* classes) so it doesn't read as the same claim.
+  // Loose production-style grouping for AI Reel samples only — NOT a
+  // record of which package tier actually produced a given video (we
+  // don't keep that record, see the note above the showcase tabs).
+  // Reuses the exact same 4 names/icons/colors (tq-1..tq-4) as the
+  // Starter/Standard/Popular/Premium package-tier badges in the
+  // Services modal, by request, for one consistent visual language
+  // across the page — just understand it's each video's visible
+  // production complexity sorted into that same 4-point scale, not a
+  // tier assignment.
   const BAND_LABEL = {
-    simple: { label: "Simple & Fast", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>' },
-    premium: { label: "Premium & Cinematic", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>' },
+    starter: { label: "Starter", cls: "tq-1", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>' },
+    standard: { label: "Standard", cls: "tq-2", icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>' },
+    popular: { label: "Popular", cls: "tq-3", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>' },
+    premium: { label: "Premium", cls: "tq-4", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>' },
   };
 
   function cardMediaSrc(item) {
@@ -2249,7 +2254,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const catPill = `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
     const band = activeShowcaseCat === "reels" && BAND_LABEL[item.band];
     const bandPill = band
-      ? `<span class="wc-band-pill band-${item.band}">${band.icon}${escapeHtml(band.label)}</span>`
+      ? `<span class="wc-band-pill ${band.cls}">${band.icon}${escapeHtml(band.label)}</span>`
       : "";
     return catPill + bandPill;
   }
