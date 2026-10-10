@@ -820,7 +820,13 @@
     const items = [
       ["Length", d.duration],
       ["Format", d.format],
-      ["Turnaround", d.turnaround],
+      // Same short form as keyFacts() below uses for the order-builder
+      // strip — the "after we receive everything needed from you"
+      // qualifier is identical boilerplate on all 4 tiers and already
+      // covered once for the whole order by .order-tat-note in the
+      // Quote section, so repeating it here just added 3-4 extra
+      // wrapped lines to an always-visible strip for no new information.
+      ["Turnaround", (d.turnaround || "").split(" after")[0]],
       ["Revisions", d.revisions],
       ["Quality", d.quality],
     ].filter(([, v]) => v);
