@@ -91,8 +91,10 @@
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
-      revisionScript: "Not applicable — no scripting on this service",
+      revisionScript: "Not applicable, no scripting on this service",
       revisionCreative: "No revisions included",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "None",
       language: "Not applicable (silent, no voiceover)",
       turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -132,8 +134,10 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
-      revisionScript: "Not applicable — design-only, no scripting",
+      revisionScript: "Not applicable, design-only, no scripting",
       revisionCreative: "1 revision",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 revision",
       language: "Not applicable",
       turnaround: "24 working hours per creative after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -166,8 +170,10 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
-      revisionScript: "Not applicable — design-only, no scripting",
+      revisionScript: "Not applicable, design-only, no scripting",
       revisionCreative: "1 revision",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 revision",
       language: "Not applicable",
       turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -195,8 +201,10 @@
       quality: "Basic edit: straightforward cuts and standard transitions, no advanced visual detailing.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
-      revisionScript: "Not applicable — script is finalised from your brief, no separate approval step",
+      revisionScript: "Not applicable, script is finalised from your brief with no separate approval step",
       revisionCreative: "1 revision (minor, in-frame changes only)",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 (in-frame only)",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
@@ -230,8 +238,10 @@
       quality: "Enhanced edit: smoother pacing, improved transitions, and additional visual detailing.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
-      revisionScript: "Covered by the 1 revision below, usable on the script before approval",
-      revisionCreative: "1 revision — for a script change or a finished-reel communication change (e.g. hook, CTA)",
+      revisionScript: "Shared with the 1 creative revision below, usable on the script before approval",
+      revisionCreative: "1 revision, for a script change or a finished-reel communication change such as the hook or CTA",
+      revisionScriptShort: "Shared (1)",
+      revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
@@ -265,8 +275,10 @@
       quality: "Premium edit: cinematic pacing, advanced transitions, and richer visual detailing.",
       duration: "Max 50 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
-      revisionScript: "Covered by the 1 revision below, usable on the script/hooks before approval",
-      revisionCreative: "1 revision — for a script/hook change or a finished-reel communication change",
+      revisionScript: "Shared with the 1 creative revision below, usable on the script or hooks before approval",
+      revisionCreative: "1 revision, for a script/hook change or a finished-reel communication change",
+      revisionScriptShort: "Shared (1)",
+      revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
@@ -300,8 +312,10 @@
       quality: "Highest-quality edit: cinematic transitions, advanced detailing, and the most polished finish.",
       duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
-      revisionScript: "Covered by the 2 revisions below, usable on the script/hooks before approval",
-      revisionCreative: "2 revisions — for a script/hook change or a finished-reel communication change",
+      revisionScript: "Shared with the 2 creative revisions below, usable on the script or hooks before approval",
+      revisionCreative: "2 revisions, for a script/hook change or a finished-reel communication change",
+      revisionScriptShort: "Shared (2)",
+      revisionCreativeShort: "2 revisions",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
@@ -876,8 +890,8 @@
       ["Turnaround", (d.turnaround || "").split(" after")[0]],
       [
         "Revisions",
-        d.revisionScript && d.revisionCreative
-          ? `<span class="glance-rev-line"><i>Script</i> ${d.revisionScript}</span><span class="glance-rev-line"><i>Creative</i> ${d.revisionCreative}</span>`
+        d.revisionScriptShort && d.revisionCreativeShort
+          ? `<span class="glance-rev-mini"><i>Script</i><em>${d.revisionScriptShort}</em></span><span class="glance-rev-mini"><i>Creative</i><em>${d.revisionCreativeShort}</em></span>`
           : d.revisions,
       ],
       ["Quality", d.quality],
@@ -1687,24 +1701,28 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   initPkgDrag();
 
-  const comparePackagesLink = document.getElementById("comparePackagesLink");
-  if (comparePackagesLink) {
-    comparePackagesLink.addEventListener("click", () => {
-      const reelsCard = document.querySelector('.pkg-card[data-svc="reels"]');
-      if (!reelsCard) return;
-      reelsCard.click();
-      // Wait out the modal's own .5s open transform (see openPkgModal)
-      // before scrolling inside it — scrolling mid-transition would
-      // measure against a still-animating layout.
-      setTimeout(() => {
-        const toggle = document.getElementById("rulesCompareToggle");
-        if (toggle) {
-          toggle.open = true;
-          toggle.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, 560);
-    });
+  // Opens the Reels package modal and jumps straight to the comparison
+  // table inside it — shared by the link next to the package cards and
+  // the "Compare Packages" top-nav item, so both land in the same place.
+  function openPackageComparison() {
+    const reelsCard = document.querySelector('.pkg-card[data-svc="reels"]');
+    if (!reelsCard) return;
+    reelsCard.click();
+    // Wait out the modal's own .5s open transform (see openPkgModal)
+    // before scrolling inside it — scrolling mid-transition would
+    // measure against a still-animating layout.
+    setTimeout(() => {
+      const toggle = document.getElementById("rulesCompareToggle");
+      if (toggle) {
+        toggle.open = true;
+        toggle.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 560);
   }
+  const comparePackagesLink = document.getElementById("comparePackagesLink");
+  if (comparePackagesLink) comparePackagesLink.addEventListener("click", openPackageComparison);
+  const navCompareLink = document.getElementById("navCompareLink");
+  if (navCompareLink) navCompareLink.addEventListener("click", openPackageComparison);
 
   pkgModalClose.addEventListener("click", closePkgModal);
   pkgModalBackdrop.addEventListener("click", (e) => {
@@ -1779,6 +1797,61 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         });
       });
     });
+
+    // Compare-selection checkboxes: a separate action from Quick Add
+    // above. Checking 2+ tiers reveals a bar to view just those tiers
+    // side by side; nothing here touches the cart/order until the rep
+    // explicitly adds a tier from the filtered view's own Quick Add row.
+    const compareBar = document.getElementById("ctCompareBar");
+    const compareCount = document.getElementById("ctCompareCount");
+    const compareViewBtn = document.getElementById("ctCompareViewBtn");
+    const compareClearBtn = document.getElementById("ctCompareClearBtn");
+    const compareExitBtn = document.getElementById("ctCompareExitBtn");
+    const compareChecks = [...reelCompareTable.querySelectorAll("[data-compare-tier]")];
+
+    function checkedTiers() {
+      return compareChecks.filter((c) => c.checked).map((c) => c.dataset.compareTier);
+    }
+
+    function updateCompareBar() {
+      const n = checkedTiers().length;
+      if (compareBar) compareBar.hidden = n === 0;
+      if (compareCount) compareCount.textContent = String(n);
+      if (compareViewBtn) compareViewBtn.disabled = n < 2;
+    }
+
+    compareChecks.forEach((check) => {
+      check.addEventListener("change", updateCompareBar);
+    });
+
+    if (compareViewBtn) {
+      compareViewBtn.addEventListener("click", () => {
+        const tiers = checkedTiers();
+        if (tiers.length < 2) return;
+        reelCompareTable.querySelectorAll("[data-tier-col]").forEach((cell) => {
+          cell.classList.toggle("compare-active", tiers.includes(cell.dataset.tierCol));
+        });
+        reelCompareTable.classList.add("compare-filtering");
+      });
+    }
+
+    function exitComparison() {
+      reelCompareTable.classList.remove("compare-filtering");
+      reelCompareTable.querySelectorAll("[data-tier-col]").forEach((cell) => {
+        cell.classList.remove("compare-active");
+      });
+    }
+
+    if (compareClearBtn) {
+      compareClearBtn.addEventListener("click", () => {
+        compareChecks.forEach((c) => (c.checked = false));
+        exitComparison();
+        updateCompareBar();
+      });
+    }
+    if (compareExitBtn) compareExitBtn.addEventListener("click", exitComparison);
+
+    updateCompareBar();
   }
 
   const qQtyInput = document.getElementById("qQtyInput");

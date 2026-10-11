@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-249" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-249" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-249" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-249" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-249" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-249" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-249" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-249" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-249" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-249" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-249" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-249" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -211,6 +211,11 @@ footer .brand-logo{height:24px;}
 }
 .nav-links a{transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;}
 .nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
+.nav-compare-link{
+  font:inherit; color:inherit; background:none; border:none; white-space:nowrap;
+  transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;
+}
+.nav-compare-link:hover{color:var(--text-0); background:var(--surface-hover);}
 .nav-right{display:flex; align-items:center; gap:14px;}
 .nav-cta{padding:9px 20px; font-size:13px; white-space:nowrap;}
 @media (max-width:600px){.nav-cta{padding:8px 14px; font-size:12px;}}
@@ -981,7 +986,12 @@ body.pkg-modal-open{overflow:hidden;}
 .tier-quality-badge svg{width:10px; height:10px; flex:0 0 auto;}
 .tq-1{background:rgba(90,180,240,.16); color:var(--sky);}
 .tq-2{background:rgba(47,217,196,.16); color:var(--teal);}
-.tq-3{background:var(--violet-soft); color:var(--violet);}
+/* Violet reads noticeably dimmer than the other 3 accents at the same
+   opacity against a dark background (lower luminance), so "Popular"
+   consistently looked the least prominent of the four tier badges —
+   a stronger fill plus a hairline border brings it back in line with
+   its siblings rather than leaving it the odd one out. */
+.tq-3{background:rgba(139,124,246,.26); color:#b3a6ff; border:1px solid rgba(139,124,246,.4);}
 .tq-4{background:rgba(245,194,107,.18); color:var(--gold);}
 table.compare-table th .tier-quality-badge{margin-top:6px;}
 .qtier-chip:focus-visible{outline:none; background:var(--surface-hover);}
@@ -1009,9 +1019,13 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
 .svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
 .svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
 .svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
-.glance-rev-line{display:block; margin-bottom:5px;}
-.glance-rev-line:last-child{margin-bottom:0;}
-.glance-rev-line i{font-style:normal; font-weight:700; color:var(--violet); margin-right:4px;}
+/* Compact two-up mini stat blocks instead of stacked sentence-length
+   lines — matches the single-line brevity of the Length/Format/
+   Turnaround cells next to it instead of towering over them. */
+.glance-rev-mini{display:block; margin-bottom:8px;}
+.glance-rev-mini:last-child{margin-bottom:0;}
+.glance-rev-mini i{display:block; font-style:normal; font-family:var(--font-mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); margin-bottom:2px;}
+.glance-rev-mini em{display:block; font-style:normal; font-size:13px; font-weight:600; color:var(--text-0); white-space:nowrap;}
 @media (max-width:760px){
   .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
   .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
@@ -1159,6 +1173,49 @@ table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct
 .tier-recommend-btn.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet);}
 .tier-recommend-note{flex-basis:100%; margin-top:2px; font-size:12.5px; color:var(--text-2); line-height:1.55; min-height:1em;}
 table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
+/* Compare-selection checkboxes — a distinct action from Quick Add
+   (which places an order line item immediately): checking 2+ of these
+   reveals a bar (#ctCompareBar) to view just the checked tiers side
+   by side, with no effect on the actual order until the rep/customer
+   explicitly adds one from that filtered view. */
+table.compare-table tr.ct-compare-row td{padding-top:4px; padding-bottom:14px;}
+.ct-compare-check{display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; color:var(--text-2);}
+.ct-compare-check input{position:absolute; opacity:0; width:1px; height:1px;}
+.ct-compare-check span{
+  width:16px; height:16px; border-radius:5px; border:1.5px solid var(--line); flex:0 0 auto;
+  transition:background .2s ease, border-color .2s ease;
+}
+.ct-compare-check span::after{
+  content:''; display:block; width:100%; height:100%;
+  -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>') center/68% no-repeat;
+  mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>') center/68% no-repeat;
+  background:var(--btn-ink); opacity:0; transition:opacity .15s ease;
+}
+.ct-compare-check input:checked + span{background:var(--violet); border-color:var(--violet);}
+.ct-compare-check input:checked + span::after{opacity:1;}
+.ct-compare-check input:focus-visible + span{outline:2px solid var(--violet); outline-offset:2px;}
+.ct-compare-bar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px;
+  padding:10px 14px; border-radius:10px; background:var(--violet-soft); border:1px solid color-mix(in srgb, var(--violet) 35%, transparent);
+  font-size:13px; color:var(--text-0);
+}
+.ct-compare-bar[hidden]{display:none;}
+.ct-compare-view-btn:disabled{opacity:.5; cursor:not-allowed; filter:none;}
+.ct-compare-bar strong{color:var(--violet);}
+.ct-compare-bar-actions{display:flex; align-items:center; gap:8px;}
+.ct-compare-view-btn{padding:7px 14px; border-radius:7px; background:var(--violet); color:var(--btn-ink); font-size:12.5px; font-weight:700;}
+.ct-compare-view-btn:hover{filter:brightness(1.08);}
+.ct-compare-clear-btn{padding:7px 10px; font-size:12.5px; color:var(--text-2); transition:color .2s ease;}
+.ct-compare-clear-btn:hover{color:var(--text-0);}
+/* Filtered view: hide every column that isn't checked, leaving the
+   row-label column and only the compared tiers, so this reuses the
+   exact same table/markup instead of a second parallel component. */
+table.compare-table.compare-filtering [data-tier-col]:not(.compare-active){display:none;}
+.ct-compare-exit-row{display:none;}
+table.compare-table.compare-filtering .ct-compare-exit-row{display:table-row;}
+.ct-compare-exit-row td{border-bottom:none; padding-top:10px;}
+.ct-compare-exit-btn{font-size:12px; color:var(--text-2); text-decoration:underline; text-underline-offset:2px;}
+.ct-compare-exit-btn:hover{color:var(--text-0);}
 .ct-add-btn{
   padding:7px 16px; border-radius:8px; border:1px solid var(--violet); background:transparent;
   font-size:12px; font-weight:700; color:var(--violet); transition:background .2s ease, color .2s ease, transform .2s ease;
@@ -2758,12 +2815,13 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-249" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-249" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
         <a href="#services">Services</a>
+        <button type="button" class="nav-compare-link" id="navCompareLink" title="Compare AI Reel packages by quality, deliverables, turnaround, and revisions">Compare Packages</button>
         <a href="#process">How We Work</a>
                 <a href="#quote">Pricing</a>
                               </div>
@@ -3071,7 +3129,7 @@ footer{padding:64px 0 0; margin-top:40px;}
                   </tbody>
                                   </table>
               </div>
-            </details>
+                          </details>
           </div>
         </div>
       </div>
@@ -3602,8 +3660,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-249" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-249" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3779,7 +3837,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-247"></script>
-<script src="assets/app-v2.js?v=20260811-247"></script>
+<script src="assets/creative-data.js?v=20260811-249"></script>
+<script src="assets/app-v2.js?v=20260811-249"></script>
 </body>
 </html>
