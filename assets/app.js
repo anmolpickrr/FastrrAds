@@ -2583,10 +2583,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // delivered work) keep their own muted note so they're never mistaken
   // for a real sample, but every other card shows nothing but the media
   // itself, so a row's height is purely the fixed media aspect-ratio.
+  // Package-tier tag only (Starter/Standard/Popular/Premium for Reels,
+  // Standard/Premium for Catalogue) — the old content-category pill
+  // (Fashion/Beauty/Food/etc., driven by the now-removed per-video
+  // `cat`/`catlabel` metadata) stays gone; it was a different label
+  // from a different field and isn't coming back.
   function workCardMetaHTML(item) {
     const isDemo = item.cat === "demo";
     if (isDemo) return `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`;
-    return "";
+    const showsBand = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
+    const band = showsBand && BAND_LABEL[item.band];
+    return band ? `<span class="wc-band-pill ${band.cls}">${band.icon}${escapeHtml(band.label)}</span>` : "";
   }
 
   function workCardHTML(item, idx) {
