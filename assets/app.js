@@ -1236,7 +1236,16 @@
     // language/timeline) plus general terms lives in the downloadable
     // PDF only (see generatePackagePdf below), not duplicated here.
     const orderBlock = cart.items
-      .map((item, idx) => `${idx + 1}. ${item.d.name} (Qty ${item.qty}): ${fmtINR(item.lineSubtotal)}`)
+      .map((item, idx) => {
+        const d = item.d;
+        const scopeBits = [
+          `${d.duration} · ${d.format}`,
+          d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting) ? d.scripting : null,
+          `Revisions: ${d.revisionCreative || d.revisions}`,
+          `TAT: ${d.turnaround.split(" after")[0]}`,
+        ].filter(Boolean);
+        return `${idx + 1}. ${d.name} (Qty ${item.qty}): ${fmtINR(item.lineSubtotal)}\n   ${scopeBits.join(" · ")}`;
+      })
       .join("\n");
 
     const clientMsg = `Package Summary for ${brandName}
@@ -1250,7 +1259,7 @@ ${orderBlock}
 Pricing:
 ${priceBlock}
 
-Full package details (deliverables, revisions, turnaround, terms) are in the downloadable PDF from the Package Summary panel.`;
+Turnaround begins once we've received the complete brief, assets, and (where applicable) written script approval, not the payment date. Revisions above are one consolidated round of minor changes as described in the package scope, not unlimited. Full package details and terms are in the downloadable PDF from the Package Summary panel.`;
 
     // Message 2 — What We Need From You. Since every line item in the
     // order belongs to the same brand, brand/product-level assets (logo,

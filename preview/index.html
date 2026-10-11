@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-250" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-250" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-250" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-250" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-250" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-250" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-250" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-250" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-250" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-250" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-250" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-250" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-251" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-251" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-251" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-251" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-251" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-251" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-251" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-251" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-251" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-251" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-251" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-251" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1159,6 +1159,12 @@ table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct
 .mini-toggle{margin-top:12px; margin-bottom:12px; padding-top:12px;}
 .mini-toggle[open]>summary{margin-bottom:12px;}
 .mini-toggle .ob-facts{margin:0;}
+
+.prod-terms{margin-top:14px; display:flex; flex-direction:column; gap:16px;}
+.prod-term h4{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-1); margin:0 0 5px;}
+.prod-term p{font-size:13px; line-height:1.6; color:var(--text-2); margin:0;}
+.prod-term ul{margin:6px 0 0; padding-left:18px; font-size:13px; line-height:1.6; color:var(--text-2);}
+.prod-term li{margin-bottom:2px;}
 
 /* Team-only pitch aids nested inside the reel compare table (see
    PUBLIC:STRIP markers around them in the markup) — a rule-based tier
@@ -2817,8 +2823,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-250" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-250" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3060,6 +3066,61 @@ footer{padding:64px 0 0; margin-top:40px;}
               <div class="scope-body" id="scopeBody"></div>
             </div>
 
+            <!-- Shared production policy, same wording across every
+                 service/tier modal — covers the things that cause
+                 client disputes when left unstated: when the TAT clock
+                 actually starts, what "1 revision" does and doesn't
+                 cover, script-approval responsibility, and how AI
+                 product accuracy works. Static text, not pulled from
+                 DATA, since it applies identically regardless of which
+                 service/tier is open. -->
+            <details class="rules-compare-toggle" id="productionTermsToggle">
+              <summary>Production terms &amp; policies</summary>
+              <div class="prod-terms">
+                <div class="prod-term">
+                  <h4>Turnaround time</h4>
+                  <p>Turnaround time applies to one reel (or one creative/SKU, for other services) and begins once the order/payment confirmation, complete creative brief, required product assets and other necessary inputs have been received. For packages that require script approval, production begins after written script approval. Client-side delays, pending approvals, incomplete assets, scope changes and additional revisions may extend the delivery timeline. Bulk orders and multiple creatives may require additional time, which will be communicated before production.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Format &amp; duration</h4>
+                  <p>Each AI Reel package includes one final vertical video in 9:16 format, subject to the maximum duration specified in the selected package. The final duration depends on the agreed brief or approved script and the package limit. Additional aspect ratios, alternate cuts, extended durations and separate versions are not included unless specified in the confirmed order. The standard deliverable is one final exported video file. Captions, subtitles, on-screen text, custom music, source/project files and other additional deliverables are included only when explicitly listed in the order scope.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Script approval</h4>
+                  <p>For packages without a separate script-approval stage, the client is responsible for sharing all mandatory product information, selling points, offers, claims and restrictions before production. For packages that include script approval, the client must approve the script in writing before production starts. Changes requested after script approval, including new mandatory points, revised offers or a change in creative direction, may affect the scope, charges and delivery timeline. All factual, pricing, promotional and product claims must be verified by the client before approval.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Revision policy</h4>
+                  <p>A revision round means one consolidated set of feedback for the current deliverable. Minor revisions may include small text corrections, minor in-frame placement adjustments, limited timing changes and edit refinements that do not require a change to the approved concept or substantial regeneration. Changes to the approved script, offer, concept, model, language or scene sequence, requests for new scenes, substantial regeneration, new aspect ratios or additional deliverables are outside the standard minor-revision allowance. Requests outside the selected package scope may require additional charges and delivery time. Please share consolidated feedback through your designated KAM.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Product reference &amp; AI accuracy</h4>
+                  <p>Clients should provide clear, high-resolution product images or confirm the website/product page to be used as the visual reference. Raw product images are preferred, particularly images showing the front, back, sides, packaging, logo, labels and important product details where applicable. When website images are used, visual accuracy depends on the quality, resolution, clarity and availability of the source images. AI-generated visuals may contain inconsistencies in small text, labels, packaging, hands, product proportions or fine details. The production team will use the approved references to guide the output but cannot guarantee perfect reproduction of every detail in every generated frame. Mandatory product details, prohibited visual changes and required product angles must be communicated before production.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Client brief &amp; required inputs</h4>
+                  <p>Production begins once the brief and required inputs are complete. New requirements introduced after confirmation may affect the scope, cost and delivery timeline. What we typically need from you:</p>
+                  <ul>
+                    <li>Brand name, website and product name</li>
+                    <li>Product images or an approved website reference</li>
+                    <li>Objective of the creative and target audience</li>
+                    <li>Main selling points and features to highlight</li>
+                    <li>Offers, CTA, and any mandatory disclaimers or claims</li>
+                    <li>Preferred language and voiceover requirements</li>
+                    <li>Model preferences (gender, approximate age, appearance), where relevant</li>
+                    <li>Visual references and brand guidelines, if available</li>
+                    <li>Required inclusions and exclusions</li>
+                    <li>Product details that must not be altered</li>
+                    <li>Authorised approver and preferred communication channel</li>
+                  </ul>
+                </div>
+                <div class="prod-term">
+                  <h4>Communication &amp; KAM support</h4>
+                  <p>Each order has a designated KAM as the primary point of contact for brief coordination, status updates, feedback collection and delivery communication. WhatsApp is the primary channel for routine coordination; calls can be scheduled when a discussion is required. Creative feedback and approvals must be shared in writing through the designated communication channel. The production team will share updates at relevant milestones, and creative-team involvement depends on the selected package. Support does not include unlimited calls, continuous live updates or unrestricted direct access to production team members.</p>
+                </div>
+              </div>
+            </details>
+
             <!-- Side-by-side tier comparison, AI Reels only (see the
                  compareToggle/reelCompareTable logic in renderScopePanel()
                  in app-v2.js, which only toggles visibility/highlighting —
@@ -3088,6 +3149,10 @@ footer{padding:64px 0 0; margin-top:40px;}
                       <td data-tier-col="2">₹3,500</td>
                       <td data-tier-col="3">₹5,000</td>
                       <td data-tier-col="4">₹8,000</td>
+                    </tr>
+                    <tr>
+                      <td>Min. order value</td>
+                      <td colspan="4">₹10,000 per order (not per package, mix and match tiers/services to reach it)</td>
                     </tr>
                     <tr>
                       <td>Max length</td>
@@ -3130,6 +3195,20 @@ footer{padding:64px 0 0; margin-top:40px;}
                       <td data-tier-col="2">KAM + Video Editor</td>
                       <td data-tier-col="3">KAM + Editor + Content Writer + Creative Director</td>
                       <td data-tier-col="4">KAM + Editor + dedicated Content Writer + Creative Director + custom music</td>
+                    </tr>
+                    <tr>
+                      <td>Voiceover language</td>
+                      <td data-tier-col="1">Hindi or English</td>
+                      <td data-tier-col="2">Hindi or English</td>
+                      <td data-tier-col="3">Hindi or English</td>
+                      <td data-tier-col="4">Hindi or English</td>
+                    </tr>
+                    <tr>
+                      <td>Key exclusions</td>
+                      <td data-tier-col="1">Script approval, extra hooks, major rework, extra dimensions</td>
+                      <td data-tier-col="2">Extra hooks, major post-approval script changes, extra dimensions</td>
+                      <td data-tier-col="3">Custom brand music, major rework, extra dimensions</td>
+                      <td data-tier-col="4">Major rework, extra dimensions, lip-sync to custom music</td>
                     </tr>
                   </tbody>
                                   </table>
@@ -3665,8 +3744,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-250" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-250" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3842,7 +3921,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-250"></script>
-<script src="assets/app-v2.js?v=20260811-250"></script>
+<script src="assets/creative-data.js?v=20260811-251"></script>
+<script src="assets/app-v2.js?v=20260811-251"></script>
 </body>
 </html>
