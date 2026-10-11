@@ -24,18 +24,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-239" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-239" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-239" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-239" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-239" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-239" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-239" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-239" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-239" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-239" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-239" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-239" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-240" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-240" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-240" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-240" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-240" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-240" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-240" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-240" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-240" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-240" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-240" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-240" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1176,25 +1176,25 @@ table.compare-table td[data-tier-col="3"] .ct-add-btn:hover{background:var(--vio
    sidebar, so the steps become a horizontal scrollable strip above a
    shorter display pane. */
 .process-switcher{
+  position:relative; isolation:isolate; overflow:hidden;
   display:grid; grid-template-columns:220px 1fr; margin-top:18px; border-radius:16px;
-  border:1px solid var(--line); background:var(--surface-1); overflow:hidden; box-shadow:var(--shadow-sm);
+  border:1px solid var(--line); background:var(--glass); box-shadow:var(--shadow-md), var(--inset-hi);
+}
+.process-switcher::before{
+  content:''; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(ellipse 70% 60% at 0% 0%, color-mix(in srgb, var(--violet) 8%, transparent), transparent 62%);
 }
 .process-tabs{position:relative; display:flex; flex-direction:column; gap:2px; padding:8px; border-right:1px solid var(--line-soft);}
-/* One shared pill that slides/resizes to whichever tab is active,
-   measured and positioned in JS (initProcessSwitcher) via
-   getBoundingClientRect rather than a background swapped per-tab —
-   the continuous glide between positions (and between the vertical
-   desktop list and horizontal mobile strip, same code either way) is
-   the "premium segmented control" feel a discrete per-tab background
-   toggle can't produce. */
+/* Shared pill that slides/resizes to the active tab (positioned in JS). */
 .process-tab-indicator{
   position:absolute; top:0; left:0; width:0; height:0; border-radius:9px; background:var(--surface-2);
+  border:1px solid var(--line-soft);
   transform:translate(0,0); transition:transform .4s cubic-bezier(.16,1,.3,1), width .4s cubic-bezier(.16,1,.3,1), height .4s cubic-bezier(.16,1,.3,1);
   z-index:0; pointer-events:none;
 }
 .process-tab{
   position:relative; z-index:1; display:flex; align-items:center; gap:10px; padding:10px 13px 12px; border-radius:9px;
-  text-align:left; color:var(--text-2); transition:color .25s ease;
+  text-align:left; color:var(--text-2); background:none; border:none; transition:color .25s ease;
 }
 .process-tab:not(.active):hover{background:color-mix(in srgb, var(--surface-2) 55%, transparent); color:var(--text-1);}
 .process-tab.active{color:var(--text-0);}
@@ -2723,8 +2723,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-239" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-239" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-240" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-240" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2895,7 +2895,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </div>
 
-<section class="section" id="services" style="padding-top:0;">
+<section class="section" id="services" style="padding-top:0; padding-bottom:36px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">02 · Services &amp; Package Scope</span>
@@ -3109,7 +3109,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
-<section class="section" id="process" style="padding:64px 0 52px;">
+<section class="section" id="process" style="padding:36px 0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">03 · How We Work</span>
@@ -3186,7 +3186,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
-<section class="section" id="quote" style="padding-top:0;">
+<section class="section" id="quote" style="padding:36px 0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <!-- TEAM:STRIP:START -->
@@ -3318,7 +3318,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   </div>
 </section>
 
-<section class="section" id="testimonials" style="padding:52px 0 16px;">
+<section class="section" id="testimonials" style="padding:36px 0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">05 · What Brands Say</span>
@@ -3651,7 +3651,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 </section>
 
 <!-- PUBLIC:STRIP:START -->
-<section class="section" id="messages" style="padding:52px 0 56px;">
+<section class="section" id="messages" style="padding:36px 0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
       <span class="eyebrow">06 · Message Generator</span>
@@ -3782,8 +3782,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-239" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-239" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-240" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-240" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -4153,10 +4153,10 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-239"></script>
-<script src="assets/app.js?v=20260811-239"></script>
+<script src="assets/creative-data.js?v=20260811-240"></script>
+<script src="assets/app.js?v=20260811-240"></script>
 <!-- PUBLIC:STRIP:START -->
-<script type="module" src="assets/team.js?v=20260811-239"></script>
+<script type="module" src="assets/team.js?v=20260811-240"></script>
 <!-- PUBLIC:STRIP:END -->
 </body>
 </html>
