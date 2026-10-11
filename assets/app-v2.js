@@ -91,6 +91,8 @@
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
+      revisionScript: "Not applicable — no scripting on this service",
+      revisionCreative: "No revisions included",
       language: "Not applicable (silent, no voiceover)",
       turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -130,6 +132,8 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
+      revisionScript: "Not applicable — design-only, no scripting",
+      revisionCreative: "1 revision",
       language: "Not applicable",
       turnaround: "24 working hours per creative after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -162,6 +166,8 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
+      revisionScript: "Not applicable — design-only, no scripting",
+      revisionCreative: "1 revision",
       language: "Not applicable",
       turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -189,6 +195,8 @@
       quality: "Basic edit: straightforward cuts and standard transitions, no advanced visual detailing.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
+      revisionScript: "Not applicable — script is finalised from your brief, no separate approval step",
+      revisionCreative: "1 revision (minor, in-frame changes only)",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
@@ -222,6 +230,8 @@
       quality: "Enhanced edit: smoother pacing, improved transitions, and additional visual detailing.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
+      revisionScript: "Covered by the 1 revision below, usable on the script before approval",
+      revisionCreative: "1 revision — for a script change or a finished-reel communication change (e.g. hook, CTA)",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
@@ -255,6 +265,8 @@
       quality: "Premium edit: cinematic pacing, advanced transitions, and richer visual detailing.",
       duration: "Max 50 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
+      revisionScript: "Covered by the 1 revision below, usable on the script/hooks before approval",
+      revisionCreative: "1 revision — for a script/hook change or a finished-reel communication change",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
@@ -288,6 +300,8 @@
       quality: "Highest-quality edit: cinematic transitions, advanced detailing, and the most polished finish.",
       duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
+      revisionScript: "Covered by the 2 revisions below, usable on the script/hooks before approval",
+      revisionCreative: "2 revisions — for a script/hook change or a finished-reel communication change",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
@@ -400,7 +414,7 @@
   // visitors never set a discount manually, so their version reads as an
   // offer they earned rather than a generic "Discount" line.
   function discountLabel(cart) {
-    if (cart.discountType === "pct" && cart.discountValue > 0) {
+    if (cart.discountValue > 0) {
       return isInternal() ? `Discount (${cart.discountValue}%)` : `Order Discount (${cart.discountValue}%)`;
     }
     return "Discount";
@@ -439,8 +453,7 @@
     tier: 3, // only relevant when service === 'reels'
     qty: 1, // builder quantity, for the item about to be added to the order
     cart: [], // order line items: { id, service, tier|null, qty }
-    discountType: "pct", // pct | flat — how discountValue below is interpreted
-    discountValue: 0, // order-level discount, applied once to the whole cart's subtotal — a percent (0-100) or a flat ₹ amount depending on discountType
+    discountValue: 0, // order-level discount percent (0-100), applied once to the whole cart's subtotal
     gstEnabled: true, // 18% GST toggle — off for clients billed without a GST invoice
     scopeTab: "inc", // inc | exc | need
     brandName: "",
@@ -465,7 +478,6 @@
         JSON.stringify({
           cart: state.cart,
           cartIdSeq,
-          discountType: state.discountType,
           discountValue: state.discountValue,
           gstEnabled: state.gstEnabled,
           brandName: state.brandName,
@@ -491,7 +503,6 @@
     if (!saved) return;
     if (Array.isArray(saved.cart)) state.cart = saved.cart;
     if (typeof saved.cartIdSeq === "number") cartIdSeq = saved.cartIdSeq;
-    if (saved.discountType) state.discountType = saved.discountType;
     if (typeof saved.discountValue === "number") state.discountValue = saved.discountValue;
     if (typeof saved.gstEnabled === "boolean") state.gstEnabled = saved.gstEnabled;
     if (typeof saved.brandName === "string") state.brandName = saved.brandName;
@@ -586,26 +597,17 @@
       return { ...item, d, lineSubtotal };
     });
     const subtotal = items.reduce((sum, i) => sum + i.lineSubtotal, 0);
-    let discountType = state.discountType === "flat" ? "flat" : "pct";
-    let rawDiscountValue = Math.max(0, state.discountValue || 0);
-    if (!isInternal()) {
-      // Overrides whatever's in state — public visitors never edit this
-      // directly, so state.discountValue here is stale/irrelevant, not
-      // something to respect.
-      discountType = "pct";
-      rawDiscountValue = subtotal >= PUBLIC_OFFER_THRESHOLD ? PUBLIC_OFFER_PCT : 0;
-    }
-    // Team's own manual discount — independent of the public auto-offer
-    // above — is capped at TEAM_MAX_DISCOUNT_PCT, with no minimum order
-    // value attached (unlike the public coupon).
-    const discountValue =
-      discountType === "pct"
-        ? Math.min(isInternal() ? TEAM_MAX_DISCOUNT_PCT : 100, rawDiscountValue)
-        : isInternal()
-        ? Math.min(subtotal * (TEAM_MAX_DISCOUNT_PCT / 100), rawDiscountValue)
-        : rawDiscountValue;
-    const discountAmt =
-      discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
+    // Percent-only discount. Public visitors never edit this directly —
+    // they get the automatic coupon below instead, so state.discountValue
+    // is irrelevant there. Team's own manual discount is capped at
+    // TEAM_MAX_DISCOUNT_PCT, independent of the public coupon's own cap
+    // and with no minimum order value attached.
+    const discountValue = !isInternal()
+      ? subtotal >= PUBLIC_OFFER_THRESHOLD
+        ? PUBLIC_OFFER_PCT
+        : 0
+      : Math.min(TEAM_MAX_DISCOUNT_PCT, Math.max(0, state.discountValue || 0));
+    const discountAmt = subtotal * (discountValue / 100);
     const taxable = subtotal - discountAmt;
     // GST is compulsory on every public order — only internal team can
     // switch it off (e.g. to issue a non-GST invoice for a specific
@@ -614,7 +616,7 @@
     const gstEnabled = isInternal() ? state.gstEnabled !== false : true;
     const gstAmt = gstEnabled ? taxable * GST_RATE : 0;
     const final = taxable + gstAmt;
-    return { items, subtotal, discountType, discountValue, discountAmt, taxable, gstEnabled, gstAmt, final };
+    return { items, subtotal, discountValue, discountAmt, taxable, gstEnabled, gstAmt, final };
   }
 
   function addToOrder() {
@@ -872,7 +874,12 @@
       // Quote section, so repeating it here just added 3-4 extra
       // wrapped lines to an always-visible strip for no new information.
       ["Turnaround", (d.turnaround || "").split(" after")[0]],
-      ["Revisions", d.revisions],
+      [
+        "Revisions",
+        d.revisionScript && d.revisionCreative
+          ? `<span class="glance-rev-line"><i>Script</i> ${d.revisionScript}</span><span class="glance-rev-line"><i>Creative</i> ${d.revisionCreative}</span>`
+          : d.revisions,
+      ],
       ["Quality", d.quality],
     ].filter(([, v]) => v);
     document.getElementById("svcGlance").innerHTML = items
@@ -1107,26 +1114,39 @@
         .join("");
     }
 
-    // qDiscountInput/discountTypeToggle/qGstToggle are the manual-edit
-    // controls inside #discountFieldRow/#gstToggleRow — internal-tools
-    // only, and entirely absent from the public build (not just
-    // CSS-hidden), so every reference to them here is null-guarded.
+    // qDiscountInput/qGstToggle are the manual-edit controls inside
+    // #discountFieldRow/#gstToggleRow — internal-tools only, and
+    // entirely absent from the public build (not just CSS-hidden), so
+    // every reference to them here is null-guarded.
     const qDiscountInputEl = document.getElementById("qDiscountInput");
     if (qDiscountInputEl) {
       qDiscountInputEl.value = state.discountValue;
-      qDiscountInputEl.max = cart.discountType === "pct" ? TEAM_MAX_DISCOUNT_PCT : "";
+      qDiscountInputEl.max = TEAM_MAX_DISCOUNT_PCT;
     }
-    document.querySelectorAll("#discountTypeToggle .unit-toggle-btn").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.type === cart.discountType);
-    });
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
+    document.getElementById("qSubtotalCompact").textContent = fmtINR(cart.subtotal);
     document.getElementById("qDiscountLabel").textContent = discountLabel(cart);
     animateMoneyText(document.getElementById("qDiscountAmt"), cart.discountAmt, "− ");
     document.getElementById("qGstAmt").textContent = cart.gstEnabled ? "+ " + fmtINR(cart.gstAmt) : "Not applied";
-    animateMoneyText(document.getElementById("qFinal"), cart.final);
+    const qFinalEl = document.getElementById("qFinal");
+    const finalChanged = Number(qFinalEl.dataset.val || 0) !== cart.final;
+    animateMoneyText(qFinalEl, cart.final);
+    if (finalChanged) {
+      qFinalEl.classList.remove("price-burst");
+      void qFinalEl.offsetWidth;
+      qFinalEl.classList.add("price-burst");
+    }
 
     const discountActive = cart.discountAmt > 0;
     document.getElementById("discountRow").classList.toggle("is-active", discountActive);
+    const ocsDiscountRow = document.getElementById("ocsDiscountRow");
+    if (ocsDiscountRow) {
+      ocsDiscountRow.hidden = !discountActive;
+      if (discountActive) {
+        const pctDisplay = Math.round(cart.discountValue * 10) / 10;
+        document.getElementById("qDiscountPctCompact").textContent = `${pctDisplay}% off`;
+      }
+    }
 
     const qGstToggleEl = document.getElementById("qGstToggle");
     if (qGstToggleEl) qGstToggleEl.checked = cart.gstEnabled;
@@ -1395,8 +1415,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           ["Duration / Format", `${d.duration} · ${d.format}`],
         ];
         if (d.quality) rows.push(["Quality", d.quality]);
-        rows.push(["Revisions", d.revisions]);
         if (d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)) rows.push(["Script / Approval", d.scripting]);
+        rows.push(["Script Revisions", d.revisionScript || "Not applicable"]);
+        rows.push(["Creative Revisions", d.revisionCreative || d.revisions]);
         if (d.language && !/^not applicable/i.test(d.language)) rows.push(["Language", d.language]);
         rows.push(["Turnaround (TAT)", d.turnaround]);
         if (d.support && d.support.length) rows.push(["Team / Support", supportIncludedValue(d)]);
@@ -1652,6 +1673,25 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   initPkgDrag();
 
+  const comparePackagesLink = document.getElementById("comparePackagesLink");
+  if (comparePackagesLink) {
+    comparePackagesLink.addEventListener("click", () => {
+      const reelsCard = document.querySelector('.pkg-card[data-svc="reels"]');
+      if (!reelsCard) return;
+      reelsCard.click();
+      // Wait out the modal's own .5s open transform (see openPkgModal)
+      // before scrolling inside it — scrolling mid-transition would
+      // measure against a still-animating layout.
+      setTimeout(() => {
+        const toggle = document.getElementById("rulesCompareToggle");
+        if (toggle) {
+          toggle.open = true;
+          toggle.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 560);
+    });
+  }
+
   pkgModalClose.addEventListener("click", closePkgModal);
   pkgModalBackdrop.addEventListener("click", (e) => {
     if (e.target === pkgModalBackdrop) closePkgModal();
@@ -1766,29 +1806,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     qDiscountInput.addEventListener("input", () => {
       let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
       let exceeded = false;
-      if (state.discountType === "pct") {
-        if (v > TEAM_MAX_DISCOUNT_PCT) {
-          v = TEAM_MAX_DISCOUNT_PCT;
-          exceeded = true;
-        }
-      } else {
-        const cap = computeCart().subtotal * (TEAM_MAX_DISCOUNT_PCT / 100);
-        if (v > cap) {
-          v = cap;
-          exceeded = true;
-        }
+      if (v > TEAM_MAX_DISCOUNT_PCT) {
+        v = TEAM_MAX_DISCOUNT_PCT;
+        exceeded = true;
       }
       state.discountValue = v;
       if (exceeded) flashDiscountLimitPopup();
-      renderCart();
-      renderMessages();
-    });
-
-    document.getElementById("discountTypeToggle").addEventListener("click", (e) => {
-      const btn = e.target.closest(".unit-toggle-btn");
-      if (!btn || btn.dataset.type === state.discountType) return;
-      state.discountType = btn.dataset.type;
-      state.discountValue = 0; // a number under one type rarely means the same thing under the other
       renderCart();
       renderMessages();
     });
