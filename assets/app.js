@@ -956,6 +956,20 @@
         cell.classList.toggle("ct-sel", Number(cell.dataset.tierCol) === state.tier);
       });
     }
+    // Quick Recommend buttons and their explanatory note track whichever
+    // tier is actually selected (state.tier) — the same single value the
+    // tier chips above and the compare table's .ct-sel both key off —
+    // instead of keeping their own separate "recommended" selection that
+    // could point at a different tier than the one actually chosen.
+    const tierRecommendEl = document.getElementById("tierRecommend");
+    if (tierRecommendEl && state.service === "reels") {
+      tierRecommendEl.querySelectorAll(".tier-recommend-btn").forEach((b) => {
+        b.classList.toggle("active", Number(b.dataset.rec) === state.tier);
+      });
+      const d = DATA["reel" + state.tier];
+      const note = document.getElementById("tierRecommendNote");
+      if (note && d) note.textContent = `${d.name.replace(/^AI Reel: /, "")}: ${d.short} ${d.benefit}`;
+    }
   }
 
   /* ----------------------------------------------------------
@@ -1723,21 +1737,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // fixed need -> tier mapping, with the explanation pulled straight
   // from that tier's own DATA.short/benefit copy so it can't drift out
   // of sync with what the scope panel above it already says.
+  // Clicking a Quick Recommend button genuinely selects that tier —
+  // same state.tier the tier chips set, same render() path — rather
+  // than driving a separate "recommended" highlight that could disagree
+  // with whichever tier is actually selected (see renderScopePanel()
+  // for the matching .active/.ct-sel sync, which runs on every render
+  // regardless of what triggered it, including these buttons).
   const tierRecommend = document.getElementById("tierRecommend");
   if (tierRecommend) {
     tierRecommend.querySelectorAll(".tier-recommend-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const tier = Number(btn.dataset.rec);
-        tierRecommend.querySelectorAll(".tier-recommend-btn").forEach((b) => b.classList.toggle("active", b === btn));
-        const table = document.getElementById("reelCompareTable");
-        if (table) {
-          table.querySelectorAll("[data-tier-col]").forEach((cell) => {
-            cell.classList.toggle("ct-rec", Number(cell.dataset.tierCol) === tier);
-          });
-        }
-        const d = DATA["reel" + tier];
-        const note = document.getElementById("tierRecommendNote");
-        if (note && d) note.textContent = `${d.name.replace(/^AI Reel: /, "")}: ${d.short} ${d.benefit}`;
+        withScrollAnchor(() => {
+          state.tier = Number(btn.dataset.rec);
+          render();
+        });
       });
     });
   }
