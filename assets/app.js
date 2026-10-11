@@ -829,6 +829,8 @@
 
   function renderServiceNav() {
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
+    const modalCompareLinkEl = document.getElementById("modalCompareLink");
+    if (modalCompareLinkEl) modalCompareLinkEl.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
@@ -1721,8 +1723,20 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   const comparePackagesLink = document.getElementById("comparePackagesLink");
   if (comparePackagesLink) comparePackagesLink.addEventListener("click", openPackageComparison);
-  const navCompareLink = document.getElementById("navCompareLink");
-  if (navCompareLink) navCompareLink.addEventListener("click", openPackageComparison);
+
+  // Lives inside the modal itself (reels only), so it just needs to
+  // open the compare table in place, not re-open the modal it's
+  // already in.
+  const modalCompareLink = document.getElementById("modalCompareLink");
+  if (modalCompareLink) {
+    modalCompareLink.addEventListener("click", () => {
+      const toggle = document.getElementById("rulesCompareToggle");
+      if (toggle) {
+        toggle.open = true;
+        toggle.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+  }
 
   pkgModalClose.addEventListener("click", closePkgModal);
   pkgModalBackdrop.addEventListener("click", (e) => {
