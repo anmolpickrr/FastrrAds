@@ -2636,6 +2636,37 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }[c]));
   }
 
+  // Round-robins items across their bands (Starter, Standard, Popular,
+  // Premium in whatever order each first appears) instead of leaving
+  // them in the source array's natural tier-grouped order — one from
+  // each band in turn, cycling until every item's placed. Deterministic
+  // rather than randomized on every render: a reshuffle on every tab
+  // click would read as the page glitching, not as "showing variety".
+  function interleaveByBand(items) {
+    const order = [];
+    const groups = {};
+    items.forEach((item) => {
+      const key = item.band || "_";
+      if (!groups[key]) {
+        groups[key] = [];
+        order.push(key);
+      }
+      groups[key].push(item);
+    });
+    const result = [];
+    let added = true;
+    while (added) {
+      added = false;
+      for (const key of order) {
+        if (groups[key].length) {
+          result.push(groups[key].shift());
+          added = true;
+        }
+      }
+    }
+    return result;
+  }
+
   function renderShowcase(cat) {
     const catChanged = cat !== activeShowcaseCat;
     activeShowcaseCat = cat;
@@ -2650,7 +2681,18 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     }
     let list = SHOWCASE_SOURCES[cat] || [];
-    if ((isReels || isCatalogue) && activeBand !== "all") list = list.filter((item) => item.band === activeBand);
+    if (isReels || isCatalogue) {
+      if (activeBand !== "all") {
+        list = list.filter((item) => item.band === activeBand);
+      } else {
+        // "All" mixes every tier round-robin (one Starter, one Standard,
+        // one Popular, one Premium, repeat) instead of four long same-tier
+        // blocks back to back — a visitor scrolling past the first few
+        // cards should see every tier represented quickly, not just
+        // whichever tier happens to be uploaded first.
+        list = interleaveByBand(list);
+      }
+    }
     activeShowcaseList = list;
     showcaseTabs.forEach((t) => t.classList.toggle("active", t.dataset.cat === cat));
     if (!list.length) {
