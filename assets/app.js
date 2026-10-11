@@ -354,6 +354,38 @@
     return "₹" + Math.round(n).toLocaleString("en-IN");
   }
 
+  // Count-up/down tween for a money value, so a discount or coupon
+  // landing reads as a live price drop rather than a silent swap.
+  // Self-contained reduced-motion check (not the shared const further
+  // down the file) since this runs the moment the script first paints,
+  // before that const further down is guaranteed to exist yet.
+  function animateMoneyText(el, newVal, prefix) {
+    if (!el) return;
+    prefix = prefix || "";
+    const prev = Number(el.dataset.val || 0);
+    el.dataset.val = newVal;
+    if (prev === newVal) {
+      el.textContent = prefix + fmtINR(newVal);
+      return;
+    }
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      el.textContent = prefix + fmtINR(newVal);
+      return;
+    }
+    const start = performance.now();
+    const dur = 450;
+    const token = (el.__animToken = Symbol());
+    function tick(now) {
+      if (el.__animToken !== token) return; // a newer animation superseded this one
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = prefix + fmtINR(prev + (newVal - prev) * eased);
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
   // jsPDF's built-in fonts (WinAnsi/Latin-only) can't render ₹ — it falls
   // back to an unrelated glyph — so the PDF path formats amounts with
   // "Rs." instead. Everywhere else on the page keeps the ₹ symbol.
@@ -385,6 +417,9 @@
   const PUBLIC_OFFER_THRESHOLD = 10000;
   const PUBLIC_OFFER_PCT = 10;
   const PUBLIC_OFFER_CODE = "SAVE10";
+  // Ceiling on the team's own manual discount field — separate from
+  // the public auto-offer above, and with no minimum order value.
+  const TEAM_MAX_DISCOUNT_PCT = 15;
 
   /* ----------------------------------------------------------
      2. SHARED APPLICATION STATE
@@ -559,18 +594,15 @@
       // something to respect.
       discountType = "pct";
       rawDiscountValue = subtotal >= PUBLIC_OFFER_THRESHOLD ? PUBLIC_OFFER_PCT : 0;
-    } else if (subtotal < PUBLIC_OFFER_THRESHOLD) {
-      // Team discount is capped the same way the public auto-offer is:
-      // up to 10%, and only on orders that already clear the ₹10,000
-      // minimum. Below that, no discount applies regardless of what's
-      // sitting in the input.
-      rawDiscountValue = 0;
     }
+    // Team's own manual discount — independent of the public auto-offer
+    // above — is capped at TEAM_MAX_DISCOUNT_PCT, with no minimum order
+    // value attached (unlike the public coupon).
     const discountValue =
       discountType === "pct"
-        ? Math.min(isInternal() ? PUBLIC_OFFER_PCT : 100, rawDiscountValue)
+        ? Math.min(isInternal() ? TEAM_MAX_DISCOUNT_PCT : 100, rawDiscountValue)
         : isInternal()
-        ? Math.min(subtotal * (PUBLIC_OFFER_PCT / 100), rawDiscountValue)
+        ? Math.min(subtotal * (TEAM_MAX_DISCOUNT_PCT / 100), rawDiscountValue)
         : rawDiscountValue;
     const discountAmt =
       discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
@@ -1082,16 +1114,16 @@
     const qDiscountInputEl = document.getElementById("qDiscountInput");
     if (qDiscountInputEl) {
       qDiscountInputEl.value = state.discountValue;
-      qDiscountInputEl.max = cart.discountType === "pct" ? PUBLIC_OFFER_PCT : "";
+      qDiscountInputEl.max = cart.discountType === "pct" ? TEAM_MAX_DISCOUNT_PCT : "";
     }
     document.querySelectorAll("#discountTypeToggle .unit-toggle-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.type === cart.discountType);
     });
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
     document.getElementById("qDiscountLabel").textContent = discountLabel(cart);
-    document.getElementById("qDiscountAmt").textContent = "− " + fmtINR(cart.discountAmt);
+    animateMoneyText(document.getElementById("qDiscountAmt"), cart.discountAmt, "− ");
     document.getElementById("qGstAmt").textContent = cart.gstEnabled ? "+ " + fmtINR(cart.gstAmt) : "Not applied";
-    document.getElementById("qFinal").textContent = fmtINR(cart.final);
+    animateMoneyText(document.getElementById("qFinal"), cart.final);
 
     const discountActive = cart.discountAmt > 0;
     document.getElementById("discountRow").classList.toggle("is-active", discountActive);
@@ -1722,10 +1754,32 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // block is skipped there rather than throwing on missing elements.
   const qDiscountInput = document.getElementById("qDiscountInput");
   if (qDiscountInput) {
+    const discountLimitPopup = document.getElementById("discountLimitPopup");
+    let discountPopupTimer = null;
+    function flashDiscountLimitPopup() {
+      if (!discountLimitPopup) return;
+      discountLimitPopup.classList.add("show");
+      clearTimeout(discountPopupTimer);
+      discountPopupTimer = setTimeout(() => discountLimitPopup.classList.remove("show"), 2600);
+    }
+
     qDiscountInput.addEventListener("input", () => {
       let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
-      if (state.discountType === "pct") v = Math.min(PUBLIC_OFFER_PCT, v);
+      let exceeded = false;
+      if (state.discountType === "pct") {
+        if (v > TEAM_MAX_DISCOUNT_PCT) {
+          v = TEAM_MAX_DISCOUNT_PCT;
+          exceeded = true;
+        }
+      } else {
+        const cap = computeCart().subtotal * (TEAM_MAX_DISCOUNT_PCT / 100);
+        if (v > cap) {
+          v = cap;
+          exceeded = true;
+        }
+      }
       state.discountValue = v;
+      if (exceeded) flashDiscountLimitPopup();
       renderCart();
       renderMessages();
     });
