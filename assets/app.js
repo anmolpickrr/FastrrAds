@@ -3126,11 +3126,23 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // what's on screen (plus the initial-load stagger), while still
     // letting every real clip play as it comes into view, not just a
     // fixed handful.
+    // Same package-tier tag the main showcase cards carry (Starter/
+    // Standard/Popular/Premium for Reels, Standard/Premium for
+    // Catalogue) — without it this row mixes every tier back-to-back
+    // with no way to tell which clip belongs to which, reading as
+    // randomly out of order even though it's really just every tier
+    // playing in the same loop.
+    function tierTagHTML(item) {
+      const band = item.band && BAND_LABEL[item.band];
+      return band ? `<span class="wc-band-pill ${band.cls}">${band.icon}${band.label}</span>` : "";
+    }
+
     function videoTileHTML(item) {
+      const tag = tierTagHTML(item);
       if (item.video) {
-        return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
+        return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>${tag}`;
       }
-      return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
+      return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">${tag}`;
     }
 
     function rowHTML(items, dir, dur, tileClass, mediaFn) {
