@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-241" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-241" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-241" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-241" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-241" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-241" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-241" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-241" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-241" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-241" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-241" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-241" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-242" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-242" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-242" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-242" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-242" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-242" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-242" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-242" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-242" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-242" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-242" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-242" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1479,20 +1479,22 @@ html.is-internal .oc-offer{display:none !important;}
    it's reachable without a mouse too. Signed-out state never shows
    this menu at all — the trigger just opens the sign-in popup then. */
 .team-profile{position:relative;}
-/* Signed-in styling only — signed-out keeps the plain ghost-button
-   look (nothing to imply an account menu when there isn't one yet).
-   Signed-in drops the outlined "ghost button" pill entirely — a
-   gradient-filled avatar plus name, transparent until hovered, reads
-   as a native app account switcher rather than a bordered form
-   control. The avatar bubble shows the display name's first letter
-   via a data attribute (set in team.js) so the button stays a single
-   element with a dynamic label, rather than needing an innerHTML
-   rebuild. */
-.team-profile-trigger[data-signed-in="1"]{
-  display:inline-flex; align-items:center; gap:9px; border-color:transparent; background:transparent; box-shadow:none;
-  padding:6px 10px 6px 6px !important; transition:background .18s ease, border-color .18s ease, box-shadow .18s ease;
+/* One compact icon button either way, matching .theme-toggle's size
+   and treatment, instead of a wordy "Team Sign In" pill: signed-out
+   shows a plain sign-in glyph, signed-in swaps it for a small
+   gradient avatar (the display name's first letter, via a data
+   attribute set in team.js) plus a tiny open/close chevron. Full name
+   and email still show in the dropdown header, where there's room. */
+.team-profile-trigger{
+  width:34px; height:34px; padding:0 !important; border-radius:50%; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center; gap:0;
+  background:transparent; border:none; color:var(--text-2); box-shadow:none;
+  transition:background .18s ease, color .18s ease;
 }
-.team-profile-trigger[data-signed-in="1"]:hover{background:var(--surface-hover); border-color:var(--line-soft); box-shadow:none;}
+.team-profile-trigger:hover{background:var(--surface-hover); color:var(--text-0);}
+.team-nav-signin-icon{width:17px; height:17px;}
+.team-profile-trigger[data-signed-in="1"] .team-nav-signin-icon{display:none;}
+.team-profile-trigger[data-signed-in="1"]{width:auto; gap:1px; padding:3px 7px 3px 3px !important;}
 .team-profile-trigger[data-signed-in="1"]::before{
   content:attr(data-initial); display:flex; align-items:center; justify-content:center; flex:0 0 auto;
   width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, var(--violet), var(--teal));
@@ -2705,8 +2707,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-241" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-241" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-242" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-242" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3537,8 +3539,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-241" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-241" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-242" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-242" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3714,7 +3716,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-241"></script>
-<script src="assets/app.js?v=20260811-241"></script>
+<script src="assets/creative-data.js?v=20260811-242"></script>
+<script src="assets/app.js?v=20260811-242"></script>
 </body>
 </html>
