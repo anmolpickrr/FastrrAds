@@ -168,7 +168,6 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
 
   if (isInternal()) {
     wrap.style.display = "";
-    trigger.textContent = "Team Sign In";
   }
 
   function closeMenu() {
@@ -207,11 +206,7 @@ function initProfileMenu(authModal, orderHistoryModal, getAuthApi) {
   return {
     setSignedIn(signedIn, label, email) {
       trigger.dataset.signedIn = signedIn ? "1" : "0";
-      // The nav trigger stays concise (first name only) since it's
-      // competing for space with the rest of the nav bar — the full
-      // name still shows in the dropdown header, where there's room.
-      const firstName = (label || "").trim().split(/\s+/)[0];
-      trigger.textContent = signedIn ? firstName || label : "Team Sign In";
+      trigger.setAttribute("aria-label", signedIn ? `Account: ${label || "Team member"}` : "Team sign in");
       const initial = (label || "?").trim().charAt(0).toUpperCase();
       if (signedIn) trigger.dataset.initial = initial;
       if (menu) menu.hidden = !signedIn;
