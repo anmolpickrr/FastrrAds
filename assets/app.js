@@ -3133,6 +3133,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   (function initProcessSwitcher() {
     const root = document.getElementById("processSwitcher");
     if (!root) return;
+    const tabsWrap = document.getElementById("processTabs");
+    const indicator = document.getElementById("processTabIndicator");
     const tabs = Array.from(root.querySelectorAll(".process-tab"));
     const panels = Array.from(root.querySelectorAll(".process-panel"));
     if (!tabs.length || !panels.length) return;
@@ -3140,6 +3142,24 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const ADVANCE_MS = 4500;
     let active = 0;
     let timer = null;
+
+    // Slides/resizes the shared indicator pill to sit exactly behind
+    // the active tab, measured live so the same code works for the
+    // vertical desktop list and the horizontal mobile strip (the
+    // layout itself flips via a media query; this just follows it).
+    // offsetLeft/offsetTop (relative to tabsWrap, its offsetParent),
+    // not getBoundingClientRect, on purpose — the mobile strip
+    // scrolls horizontally, and a click can trigger the browser's own
+    // scroll-into-view before this runs; viewport-relative rects would
+    // then be measured against a stale scroll position, offsetting the
+    // indicator. offsetLeft/Top are scroll-independent.
+    function positionIndicator() {
+      if (!indicator || !tabsWrap) return;
+      const tab = tabs[active];
+      indicator.style.width = tab.offsetWidth + "px";
+      indicator.style.height = tab.offsetHeight + "px";
+      indicator.style.transform = `translate(${tab.offsetLeft}px, ${tab.offsetTop}px)`;
+    }
 
     function show(index) {
       active = ((index % tabs.length) + tabs.length) % tabs.length;
@@ -3153,6 +3173,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         if (!bar) return;
         bar.classList.remove("running");
       });
+      positionIndicator();
       if (!prefersReducedMotion) {
         const activeBar = tabs[active].querySelector(".process-tab-progress");
         if (activeBar) {
@@ -3182,6 +3203,18 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     root.addEventListener("mouseleave", startAuto);
     root.addEventListener("focusin", stopAuto);
     root.addEventListener("focusout", startAuto);
+
+    // The vertical/horizontal layout swap at 820px (and any other
+    // viewport change) moves every tab's position, so the indicator
+    // has to re-measure rather than keep its last transform.
+    let resizeRaf = null;
+    window.addEventListener("resize", () => {
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = null;
+        positionIndicator();
+      });
+    });
 
     show(0);
     startAuto();
