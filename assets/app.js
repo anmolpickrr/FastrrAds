@@ -3137,12 +3137,31 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       return band ? `<span class="wc-band-pill ${band.cls}">${band.icon}${band.label}</span>` : "";
     }
 
+    // No tier tag in this decorative strip — it's a fast-moving
+    // background element, not a browsable list, and a pill flashing by
+    // on each tiny tile just added clutter. The tier tag stays on the
+    // main showcase cards below, where it's actually useful.
     function videoTileHTML(item) {
-      const tag = tierTagHTML(item);
       if (item.video) {
-        return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>${tag}`;
+        return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
       }
-      return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">${tag}`;
+      return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
+    }
+
+    // Duration is derived from each row's actual content width instead
+    // of a fixed number of seconds, so both rows travel at the same
+    // px/sec pace regardless of how many items either one holds — a
+    // fixed duration meant the video row (which grows every time new
+    // reel/catalogue videos are uploaded) kept getting visibly faster
+    // than the static row as its tile count grew. Reference tile
+    // widths match the desktop CSS (.tile-video/.tile-static + the
+    // track's 14px gap); mobile's own widths scale both tiles by the
+    // same factor, so the ratio — and therefore the matched speed —
+    // holds there too.
+    const FILMSTRIP_PX_PER_SEC = 34;
+    function rowDuration(itemCount, tileW) {
+      const px = (tileW + 14) * itemCount;
+      return Math.max(20, px / FILMSTRIP_PX_PER_SEC);
     }
 
     function rowHTML(items, dir, dur, tileClass, mediaFn) {
@@ -3155,8 +3174,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
 
     wrap.innerHTML =
-      rowHTML(rowA, "left", 48, "tile-video", videoTileHTML) +
-      rowHTML(rowB, "right", 60, "tile-static", (item) => `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`);
+      rowHTML(rowA, "left", rowDuration(rowA.length, 118), "tile-video", videoTileHTML) +
+      rowHTML(rowB, "right", rowDuration(rowB.length, 168), "tile-static", (item) => `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`);
 
     // Lazy-start real video tiles only once horizontally visible
     // within the filmstrip — keeps far more than a couple of the
