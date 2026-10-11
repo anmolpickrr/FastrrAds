@@ -409,7 +409,7 @@ function initOrderConfirmModal(authModal, getAuthApi, getOrderApi, onSignedInPen
     editBanner = document.createElement("div");
     editBanner.className = "edit-order-banner";
     editBanner.innerHTML =
-      `<p>Editing order <b>${escapeHtml(order.orderNumber || "")}</b> for <b>${escapeHtml(order.client || "this client")}</b> — adjust the creatives below, then click "Update Order" to save your changes.</p>` +
+      `<p>Editing order <b>${escapeHtml(order.orderNumber || "")}</b> for <b>${escapeHtml(order.client || "this client")}</b>. Adjust the creatives below, then click "Update Order" to save your changes.</p>` +
       `<button type="button" class="btn btn-ghost">Cancel edit</button>`;
     editBanner.querySelector("button").addEventListener("click", cancelEdit);
     builderEl.parentNode.insertBefore(editBanner, builderEl);

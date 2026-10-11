@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-233" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-233" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-233" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-233" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-233" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-233" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-233" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-233" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-233" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-233" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-233" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-233" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-235" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-235" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-235" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-235" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-235" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-235" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-235" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-235" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-235" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-235" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-235" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-235" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -164,8 +164,9 @@ img{max-width:100%; display:block;}
 @media (max-width:720px){.wrap{padding:0 18px;}}
 .eyebrow{
   font-family:var(--font-mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
-  color:var(--violet); display:inline-flex; align-items:center; gap:8px;
+  color:var(--violet); display:inline-flex; flex-direction:column; align-items:flex-start; gap:6px;
 }
+.eyebrow::after{content:''; width:28px; height:1.5px; background:linear-gradient(90deg, var(--violet), transparent); border-radius:2px;}
 .glass{
   background:var(--glass); border:1px solid var(--line); border-radius:var(--radius);
   backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
@@ -376,8 +377,16 @@ footer .brand-logo{height:24px;}
 }
 
 .marquee-strip{position:relative; z-index:2; overflow:hidden; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); padding:14px 0;}
-.marquee-track{display:flex; gap:44px; white-space:nowrap; animation:marquee 70s linear infinite; width:max-content;}
-.marquee-track span{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
+.marquee-track{display:flex; align-items:center; gap:14px; white-space:nowrap; animation:marquee 70s linear infinite; width:max-content;}
+/* Odd children are the service-name labels, even are the "·" separators
+   between them — styling labels as small pill chips (vs. plain running
+   text) gives the ribbon some texture without changing the scroll
+   mechanics or the markup's repeat-group structure. */
+.marquee-track span:nth-child(odd){
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-1);
+  border:1px solid var(--line); border-radius:999px; padding:6px 14px; background:var(--surface-1);
+}
+.marquee-track span:nth-child(even){color:var(--violet); font-size:12px;}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* No panel background of its own — same treatment as .marquee-strip right
@@ -1054,14 +1063,26 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    ("Writer + Editor + Creative Director + custom music" etc.). A
    taller row from wrapped text is preferable to text nobody can read
    without scrolling sideways inside an already-open modal. */
-.compare-wrap{overflow-x:auto; margin-top:16px;}
+.compare-wrap{overflow-x:auto; margin-top:16px; border-radius:14px; border:1px solid var(--line-soft); padding:4px 10px;}
 table.compare-table{width:100%; border-collapse:collapse; font-size:12px; table-layout:fixed;}
-table.compare-table th,table.compare-table td{padding:10px 8px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:normal; line-height:1.4; word-break:break-word;}
-table.compare-table th:first-child,table.compare-table td:first-child{padding-left:0; width:17%;}
+table.compare-table th,table.compare-table td{padding:11px 8px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:normal; line-height:1.4; word-break:break-word;}
+table.compare-table th:first-child,table.compare-table td:first-child{padding-left:2px; width:17%; color:var(--text-2); font-weight:600;}
 table.compare-table tbody tr:last-child td{border-bottom:none;}
-table.compare-table tbody tr:hover td{background:var(--surface-1);}
-table.compare-table thead th{color:var(--text-2); font-weight:600; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; border-bottom:2px solid var(--line);}
+table.compare-table tbody tr:nth-child(even) td{background:var(--surface-1);}
+table.compare-table tbody tr:hover td{background:var(--surface-hover, var(--surface-2));}
+table.compare-table thead th{color:var(--text-2); font-weight:600; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; border-bottom:2px solid var(--line); padding-top:14px; padding-bottom:14px;}
 table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet);}
+/* Director's Cut is the called-out "Popular" tier everywhere else on
+   the page (tier chip, pkg-card deck) — giving its whole column a
+   standing tint plus a highlighted header, not just a text-color badge,
+   carries that same signal into the comparison table so the eye lands
+   on it by default instead of reading 4 equally-weighted columns. */
+table.compare-table [data-tier-col="3"]{background:color-mix(in srgb, var(--violet) 7%, transparent); position:relative;}
+table.compare-table thead th[data-tier-col="3"]{background:color-mix(in srgb, var(--violet) 12%, transparent); border-radius:10px 10px 0 0;}
+table.compare-table tbody tr:last-child td[data-tier-col="3"]{border-radius:0 0 10px 10px;}
+table.compare-table td.ct-rec[data-tier-col="3"], table.compare-table th.ct-rec[data-tier-col="3"]{background:var(--violet-soft);}
+table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct-price-row td{font-size:14px; font-weight:700; color:var(--text-0);}
+table.compare-table tr.ct-price-row td[data-tier-col="3"]{color:var(--violet);}
 
 /* ---------- GOOD TO KNOW / RULES ----------
    Purely general, cross-cutting terms — deliberately NOT scoped to
@@ -1120,69 +1141,60 @@ table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet)
 table.compare-table td.ct-rec, table.compare-table th.ct-rec{background:var(--violet-soft);}
 table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
 .ct-add-btn{
-  padding:6px 14px; border-radius:8px; border:1px solid var(--violet); background:transparent;
-  font-size:12px; font-weight:600; color:var(--violet); transition:background .2s ease, color .2s ease;
+  padding:7px 16px; border-radius:8px; border:1px solid var(--violet); background:transparent;
+  font-size:12px; font-weight:700; color:var(--violet); transition:background .2s ease, color .2s ease, transform .2s ease;
 }
-.ct-add-btn:hover{background:var(--violet); color:var(--btn-ink);}
+.ct-add-btn:hover{background:var(--violet); color:var(--btn-ink); transform:translateY(-1px);}
+.ct-add-btn:active{transform:translateY(0);}
+/* The Popular column's add button gets the same filled treatment the
+   tier chip itself uses for its active state, so the one tier the
+   table is quietly steering people toward also has the one button
+   that doesn't need a second look to register as "the pick." */
+table.compare-table td[data-tier-col="3"] .ct-add-btn{background:var(--violet); color:var(--btn-ink); border-color:var(--violet);}
+table.compare-table td[data-tier-col="3"] .ct-add-btn:hover{background:var(--violet-strong, var(--violet)); filter:brightness(1.08);}
 
-/* ---------- HOW WE WORK (storyboard reel) ----------
-   A creative agency sells a process by making it feel handmade, so this
-   reads as a strip of storyboard cards pinned up on a wall rather than
-   a corporate flowchart: each card sits at a slight, alternating tilt
-   (--rot, set inline per card), has a clapperboard-style "slate" tag
-   standing in for the step number, and a row of film-sprocket dots
-   along its top edge. A dashed reel line threads behind the cards and
-   draws itself in on scroll. Hovering a card lifts it and straightens
-   the tilt, like picking a photo up off the pinboard to look closer.
-   Below 980px there's no pinboard to tilt against, so cards go upright
-   in a single column, sprockets and tilt both dropped. */
+/* ---------- HOW WE WORK (process pills) ----------
+   Rounded pill cards in a loose wrapping row, each keyed to its own
+   accent (cycling sky/teal/violet/gold) that only shows up on hover: a
+   soft colored glow blooms behind the card and the border picks up the
+   accent, like a tile lighting up as you land on it, rather than every
+   step shouting for attention at once. The step count reads as a
+   plain mono "/01/" numeral above the title, not a separate badge
+   element, keeping the card itself quiet until you interact with it. */
 .process-rail{
-  position:relative; display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-top:34px; padding:6px 4px 4px;
+  position:relative; display:flex; flex-wrap:wrap; gap:12px; margin-top:28px;
 }
-.process-rail::before{
-  content:''; position:absolute; top:52px; left:3%; right:3%; border-top:2px dashed color-mix(in srgb, var(--text-2) 45%, transparent);
-  transform-origin:left center; transform:scaleX(0); transition:transform 1.1s cubic-bezier(.16,1,.3,1) .1s;
-}
-.process-rail.revealed::before{transform:scaleX(1);}
-@media (prefers-reduced-motion: reduce){.process-rail::before{transition:none; transform:scaleX(1);}}
 .process-step{
-  position:relative; z-index:1; display:flex; flex-direction:column; gap:9px;
-  background:var(--surface-1); border:1px solid var(--line); border-radius:12px; padding:20px 15px 18px;
-  box-shadow:0 14px 28px -20px rgba(0,0,0,.4);
-  opacity:0; transform:rotate(var(--rot)) translateY(22px);
-  transition:opacity .55s var(--ease), transform .45s var(--ease), box-shadow .3s ease;
-  transition-delay:calc(var(--i, 0) * .1s + .1s);
+  position:relative; flex:1 1 220px; display:flex; flex-direction:column; gap:8px;
+  background:var(--surface-1); border:1px solid var(--line); border-radius:20px; padding:22px 20px 20px;
+  opacity:0; transform:translateY(18px);
+  transition:opacity .5s var(--ease), transform .5s var(--ease), border-color .3s ease, box-shadow .3s ease, background .3s ease;
+  transition-delay:calc(var(--i, 0) * .09s + .1s);
 }
-.process-rail.revealed .process-step{opacity:1; transform:rotate(var(--rot)) translateY(0);}
-.process-step:hover{transform:rotate(0deg) translateY(-7px) scale(1.04); box-shadow:0 20px 34px -18px var(--accent); z-index:3;}
+.process-rail.revealed .process-step{opacity:1; transform:translateY(0);}
+.process-step:hover{
+  border-color:color-mix(in srgb, var(--accent) 55%, var(--line));
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), 0 16px 40px -14px var(--accent);
+  background:color-mix(in srgb, var(--accent) 6%, var(--surface-1));
+}
 @media (prefers-reduced-motion: reduce){.process-step{opacity:1; transform:none; transition:none;}}
-.process-step::after{
-  content:''; position:absolute; top:7px; left:16px; right:16px; height:4px;
-  background-image:radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent) 1.4px, transparent 1.6px);
-  background-size:9px 4px; background-repeat:repeat-x;
-}
-.process-step-slate{
-  align-self:flex-start; display:inline-flex; align-items:center; font-family:var(--font-mono); font-weight:800;
-  font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:#fff; background:var(--accent);
-  padding:3px 8px; border-radius:5px; transform:rotate(-2deg); margin-top:6px;
+.process-step-num{
+  font-family:var(--font-mono); font-weight:700; font-size:12px; letter-spacing:.02em;
+  color:var(--accent); transition:color .3s ease;
 }
 .process-step-icon{
   width:34px; height:34px; border-radius:9px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
   background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent);
-  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); margin-top:2px;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
 }
 .process-step-icon svg{width:17px; height:17px;}
-.process-step:hover .process-step-icon{transform:scale(1.1) rotate(-6deg); box-shadow:0 8px 20px -8px var(--accent);}
+.process-step:hover .process-step-icon{transform:scale(1.1) rotate(-6deg);}
 .process-step h3{font-size:15px; font-weight:700; letter-spacing:-0.01em;}
 .process-step p{font-size:12.5px; color:var(--text-1); line-height:1.55;}
 @media (max-width:980px){
-  .process-rail{display:flex; flex-direction:column; gap:16px; padding:0;}
-  .process-rail::before{display:none;}
-  .process-step{transform:none !important; box-shadow:0 10px 20px -16px rgba(0,0,0,.35);}
-  .process-step:hover{transform:translateY(-3px) !important;}
-  .process-step::after{display:none;}
-  .process-step-slate{transform:none;}
+  .process-rail{flex-direction:column;}
+  .process-step{flex-basis:auto;}
 }
 
 /* ---------- ORDER BUILDER / CALCULATOR ----------
@@ -1621,7 +1633,9 @@ html.is-internal .oc-offer{display:none !important;}
    the number) so a 1-digit vs 2-digit quantity can't shift where
    price/remove sit from row to row — each .cart-item is its own grid
    context, so column widths aren't otherwise shared across rows. */
-.cart-item{display:grid; grid-template-columns:1fr 78px 96px 40px; align-items:start; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft);}
+.cart-item{display:grid; grid-template-columns:1fr 78px 96px 40px; align-items:start; gap:16px; padding:13px 0; border-bottom:1px solid var(--line-soft); border-radius:8px; transition:background .3s ease;}
+.cart-item.flash{animation:cartItemFlash 1s ease;}
+@keyframes cartItemFlash{0%{background:color-mix(in srgb, var(--violet) 22%, transparent);}100%{background:transparent;}}
 .cart-item-info{min-width:0;}
 .cart-item-name{font-weight:700; font-size:14px; letter-spacing:-0.005em;}
 .cart-item-facts{
@@ -1683,7 +1697,8 @@ html.is-internal .oc-offer{display:none !important;}
   display:flex; align-items:center; justify-content:space-between; gap:16px;
   padding:12px 0; margin-bottom:2px; border-bottom:1px solid var(--line-soft);
 }
-.discount-standalone > span:first-child{color:var(--text-0); font-size:14px; font-weight:600;}
+.discount-standalone > span:first-child{color:var(--text-0); font-size:14px; font-weight:600; display:flex; flex-direction:column; gap:2px;}
+.discount-cap-note{font-size:11px; font-weight:500; color:var(--text-2); letter-spacing:0;}
 .discount-standalone .unit-toggle-btn{font-size:13px; padding:4px 9px;}
 .discount-standalone .summary-input{width:60px; font-size:15px; font-weight:700; text-align:right; padding:6px 8px;}
 .gst-switch-state{display:inline-block; margin-left:8px; font-style:normal; font-size:11px; font-weight:600; padding:3px 8px; border-radius:100px; background:var(--surface-2); color:var(--text-2); vertical-align:middle;}
@@ -1863,12 +1878,14 @@ html.is-internal .oc-offer{display:none !important;}
 .msg-card-head{display:flex; align-items:center; justify-content:space-between; gap:10px;}
 .msg-card-head h4{margin-bottom:0;}
 .pdf-btn{
-  flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 13px; margin-bottom:14px; border-radius:100px; border:1px solid var(--line);
-  background:var(--surface-1); color:var(--text-1); font-size:12px; font-weight:600;
-  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+  flex:0 0 auto; display:flex; align-items:center; gap:7px; padding:8px 15px; margin-bottom:14px; border-radius:100px;
+  border:1px solid color-mix(in srgb, var(--violet) 40%, var(--line)); background:var(--violet-soft); color:var(--violet);
+  font-size:12px; font-weight:700; box-shadow:var(--shadow-sm);
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
-.pdf-btn:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--violet); transform:translateY(-1px);}
-.pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none;}
+.pdf-btn:hover{background:var(--violet); border-color:var(--violet); color:var(--btn-ink); transform:translateY(-1px); box-shadow:0 10px 22px -10px color-mix(in srgb, var(--violet) 60%, transparent);}
+.pdf-btn:active{transform:translateY(0);}
+.pdf-btn:disabled{opacity:.6; cursor:default; transform:none; pointer-events:none; box-shadow:none;}
 .msg-inputs{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
 /* Preview frame — a hairline gradient border and a quiet status bar,
    not a fill: the first pass drenched the whole message in a
@@ -2152,17 +2169,20 @@ html[data-theme="dark"] .wa-input-pill{background:#2a3942; color:#8696a0;}
 }
 .wa-float-left{left:clamp(0px, 3vw, 36px);}
 .wa-float-right{right:clamp(0px, 3vw, 36px);}
-@media (min-width:1180px){.wa-float{display:flex;}}
+@media (min-width:980px){.wa-float{display:flex;}}
 .wa-float-item{
   display:flex; align-items:center; gap:10px; padding:10px 13px; border-radius:14px;
   background:var(--glass-strong); border:1px solid var(--line); box-shadow:var(--shadow-md), var(--inset-hi);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-  opacity:0; animation:waFloatBlink 12s ease-in-out infinite; animation-delay:var(--wa-float-delay, 0s);
+  opacity:.22; animation:waFloatBlink 12s ease-in-out infinite; animation-delay:var(--wa-float-delay, 0s);
 }
+/* Dips to a dim resting state instead of fully invisible, so whatever
+   moment a screen happens to render on, there's always some texture
+   beside the window rather than a stretch of flat empty stage. */
 @keyframes waFloatBlink{
-  0%, 100% { opacity:0; transform:translateY(6px) scale(.96); }
+  0%, 100% { opacity:.22; transform:translateY(6px) scale(.96); }
   8%, 25% { opacity:1; transform:translateY(0) scale(1); }
-  35% { opacity:0; transform:translateY(-6px) scale(.96); }
+  35% { opacity:.22; transform:translateY(-6px) scale(.96); }
 }
 .wa-float-avatar{
   width:28px; height:28px; border-radius:9px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
@@ -2178,6 +2198,19 @@ html[data-theme="dark"] .wa-input-pill{background:#2a3942; color:#8696a0;}
 .wa-float-text b{font-size:11.5px; font-weight:700; color:var(--text-1); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .wa-float-text span{font-size:12px; color:var(--text-0); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 @media (prefers-reduced-motion: reduce){.wa-float-item{animation:none; opacity:.85;}}
+
+.testi-trust-strip{
+  position:relative; z-index:1; display:flex; flex-wrap:wrap; justify-content:center; gap:12px;
+  max-width:780px; margin:32px auto 0;
+}
+.testi-trust-chip{
+  display:flex; align-items:center; gap:10px; padding:10px 16px 10px 10px; border-radius:100px;
+  background:var(--glass-strong); border:1px solid var(--line); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  font-size:12.5px; color:var(--text-1); line-height:1.3;
+}
+.testi-trust-chip b{color:var(--text-0); font-weight:700; white-space:nowrap;}
+.testi-trust-chip .wa-float-avatar{width:26px; height:26px; border-radius:50%; font-size:11px; font-weight:700;}
+@media (max-width:640px){.testi-trust-strip{flex-direction:column; align-items:stretch;} .testi-trust-chip{border-radius:14px;}}
 
 /* ---------- FOOTER ----------
    Three movements instead of one flat link block: a CTA that gives the
@@ -2648,8 +2681,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-233" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-233" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2675,7 +2708,7 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="hero-stage" id="heroStage">
       <div class="hero-head">
-                <span class="eyebrow">● Fastrr Ads — Live Creative Portfolio</span>
+                <span class="eyebrow">● Fastrr Ads · Live Creative Portfolio</span>
                         <h1 class="hero-title">
           <span class="word" style="--w:0"><span>Real</span></span> <span class="word" style="--w:1"><span>AI</span></span> <span class="word" style="--w:2"><span>creative</span></span><br>
           <span class="word" style="--w:3"><span>that</span></span> <span class="word" style="--w:4"><span class="accent">grows</span></span> <span class="word" style="--w:5"><span class="accent">your</span></span> <span class="word" style="--w:6"><span class="accent">brand.</span></span>
@@ -2717,7 +2750,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="showcase" style="padding-bottom:0">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">01 — Creative Showcase</span>
+      <span class="eyebrow">01 · Creative Showcase</span>
       <h2>Real work.<br>Not mockups.</h2>
       <p>Every thumbnail below is a delivered Fastrr creative. Browse by category, preview carousels inline, and click any card to open the full viewer.</p>
       <p class="showcase-tier-note">AI Reel examples are grouped by style, not a tier record. Compare the 4 packages below to see what each one actually includes.</p>
@@ -2776,7 +2809,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="services" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">02 — Services &amp; Package Scope</span>
+      <span class="eyebrow">02 · Services &amp; Package Scope</span>
       <h2>Pick a service.<br>See the exact scope.</h2>
       <p>Pick a package below to see exactly what's included: price, deliverables, and delivery timeline, all in one place.</p>
     </div>
@@ -2905,7 +2938,7 @@ footer{padding:64px 0 0; margin-top:40px;}
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr class="ct-price-row">
                       <td>Price</td>
                       <td data-tier-col="1">₹2,500</td>
                       <td data-tier-col="2">₹3,500</td>
@@ -2921,10 +2954,10 @@ footer{padding:64px 0 0; margin-top:40px;}
                     </tr>
                     <tr>
                       <td>Production quality</td>
-                      <td data-tier-col="1">Basic — straightforward cuts, standard transitions</td>
-                      <td data-tier-col="2">Enhanced — smoother pacing, improved transitions, added detailing</td>
-                      <td data-tier-col="3">Premium — cinematic pacing, advanced transitions, richer detailing</td>
-                      <td data-tier-col="4">Highest — cinematic transitions, advanced detailing, most polished</td>
+                      <td data-tier-col="1">Basic: straightforward cuts, standard transitions</td>
+                      <td data-tier-col="2">Enhanced: smoother pacing, improved transitions, added detailing</td>
+                      <td data-tier-col="3">Premium: cinematic pacing, advanced transitions, richer detailing</td>
+                      <td data-tier-col="4">Highest: cinematic transitions, advanced detailing, most polished</td>
                     </tr>
                     <tr>
                       <td>Script / hook approval</td>
@@ -2969,37 +3002,37 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="process">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">03 — How We Work</span>
+      <span class="eyebrow">03 · How We Work</span>
       <h2>From brief.<br>To finished creative.</h2>
       <p>Five steps, start to finish: here's what happens between the brief you send us and the file landing in your drive.</p>
     </div>
     <div class="process-rail reveal-on-scroll" id="processRail">
-      <div class="process-step" style="--i:0; --accent:var(--sky); --rot:-2.5deg;">
-        <span class="process-step-slate">Step 01</span>
+      <div class="process-step" style="--i:0; --accent:var(--sky);">
+        <span class="process-step-num">/01/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
         <h3>Share your brief</h3>
         <p>Tell us about the brand, the product, and what the creative needs to say. One brief covers the whole order.</p>
       </div>
-      <div class="process-step" style="--i:1; --accent:var(--teal); --rot:1.8deg;">
-        <span class="process-step-slate">Step 02</span>
+      <div class="process-step" style="--i:1; --accent:var(--teal);">
+        <span class="process-step-num">/02/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 10 2 2 4-4"/></svg></span>
         <h3>Script &amp; direction</h3>
         <p>Story Cut and up get the script to approve first. Director's Cut and Studio Cut also get two hook options to pick from.</p>
       </div>
-      <div class="process-step" style="--i:2; --accent:var(--violet); --rot:-1.5deg;">
-        <span class="process-step-slate">Step 03</span>
+      <div class="process-step" style="--i:2; --accent:var(--violet);">
+        <span class="process-step-num">/03/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18 9l-4.1 1.4L12 15l-1.9-4.6L6 9l4.1-1.4L12 3Z"/><path d="M19 15.5 19.8 17.5 22 18.3 19.8 19.1 19 21.1 18.2 19.1 16 18.3 18.2 17.5 19 15.5Z"/></svg></span>
         <h3>Production</h3>
         <p>We build it: AI voiceover, editing, and transitions, with a Content Writer and Creative Director on anything Director's Cut or above.</p>
       </div>
-      <div class="process-step" style="--i:3; --accent:var(--gold); --rot:2.2deg;">
-        <span class="process-step-slate">Step 04</span>
+      <div class="process-step" style="--i:3; --accent:var(--gold);">
+        <span class="process-step-num">/04/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <h3>Review &amp; revise</h3>
         <p>Every package comes with revision rounds, so if something needs tightening up, we fix it before it's final.</p>
       </div>
-      <div class="process-step" style="--i:4; --accent:var(--sky); --rot:-2deg;">
-        <span class="process-step-slate">Step 05</span>
+      <div class="process-step" style="--i:4; --accent:var(--sky);">
+        <span class="process-step-num">/05/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
         <h3>Delivery</h3>
         <p>The finished file lands in your shared drive. Turnaround depends on the package, and it's always shown upfront.</p>
@@ -3011,7 +3044,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="quote" style="padding-top:0;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-            <span class="eyebrow">04 — Quote &amp; Price Calculator</span>
+            <span class="eyebrow">04 · Quote &amp; Price Calculator</span>
       <h2>Add your creatives.<br>Watch the price update live.</h2>
       <p>Add every creative type you need, with a quantity for each, and a cut too if it's an AI Reel. Your total updates live as you build.</p>
                 </div>
@@ -3090,7 +3123,7 @@ footer{padding:64px 0 0; margin-top:40px;}
           </div>
 
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
-          <p class="order-tat-note">Turnaround shown per item above is for a single creative — bulk orders or multiple creative types may take longer depending on quantity, creative type, cut, and complexity.</p>
+          <p class="order-tat-note">Turnaround shown per item above is for a single creative. Bulk orders or multiple creative types may take longer depending on quantity, creative type, cut, and complexity.</p>
         </div>
 
         <div class="lead-cta">
@@ -3111,7 +3144,7 @@ footer{padding:64px 0 0; margin-top:40px;}
 <section class="section" id="testimonials" style="padding-bottom:16px;">
   <div class="wrap">
     <div class="section-head reveal-on-scroll">
-      <span class="eyebrow">05 — What Brands Say</span>
+      <span class="eyebrow">05 · What Brands Say</span>
       <h2>Loved by brands.<br>Built to perform.</h2>
       <p>Straight from client chats, unedited.</p>
     </div>
@@ -3414,6 +3447,28 @@ footer{padding:64px 0 0; margin-top:40px;}
         </div>
        </div>
       </div>
+
+      <!-- Always-on complement to the .wa-float pop-ups: those are
+           animated and hidden below 1180px, so without something else
+           in the frame the stage reads as "one small window floating
+           in a lot of empty dark space" on anything but a wide desktop
+           (the exact complaint this was built against). This strip is
+           static, needs no animation timing or viewport width to show
+           up, and sits under the window on every screen size. -->
+      <div class="testi-trust-strip reveal-on-scroll">
+        <div class="testi-trust-chip">
+          <span class="wa-float-avatar wa-pink">P</span>
+          <span>"the editing team really outdid themselves this time" <b>Priya, Skincare</b></span>
+        </div>
+        <div class="testi-trust-chip">
+          <span class="wa-float-avatar wa-blue">R</span>
+          <span>"yesss let's go live with this" <b>Rohan, Electronics</b></span>
+        </div>
+        <div class="testi-trust-chip">
+          <span class="wa-float-avatar wa-amber">K</span>
+          <span>"so professional, ship it" <b>Karan, Home Decor</b></span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -3434,7 +3489,7 @@ footer{padding:64px 0 0; margin-top:40px;}
       </span>
       <span class="footer-cta-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2Z"/></svg>Let's create something great</span>
       <h3>Got a campaign to put into <span class="accent">production</span>?</h3>
-      <p class="footer-cta-sub">Tell us the brief, the brand, and the deadline — we'll scope a clear, itemized quote and get creative moving the same day.</p>
+      <p class="footer-cta-sub">Tell us the brief, the brand, and the deadline, and we'll scope a clear, itemized quote and get creative moving the same day.</p>
       <button type="button" class="footer-cta-link js-open-lead-modal">
         Share your requirement
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -3444,8 +3499,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-233" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-233" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3621,7 +3676,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-233"></script>
-<script src="assets/app-v2.js?v=20260811-233"></script>
+<script src="assets/creative-data.js?v=20260811-235"></script>
+<script src="assets/app-v2.js?v=20260811-235"></script>
 </body>
 </html>
