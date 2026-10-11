@@ -183,17 +183,17 @@
       support: ["editor", "call"],
     },
     reel1: {
-      name: "AI Reel — Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
-      short: "Basic creative execution with KAM support — the fastest, most affordable way into AI reels.",
+      name: "AI Reel: Quick Cut", tier: 1, unit: "reel", basePrice: 2500,
+      short: "Basic creative execution with KAM support, the fastest and most affordable way into AI reels.",
       benefit: "Simple, clean reels with the quickest turnaround, for high-volume or budget-first orders.",
-      quality: "Basic edit — straightforward cuts and standard transitions, no advanced visual detailing.",
+      quality: "Basic edit: straightforward cuts and standard transitions, no advanced visual detailing.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Basic edit — straightforward cuts and standard transitions",
+        "Basic edit: straightforward cuts and standard transitions",
         "Script written from the brief we discuss together, with no separate approval step",
         "Single 9:16 export, max 25 sec",
         "1 revision for minor, in frame changes such as text or element placement",
@@ -216,17 +216,17 @@
       support: ["kam"],
     },
     reel2: {
-      name: "AI Reel — Story Cut", tier: 2, unit: "reel", basePrice: 3500,
+      name: "AI Reel: Story Cut", tier: 2, unit: "reel", basePrice: 3500,
       short: "Improved creative quality with additional editing and visual detailing, backed by our Design team.",
       benefit: "A step up in polish and pacing, with a script approval step to get the story right before we build.",
-      quality: "Enhanced edit — smoother pacing, improved transitions, and additional visual detailing.",
+      quality: "Enhanced edit: smoother pacing, improved transitions, and additional visual detailing.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Enhanced edit — smoother pacing, improved transitions, and additional visual detailing",
+        "Enhanced edit: smoother pacing, improved transitions, and additional visual detailing",
         "Reel built with a dedicated video editor",
         "Single 9:16 export, max 35 sec",
         "1 script shared for approval",
@@ -249,17 +249,17 @@
       support: ["kam", "editor"],
     },
     reel3: {
-      name: "AI Reel — Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
+      name: "AI Reel: Director's Cut", tier: 3, unit: "reel", basePrice: 5000,
       short: "Premium creative execution with Content Writer and Creative Director involvement for stronger storytelling.",
       benefit: "Cinematic editing and advanced transitions, with dedicated creative direction behind the script and visuals.",
-      quality: "Premium edit — cinematic pacing, advanced transitions, and richer visual detailing.",
+      quality: "Premium edit: cinematic pacing, advanced transitions, and richer visual detailing.",
       duration: "Max 50 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Premium edit — cinematic pacing, advanced transitions, and richer visual detailing",
+        "Premium edit: cinematic pacing, advanced transitions, and richer visual detailing",
         "Reel built with Content Writer involvement and Creative Director oversight",
         "Creative guidance, suggestions, and input on the script and direction",
         "Single 9:16 export, max 50 sec",
@@ -282,17 +282,17 @@
       support: ["kam", "editor", "writer", "director"],
     },
     reel4: {
-      name: "AI Reel — Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
+      name: "AI Reel: Studio Cut", tier: 4, unit: "reel", basePrice: 8000,
       short: "Highest-quality production with enhanced creative direction, advanced storytelling, and premium editing.",
-      benefit: "Full creative oversight, custom brand music, and the most revision room — built for flagship, hero content.",
-      quality: "Highest-quality edit — cinematic transitions, advanced detailing, and the most polished finish.",
+      benefit: "Full creative oversight, custom brand music, and the most revision room, built for flagship, hero content.",
+      quality: "Highest-quality edit: cinematic transitions, advanced detailing, and the most polished finish.",
       duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
         "AI voiceover, in Hindi or English",
-        "Highest-quality edit — cinematic transitions, advanced detailing, and the most polished finish",
+        "Highest-quality edit: cinematic transitions, advanced detailing, and the most polished finish",
         "Reel built with dedicated Content Writer and Creative Director involvement throughout",
         "Enhanced creative direction and advanced storytelling guidance",
         "Single 9:16 export, max 1 min",
@@ -559,8 +559,19 @@
       // something to respect.
       discountType = "pct";
       rawDiscountValue = subtotal >= PUBLIC_OFFER_THRESHOLD ? PUBLIC_OFFER_PCT : 0;
+    } else if (subtotal < PUBLIC_OFFER_THRESHOLD) {
+      // Team discount is capped the same way the public auto-offer is:
+      // up to 10%, and only on orders that already clear the ₹10,000
+      // minimum. Below that, no discount applies regardless of what's
+      // sitting in the input.
+      rawDiscountValue = 0;
     }
-    const discountValue = discountType === "pct" ? Math.min(100, rawDiscountValue) : rawDiscountValue;
+    const discountValue =
+      discountType === "pct"
+        ? Math.min(isInternal() ? PUBLIC_OFFER_PCT : 100, rawDiscountValue)
+        : isInternal()
+        ? Math.min(subtotal * (PUBLIC_OFFER_PCT / 100), rawDiscountValue)
+        : rawDiscountValue;
     const discountAmt =
       discountType === "flat" ? Math.min(subtotal, discountValue) : subtotal * (discountValue / 100);
     const taxable = subtotal - discountAmt;
@@ -579,10 +590,13 @@
     const tier = service === "reels" ? state.tier : null;
     const qty = Math.max(1, state.qty || 1);
     const existing = state.cart.find((i) => i.service === service && i.tier === tier);
+    let addedId;
     if (existing) {
       existing.qty += qty;
+      addedId = existing.id;
     } else {
-      state.cart.push({ id: cartIdSeq++, service, tier, qty });
+      addedId = cartIdSeq++;
+      state.cart.push({ id: addedId, service, tier, qty });
     }
     state.qty = 1;
     render();
@@ -592,6 +606,7 @@
       void btn.offsetWidth;
       btn.classList.add("flash");
     }
+    return addedId;
   }
 
   function removeCartItem(id) {
@@ -806,7 +821,7 @@
     // the cut ("AI Reel — Quick Cut") restated something the reader
     // already sees a few pixels up. Dropping that prefix leaves just
     // the cut name, which is the actually new information.
-    document.getElementById("svcName").textContent = d.name.replace(/^AI Reel — /, "");
+    document.getElementById("svcName").textContent = d.name.replace(/^AI Reel: /, "");
     document.getElementById("svcStartPrice").textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
     document.getElementById("svcShort").textContent = d.short || "";
   }
@@ -1067,7 +1082,7 @@
     const qDiscountInputEl = document.getElementById("qDiscountInput");
     if (qDiscountInputEl) {
       qDiscountInputEl.value = state.discountValue;
-      qDiscountInputEl.max = cart.discountType === "pct" ? 100 : "";
+      qDiscountInputEl.max = cart.discountType === "pct" ? PUBLIC_OFFER_PCT : "";
     }
     document.querySelectorAll("#discountTypeToggle .unit-toggle-btn").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.type === cart.discountType);
@@ -1117,7 +1132,7 @@
 
     if (cart.items.length === 0) {
       const emptyMsg =
-        "No creatives have been added to this order yet. Add at least one under \"03 — Quote & Price Calculator\" above to generate this message.";
+        "No creatives have been added to this order yet. Add at least one under \"Quote & Price Calculator\" above to generate this message.";
       document.getElementById("clientMsg").value = emptyMsg;
       document.getElementById("internalMsg").value = emptyMsg;
       return;
@@ -1139,10 +1154,10 @@
     // language/timeline) plus general terms lives in the downloadable
     // PDF only (see generatePackagePdf below), not duplicated here.
     const orderBlock = cart.items
-      .map((item, idx) => `${idx + 1}. ${item.d.name} — Qty ${item.qty} — ${fmtINR(item.lineSubtotal)}`)
+      .map((item, idx) => `${idx + 1}. ${item.d.name} (Qty ${item.qty}): ${fmtINR(item.lineSubtotal)}`)
       .join("\n");
 
-    const clientMsg = `Package Summary — ${brandName}
+    const clientMsg = `Package Summary for ${brandName}
 
 Brand: ${brandName} (${brandCategory})
 Website: ${website}
@@ -1153,7 +1168,7 @@ ${orderBlock}
 Pricing:
 ${priceBlock}
 
-Full package details (deliverables, revisions, turnaround, terms) — download the PDF from the Package Summary panel.`;
+Full package details (deliverables, revisions, turnaround, terms) are in the downloadable PDF from the Package Summary panel.`;
 
     // Message 2 — What We Need From You. Since every line item in the
     // order belongs to the same brand, brand/product-level assets (logo,
@@ -1346,11 +1361,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         const rows = [
           ["Deliverables", d.deliver],
           ["Duration / Format", `${d.duration} · ${d.format}`],
-          ["Revisions", d.revisions],
         ];
+        if (d.quality) rows.push(["Quality", d.quality]);
+        rows.push(["Revisions", d.revisions]);
         if (d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting)) rows.push(["Script / Approval", d.scripting]);
         if (d.language && !/^not applicable/i.test(d.language)) rows.push(["Language", d.language]);
-        rows.push(["Turnaround", d.turnaround]);
+        rows.push(["Turnaround (TAT)", d.turnaround]);
+        if (d.support && d.support.length) rows.push(["Team / Support", supportIncludedValue(d)]);
         doc.autoTable({
           startY: y,
           theme: "grid",
@@ -1648,7 +1665,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         }
         const d = DATA["reel" + tier];
         const note = document.getElementById("tierRecommendNote");
-        if (note && d) note.textContent = `${d.name.replace(/^AI Reel — /, "")} — ${d.short} ${d.benefit}`;
+        if (note && d) note.textContent = `${d.name.replace(/^AI Reel: /, "")}: ${d.short} ${d.benefit}`;
       });
     });
   }
@@ -1659,8 +1676,22 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       btn.addEventListener("click", () => {
         state.service = "reels";
         state.tier = Number(btn.dataset.addTier);
-        addToOrder();
-        document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        const addedId = addToOrder();
+        // The click happens from inside the open package modal, so
+        // scrolling the page behind it is invisible on its own — close
+        // the modal first, then scroll to the order panel and flash the
+        // exact row that was just added, so the add is actually seen,
+        // not just silently applied to state.
+        closePkgModal();
+        requestAnimationFrame(() => {
+          document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          const row = document.querySelector(`.cart-item[data-id="${addedId}"]`);
+          if (row) {
+            row.classList.remove("flash");
+            void row.offsetWidth;
+            row.classList.add("flash");
+          }
+        });
       });
     });
   }
@@ -1693,7 +1724,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   if (qDiscountInput) {
     qDiscountInput.addEventListener("input", () => {
       let v = Math.max(0, parseFloat(qDiscountInput.value) || 0);
-      if (state.discountType === "pct") v = Math.min(100, v);
+      if (state.discountType === "pct") v = Math.min(PUBLIC_OFFER_PCT, v);
       state.discountValue = v;
       renderCart();
       renderMessages();
@@ -1941,7 +1972,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   function orderDetailsBlock() {
     const cart = computeCart();
     if (!cart.items.length) return "";
-    const lines = cart.items.map((i) => `- ${i.d.name} × ${i.qty} — ${fmtINR(i.lineSubtotal)}`);
+    const lines = cart.items.map((i) => `- ${i.d.name} × ${i.qty}: ${fmtINR(i.lineSubtotal)}`);
     return `Order configured on the site:\n${lines.join("\n")}\nEstimated total: ${fmtINR(cart.final)}`;
   }
 
@@ -2005,7 +2036,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
 
     function openMailtoFallback(data) {
-      const subject = `New requirement — ${data.brand || data.name}`;
+      const subject = `New requirement: ${data.brand || data.name}`;
       const body =
         `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nBrand: ${data.brand || "-"}\n` +
         `Requirement: ${data.requirement}\nDetails: ${data.details || "-"}`;
@@ -3480,7 +3511,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       { key: "reel4", label: "Studio Cut" },
     ];
     function reelReply(d, lang) {
-      const cut = d.name.replace("AI Reel — ", "");
+      const cut = d.name.replace("AI Reel: ", "");
       const deliveryRaw = d.turnaround.split(" after")[0];
       const delivery = deliveryRaw.charAt(0).toLowerCase() + deliveryRaw.slice(1);
       if (lang === "hi")
