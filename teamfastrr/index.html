@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-266" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-266" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-266" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-266" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-266" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-266" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-266" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-266" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-266" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-266" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-266" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-266" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-267" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-267" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-267" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-267" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-267" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-267" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-267" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-267" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-267" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-267" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-267" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-267" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -378,7 +378,7 @@ footer .brand-logo{height:24px;}
 .filmstrip-tile img,.filmstrip-tile video{display:block; width:100%; height:100%; object-fit:cover;}
 /* Smaller tiles than the main showcase cards, so the tag shrinks to
    match instead of reusing the showcase's own size verbatim. */
-.filmstrip-tile .wc-band-pill{font-size:6.5px; bottom:5px; right:6px;}
+.filmstrip-tile .wc-band-pill{top:5px; left:5px; padding:2px 6px 2px 5px; font-size:6.5px;}
 .filmstrip-tile .wc-band-pill svg{width:6px; height:6px;}
 @media (max-width:720px){
   .filmstrip-tile.tile-video{width:83px;}
@@ -587,23 +587,31 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   padding:5px 10px; border-radius:10px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px);
   font-size:10.5px; color:#fff; font-style:italic; line-height:1.4;
 }
-/* Package-tier label — Reels and Catalogue, bottom-right. A
-   visible-production-style estimate (see item.band in
-   creative-data.js), naming the same tiers as the package badges —
-   rendered as plain small text with no pill/background/border (two
-   colored chips per card read as more going on than a quiet style
-   note warrants). Text-shadow carries the legibility a background
-   chip would otherwise provide. The label text itself stays one
-   neutral color across all 4 tiers; only the icon picks up that
-   tier's own tq-1..4 color, via `color` set on the <svg> specifically
-   so it doesn't cascade back onto the text next to it. */
+/* Package-tier label — Reels and Catalogue, top-left (the card's
+   single clear label now that the content-category pill is gone — no
+   longer competing for the same corner). A visible-production-style
+   estimate (see item.band in creative-data.js), naming the same
+   tiers as the package badges. Solid pill chip, same treatment as
+   .wc-cat-pill used to be, instead of bare text riding on a
+   text-shadow for legibility — a shadow alone read as unclear/barely
+   visible against busy thumbnails. The chip itself stays one neutral
+   dark background across all 4 tiers; the tier's own tq-1..4 color
+   shows on the icon and the chip's border, so the 4 tiers stay
+   visually distinct without needing 4 different background colors.
+*/
 .wc-band-pill{
-  position:absolute; bottom:7px; right:9px; z-index:2;
-  display:flex; align-items:center; gap:3px;
-  font-size:8px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
-  color:rgba(255,255,255,.72); text-shadow:0 1px 2px rgba(0,0,0,.85), 0 0 6px rgba(0,0,0,.5);
+  position:absolute; top:10px; left:10px; z-index:2;
+  display:inline-flex; align-items:center; gap:4px;
+  padding:4px 9px 4px 7px; border-radius:100px;
+  background:rgba(10,10,13,0.72); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.16);
+  font-family:var(--font-mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  color:#fff;
 }
-.wc-band-pill svg{width:7px; height:7px; flex:0 0 auto;}
+.wc-band-pill svg{width:9px; height:9px; flex:0 0 auto;}
+.wc-band-pill.tq-1{border-color:color-mix(in srgb, var(--sky) 55%, transparent);}
+.wc-band-pill.tq-2{border-color:color-mix(in srgb, var(--teal) 55%, transparent);}
+.wc-band-pill.tq-3{border-color:color-mix(in srgb, var(--violet) 55%, transparent);}
+.wc-band-pill.tq-4{border-color:color-mix(in srgb, var(--gold) 55%, transparent);}
 .wc-band-pill.tq-1 svg{color:var(--sky);}
 .wc-band-pill.tq-2 svg{color:var(--teal);}
 .wc-band-pill.tq-3 svg{color:var(--violet);}
@@ -2893,8 +2901,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-266" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-266" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-267" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-267" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -4036,8 +4044,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-266" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-266" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-267" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-267" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -4316,8 +4324,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-266"></script>
-<script src="assets/app.js?v=20260811-266"></script>
-<script type="module" src="assets/team.js?v=20260811-266"></script>
+<script src="assets/creative-data.js?v=20260811-267"></script>
+<script src="assets/app.js?v=20260811-267"></script>
+<script type="module" src="assets/team.js?v=20260811-267"></script>
 </body>
 </html>
