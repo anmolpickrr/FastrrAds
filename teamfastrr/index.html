@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-235" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-235" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-235" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-235" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-235" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-235" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-235" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-235" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-235" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-235" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-235" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-235" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-236" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-236" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-236" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-236" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-236" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-236" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-236" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-236" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-236" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-236" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-236" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-236" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1154,42 +1154,46 @@ table.compare-table td[data-tier-col="3"] .ct-add-btn{background:var(--violet); 
 table.compare-table td[data-tier-col="3"] .ct-add-btn:hover{background:var(--violet-strong, var(--violet)); filter:brightness(1.08);}
 
 /* ---------- HOW WE WORK (process pills) ----------
-   Rounded pill cards in a loose wrapping row, each keyed to its own
-   accent (cycling sky/teal/violet/gold) that only shows up on hover: a
-   soft colored glow blooms behind the card and the border picks up the
-   accent, like a tile lighting up as you land on it, rather than every
-   step shouting for attention at once. The step count reads as a
-   plain mono "/01/" numeral above the title, not a separate badge
-   element, keeping the card itself quiet until you interact with it. */
+   Quiet by default, on purpose: every card uses the same neutral
+   surface/border/icon treatment the rest of the page's cards use
+   (.msg-card, .pdf-btn's resting state, etc.), with a single brand
+   accent (violet, the page's own dominant color) reserved for the step
+   numeral and the hover state only. Earlier drafts cycled a different
+   hue per card (sky/teal/violet/gold) at full strength all the time,
+   which read as busier and less cohesive with the rest of a page that
+   otherwise treats color as an accent, not a base. Motion is a plain
+   fade-and-rise on scroll plus a small lift on hover, nothing more. */
 .process-rail{
   position:relative; display:flex; flex-wrap:wrap; gap:12px; margin-top:28px;
 }
 .process-step{
   position:relative; flex:1 1 220px; display:flex; flex-direction:column; gap:8px;
-  background:var(--surface-1); border:1px solid var(--line); border-radius:20px; padding:22px 20px 20px;
-  opacity:0; transform:translateY(18px);
-  transition:opacity .5s var(--ease), transform .5s var(--ease), border-color .3s ease, box-shadow .3s ease, background .3s ease;
-  transition-delay:calc(var(--i, 0) * .09s + .1s);
+  background:var(--surface-1); border:1px solid var(--line); border-radius:18px; padding:22px 20px 20px;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .5s var(--ease), transform .4s var(--ease), border-color .25s ease, box-shadow .25s ease;
+  transition-delay:calc(var(--i, 0) * .08s + .1s);
 }
 .process-rail.revealed .process-step{opacity:1; transform:translateY(0);}
 .process-step:hover{
-  border-color:color-mix(in srgb, var(--accent) 55%, var(--line));
-  box-shadow:0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), 0 16px 40px -14px var(--accent);
-  background:color-mix(in srgb, var(--accent) 6%, var(--surface-1));
+  transform:translateY(-3px);
+  border-color:color-mix(in srgb, var(--violet) 32%, var(--line));
+  box-shadow:0 14px 28px -20px rgba(0,0,0,.4);
 }
 @media (prefers-reduced-motion: reduce){.process-step{opacity:1; transform:none; transition:none;}}
 .process-step-num{
-  font-family:var(--font-mono); font-weight:700; font-size:12px; letter-spacing:.02em;
-  color:var(--accent); transition:color .3s ease;
+  font-family:var(--font-mono); font-weight:700; font-size:11.5px; letter-spacing:.03em; color:var(--violet);
 }
 .process-step-icon{
   width:34px; height:34px; border-radius:9px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
-  background:color-mix(in srgb, var(--accent) 16%, transparent); color:var(--accent);
-  border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); margin-top:2px;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  background:var(--surface-2); color:var(--text-1);
+  border:1px solid var(--line); margin-top:2px;
+  transition:background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
 }
 .process-step-icon svg{width:17px; height:17px;}
-.process-step:hover .process-step-icon{transform:scale(1.1) rotate(-6deg);}
+.process-step:hover .process-step-icon{
+  transform:scale(1.06);
+  background:var(--violet-soft); color:var(--violet); border-color:color-mix(in srgb, var(--violet) 40%, transparent);
+}
 .process-step h3{font-size:15px; font-weight:700; letter-spacing:-0.01em;}
 .process-step p{font-size:12.5px; color:var(--text-1); line-height:1.55;}
 @media (max-width:980px){
@@ -2681,8 +2685,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-236" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-236" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3045,31 +3049,31 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>Five steps, start to finish: here's what happens between the brief you send us and the file landing in your drive.</p>
     </div>
     <div class="process-rail reveal-on-scroll" id="processRail">
-      <div class="process-step" style="--i:0; --accent:var(--sky);">
+      <div class="process-step" style="--i:0;">
         <span class="process-step-num">/01/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
         <h3>Share your brief</h3>
         <p>Tell us about the brand, the product, and what the creative needs to say. One brief covers the whole order.</p>
       </div>
-      <div class="process-step" style="--i:1; --accent:var(--teal);">
+      <div class="process-step" style="--i:1;">
         <span class="process-step-num">/02/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 10 2 2 4-4"/></svg></span>
         <h3>Script &amp; direction</h3>
         <p>Story Cut and up get the script to approve first. Director's Cut and Studio Cut also get two hook options to pick from.</p>
       </div>
-      <div class="process-step" style="--i:2; --accent:var(--violet);">
+      <div class="process-step" style="--i:2;">
         <span class="process-step-num">/03/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18 9l-4.1 1.4L12 15l-1.9-4.6L6 9l4.1-1.4L12 3Z"/><path d="M19 15.5 19.8 17.5 22 18.3 19.8 19.1 19 21.1 18.2 19.1 16 18.3 18.2 17.5 19 15.5Z"/></svg></span>
         <h3>Production</h3>
         <p>We build it: AI voiceover, editing, and transitions, with a Content Writer and Creative Director on anything Director's Cut or above.</p>
       </div>
-      <div class="process-step" style="--i:3; --accent:var(--gold);">
+      <div class="process-step" style="--i:3;">
         <span class="process-step-num">/04/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
         <h3>Review &amp; revise</h3>
         <p>Every package comes with revision rounds, so if something needs tightening up, we fix it before it's final.</p>
       </div>
-      <div class="process-step" style="--i:4; --accent:var(--sky);">
+      <div class="process-step" style="--i:4;">
         <span class="process-step-num">/05/</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
         <h3>Delivery</h3>
@@ -3638,8 +3642,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-235" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-236" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-236" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3918,8 +3922,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-235"></script>
-<script src="assets/app.js?v=20260811-235"></script>
-<script type="module" src="assets/team.js?v=20260811-235"></script>
+<script src="assets/creative-data.js?v=20260811-236"></script>
+<script src="assets/app.js?v=20260811-236"></script>
+<script type="module" src="assets/team.js?v=20260811-236"></script>
 </body>
 </html>
