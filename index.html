@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-243" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-243" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-243" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-243" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-243" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-243" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-243" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-243" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-243" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-243" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-243" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-243" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-245" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-245" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-245" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-245" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-245" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-245" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-245" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-245" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-245" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-245" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-245" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-245" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -467,6 +467,17 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    components themselves got denser; this keeps headline-to-content
    distance proportional to the now-shorter content beneath it. */
 #process .section-head,#testimonials .section-head,#messages .section-head{margin-bottom:26px;}
+/* A quiet shortcut straight to the AI Reel comparison table (inside
+   the Reels package modal), so comparing tiers doesn't require first
+   discovering it's buried in a modal's own scroll — without
+   duplicating that table's markup onto the main page. */
+.compare-packages-link{
+  display:inline-flex; align-items:center; gap:7px; margin-top:16px; padding:8px 14px 8px 16px;
+  border-radius:100px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
+  font-size:13px; font-weight:600; transition:background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.compare-packages-link svg{width:14px; height:14px; color:var(--violet);}
+.compare-packages-link:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0); transform:translateY(-1px);}
 /* 20px, not the eyebrow's own 14px rhythm — the jump from an 11-12px
    mono label to a 28-40px display heading needs more separation than a
    same-size text pairing would, or the two read as crowded together
@@ -998,6 +1009,9 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
 .svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
 .svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
 .svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
+.glance-rev-line{display:block; margin-bottom:5px;}
+.glance-rev-line:last-child{margin-bottom:0;}
+.glance-rev-line i{font-style:normal; font-weight:700; color:var(--violet); margin-right:4px;}
 @media (max-width:760px){
   .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
   .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
@@ -1284,6 +1298,18 @@ table.compare-table td[data-tier-col="3"] .ct-add-btn:hover{background:var(--vio
 .summary-row span{color:var(--text-2);}
 .summary-row.total{border-bottom:none; padding-top:14px; font-size:19px; font-weight:700; font-family:var(--font-display);}
 .summary-row.total span{color:var(--text-1); font-family:var(--font-body); font-weight:600; font-size:14px;}
+/* A brief glow+scale the instant Final Amount actually changes value
+   (new discount applied, item added/removed) — paired with the
+   count-up/down tween in animateMoneyText, not a replacement for it,
+   so the number itself is still legible mid-animation. */
+@keyframes priceBurst{
+  0%{text-shadow:0 0 0 transparent;}
+  40%{transform:scale(1.07); text-shadow:0 0 20px color-mix(in srgb, var(--teal) 55%, transparent);}
+  100%{transform:scale(1); text-shadow:0 0 0 transparent;}
+}
+#qFinal{display:inline-block; transform-origin:right center;}
+#qFinal.price-burst{animation:priceBurst .55s var(--ease);}
+@media (prefers-reduced-motion: reduce){#qFinal.price-burst{animation:none;}}
 
 .order-builder{display:grid; grid-template-columns:1fr 1.2fr; gap:18px; align-items:start;}
 @media (max-width:900px){.order-builder{grid-template-columns:1fr;}}
@@ -1738,8 +1764,19 @@ html.is-internal .oc-offer{display:none !important;}
   padding:12px 0; margin-bottom:2px; border-bottom:1px solid var(--line-soft);
 }
 .discount-standalone > span:first-child{color:var(--text-0); font-size:14px; font-weight:600;}
-.discount-standalone .unit-toggle-btn{font-size:13px; padding:4px 9px;}
 .discount-standalone .summary-input{width:60px; font-size:15px; font-weight:700; text-align:right; padding:6px 8px;}
+.discount-pct-suffix{font-size:14px; font-weight:700; color:var(--text-2);}
+/* Compact-by-default summary: just the pre-discount total and (once
+   applied) the discount percentage, so Final Amount below is reached
+   in two short lines instead of a full subtotal/discount/GST ledger.
+   The full arithmetic still exists — see .price-breakdown-toggle —
+   it's just not the first thing a customer reads. */
+.order-compact-summary{margin-top:14px; padding-top:14px; border-top:1px solid var(--line-soft);}
+.ocs-row{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:3px 0; font-size:13px; color:var(--text-2);}
+.ocs-row[hidden]{display:none;}
+.ocs-row b{font-weight:600; color:var(--text-1);}
+.ocs-discount-row b{color:var(--teal);}
+.price-breakdown-toggle .order-breakdown{margin-top:12px;}
 /* Only ever shown transiently (a few seconds) when a typed/scrolled
    discount value is clamped back down — no permanent "up to X%" text
    sits on this field during a customer-facing presentation. */
@@ -2720,8 +2757,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-243" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-243" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2851,6 +2888,10 @@ footer{padding:64px 0 0; margin-top:40px;}
       <span class="eyebrow">02 · Services &amp; Package Scope</span>
       <h2>Pick a service.<br>See the exact scope.</h2>
       <p>Pick a package below to see exactly what's included: price, deliverables, and delivery timeline, all in one place.</p>
+      <button type="button" class="compare-packages-link" id="comparePackagesLink">
+        Compare AI Reel packages
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5"/><path d="M12 18V6"/></svg>
+      </button>
     </div>
 
     <!-- A grid of package cards (#svcNav); clicking one opens a modal
@@ -3190,19 +3231,27 @@ footer{padding:64px 0 0; margin-top:40px;}
 
         <div class="order-summary">
           
-          <div class="order-breakdown">
-            <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
-            <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
-            <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+          <div class="order-compact-summary">
+            <div class="ocs-row"><span>Total before discount</span><b id="qSubtotalCompact">₹0</b></div>
+            <div class="ocs-row ocs-discount-row" id="ocsDiscountRow" hidden><span>Discount applied</span><b id="qDiscountPctCompact">0% off</b></div>
           </div>
 
           <div class="summary-row total"><span>Final Amount</span><b id="qFinal">₹0</b></div>
+
+          <details class="mini-toggle price-breakdown-toggle" id="priceBreakdownToggle">
+            <summary>View price breakdown</summary>
+            <div class="order-breakdown">
+              <div class="summary-row"><span>Subtotal</span><b id="qSubtotal">₹0</b></div>
+              <div class="summary-row" id="discountRow"><span id="qDiscountLabel">Discount</span><b id="qDiscountAmt">− ₹0</b></div>
+              <div class="summary-row" id="gstRow"><span>GST (18%)</span><b id="qGstAmt">+ ₹0</b></div>
+            </div>
+          </details>
           <p class="order-tat-note">Turnaround shown per item above is for a single creative. Bulk orders or multiple creative types may take longer depending on quantity, creative type, cut, and complexity.</p>
         </div>
 
         <div class="lead-cta">
-                    <p class="lead-cta-sub">Ready to move forward with this order? Place your order and our team will get in touch to confirm the details.</p>
-                              <!-- On the public build this opens the lead-capture popup
+          <p class="lead-cta-sub">Ready to move forward with this order? Place your order and our team will get in touch to confirm the details.</p>
+          <!-- On the public build this opens the lead-capture popup
                (js-open-lead-modal, wired in app.js). On the team build,
                team.js intercepts this same click in the capture phase
                (stopImmediatePropagation) and opens #orderConfirmModal
@@ -3552,8 +3601,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-243" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-243" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3729,7 +3778,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-243"></script>
-<script src="assets/app.js?v=20260811-243"></script>
+<script src="assets/creative-data.js?v=20260811-245"></script>
+<script src="assets/app.js?v=20260811-245"></script>
 </body>
 </html>
