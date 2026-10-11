@@ -3120,16 +3120,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // per-item ✕ and the cart-level Clear button (#orderCartClearBtn,
   // wired below) are the real, always-visible way to discard a draft.
 
-  /* ----------------------------------------------------------
-     11c. HOW WE WORK (process switcher) — one compact display pane
-     instead of five repeated cards. Clicking a step (or just waiting)
-     cross-fades the pane's content and moves the active tab's accent
-     bar; a thin progress rail under the active tab tracks the
-     auto-advance pace. Auto-advance pauses while the pointer or focus
-     is inside the widget, so reading never races the timer, and is
-     skipped entirely under prefers-reduced-motion — the panel still
-     works by click there, it just never moves on its own.
-  ---------------------------------------------------------- */
+  // 11c. HOW WE WORK — step switcher: click or auto-advance cross-fades
+  // the display pane and slides the tab indicator; pauses on hover/focus.
   (function initProcessSwitcher() {
     const root = document.getElementById("processSwitcher");
     if (!root) return;
@@ -3143,16 +3135,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     let active = 0;
     let timer = null;
 
-    // Slides/resizes the shared indicator pill to sit exactly behind
-    // the active tab, measured live so the same code works for the
-    // vertical desktop list and the horizontal mobile strip (the
-    // layout itself flips via a media query; this just follows it).
-    // offsetLeft/offsetTop (relative to tabsWrap, its offsetParent),
-    // not getBoundingClientRect, on purpose — the mobile strip
-    // scrolls horizontally, and a click can trigger the browser's own
-    // scroll-into-view before this runs; viewport-relative rects would
-    // then be measured against a stale scroll position, offsetting the
-    // indicator. offsetLeft/Top are scroll-independent.
+    // offsetLeft/Top (not getBoundingClientRect) — scroll-independent,
+    // needed since the mobile tab strip scrolls horizontally.
     function positionIndicator() {
       if (!indicator || !tabsWrap) return;
       const tab = tabs[active];
