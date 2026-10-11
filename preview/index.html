@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-245" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-245" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-245" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-245" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-245" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-245" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-245" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-245" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-245" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-245" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-245" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-245" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-247" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1091,18 +1091,18 @@ table.compare-table tbody tr:last-child td{border-bottom:none;}
 table.compare-table tbody tr:nth-child(even) td{background:var(--surface-1);}
 table.compare-table tbody tr:hover td{background:var(--surface-hover, var(--surface-2));}
 table.compare-table thead th{color:var(--text-2); font-weight:600; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; border-bottom:2px solid var(--line); padding-top:14px; padding-bottom:14px;}
-table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet);}
-/* Director's Cut is the called-out "Popular" tier everywhere else on
-   the page (tier chip, pkg-card deck) — giving its whole column a
-   standing tint plus a highlighted header, not just a text-color badge,
-   carries that same signal into the comparison table so the eye lands
-   on it by default instead of reading 4 equally-weighted columns. */
-table.compare-table [data-tier-col="3"]{background:color-mix(in srgb, var(--violet) 7%, transparent); position:relative;}
-table.compare-table thead th[data-tier-col="3"]{background:color-mix(in srgb, var(--violet) 12%, transparent); border-radius:10px 10px 0 0;}
-table.compare-table tbody tr:last-child td[data-tier-col="3"]{border-radius:0 0 10px 10px;}
-table.compare-table td.ct-rec[data-tier-col="3"], table.compare-table th.ct-rec[data-tier-col="3"]{background:var(--violet-soft);}
+/* .ct-sel marks whichever tier is actually selected — the same
+   state.tier the tier chips above set and the Quick Recommend buttons
+   now also set (see renderScopePanel() in app-v2.js) — so exactly one
+   compare-table column is ever highlighted. This used to be two
+   independent mechanisms (.ct-sel for the tier chips, .ct-rec for
+   Quick Recommend, plus a third hardcoded tint permanently on
+   Director's Cut) that could each point at a different column and
+   read as multiple "selected" tiers at once. */
+table.compare-table td.ct-sel, table.compare-table th.ct-sel{color:var(--violet); background:var(--violet-soft);}
+table.compare-table thead th.ct-sel{border-radius:10px 10px 0 0;}
+table.compare-table tbody tr:last-child td.ct-sel{border-radius:0 0 10px 10px;}
 table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct-price-row td{font-size:14px; font-weight:700; color:var(--text-0);}
-table.compare-table tr.ct-price-row td[data-tier-col="3"]{color:var(--violet);}
 
 /* ---------- GOOD TO KNOW / RULES ----------
    Purely general, cross-cutting terms — deliberately NOT scoped to
@@ -1158,7 +1158,6 @@ table.compare-table tr.ct-price-row td[data-tier-col="3"]{color:var(--violet);}
 .tier-recommend-btn:hover{background:var(--surface-hover); color:var(--text-0);}
 .tier-recommend-btn.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet);}
 .tier-recommend-note{flex-basis:100%; margin-top:2px; font-size:12.5px; color:var(--text-2); line-height:1.55; min-height:1em;}
-table.compare-table td.ct-rec, table.compare-table th.ct-rec{background:var(--violet-soft);}
 table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
 .ct-add-btn{
   padding:7px 16px; border-radius:8px; border:1px solid var(--violet); background:transparent;
@@ -1166,12 +1165,14 @@ table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
 }
 .ct-add-btn:hover{background:var(--violet); color:var(--btn-ink); transform:translateY(-1px);}
 .ct-add-btn:active{transform:translateY(0);}
-/* The Popular column's add button gets the same filled treatment the
-   tier chip itself uses for its active state, so the one tier the
-   table is quietly steering people toward also has the one button
-   that doesn't need a second look to register as "the pick." */
-table.compare-table td[data-tier-col="3"] .ct-add-btn{background:var(--violet); color:var(--btn-ink); border-color:var(--violet);}
-table.compare-table td[data-tier-col="3"] .ct-add-btn:hover{background:var(--violet-strong, var(--violet)); filter:brightness(1.08);}
+/* The actually-selected column's add button (see .ct-sel above) gets
+   the same filled treatment the tier chip itself uses for its active
+   state, so whichever tier is really selected is also the one button
+   that doesn't need a second look to register as "the pick" — tied to
+   the same .ct-sel class as the column tint, not hardcoded to one
+   column regardless of selection. */
+table.compare-table td.ct-sel .ct-add-btn{background:var(--violet); color:var(--btn-ink); border-color:var(--violet);}
+table.compare-table td.ct-sel .ct-add-btn:hover{background:var(--violet-strong, var(--violet)); filter:brightness(1.08);}
 
 /* ---------- HOW WE WORK (process switcher) ----------
    One compact panel instead of five repeated cards: a slim list of
@@ -2757,8 +2758,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3601,8 +3602,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-245" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3778,7 +3779,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-245"></script>
-<script src="assets/app-v2.js?v=20260811-245"></script>
+<script src="assets/creative-data.js?v=20260811-247"></script>
+<script src="assets/app-v2.js?v=20260811-247"></script>
 </body>
 </html>
