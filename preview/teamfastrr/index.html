@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-251" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-251" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-251" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-251" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-251" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-251" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-251" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-251" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-251" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-251" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-251" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-251" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-252" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-252" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-252" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-252" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-252" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-252" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-252" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-252" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-252" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-252" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-252" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-252" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -472,10 +472,10 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    components themselves got denser; this keeps headline-to-content
    distance proportional to the now-shorter content beneath it. */
 #process .section-head,#testimonials .section-head,#messages .section-head{margin-bottom:26px;}
-/* A quiet shortcut straight to the AI Reel comparison table (inside
-   the Reels package modal), so comparing tiers doesn't require first
-   discovering it's buried in a modal's own scroll — without
-   duplicating that table's markup onto the main page. */
+/* The single entry point into the standalone AI Reel comparison
+   modal (#compareModalBackdrop) — deliberately the only "compare"
+   trigger on the page; the comparison table itself never appears
+   inside a package card or its detail modal. */
 .compare-packages-link{
   display:inline-flex; align-items:center; gap:7px; margin-top:16px; padding:8px 14px 8px 16px;
   border-radius:100px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
@@ -483,8 +483,6 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 }
 .compare-packages-link svg{width:14px; height:14px; color:var(--violet);}
 .compare-packages-link:hover{background:var(--violet-soft); border-color:var(--violet); color:var(--text-0); transform:translateY(-1px);}
-.compare-packages-link-modal{margin-top:0; margin-bottom:16px;}
-.compare-packages-link-modal.is-hidden{display:none;}
 /* 20px, not the eyebrow's own 14px rhythm — the jump from an 11-12px
    mono label to a 28-40px display heading needs more separation than a
    same-size text pairing would, or the two read as crowded together
@@ -914,6 +912,39 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 html.pkg-modal-open{overflow:hidden; scrollbar-gutter:stable;}
 body.pkg-modal-open{overflow:hidden;}
 
+/* Standalone comparison modal — a plain centered dialog (fade/scale,
+   no FLIP morph since it doesn't grow out of a clicked card), reusing
+   the same scroll-lock classes as the package-detail modal so only
+   one of the two is ever "the thing locking the page" at a time. */
+.compare-modal-backdrop{
+  position:fixed; inset:0; z-index:950; display:flex; align-items:center; justify-content:center; padding:20px;
+  background:rgba(4,6,10,.66); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  opacity:0; visibility:hidden; transition:opacity .25s ease, visibility 0s linear .25s;
+}
+.compare-modal-backdrop.open{opacity:1; visibility:visible; transition:opacity .25s ease, visibility 0s linear 0s;}
+.compare-modal{
+  position:relative; width:min(1040px, 100%); max-height:min(88vh, 860px); border-radius:var(--radius);
+  background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
+  display:flex; flex-direction:column; overflow:hidden;
+  transform:scale(.96); opacity:0; transition:transform .25s cubic-bezier(.34,1.3,.64,1), opacity .2s ease;
+}
+.compare-modal-backdrop.open .compare-modal{transform:scale(1); opacity:1;}
+.compare-modal-head{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-shrink:0;
+  padding:18px 22px; border-bottom:1px solid var(--line-soft);
+}
+.compare-modal-head h3{font-size:17px; font-weight:700; color:var(--text-0); margin:0;}
+.compare-modal-close{
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; background:var(--surface-1); border:1px solid var(--line);
+  color:var(--text-1); transition:background .2s ease, color .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.compare-modal-close svg{width:15px; height:15px;}
+.compare-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
+.compare-modal-close:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 40%, transparent);}
+.compare-modal-scroll{padding:20px clamp(16px,3vw,26px) 24px; overflow-y:auto;}
+@media (max-width:640px){.compare-modal{width:100%; max-height:92vh;}}
+
 .svc-panel-inner{padding:22px clamp(20px,4vw,40px) 26px;}
 /* Title+subtitle stacked above price, always — never a left/right
    split that flex-wraps. The row layout used to put the price at
@@ -1007,37 +1038,73 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    being buried inside the Included tab's spec grid, so understanding
    a package doesn't require a click first. Row dividers only, no
    card/box treatment, so it reads as one continuous fact strip. */
-.svc-glance{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
-  margin-top:20px; padding-top:18px; border-top:1px solid var(--line-soft);
+.svc-section-eyebrow{
+  display:block; margin-top:26px; margin-bottom:10px; font-family:var(--font-mono); font-size:10.5px;
+  font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);
 }
-.svc-glance-item{padding:0 22px; border-left:1px solid var(--line-soft);}
-.svc-glance-item:first-child{padding-left:0; border-left:none;}
-/* Only reels carry a 5th item (Quality, see renderServiceGlance() in
-   app.js) — rather than wrap it into row 2 as a lone bordered column,
-   give it the full row's width below the first 4 (grid-column:1/-1),
-   which also suits its longer sentence-length value better than a
-   quarter-width column would. */
-.svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
+.svc-section-eyebrow:first-of-type{margin-top:22px;}
+/* Fixed 6-item grid (3 cols × 2 rows): Duration, Format, Turnaround on
+   row 1, Script Approval, Script Revisions, Creative Revisions on row
+   2 — see renderServiceGlance() in app.js. Quality moved to its own
+   dedicated section (#svcQualityBlock) rather than sharing this strip,
+   so every cell here stays a short, scannable value, not a sentence. */
+.svc-glance{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+  padding-top:4px;
+}
+.svc-glance-item{padding:0 22px 14px; border-left:1px solid var(--line-soft);}
+.svc-glance-item:nth-child(3n+1){padding-left:0; border-left:none;}
+.svc-glance-item:nth-child(n+4){padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft);}
 .svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
 .svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
-/* Compact two-up mini stat blocks instead of stacked sentence-length
-   lines — matches the single-line brevity of the Length/Format/
-   Turnaround cells next to it instead of towering over them. */
-.glance-rev-mini{display:block; margin-bottom:8px;}
-.glance-rev-mini:last-child{margin-bottom:0;}
-.glance-rev-mini i{display:block; font-style:normal; font-family:var(--font-mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-2); margin-bottom:2px;}
-.glance-rev-mini em{display:block; font-style:normal; font-size:13px; font-weight:600; color:var(--text-0); white-space:nowrap;}
 @media (max-width:760px){
   .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
-  .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
+  .svc-glance-item:nth-child(n+3){padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft);}
+  .svc-glance-item:nth-child(odd){border-left:none; padding-left:0;}
+  .svc-glance-item:nth-child(even){border-left:1px solid var(--line-soft); padding-left:22px;}
 }
 @media (max-width:420px){
   .svc-glance{grid-template-columns:1fr; row-gap:18px;}
-  .svc-glance-item{border-left:none !important; padding-left:0 !important;}
+  .svc-glance-item{border-left:none !important; padding-left:0 !important; padding-top:14px !important; margin-top:0 !important; border-top:1px solid var(--line-soft) !important;}
+  .svc-glance-item:first-child{border-top:none !important; padding-top:0 !important;}
 }
 
-.scope-panel{margin-top:22px;}
+/* Creative quality — its own distinct section (Section C) instead of
+   a 6th glance-grid cell, since it's a sentence-length explanation of
+   cut/transition/pacing differences, not a short scannable value. */
+.svc-quality-block{
+  padding:14px 18px; border-radius:12px; background:var(--surface-1); border:1px solid var(--line-soft);
+}
+.svc-quality-block p{margin:0; font-size:13.5px; line-height:1.6; color:var(--text-1);}
+
+/* Script vs. creative revisions, kept as two visually separate cards
+   (never merged into one generic "Revisions" block) — see Section E. */
+.revision-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.revision-block{padding:16px 18px; border-radius:12px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.revision-block h4{margin:0 0 8px; font-size:13px; font-weight:700; color:var(--text-0);}
+.revision-count{margin:0 0 6px; font-size:15px; font-weight:700; color:var(--violet);}
+.revision-desc{margin:0 0 12px; font-size:12.5px; line-height:1.55; color:var(--text-2);}
+.revision-examples{display:flex; flex-direction:column; gap:8px; padding-top:10px; border-top:1px solid var(--line-soft);}
+.revision-examples div{font-size:12px; line-height:1.55; color:var(--text-2);}
+.revision-examples span{display:block; font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-1); margin-bottom:2px;}
+@media (max-width:640px){.revision-split{grid-template-columns:1fr;}}
+
+/* Section I — recap + the one in-modal path into the order builder. */
+.svc-final-action{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  margin-top:26px; padding:18px 20px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);
+}
+.svc-final-name{font-size:14px; font-weight:700; color:var(--text-0); margin-bottom:4px;}
+.svc-final-specs{font-size:12px; color:var(--text-2); line-height:1.5;}
+.svc-final-price-wrap{display:flex; align-items:center; gap:14px; flex-shrink:0;}
+.svc-final-price{font-size:19px; font-weight:800; color:var(--text-0);}
+.svc-final-add-btn{
+  padding:11px 20px; border-radius:9px; background:var(--violet); color:var(--btn-ink); font-size:13.5px; font-weight:700;
+  white-space:nowrap; transition:filter .2s ease, transform .2s ease;
+}
+.svc-final-add-btn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+
+.scope-panel{margin-top:4px;}
 /* Segmented pill switch — the selected list gets a filled, full-
    contrast segment while the other two fade back, so which of the
    three lists is currently on screen is obvious at a glance instead
@@ -1100,7 +1167,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    taller row from wrapped text is preferable to text nobody can read
    without scrolling sideways inside an already-open modal. */
 .compare-wrap{overflow-x:auto; margin-top:16px; border-radius:14px; border:1px solid var(--line-soft); padding:4px 10px;}
-table.compare-table{width:100%; border-collapse:collapse; font-size:12px; table-layout:fixed;}
+table.compare-table{width:100%; min-width:640px; border-collapse:collapse; font-size:12px; table-layout:fixed;}
 table.compare-table th,table.compare-table td{padding:11px 8px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:normal; line-height:1.4; word-break:break-word;}
 table.compare-table th:first-child,table.compare-table td:first-child{padding-left:2px; width:17%; color:var(--text-2); font-weight:600;}
 table.compare-table tbody tr:last-child td{border-bottom:none;}
@@ -2823,8 +2890,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-252" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-252" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -3056,10 +3123,6 @@ footer{padding:64px 0 0; margin-top:40px;}
         </button>
         <div class="pkg-modal-scroll" id="pkgModalScroll">
           <div class="svc-panel-inner" id="svcPanelInner">
-            <button type="button" class="compare-packages-link compare-packages-link-modal" id="modalCompareLink">
-              Compare all 4 packages
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5"/><path d="M12 18V6"/></svg>
-            </button>
             <div class="svc-panel-head">
               <div>
                 <h3 id="svcName">AI Reel</h3>
@@ -3078,8 +3141,15 @@ footer{padding:64px 0 0; margin-top:40px;}
               <button class="tier-chip" data-tier="4"><span>Studio Cut</span><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em><b>₹8,000</b><span class="tier-chip-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span></button>
             </div>
 
+            <span class="svc-section-eyebrow">Key delivery specs</span>
             <div class="svc-glance" id="svcGlance"></div>
 
+            <span class="svc-section-eyebrow">Creative quality</span>
+            <div class="svc-quality-block" id="svcQualityBlock">
+              <p id="svcQualityText"></p>
+            </div>
+
+            <span class="svc-section-eyebrow">What's included, not included &amp; client-provided</span>
             <div class="scope-panel" id="scopePanel">
               <div class="scope-tab-bar">
                 <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
@@ -3087,6 +3157,33 @@ footer{padding:64px 0 0; margin-top:40px;}
                 <button class="scope-tab-btn" data-tab="need"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg> Client Provides</button>
               </div>
               <div class="scope-body" id="scopeBody"></div>
+            </div>
+
+            <!-- Script revisions and creative revisions are deliberately
+                 kept as two separate, clearly labelled blocks rather than
+                 one generic "Revisions" line — a script round happens
+                 before approval, a creative round happens after the first
+                 draft, and they're not interchangeable. -->
+            <span class="svc-section-eyebrow">Revisions &amp; limitations</span>
+            <div class="revision-split" id="revisionSplit">
+              <div class="revision-block">
+                <h4>Script revisions</h4>
+                <p class="revision-count" id="svcScriptRevisionCount"></p>
+                <p class="revision-desc" id="svcScriptRevisionDesc"></p>
+                <div class="revision-examples">
+                  <div><span>Covered</span>Small wording tweaks, reordering a point, fixing a factual detail you flag before approval.</div>
+                  <div><span>Not covered</span>A new concept, a different offer, or a full rewrite after you've already approved the script.</div>
+                </div>
+              </div>
+              <div class="revision-block">
+                <h4>Creative revisions</h4>
+                <p class="revision-count" id="svcCreativeRevisionCount"></p>
+                <p class="revision-desc" id="svcCreativeRevisionDesc"></p>
+                <div class="revision-examples">
+                  <div><span>Covered</span>Minor in-frame text or placement fixes, small timing adjustments, edit refinements within the approved direction.</div>
+                  <div><span>Not covered</span>A new concept, replacement model, language change, new scenes, or substantial regeneration — these may need additional charges and time.</div>
+                </div>
+              </div>
             </div>
 
             <!-- Shared production policy, same wording across every
@@ -3144,135 +3241,160 @@ footer{padding:64px 0 0; margin-top:40px;}
               </div>
             </details>
 
-            <!-- Side-by-side tier comparison, AI Reels only (see the
-                 compareToggle/reelCompareTable logic in renderScopePanel()
-                 in app-v2.js, which only toggles visibility/highlighting —
-                 the actual rows below are static, hand-written from the
-                 same DATA.reel1-4 values the scope panel above renders
-                 from, so the two can't drift out of sync with each other). -->
-            <details class="rules-compare-toggle" id="rulesCompareToggle" open>
-              <summary>Compare all 4 AI Reel tiers</summary>
-
-                            <div class="tier-recommend" id="tierRecommend">
-                <span class="tier-recommend-label">Quick recommend:</span>
-                <button type="button" class="tier-recommend-btn" data-rec="1">Tight budget</button>
-                <button type="button" class="tier-recommend-btn" data-rec="2">Wants script sign-off</button>
-                <button type="button" class="tier-recommend-btn" data-rec="3">Balanced / most popular</button>
-                <button type="button" class="tier-recommend-btn" data-rec="4">Best quality, full CD oversight</button>
-                <p class="tier-recommend-note" id="tierRecommendNote"></p>
+            <!-- Section I: final recap + the one in-modal path into the
+                 order builder, so a client/rep doesn't have to leave the
+                 modal and hunt for the right tier again in Quote. -->
+            <div class="svc-final-action" id="svcFinalAction">
+              <div class="svc-final-recap">
+                <div class="svc-final-name" id="svcFinalName"></div>
+                <div class="svc-final-specs" id="svcFinalSpecs"></div>
               </div>
-              
-              <div class="compare-wrap">
-                <table class="compare-table" id="reelCompareTable">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th data-tier-col="1">Quick Cut<br><em class="tier-quality-badge tq-1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>Starter</em></th>
-                      <th data-tier-col="2">Story Cut<br><em class="tier-quality-badge tq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Standard</em></th>
-                      <th data-tier-col="3">Director's Cut<br><em class="tier-quality-badge tq-3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>Popular</em></th>
-                      <th data-tier-col="4">Studio Cut<br><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="ct-price-row">
-                      <td>Price</td>
-                      <td data-tier-col="1">₹2,500</td>
-                      <td data-tier-col="2">₹3,500</td>
-                      <td data-tier-col="3">₹5,000</td>
-                      <td data-tier-col="4">₹8,000</td>
-                    </tr>
-                    <tr>
-                      <td>Min. order value</td>
-                      <td colspan="4">₹10,000 per order (not per package, mix and match tiers/services to reach it)</td>
-                    </tr>
-                    <tr>
-                      <td>Max length</td>
-                      <td data-tier-col="1">25 sec</td>
-                      <td data-tier-col="2">35 sec</td>
-                      <td data-tier-col="3">50 sec</td>
-                      <td data-tier-col="4">1 min</td>
-                    </tr>
-                    <tr>
-                      <td>Production quality</td>
-                      <td data-tier-col="1">Basic: straightforward cuts, standard transitions</td>
-                      <td data-tier-col="2">Enhanced: smoother pacing, improved transitions, added detailing</td>
-                      <td data-tier-col="3">Premium: cinematic pacing, advanced transitions, richer detailing</td>
-                      <td data-tier-col="4">Highest: cinematic transitions, advanced detailing, most polished</td>
-                    </tr>
-                    <tr>
-                      <td>Script / hook approval</td>
-                      <td data-tier-col="1">No separate approval step</td>
-                      <td data-tier-col="2">1 script shared for approval</td>
-                      <td data-tier-col="3">1 script + 2 hook options</td>
-                      <td data-tier-col="4">1 script + 2 hook options</td>
-                    </tr>
-                    <tr>
-                      <td>Revisions</td>
-                      <td data-tier-col="1">1 (minor, in-frame only)</td>
-                      <td data-tier-col="2">1 (small script/comms changes)</td>
-                      <td data-tier-col="3">1 (small script/comms changes)</td>
-                      <td data-tier-col="4">2 (small script/comms changes)</td>
-                    </tr>
-                    <tr>
-                      <td>Turnaround</td>
-                      <td data-tier-col="1">1–2 working days</td>
-                      <td data-tier-col="2">Up to 3 working days</td>
-                      <td data-tier-col="3">Up to 4 working days</td>
-                      <td data-tier-col="4">Up to 5 working days</td>
-                    </tr>
-                    <tr>
-                      <td>Team involvement</td>
-                      <td data-tier-col="1">KAM support</td>
-                      <td data-tier-col="2">KAM + Video Editor</td>
-                      <td data-tier-col="3">KAM + Editor + Content Writer + Creative Director</td>
-                      <td data-tier-col="4">KAM + Editor + dedicated Content Writer + Creative Director + custom music</td>
-                    </tr>
-                    <tr>
-                      <td>Voiceover language</td>
-                      <td data-tier-col="1">Hindi or English</td>
-                      <td data-tier-col="2">Hindi or English</td>
-                      <td data-tier-col="3">Hindi or English</td>
-                      <td data-tier-col="4">Hindi or English</td>
-                    </tr>
-                    <tr>
-                      <td>Key exclusions</td>
-                      <td data-tier-col="1">Script approval, extra hooks, major rework, extra dimensions</td>
-                      <td data-tier-col="2">Extra hooks, major post-approval script changes, extra dimensions</td>
-                      <td data-tier-col="3">Custom brand music, major rework, extra dimensions</td>
-                      <td data-tier-col="4">Major rework, extra dimensions, lip-sync to custom music</td>
-                    </tr>
-                  </tbody>
-                                    <tfoot>
-                    <tr class="ct-add-row">
-                      <td>Quick add</td>
-                      <td data-tier-col="1"><button type="button" class="ct-add-btn" data-add-tier="1">+ Add</button></td>
-                      <td data-tier-col="2"><button type="button" class="ct-add-btn" data-add-tier="2">+ Add</button></td>
-                      <td data-tier-col="3"><button type="button" class="ct-add-btn" data-add-tier="3">+ Add</button></td>
-                      <td data-tier-col="4"><button type="button" class="ct-add-btn" data-add-tier="4">+ Add</button></td>
-                    </tr>
-                    <tr class="ct-compare-row">
-                      <td>Compare</td>
-                      <td data-tier-col="1"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="1"><span></span></label></td>
-                      <td data-tier-col="2"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="2"><span></span></label></td>
-                      <td data-tier-col="3"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="3"><span></span></label></td>
-                      <td data-tier-col="4"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="4"><span></span></label></td>
-                    </tr>
-                    <tr class="ct-compare-exit-row">
-                      <td colspan="5"><button type="button" class="ct-compare-exit-btn" id="ctCompareExitBtn">Show all tiers</button></td>
-                    </tr>
-                  </tfoot>
-                                  </table>
-              </div>
-                            <div class="ct-compare-bar" id="ctCompareBar" hidden>
-                <span><strong id="ctCompareCount">0</strong> tiers selected for comparison</span>
-                <div class="ct-compare-bar-actions">
-                  <button type="button" class="ct-compare-clear-btn" id="ctCompareClearBtn">Clear</button>
-                  <button type="button" class="ct-compare-view-btn" id="ctCompareViewBtn" disabled>View Comparison</button>
-                </div>
-              </div>
-                          </details>
+              <div class="svc-final-price-wrap">
+                <div class="svc-final-price" id="svcFinalPrice"></div>
+                                <button type="button" class="svc-final-add-btn" id="svcFinalAddBtn">Add to Order</button>
+                              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Standalone AI Reel comparison modal — the ONLY place the 4-tier
+         comparison table lives. It's a sibling of the package-detail
+         modal, not nested inside it, and opens from the single
+         "Compare AI Reel packages" button near the section heading
+         (#comparePackagesLink) so there's exactly one way in, matching
+         whatever tier is currently selected via the shared state.tier
+         (see .ct-sel sync in renderScopePanel()). Closing it never
+         touches pkgModal/state.tier/scroll position — see
+         openCompareModal()/closeCompareModal() in app-v2.js. -->
+    <div class="compare-modal-backdrop" id="compareModalBackdrop">
+      <div class="compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-label="Compare AI Reel packages">
+        <div class="compare-modal-head">
+          <h3>Compare AI Reel packages</h3>
+          <button type="button" class="compare-modal-close" id="compareModalClose" aria-label="Close comparison">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="compare-modal-scroll">
+                    <div class="tier-recommend" id="tierRecommend">
+            <span class="tier-recommend-label">Quick recommend:</span>
+            <button type="button" class="tier-recommend-btn" data-rec="1">Tight budget</button>
+            <button type="button" class="tier-recommend-btn" data-rec="2">Wants script sign-off</button>
+            <button type="button" class="tier-recommend-btn" data-rec="3">Balanced / most popular</button>
+            <button type="button" class="tier-recommend-btn" data-rec="4">Best quality, full CD oversight</button>
+            <p class="tier-recommend-note" id="tierRecommendNote"></p>
+          </div>
+          
+          <div class="compare-wrap">
+            <table class="compare-table" id="reelCompareTable">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th data-tier-col="1">Quick Cut<br><em class="tier-quality-badge tq-1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>Starter</em></th>
+                  <th data-tier-col="2">Story Cut<br><em class="tier-quality-badge tq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Standard</em></th>
+                  <th data-tier-col="3">Director's Cut<br><em class="tier-quality-badge tq-3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>Popular</em></th>
+                  <th data-tier-col="4">Studio Cut<br><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="ct-price-row">
+                  <td>Price</td>
+                  <td data-tier-col="1">₹2,500</td>
+                  <td data-tier-col="2">₹3,500</td>
+                  <td data-tier-col="3">₹5,000</td>
+                  <td data-tier-col="4">₹8,000</td>
+                </tr>
+                <tr>
+                  <td>Min. order value</td>
+                  <td colspan="4">₹10,000 per order (not per package, mix and match tiers/services to reach it)</td>
+                </tr>
+                <tr>
+                  <td>Max length</td>
+                  <td data-tier-col="1">25 sec</td>
+                  <td data-tier-col="2">35 sec</td>
+                  <td data-tier-col="3">50 sec</td>
+                  <td data-tier-col="4">1 min</td>
+                </tr>
+                <tr>
+                  <td>Production quality</td>
+                  <td data-tier-col="1">Basic: straightforward cuts, standard transitions</td>
+                  <td data-tier-col="2">Enhanced: smoother pacing, improved transitions, added detailing</td>
+                  <td data-tier-col="3">Premium: cinematic pacing, advanced transitions, richer detailing</td>
+                  <td data-tier-col="4">Highest: cinematic transitions, advanced detailing, most polished</td>
+                </tr>
+                <tr>
+                  <td>Script / hook approval</td>
+                  <td data-tier-col="1">No separate approval step</td>
+                  <td data-tier-col="2">1 script shared for approval</td>
+                  <td data-tier-col="3">1 script + 2 hook options</td>
+                  <td data-tier-col="4">1 script + 2 hook options</td>
+                </tr>
+                <tr>
+                  <td>Revisions</td>
+                  <td data-tier-col="1">1 (minor, in-frame only)</td>
+                  <td data-tier-col="2">1 (small script/comms changes)</td>
+                  <td data-tier-col="3">1 (small script/comms changes)</td>
+                  <td data-tier-col="4">2 (small script/comms changes)</td>
+                </tr>
+                <tr>
+                  <td>Turnaround</td>
+                  <td data-tier-col="1">1–2 working days</td>
+                  <td data-tier-col="2">Up to 3 working days</td>
+                  <td data-tier-col="3">Up to 4 working days</td>
+                  <td data-tier-col="4">Up to 5 working days</td>
+                </tr>
+                <tr>
+                  <td>Team involvement</td>
+                  <td data-tier-col="1">KAM support</td>
+                  <td data-tier-col="2">KAM + Video Editor</td>
+                  <td data-tier-col="3">KAM + Editor + Content Writer + Creative Director</td>
+                  <td data-tier-col="4">KAM + Editor + dedicated Content Writer + Creative Director + custom music</td>
+                </tr>
+                <tr>
+                  <td>Voiceover language</td>
+                  <td data-tier-col="1">Hindi or English</td>
+                  <td data-tier-col="2">Hindi or English</td>
+                  <td data-tier-col="3">Hindi or English</td>
+                  <td data-tier-col="4">Hindi or English</td>
+                </tr>
+                <tr>
+                  <td>Key exclusions</td>
+                  <td data-tier-col="1">Script approval, extra hooks, major rework, extra dimensions</td>
+                  <td data-tier-col="2">Extra hooks, major post-approval script changes, extra dimensions</td>
+                  <td data-tier-col="3">Custom brand music, major rework, extra dimensions</td>
+                  <td data-tier-col="4">Major rework, extra dimensions, lip-sync to custom music</td>
+                </tr>
+              </tbody>
+                            <tfoot>
+                <tr class="ct-add-row">
+                  <td>Quick add</td>
+                  <td data-tier-col="1"><button type="button" class="ct-add-btn" data-add-tier="1">+ Add</button></td>
+                  <td data-tier-col="2"><button type="button" class="ct-add-btn" data-add-tier="2">+ Add</button></td>
+                  <td data-tier-col="3"><button type="button" class="ct-add-btn" data-add-tier="3">+ Add</button></td>
+                  <td data-tier-col="4"><button type="button" class="ct-add-btn" data-add-tier="4">+ Add</button></td>
+                </tr>
+                <tr class="ct-compare-row">
+                  <td>Compare</td>
+                  <td data-tier-col="1"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="1"><span></span></label></td>
+                  <td data-tier-col="2"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="2"><span></span></label></td>
+                  <td data-tier-col="3"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="3"><span></span></label></td>
+                  <td data-tier-col="4"><label class="ct-compare-check"><input type="checkbox" data-compare-tier="4"><span></span></label></td>
+                </tr>
+                <tr class="ct-compare-exit-row">
+                  <td colspan="5"><button type="button" class="ct-compare-exit-btn" id="ctCompareExitBtn">Show all tiers</button></td>
+                </tr>
+              </tfoot>
+                          </table>
+          </div>
+                    <div class="ct-compare-bar" id="ctCompareBar" hidden>
+            <span><strong id="ctCompareCount">0</strong> tiers selected for comparison</span>
+            <div class="ct-compare-bar-actions">
+              <button type="button" class="ct-compare-clear-btn" id="ctCompareClearBtn">Clear</button>
+              <button type="button" class="ct-compare-view-btn" id="ctCompareViewBtn" disabled>View Comparison</button>
+            </div>
+          </div>
+                  </div>
       </div>
     </div>
 
@@ -3899,8 +4021,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-251" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-252" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-252" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -4179,8 +4301,8 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-251"></script>
-<script src="assets/app-v2.js?v=20260811-251"></script>
-<script type="module" src="assets/team-v2.js?v=20260811-251"></script>
+<script src="assets/creative-data.js?v=20260811-252"></script>
+<script src="assets/app-v2.js?v=20260811-252"></script>
+<script type="module" src="assets/team-v2.js?v=20260811-252"></script>
 </body>
 </html>

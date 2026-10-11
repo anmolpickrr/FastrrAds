@@ -716,14 +716,20 @@
       state.tier = t;
       renderServiceSummary();
       renderServiceGlance();
+      renderQualitySection();
       renderScopePanel();
+      renderRevisionsSection();
+      renderFinalAction();
       maxH = Math.max(maxH, svcPanelInner.scrollHeight);
     });
     state.tier = savedTier;
     state.scopeTab = savedScopeTab;
     renderServiceSummary();
     renderServiceGlance();
+    renderQualitySection();
     renderScopePanel();
+    renderRevisionsSection();
+    renderFinalAction();
     return maxH;
   }
 
@@ -829,8 +835,6 @@
 
   function renderServiceNav() {
     tierRow.classList.toggle("is-hidden", state.service !== "reels");
-    const modalCompareLinkEl = document.getElementById("modalCompareLink");
-    if (modalCompareLinkEl) modalCompareLinkEl.classList.toggle("is-hidden", state.service !== "reels");
     if (state.service === "reels") {
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
@@ -876,12 +880,28 @@
     document.getElementById("svcShort").textContent = d.short || "";
   }
 
-  // The handful of facts worth scanning without a click: always visible,
-  // so understanding a package doesn't start by opening the Included tab.
+  // "Not applicable" (no scripting on this service at all) vs. "Not
+  // included" (this tier scripts the reel but skips a separate
+  // client-approval step) vs. "Included" (a script/hooks are shared
+  // for written approval before production) — three different facts,
+  // so they get three different short labels rather than one flattened
+  // "yes/no".
+  function scriptApprovalLabel(d) {
+    const s = d.scripting || "";
+    if (/not applicable|no scripting/i.test(s)) return "Not applicable";
+    if (/no separate approval/i.test(s)) return "Not included";
+    if (/approval/i.test(s)) return "Included";
+    return s || "—";
+  }
+
+  // Section B (Key delivery specs): a fixed 6-item grid, always
+  // visible, no click required. Script and creative revisions are two
+  // separate cells here too — never merged into one "Revisions" line
+  // — matching the dedicated Section E split below.
   function renderServiceGlance() {
     const d = currentData();
     const items = [
-      ["Length", d.duration],
+      ["Duration", d.duration],
       ["Format", d.format],
       // Same short form as keyFacts() below uses for the order-builder
       // strip — the "after we receive everything needed from you"
@@ -889,18 +909,64 @@
       // covered once for the whole order by .order-tat-note in the
       // Quote section, so repeating it here just added 3-4 extra
       // wrapped lines to an always-visible strip for no new information.
-      ["Turnaround", (d.turnaround || "").split(" after")[0]],
-      [
-        "Revisions",
-        d.revisionScriptShort && d.revisionCreativeShort
-          ? `<span class="glance-rev-mini"><i>Script</i><em>${d.revisionScriptShort}</em></span><span class="glance-rev-mini"><i>Creative</i><em>${d.revisionCreativeShort}</em></span>`
-          : d.revisions,
-      ],
-      ["Quality", d.quality],
+      ["Turnaround (TAT)", (d.turnaround || "").split(" after")[0]],
+      ["Script approval", scriptApprovalLabel(d)],
+      ["Script revisions", d.revisionScriptShort || d.revisionScript || "—"],
+      ["Creative revisions", d.revisionCreativeShort || d.revisionCreative || d.revisions || "—"],
     ].filter(([, v]) => v);
     document.getElementById("svcGlance").innerHTML = items
       .map(([k, v]) => `<div class="svc-glance-item"><span>${k}</span><b>${v}</b></div>`)
       .join("");
+  }
+
+  // Section C (Creative quality): its own sentence-length explanation,
+  // separate from the short scannable glance grid above.
+  function renderQualitySection() {
+    const d = currentData();
+    const block = document.getElementById("svcQualityBlock");
+    const text = document.getElementById("svcQualityText");
+    if (!block || !text) return;
+    if (d.quality) {
+      text.textContent = d.quality;
+      block.style.display = "";
+    } else {
+      block.style.display = "none";
+    }
+  }
+
+  // Section E (Revisions & limitations): script vs. creative kept as
+  // two distinct blocks, each with its own count and the per-package
+  // description already written for the PDF/message generator
+  // (d.revisionScript / d.revisionCreative), so this view can't drift
+  // out of sync with what's actually quoted elsewhere.
+  function renderRevisionsSection() {
+    const d = currentData();
+    const scriptCountEl = document.getElementById("svcScriptRevisionCount");
+    const scriptDescEl = document.getElementById("svcScriptRevisionDesc");
+    const creativeCountEl = document.getElementById("svcCreativeRevisionCount");
+    const creativeDescEl = document.getElementById("svcCreativeRevisionDesc");
+    if (!scriptCountEl) return;
+    scriptCountEl.textContent = d.revisionScriptShort || "N/A";
+    scriptDescEl.textContent = d.revisionScript || "Not applicable to this service.";
+    creativeCountEl.textContent = d.revisionCreativeShort || d.revisions || "—";
+    creativeDescEl.textContent = d.revisionCreative || d.revisions || "";
+  }
+
+  // Section I (final recap + action): mirrors whatever's currently
+  // selected (state.service/state.tier) so it never goes stale against
+  // the rest of the modal, and the Add to Order button below it acts
+  // on that exact same selection via the shared addToOrder()/cart path
+  // — nothing new, just a second place to trigger it without leaving
+  // the modal.
+  function renderFinalAction() {
+    const d = currentData();
+    const nameEl = document.getElementById("svcFinalName");
+    const specsEl = document.getElementById("svcFinalSpecs");
+    const priceEl = document.getElementById("svcFinalPrice");
+    if (!nameEl) return;
+    nameEl.textContent = d.name.replace(/^AI Reel: /, "");
+    specsEl.textContent = [d.duration, d.format, (d.turnaround || "").split(" after")[0]].filter(Boolean).join(" · ");
+    priceEl.textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
   }
 
   function renderScopePanel() {
@@ -956,16 +1022,10 @@
     }
     document.getElementById("scopeBody").innerHTML = html;
 
-    // Reel comparison table (nested inside "Good to know") only makes
-    // sense for AI Reels — hide the whole toggle, not just the table,
-    // for tier-less services. It ships open by default (the `open`
-    // attribute in the markup) for both builds now, so the tier specs
-    // are visible without an extra click — this only hides it outright
-    // for tier-less services; it deliberately does NOT force .open
-    // back to true on every render, so a visitor who collapses it
-    // manually stays collapsed instead of being fought by re-renders.
-    const compareToggle = document.getElementById("rulesCompareToggle");
-    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
+    // The standalone comparison modal's table always covers all 4 AI
+    // Reel tiers regardless of which service's card is currently open
+    // (it lives outside any package modal) — this just keeps its
+    // .ct-sel highlight in sync with whichever reel tier is selected.
     const table = document.getElementById("reelCompareTable");
     if (table) {
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
@@ -1561,7 +1621,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     renderServiceNav();
     renderServiceSummary();
     renderServiceGlance();
+    renderQualitySection();
     renderScopePanel();
+    renderRevisionsSection();
+    renderFinalAction();
     renderCalculator();
     renderCart();
     renderMessages();
@@ -1712,38 +1775,44 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   initPkgDrag();
 
-  // Opens the Reels package modal and jumps straight to the comparison
-  // table inside it — shared by the link next to the package cards and
-  // the "Compare Packages" top-nav item, so both land in the same place.
-  function openPackageComparison() {
-    const reelsCard = document.querySelector('.pkg-card[data-svc="reels"]');
-    if (!reelsCard) return;
-    reelsCard.click();
-    // Wait out the modal's own .5s open transform (see openPkgModal)
-    // before scrolling inside it — scrolling mid-transition would
-    // measure against a still-animating layout.
-    setTimeout(() => {
-      const toggle = document.getElementById("rulesCompareToggle");
-      if (toggle) {
-        toggle.open = true;
-        toggle.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 560);
+  // The ONE standalone comparison modal — the 4-tier table lives only
+  // here, never inside a package card or its detail modal. Opening or
+  // closing it is entirely independent of pkgModal: it doesn't touch
+  // state.service/state.tier, doesn't close/open the package-detail
+  // modal, and doesn't move page scroll, so whatever the client was
+  // looking at stays exactly where it was.
+  const compareModalBackdrop = document.getElementById("compareModalBackdrop");
+  const compareModal = document.getElementById("compareModal");
+  const compareModalClose = document.getElementById("compareModalClose");
+  let compareModalOpen = false;
+
+  function openCompareModal() {
+    if (!compareModalBackdrop) return;
+    compareModalBackdrop.classList.add("open");
+    document.body.classList.add("pkg-modal-open");
+    document.documentElement.classList.add("pkg-modal-open");
+    compareModalOpen = true;
+    compareModalClose?.focus();
+  }
+  function closeCompareModal() {
+    if (!compareModalBackdrop || !compareModalOpen) return;
+    compareModalOpen = false;
+    compareModalBackdrop.classList.remove("open");
+    // Only drop the scroll lock if the package-detail modal isn't also
+    // open — in practice the two are never open at once (the compare
+    // button lives on the main page, not inside pkgModal), but this
+    // keeps the lock correct either way instead of assuming it.
+    if (!pkgModalOpen) {
+      document.body.classList.remove("pkg-modal-open");
+      document.documentElement.classList.remove("pkg-modal-open");
+    }
   }
   const comparePackagesLink = document.getElementById("comparePackagesLink");
-  if (comparePackagesLink) comparePackagesLink.addEventListener("click", openPackageComparison);
-
-  // Lives inside the modal itself (reels only), so it just needs to
-  // open the compare table in place, not re-open the modal it's
-  // already in.
-  const modalCompareLink = document.getElementById("modalCompareLink");
-  if (modalCompareLink) {
-    modalCompareLink.addEventListener("click", () => {
-      const toggle = document.getElementById("rulesCompareToggle");
-      if (toggle) {
-        toggle.open = true;
-        toggle.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+  if (comparePackagesLink) comparePackagesLink.addEventListener("click", openCompareModal);
+  if (compareModalClose) compareModalClose.addEventListener("click", closeCompareModal);
+  if (compareModalBackdrop) {
+    compareModalBackdrop.addEventListener("click", (e) => {
+      if (e.target === compareModalBackdrop) closeCompareModal();
     });
   }
 
@@ -1752,7 +1821,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     if (e.target === pkgModalBackdrop) closePkgModal();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && pkgModalOpen) closePkgModal();
+    if (e.key !== "Escape") return;
+    if (compareModalOpen) {
+      closeCompareModal();
+      return;
+    }
+    if (pkgModalOpen) closePkgModal();
   });
 
   tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
@@ -1796,6 +1870,27 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   }
 
+  // Section I's own Add to Order button — adds whatever service/tier
+  // is currently selected in the modal (same addToOrder() the compare
+  // table's Quick Add and the main order builder both use), then
+  // closes the package-detail modal and jumps to the order panel.
+  const svcFinalAddBtn = document.getElementById("svcFinalAddBtn");
+  if (svcFinalAddBtn) {
+    svcFinalAddBtn.addEventListener("click", () => {
+      const addedId = addToOrder();
+      closePkgModal();
+      requestAnimationFrame(() => {
+        document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const row = document.querySelector(`.cart-item[data-id="${addedId}"]`);
+        if (row) {
+          row.classList.remove("flash");
+          void row.offsetWidth;
+          row.classList.add("flash");
+        }
+      });
+    });
+  }
+
   const reelCompareTable = document.getElementById("reelCompareTable");
   if (reelCompareTable) {
     reelCompareTable.querySelectorAll(".ct-add-btn").forEach((btn) => {
@@ -1803,12 +1898,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         state.service = "reels";
         state.tier = Number(btn.dataset.addTier);
         const addedId = addToOrder();
-        // The click happens from inside the open package modal, so
-        // scrolling the page behind it is invisible on its own — close
-        // the modal first, then scroll to the order panel and flash the
-        // exact row that was just added, so the add is actually seen,
-        // not just silently applied to state.
-        closePkgModal();
+        // The click happens from inside the standalone compare modal,
+        // so scrolling the page behind it is invisible on its own —
+        // close the modal first, then scroll to the order panel and
+        // flash the exact row that was just added, so the add is
+        // actually seen, not just silently applied to state.
+        closeCompareModal();
         requestAnimationFrame(() => {
           document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
           const row = document.querySelector(`.cart-item[data-id="${addedId}"]`);
