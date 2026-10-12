@@ -81,23 +81,28 @@
      per the brief (supersedes the prototype for these two).
   ---------------------------------------------------------- */
   const DATA = {
-    catalogue: {
-      name: "360° Catalogue Video",
+    // Two pricing tiers, same pattern as the AI Reel tiers (reel1-4)
+    // below — tag/duration/price per the approved package scope;
+    // every other field (inclusions, exclusions, support) carries over
+    // unchanged from the previous single-tier version since no other
+    // scope difference between the two tiers has been confirmed yet.
+    catalogue1: {
+      name: "360° Catalogue Video: Standard", tier: 1, unit: "SKU", basePrice: 1400,
       short: "AI-generated 360° product rotation, catalogue-ready.",
       benefit: "Fastest way to make a product page feel alive.",
-      unit: "SKU",
-      basePrice: 1800,
-      duration: "8–15 sec",
+      duration: "10–15 sec",
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
-      revisionScript: "Not applicable — no scripting on this service",
+      revisionScript: "Not applicable, no scripting on this service",
       revisionCreative: "No revisions included",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "None",
       language: "Not applicable (silent, no voiceover)",
       turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
-        "Silent, looped motion, 8–15 sec",
+        "Silent, looped motion, 10–15 sec",
         "1 aspect ratio of your choice",
         "Clean/white or brand-background finish",
         "Lifestyle/product-use shots showing the product worn or used, where relevant",
@@ -114,12 +119,48 @@
         "SKU list with the product names that need a rotation",
         "Reference/inspiration for the rotation style (if any)",
       ],
-      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 10–15 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
       // Standard 360° rotation is deliberately silent/text-free/script-free (see
       // `excluded` above); the one exception is that a human CAN appear wearing or
       // using the product via lifestyle/product-use shots where relevant — that's
       // not the same as a scripted presenter piece, so it stays editor-only, no
       // writer/CD role.
+      support: ["editor", "call"],
+    },
+    catalogue2: {
+      name: "360° Catalogue Video: Premium", tier: 2, unit: "SKU", basePrice: 2000,
+      short: "AI-generated 360° product rotation, catalogue-ready.",
+      benefit: "A longer, more detailed rotation for hero SKUs.",
+      duration: "15–20 sec",
+      format: "1 of 1:1 / 4:5 / 9:16",
+      revisions: "No revisions",
+      scripting: "No scripting",
+      revisionScript: "Not applicable, no scripting on this service",
+      revisionCreative: "No revisions included",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "None",
+      language: "Not applicable (silent, no voiceover)",
+      turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
+      included: [
+        "AI-generated 360° rotation per SKU",
+        "Silent, looped motion, 15–20 sec",
+        "1 aspect ratio of your choice",
+        "Clean/white or brand-background finish",
+        "Lifestyle/product-use shots showing the product worn or used, where relevant",
+      ],
+      excluded: [
+        "Text overlays",
+        "Voiceover",
+        "Custom music",
+        "Offers or promotional elements",
+        "Scripting",
+        "Additional aspect ratios (quoted separately)",
+      ],
+      need: [
+        "SKU list with the product names that need a rotation",
+        "Reference/inspiration for the rotation style (if any)",
+      ],
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 15–20 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
       support: ["editor", "call"],
     },
     static: {
@@ -132,8 +173,10 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
-      revisionScript: "Not applicable — design-only, no scripting",
+      revisionScript: "Not applicable, design-only, no scripting",
       revisionCreative: "1 revision",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 revision",
       language: "Not applicable",
       turnaround: "24 working hours per creative after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -166,8 +209,10 @@
       format: "1:1 + 9:16 (2 sizes)",
       revisions: "1 revision",
       scripting: "Not applicable",
-      revisionScript: "Not applicable — design-only, no scripting",
+      revisionScript: "Not applicable, design-only, no scripting",
       revisionCreative: "1 revision",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 revision",
       language: "Not applicable",
       turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -195,8 +240,10 @@
       quality: "Basic edit: straightforward cuts and standard transitions, no advanced visual detailing.",
       duration: "Max 25 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (minor, in frame changes only)", scripting: "Script written from your brief, with no separate approval step",
-      revisionScript: "Not applicable — script is finalised from your brief, no separate approval step",
+      revisionScript: "Not applicable, script is finalised from your brief with no separate approval step",
       revisionCreative: "1 revision (minor, in-frame changes only)",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "1 (in-frame only)",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
@@ -230,8 +277,10 @@
       quality: "Enhanced edit: smoother pacing, improved transitions, and additional visual detailing.",
       duration: "Max 35 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
-      revisionScript: "Covered by the 1 revision below, usable on the script before approval",
-      revisionCreative: "1 revision — for a script change or a finished-reel communication change (e.g. hook, CTA)",
+      revisionScript: "Shared with the 1 creative revision below, usable on the script before approval",
+      revisionCreative: "1 revision, for a script change or a finished-reel communication change such as the hook or CTA",
+      revisionScriptShort: "1 revision (shared)",
+      revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
@@ -265,8 +314,10 @@
       quality: "Premium edit: cinematic pacing, advanced transitions, and richer visual detailing.",
       duration: "Max 50 sec", format: "9:16 (1 dimension)",
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
-      revisionScript: "Covered by the 1 revision below, usable on the script/hooks before approval",
-      revisionCreative: "1 revision — for a script/hook change or a finished-reel communication change",
+      revisionScript: "Shared with the 1 creative revision below, usable on the script or hooks before approval",
+      revisionCreative: "1 revision, for a script/hook change or a finished-reel communication change",
+      revisionScriptShort: "1 revision (shared)",
+      revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
@@ -300,8 +351,10 @@
       quality: "Highest-quality edit: cinematic transitions, advanced detailing, and the most polished finish.",
       duration: "Max 1 min", format: "9:16 (1 dimension)",
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
-      revisionScript: "Covered by the 2 revisions below, usable on the script/hooks before approval",
-      revisionCreative: "2 revisions — for a script/hook change or a finished-reel communication change",
+      revisionScript: "Shared with the 2 creative revisions below, usable on the script or hooks before approval",
+      revisionCreative: "2 revisions, for a script/hook change or a finished-reel communication change",
+      revisionScriptShort: "2 revisions (shared)",
+      revisionCreativeShort: "2 revisions",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
@@ -451,6 +504,7 @@
   const state = {
     service: "reels", // reels | catalogue | static | carousel — also the order-builder's current selection
     tier: 3, // only relevant when service === 'reels'
+    catalogueTier: 1, // only relevant when service === 'catalogue' — 1 = Standard, 2 = Premium
     qty: 1, // builder quantity, for the item about to be added to the order
     cart: [], // order line items: { id, service, tier|null, qty }
     discountValue: 0, // order-level discount percent (0-100), applied once to the whole cart's subtotal
@@ -563,14 +617,28 @@
   // every re-render while the order stays above the threshold.
   let offerWasUnlocked = false;
 
+  // Reels (4 tiers) and Catalogue (2 tiers) both key into DATA as
+  // "<prefix><tier>" and track their own tier selection separately in
+  // state, so switching between them never clobbers the other's
+  // current tier. Every other service is tier-less (tier is always
+  // null, key is just the service name).
+  const TIER_KEY_PREFIX = { reels: "reel", catalogue: "catalogue" };
+  function tierStateKey(service) {
+    return service === "reels" ? "tier" : service === "catalogue" ? "catalogueTier" : null;
+  }
+  function tierFor(service) {
+    const key = tierStateKey(service);
+    return key ? state[key] : null;
+  }
   function keyFor(service, tier) {
-    return service === "reels" ? "reel" + tier : service;
+    const prefix = TIER_KEY_PREFIX[service];
+    return prefix ? prefix + tier : service;
   }
   function dataFor(service, tier) {
     return DATA[keyFor(service, tier)];
   }
   function currentKey() {
-    return keyFor(state.service, state.tier);
+    return keyFor(state.service, tierFor(state.service));
   }
   function currentData() {
     return DATA[currentKey()];
@@ -621,7 +689,7 @@
 
   function addToOrder() {
     const service = state.service;
-    const tier = service === "reels" ? state.tier : null;
+    const tier = tierFor(service);
     const qty = Math.max(1, state.qty || 1);
     const existing = state.cart.find((i) => i.service === service && i.tier === tier);
     let addedId;
@@ -673,6 +741,7 @@
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
   const tierRow = document.getElementById("tierRow");
+  const catalogueTierRow = document.getElementById("catalogueTierRow");
   const scopePanel = document.getElementById("scopePanel");
   const pkgModalBackdrop = document.getElementById("pkgModalBackdrop");
   const pkgModal = document.getElementById("pkgModal");
@@ -694,22 +763,30 @@
   // FLIP-morph measures the modal's box, so the footprint never moves
   // while switching tiers afterward.
   function measureMaxTierHeight() {
-    if (state.service !== "reels") return 0;
-    const savedTier = state.tier;
+    const tierStateK = tierStateKey(state.service);
+    if (!tierStateK) return 0;
+    const tierCount = state.service === "reels" ? 4 : 2;
+    const savedTier = state[tierStateK];
     const savedScopeTab = state.scopeTab;
     let maxH = 0;
-    [1, 2, 3, 4].forEach((t) => {
-      state.tier = t;
+    for (let t = 1; t <= tierCount; t++) {
+      state[tierStateK] = t;
       renderServiceSummary();
       renderServiceGlance();
+      renderQualitySection();
       renderScopePanel();
+      renderRevisionsSection();
+      renderFinalAction();
       maxH = Math.max(maxH, svcPanelInner.scrollHeight);
-    });
-    state.tier = savedTier;
+    }
+    state[tierStateK] = savedTier;
     state.scopeTab = savedScopeTab;
     renderServiceSummary();
     renderServiceGlance();
+    renderQualitySection();
     renderScopePanel();
+    renderRevisionsSection();
+    renderFinalAction();
     return maxH;
   }
 
@@ -820,6 +897,14 @@
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
     }
+    if (catalogueTierRow) {
+      catalogueTierRow.classList.toggle("is-hidden", state.service !== "catalogue");
+      if (state.service === "catalogue") {
+        catalogueTierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+          chip.classList.toggle("active", Number(chip.dataset.tier) === state.catalogueTier);
+        });
+      }
+    }
     svcNav.querySelectorAll(".pkg-card").forEach((card) => {
       card.classList.toggle("selected", card.dataset.svc === state.service);
     });
@@ -860,12 +945,28 @@
     document.getElementById("svcShort").textContent = d.short || "";
   }
 
-  // The handful of facts worth scanning without a click: always visible,
-  // so understanding a package doesn't start by opening the Included tab.
+  // "Not applicable" (no scripting on this service at all) vs. "Not
+  // included" (this tier scripts the reel but skips a separate
+  // client-approval step) vs. "Included" (a script/hooks are shared
+  // for written approval before production) — three different facts,
+  // so they get three different short labels rather than one flattened
+  // "yes/no".
+  function scriptApprovalLabel(d) {
+    const s = d.scripting || "";
+    if (/not applicable|no scripting/i.test(s)) return "Not applicable";
+    if (/no separate approval/i.test(s)) return "Not included";
+    if (/approval/i.test(s)) return "Included";
+    return s || "—";
+  }
+
+  // Section B (Key delivery specs): a fixed 6-item grid, always
+  // visible, no click required. Script and creative revisions are two
+  // separate cells here too — never merged into one "Revisions" line
+  // — matching the dedicated Section E split below.
   function renderServiceGlance() {
     const d = currentData();
     const items = [
-      ["Length", d.duration],
+      ["Duration", d.duration],
       ["Format", d.format],
       // Same short form as keyFacts() below uses for the order-builder
       // strip — the "after we receive everything needed from you"
@@ -873,18 +974,64 @@
       // covered once for the whole order by .order-tat-note in the
       // Quote section, so repeating it here just added 3-4 extra
       // wrapped lines to an always-visible strip for no new information.
-      ["Turnaround", (d.turnaround || "").split(" after")[0]],
-      [
-        "Revisions",
-        d.revisionScript && d.revisionCreative
-          ? `<span class="glance-rev-line"><i>Script</i> ${d.revisionScript}</span><span class="glance-rev-line"><i>Creative</i> ${d.revisionCreative}</span>`
-          : d.revisions,
-      ],
-      ["Quality", d.quality],
+      ["Turnaround (TAT)", (d.turnaround || "").split(" after")[0]],
+      ["Script approval", scriptApprovalLabel(d)],
+      ["Script revisions", d.revisionScriptShort || d.revisionScript || "—"],
+      ["Creative revisions", d.revisionCreativeShort || d.revisionCreative || d.revisions || "—"],
     ].filter(([, v]) => v);
     document.getElementById("svcGlance").innerHTML = items
       .map(([k, v]) => `<div class="svc-glance-item"><span>${k}</span><b>${v}</b></div>`)
       .join("");
+  }
+
+  // Section C (Creative quality): its own sentence-length explanation,
+  // separate from the short scannable glance grid above.
+  function renderQualitySection() {
+    const d = currentData();
+    const block = document.getElementById("svcQualityBlock");
+    const text = document.getElementById("svcQualityText");
+    if (!block || !text) return;
+    if (d.quality) {
+      text.textContent = d.quality;
+      block.style.display = "";
+    } else {
+      block.style.display = "none";
+    }
+  }
+
+  // Section E (Revisions & limitations): script vs. creative kept as
+  // two distinct blocks, each with its own count and the per-package
+  // description already written for the PDF/message generator
+  // (d.revisionScript / d.revisionCreative), so this view can't drift
+  // out of sync with what's actually quoted elsewhere.
+  function renderRevisionsSection() {
+    const d = currentData();
+    const scriptCountEl = document.getElementById("svcScriptRevisionCount");
+    const scriptDescEl = document.getElementById("svcScriptRevisionDesc");
+    const creativeCountEl = document.getElementById("svcCreativeRevisionCount");
+    const creativeDescEl = document.getElementById("svcCreativeRevisionDesc");
+    if (!scriptCountEl) return;
+    scriptCountEl.textContent = d.revisionScriptShort || "N/A";
+    scriptDescEl.textContent = d.revisionScript || "Not applicable to this service.";
+    creativeCountEl.textContent = d.revisionCreativeShort || d.revisions || "—";
+    creativeDescEl.textContent = d.revisionCreative || d.revisions || "";
+  }
+
+  // Section I (final recap + action): mirrors whatever's currently
+  // selected (state.service/state.tier) so it never goes stale against
+  // the rest of the modal, and the Add to Order button below it acts
+  // on that exact same selection via the shared addToOrder()/cart path
+  // — nothing new, just a second place to trigger it without leaving
+  // the modal.
+  function renderFinalAction() {
+    const d = currentData();
+    const nameEl = document.getElementById("svcFinalName");
+    const specsEl = document.getElementById("svcFinalSpecs");
+    const priceEl = document.getElementById("svcFinalPrice");
+    if (!nameEl) return;
+    nameEl.textContent = d.name.replace(/^AI Reel: /, "");
+    specsEl.textContent = [d.duration, d.format, (d.turnaround || "").split(" after")[0]].filter(Boolean).join(" · ");
+    priceEl.textContent = fmtINR(d.basePrice) + " / " + (d.unit || "package");
   }
 
   function renderScopePanel() {
@@ -940,16 +1087,10 @@
     }
     document.getElementById("scopeBody").innerHTML = html;
 
-    // Reel comparison table (nested inside "Good to know") only makes
-    // sense for AI Reels — hide the whole toggle, not just the table,
-    // for tier-less services. It ships open by default (the `open`
-    // attribute in the markup) for both builds now, so the tier specs
-    // are visible without an extra click — this only hides it outright
-    // for tier-less services; it deliberately does NOT force .open
-    // back to true on every render, so a visitor who collapses it
-    // manually stays collapsed instead of being fought by re-renders.
-    const compareToggle = document.getElementById("rulesCompareToggle");
-    if (compareToggle) compareToggle.style.display = state.service === "reels" ? "" : "none";
+    // The standalone comparison modal's table always covers all 4 AI
+    // Reel tiers regardless of which service's card is currently open
+    // (it lives outside any package modal) — this just keeps its
+    // .ct-sel highlight in sync with whichever reel tier is selected.
     const table = document.getElementById("reelCompareTable");
     if (table) {
       table.querySelectorAll("[data-tier-col]").forEach((cell) => {
@@ -991,6 +1132,7 @@
   function renderCalculator() {
     const preview = computeBuilderPreview();
     const isReel = state.service === "reels";
+    const isCatalogue = state.service === "catalogue";
 
     // Keep the <select> itself in sync with state too — state.service can
     // change from outside this control, and previously nothing here ever
@@ -999,14 +1141,24 @@
     const qServiceSelect = document.getElementById("qServiceSelect");
     if (qServiceSelect.value !== state.service) qServiceSelect.value = state.service;
 
-    // Tier chips only apply to AI Reel — hide the whole field for
-    // tier-less services, and keep exactly one chip marked .active,
-    // driven directly from state.tier.
-    document.getElementById("qTierField").style.display = isReel ? "" : "none";
+    // Tier chips only apply to AI Reel and Catalogue — hide each field
+    // for every other service, and keep exactly one chip marked
+    // .active per field, driven from that service's own tier state.
+    const qTierField = document.getElementById("qTierField");
+    qTierField.style.display = isReel ? "" : "none";
     if (isReel) {
-      document.querySelectorAll(".qtier-chip").forEach((chip) => {
+      qTierField.querySelectorAll(".qtier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
+    }
+    const qCatalogueTierField = document.getElementById("qCatalogueTierField");
+    if (qCatalogueTierField) {
+      qCatalogueTierField.style.display = isCatalogue ? "" : "none";
+      if (isCatalogue) {
+        qCatalogueTierField.querySelectorAll(".qtier-chip").forEach((chip) => {
+          chip.classList.toggle("active", Number(chip.dataset.tier) === state.catalogueTier);
+        });
+      }
     }
 
     document.getElementById("qUnitPrice").textContent =
@@ -1017,7 +1169,7 @@
       .map(([l, v]) => `<div class="ob-fact"><span class="dot"></span>${l}: <b>${v}</b></div>`)
       .join("");
 
-    const existing = state.cart.find((i) => i.service === state.service && i.tier === (isReel ? state.tier : null));
+    const existing = state.cart.find((i) => i.service === state.service && i.tier === tierFor(state.service));
     document.getElementById("obAddBtnLabel").textContent = existing
       ? `Add ${preview.qty} more (already in order)`
       : "Add to Order";
@@ -1220,7 +1372,16 @@
     // language/timeline) plus general terms lives in the downloadable
     // PDF only (see generatePackagePdf below), not duplicated here.
     const orderBlock = cart.items
-      .map((item, idx) => `${idx + 1}. ${item.d.name} (Qty ${item.qty}): ${fmtINR(item.lineSubtotal)}`)
+      .map((item, idx) => {
+        const d = item.d;
+        const scopeBits = [
+          `${d.duration} · ${d.format}`,
+          d.scripting && !/^(no scripting|not applicable)/i.test(d.scripting) ? d.scripting : null,
+          `Revisions: ${d.revisionCreative || d.revisions}`,
+          `TAT: ${d.turnaround.split(" after")[0]}`,
+        ].filter(Boolean);
+        return `${idx + 1}. ${d.name} (Qty ${item.qty}): ${fmtINR(item.lineSubtotal)}\n   ${scopeBits.join(" · ")}`;
+      })
       .join("\n");
 
     const clientMsg = `Package Summary for ${brandName}
@@ -1234,7 +1395,7 @@ ${orderBlock}
 Pricing:
 ${priceBlock}
 
-Full package details (deliverables, revisions, turnaround, terms) are in the downloadable PDF from the Package Summary panel.`;
+Turnaround begins once we've received the complete brief, assets, and (where applicable) written script approval, not the payment date. Revisions above are one consolidated round of minor changes as described in the package scope, not unlimited. Full package details and terms are in the downloadable PDF from the Package Summary panel.`;
 
     // Message 2 — What We Need From You. Since every line item in the
     // order belongs to the same brand, brand/product-level assets (logo,
@@ -1536,7 +1697,10 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     renderServiceNav();
     renderServiceSummary();
     renderServiceGlance();
+    renderQualitySection();
     renderScopePanel();
+    renderRevisionsSection();
+    renderFinalAction();
     renderCalculator();
     renderCart();
     renderMessages();
@@ -1687,22 +1851,44 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
   initPkgDrag();
 
+  // The ONE standalone comparison modal — the 4-tier table lives only
+  // here, never inside a package card or its detail modal. Opening or
+  // closing it is entirely independent of pkgModal: it doesn't touch
+  // state.service/state.tier, doesn't close/open the package-detail
+  // modal, and doesn't move page scroll, so whatever the client was
+  // looking at stays exactly where it was.
+  const compareModalBackdrop = document.getElementById("compareModalBackdrop");
+  const compareModal = document.getElementById("compareModal");
+  const compareModalClose = document.getElementById("compareModalClose");
+  let compareModalOpen = false;
+
+  function openCompareModal() {
+    if (!compareModalBackdrop) return;
+    compareModalBackdrop.classList.add("open");
+    document.body.classList.add("pkg-modal-open");
+    document.documentElement.classList.add("pkg-modal-open");
+    compareModalOpen = true;
+    compareModalClose?.focus();
+  }
+  function closeCompareModal() {
+    if (!compareModalBackdrop || !compareModalOpen) return;
+    compareModalOpen = false;
+    compareModalBackdrop.classList.remove("open");
+    // Only drop the scroll lock if the package-detail modal isn't also
+    // open — in practice the two are never open at once (the compare
+    // button lives on the main page, not inside pkgModal), but this
+    // keeps the lock correct either way instead of assuming it.
+    if (!pkgModalOpen) {
+      document.body.classList.remove("pkg-modal-open");
+      document.documentElement.classList.remove("pkg-modal-open");
+    }
+  }
   const comparePackagesLink = document.getElementById("comparePackagesLink");
-  if (comparePackagesLink) {
-    comparePackagesLink.addEventListener("click", () => {
-      const reelsCard = document.querySelector('.pkg-card[data-svc="reels"]');
-      if (!reelsCard) return;
-      reelsCard.click();
-      // Wait out the modal's own .5s open transform (see openPkgModal)
-      // before scrolling inside it — scrolling mid-transition would
-      // measure against a still-animating layout.
-      setTimeout(() => {
-        const toggle = document.getElementById("rulesCompareToggle");
-        if (toggle) {
-          toggle.open = true;
-          toggle.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, 560);
+  if (comparePackagesLink) comparePackagesLink.addEventListener("click", openCompareModal);
+  if (compareModalClose) compareModalClose.addEventListener("click", closeCompareModal);
+  if (compareModalBackdrop) {
+    compareModalBackdrop.addEventListener("click", (e) => {
+      if (e.target === compareModalBackdrop) closeCompareModal();
     });
   }
 
@@ -1711,7 +1897,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     if (e.target === pkgModalBackdrop) closePkgModal();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && pkgModalOpen) closePkgModal();
+    if (e.key !== "Escape") return;
+    if (compareModalOpen) {
+      closeCompareModal();
+      return;
+    }
+    if (pkgModalOpen) closePkgModal();
   });
 
   tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
@@ -1722,6 +1913,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     });
   });
+
+  if (catalogueTierRow) {
+    catalogueTierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        withScrollAnchor(() => {
+          state.catalogueTier = Number(chip.dataset.tier);
+          render();
+        });
+      });
+    });
+  }
 
   scopePanel.querySelectorAll(".scope-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -1755,6 +1957,27 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   }
 
+  // Section I's own Add to Order button — adds whatever service/tier
+  // is currently selected in the modal (same addToOrder() the compare
+  // table's Quick Add and the main order builder both use), then
+  // closes the package-detail modal and jumps to the order panel.
+  const svcFinalAddBtn = document.getElementById("svcFinalAddBtn");
+  if (svcFinalAddBtn) {
+    svcFinalAddBtn.addEventListener("click", () => {
+      const addedId = addToOrder();
+      closePkgModal();
+      requestAnimationFrame(() => {
+        document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const row = document.querySelector(`.cart-item[data-id="${addedId}"]`);
+        if (row) {
+          row.classList.remove("flash");
+          void row.offsetWidth;
+          row.classList.add("flash");
+        }
+      });
+    });
+  }
+
   const reelCompareTable = document.getElementById("reelCompareTable");
   if (reelCompareTable) {
     reelCompareTable.querySelectorAll(".ct-add-btn").forEach((btn) => {
@@ -1762,12 +1985,12 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         state.service = "reels";
         state.tier = Number(btn.dataset.addTier);
         const addedId = addToOrder();
-        // The click happens from inside the open package modal, so
-        // scrolling the page behind it is invisible on its own — close
-        // the modal first, then scroll to the order panel and flash the
-        // exact row that was just added, so the add is actually seen,
-        // not just silently applied to state.
-        closePkgModal();
+        // The click happens from inside the standalone compare modal,
+        // so scrolling the page behind it is invisible on its own —
+        // close the modal first, then scroll to the order panel and
+        // flash the exact row that was just added, so the add is
+        // actually seen, not just silently applied to state.
+        closeCompareModal();
         requestAnimationFrame(() => {
           document.getElementById("ocPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
           const row = document.querySelector(`.cart-item[data-id="${addedId}"]`);
@@ -1779,6 +2002,61 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         });
       });
     });
+
+    // Compare-selection checkboxes: a separate action from Quick Add
+    // above. Checking 2+ tiers reveals a bar to view just those tiers
+    // side by side; nothing here touches the cart/order until the rep
+    // explicitly adds a tier from the filtered view's own Quick Add row.
+    const compareBar = document.getElementById("ctCompareBar");
+    const compareCount = document.getElementById("ctCompareCount");
+    const compareViewBtn = document.getElementById("ctCompareViewBtn");
+    const compareClearBtn = document.getElementById("ctCompareClearBtn");
+    const compareExitBtn = document.getElementById("ctCompareExitBtn");
+    const compareChecks = [...reelCompareTable.querySelectorAll("[data-compare-tier]")];
+
+    function checkedTiers() {
+      return compareChecks.filter((c) => c.checked).map((c) => c.dataset.compareTier);
+    }
+
+    function updateCompareBar() {
+      const n = checkedTiers().length;
+      if (compareBar) compareBar.hidden = n === 0;
+      if (compareCount) compareCount.textContent = String(n);
+      if (compareViewBtn) compareViewBtn.disabled = n < 2;
+    }
+
+    compareChecks.forEach((check) => {
+      check.addEventListener("change", updateCompareBar);
+    });
+
+    if (compareViewBtn) {
+      compareViewBtn.addEventListener("click", () => {
+        const tiers = checkedTiers();
+        if (tiers.length < 2) return;
+        reelCompareTable.querySelectorAll("[data-tier-col]").forEach((cell) => {
+          cell.classList.toggle("compare-active", tiers.includes(cell.dataset.tierCol));
+        });
+        reelCompareTable.classList.add("compare-filtering");
+      });
+    }
+
+    function exitComparison() {
+      reelCompareTable.classList.remove("compare-filtering");
+      reelCompareTable.querySelectorAll("[data-tier-col]").forEach((cell) => {
+        cell.classList.remove("compare-active");
+      });
+    }
+
+    if (compareClearBtn) {
+      compareClearBtn.addEventListener("click", () => {
+        compareChecks.forEach((c) => (c.checked = false));
+        exitComparison();
+        updateCompareBar();
+      });
+    }
+    if (compareExitBtn) compareExitBtn.addEventListener("click", exitComparison);
+
+    updateCompareBar();
   }
 
   const qQtyInput = document.getElementById("qQtyInput");
@@ -1844,7 +2122,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       switchShowcaseCat(state.service);
     });
   });
-  document.querySelectorAll(".qtier-chip").forEach((chip) => {
+  document.getElementById("qTierField").querySelectorAll(".qtier-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.tier = Number(chip.dataset.tier);
@@ -1852,6 +2130,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     });
   });
+  const qCatalogueTierFieldEl = document.getElementById("qCatalogueTierField");
+  if (qCatalogueTierFieldEl) {
+    qCatalogueTierFieldEl.querySelectorAll(".qtier-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        withScrollAnchor(() => {
+          state.catalogueTier = Number(chip.dataset.tier);
+          render();
+        });
+      });
+    });
+  }
 
   document.getElementById("obAddBtn").addEventListener("click", () => {
     withScrollAnchor(addToOrder);
@@ -2304,13 +2593,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
 
   let activeShowcaseCat = "reels";
   let activeShowcaseList = [];
-  let activeReelBand = "all"; // all | simple | premium — see item.band below
+  let activeBand = "all"; // all | starter | standard | popular | premium — see item.band below. Shared across Reels and Catalogue, reset to "all" whenever the showcase tab changes.
   let lbIndex = 0;
   let lbSlideIndex = 0;
 
   const showcaseTrack = document.getElementById("showcaseTrack");
   const showcaseTabs = document.querySelectorAll(".showcase-tab");
-  const showcaseBandTabs = document.getElementById("showcaseBandTabs");
+  const showcaseBandTabsReels = document.getElementById("showcaseBandTabsReels");
+  const showcaseBandTabsCatalogue = document.getElementById("showcaseBandTabsCatalogue");
+  const showcaseBandBars = [showcaseBandTabsReels, showcaseBandTabsCatalogue].filter(Boolean);
 
   // Loose production-style grouping for AI Reel samples only — NOT a
   // record of which package tier actually produced a given video (we
@@ -2327,6 +2618,27 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     popular: { label: "Popular", cls: "tq-3", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>' },
     premium: { label: "Premium", cls: "tq-4", icon: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>' },
   };
+
+  // Lightbox caption line: type label, plus the band (Starter/Standard/
+  // Popular/Premium) for Reels/Catalogue where one exists — never the
+  // old per-video "category" (fashion/beauty/etc.), which was dropped
+  // along with the card overlay pills.
+  function lightboxCatLineHTML(item) {
+    const type = SHOWCASE_TYPE_LABEL[activeShowcaseCat] || "";
+    const band = (activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue") && BAND_LABEL[item.band];
+    const text = band ? `${type} · ${band.label}` : type;
+    return text ? `<span class="lb-cat">${escapeHtml(text)}</span>` : "";
+  }
+
+  // Reels/Catalogue titles are generated straight from the uploaded
+  // filename (see generate_creative_manifest.py) and would read as a
+  // raw filename if shown — so the lightbox heading is dropped for
+  // those two categories entirely. Static/Carousel keep their
+  // hand-written titles.
+  function lightboxTitleHTML(item) {
+    if (activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue") return "";
+    return item.title ? `<h3>${escapeHtml(item.title)}</h3>` : "";
+  }
 
   function cardMediaSrc(item) {
     return item.type === "carousel" ? item.slides[0] : item.thumb;
@@ -2364,24 +2676,22 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     carousel: "Carousel Creative",
   };
 
-  // The creative is the focus — no title, no type line, nothing below the
-  // media. The only label is the category, shown as a small pill overlaid
-  // on the image itself, so every card's total height is just its fixed
-  // media aspect-ratio and a row always lines up card-for-card. Demo/
-  // placeholder items (not real delivered work) get their own muted note
-  // instead, so they're never mistaken for a real category.
+  // The creative is the focus — no title, no filename, no category/tier
+  // tag overlaid on the video itself. Demo/placeholder items (not real
+  // delivered work) keep their own muted note so they're never mistaken
+  // for a real sample, but every other card shows nothing but the media
+  // itself, so a row's height is purely the fixed media aspect-ratio.
+  // Package-tier tag only (Starter/Standard/Popular/Premium for Reels,
+  // Standard/Premium for Catalogue) — the old content-category pill
+  // (Fashion/Beauty/Food/etc., driven by the now-removed per-video
+  // `cat`/`catlabel` metadata) stays gone; it was a different label
+  // from a different field and isn't coming back.
   function workCardMetaHTML(item) {
     const isDemo = item.cat === "demo";
     if (isDemo) return `<span class="wc-demo-note">${escapeHtml(item.catlabel)}</span>`;
-    // Static/Carousel cards drop the category pill overlay entirely,
-    // by request — Reels/Catalogue keep it.
-    if (activeShowcaseCat === "static" || activeShowcaseCat === "carousel") return "";
-    const catPill = `<span class="wc-cat-pill">${escapeHtml(item.catlabel || item.cat)}</span>`;
-    const band = activeShowcaseCat === "reels" && BAND_LABEL[item.band];
-    const bandPill = band
-      ? `<span class="wc-band-pill ${band.cls}">${band.icon}${escapeHtml(band.label)}</span>`
-      : "";
-    return catPill + bandPill;
+    const showsBand = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
+    const band = showsBand && BAND_LABEL[item.band];
+    return band ? `<span class="wc-band-pill ${band.cls}">${band.icon}${escapeHtml(band.label)}</span>` : "";
   }
 
   function workCardHTML(item, idx) {
@@ -2424,13 +2734,63 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }[c]));
   }
 
+  // Round-robins items across their bands (Starter, Standard, Popular,
+  // Premium in whatever order each first appears) instead of leaving
+  // them in the source array's natural tier-grouped order — one from
+  // each band in turn, cycling until every item's placed. Deterministic
+  // rather than randomized on every render: a reshuffle on every tab
+  // click would read as the page glitching, not as "showing variety".
+  function interleaveByBand(items) {
+    const order = [];
+    const groups = {};
+    items.forEach((item) => {
+      const key = item.band || "_";
+      if (!groups[key]) {
+        groups[key] = [];
+        order.push(key);
+      }
+      groups[key].push(item);
+    });
+    const result = [];
+    let added = true;
+    while (added) {
+      added = false;
+      for (const key of order) {
+        if (groups[key].length) {
+          result.push(groups[key].shift());
+          added = true;
+        }
+      }
+    }
+    return result;
+  }
+
   function renderShowcase(cat) {
+    const catChanged = cat !== activeShowcaseCat;
     activeShowcaseCat = cat;
     const isReels = cat === "reels";
-    if (showcaseBandTabs) showcaseBandTabs.classList.toggle("is-hidden", !isReels);
-    if (!isReels) activeReelBand = "all";
+    const isCatalogue = cat === "catalogue";
+    if (showcaseBandTabsReels) showcaseBandTabsReels.classList.toggle("is-hidden", !isReels);
+    if (showcaseBandTabsCatalogue) showcaseBandTabsCatalogue.classList.toggle("is-hidden", !isCatalogue);
+    if (catChanged) {
+      activeBand = "all";
+      showcaseBandBars.forEach((bar) => {
+        bar.querySelectorAll(".showcase-band-tab").forEach((t) => t.classList.toggle("active", t.dataset.band === "all"));
+      });
+    }
     let list = SHOWCASE_SOURCES[cat] || [];
-    if (isReels && activeReelBand !== "all") list = list.filter((item) => item.band === activeReelBand);
+    if (isReels || isCatalogue) {
+      if (activeBand !== "all") {
+        list = list.filter((item) => item.band === activeBand);
+      } else {
+        // "All" mixes every tier round-robin (one Starter, one Standard,
+        // one Popular, one Premium, repeat) instead of four long same-tier
+        // blocks back to back — a visitor scrolling past the first few
+        // cards should see every tier represented quickly, not just
+        // whichever tier happens to be uploaded first.
+        list = interleaveByBand(list);
+      }
+    }
     activeShowcaseList = list;
     showcaseTabs.forEach((t) => t.classList.toggle("active", t.dataset.cat === cat));
     if (!list.length) {
@@ -2518,15 +2878,15 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   showcaseTabs.forEach((tab) => {
     tab.addEventListener("click", () => withScrollAnchor(() => renderShowcase(tab.dataset.cat)));
   });
-  if (showcaseBandTabs) {
-    showcaseBandTabs.querySelectorAll(".showcase-band-tab").forEach((tab) => {
+  showcaseBandBars.forEach((bar) => {
+    bar.querySelectorAll(".showcase-band-tab").forEach((tab) => {
       tab.addEventListener("click", () => {
-        activeReelBand = tab.dataset.band;
-        showcaseBandTabs.querySelectorAll(".showcase-band-tab").forEach((t) => t.classList.toggle("active", t === tab));
-        withScrollAnchor(() => renderShowcase("reels"));
+        activeBand = tab.dataset.band;
+        bar.querySelectorAll(".showcase-band-tab").forEach((t) => t.classList.toggle("active", t === tab));
+        withScrollAnchor(() => renderShowcase(activeShowcaseCat));
       });
     });
-  }
+  });
   function switchShowcaseCat(svc) {
     // 'reels' | 'catalogue' | 'static' | 'carousel'
     if (SHOWCASE_SOURCES[svc]) renderShowcase(svc);
@@ -2569,7 +2929,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           renderLightboxMedia();
         });
       });
-      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)} · ${SHOWCASE_TYPE_LABEL[activeShowcaseCat] || ""}</span><h3>${escapeHtml(item.title)}</h3><p>Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
+      lbCaption.innerHTML = `${lightboxCatLineHTML(item)}${lightboxTitleHTML(item)}<p>Slide ${lbSlideIndex + 1} of ${item.slides.length}</p>`;
     } else {
       const isVertical = activeShowcaseCat === "reels" || activeShowcaseCat === "catalogue";
       const isFourFive = activeShowcaseCat === "static";
@@ -2582,7 +2942,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
           ${mediaEl}
           ${isVertical && !item.video ? `<span class="lb-play-badge">▶</span>` : ""}
         </div>`;
-      lbCaption.innerHTML = `<span class="lb-cat">${escapeHtml(item.catlabel || item.cat)} · ${SHOWCASE_TYPE_LABEL[activeShowcaseCat] || ""}</span><h3>${escapeHtml(item.title)}</h3>`;
+      lbCaption.innerHTML = `${lightboxCatLineHTML(item)}${lightboxTitleHTML(item)}`;
     }
   }
 
@@ -2906,11 +3266,42 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     // what's on screen (plus the initial-load stagger), while still
     // letting every real clip play as it comes into view, not just a
     // fixed handful.
+    // Same package-tier tag the main showcase cards carry (Starter/
+    // Standard/Popular/Premium for Reels, Standard/Premium for
+    // Catalogue) — without it this row mixes every tier back-to-back
+    // with no way to tell which clip belongs to which, reading as
+    // randomly out of order even though it's really just every tier
+    // playing in the same loop.
+    function tierTagHTML(item) {
+      const band = item.band && BAND_LABEL[item.band];
+      return band ? `<span class="wc-band-pill ${band.cls}">${band.icon}${band.label}</span>` : "";
+    }
+
+    // No tier tag in this decorative strip — it's a fast-moving
+    // background element, not a browsable list, and a pill flashing by
+    // on each tiny tile just added clutter. The tier tag stays on the
+    // main showcase cards below, where it's actually useful.
     function videoTileHTML(item) {
       if (item.video) {
         return `<video class="fs-media" src="${item.video}#t=0.1" poster="${item.thumb || ""}" muted loop playsinline preload="none"></video>`;
       }
       return `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`;
+    }
+
+    // Duration is derived from each row's actual content width instead
+    // of a fixed number of seconds, so both rows travel at the same
+    // px/sec pace regardless of how many items either one holds — a
+    // fixed duration meant the video row (which grows every time new
+    // reel/catalogue videos are uploaded) kept getting visibly faster
+    // than the static row as its tile count grew. Reference tile
+    // widths match the desktop CSS (.tile-video/.tile-static + the
+    // track's 14px gap); mobile's own widths scale both tiles by the
+    // same factor, so the ratio — and therefore the matched speed —
+    // holds there too.
+    const FILMSTRIP_PX_PER_SEC = 34;
+    function rowDuration(itemCount, tileW) {
+      const px = (tileW + 14) * itemCount;
+      return Math.max(20, px / FILMSTRIP_PX_PER_SEC);
     }
 
     function rowHTML(items, dir, dur, tileClass, mediaFn) {
@@ -2923,8 +3314,8 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     }
 
     wrap.innerHTML =
-      rowHTML(rowA, "left", 48, "tile-video", videoTileHTML) +
-      rowHTML(rowB, "right", 60, "tile-static", (item) => `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`);
+      rowHTML(rowA, "left", rowDuration(rowA.length, 118), "tile-video", videoTileHTML) +
+      rowHTML(rowB, "right", rowDuration(rowB.length, 168), "tile-static", (item) => `<img class="fs-media" src="${item.thumb}" loading="lazy" alt="">`);
 
     // Lazy-start real video tiles only once horizontally visible
     // within the filmstrip — keeps far more than a couple of the
@@ -3346,7 +3737,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const micBtn = document.getElementById("fastyMicBtn");
     if (!toggle || !panel || !messagesEl || !form || !input) return;
 
-    const START_PRICE = { catalogue: DATA.catalogue.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
+    const START_PRICE = { catalogue: DATA.catalogue1.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
 
     /* ---- Language — English or Hindi (written the way people
        actually type/read it here: Devanagari grammar with common
@@ -3762,10 +4153,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         id: "catalogue",
         test: /\b(catalogue|catalog|360)\b/i,
         reply: (text, lang) => {
-          const d = DATA.catalogue;
+          const std = DATA.catalogue1;
+          const prem = DATA.catalogue2;
           if (lang === "hi")
-            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per SKU hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur hum usually 24 se 48 ghante mein deliver kar dete hain. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
-          return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24 to 48 hours. Let me take you to the calculator so you can add it right away.</p>`;
+            return `<p>Bilkul! 360° Catalogue Video 2 tiers mein aata hai: <b>Standard</b> ${fmtINR(std.basePrice)} per SKU (${std.duration.toLowerCase()}), aur <b>Premium</b> ${fmtINR(prem.basePrice)} per SKU (${prem.duration.toLowerCase()}).</p><p>Dono silent AI-generated rotations hain, koi revisions included nahi hain, aur hum usually 24 se 48 ghante mein deliver kar dete hain. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+          return `<p>Sure! 360° Catalogue Video comes in 2 tiers: <b>Standard</b> at ${fmtINR(std.basePrice)} per SKU (${std.duration.toLowerCase()}), and <b>Premium</b> at ${fmtINR(prem.basePrice)} per SKU (${prem.duration.toLowerCase()}).</p><p>Both are silent AI-generated rotations with no revisions included, and we'd typically deliver within 24 to 48 hours. Let me take you to the calculator so you can add it right away.</p>`;
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
         autoNav: "#quote",

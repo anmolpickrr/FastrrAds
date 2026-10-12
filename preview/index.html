@@ -19,18 +19,18 @@
      is natively supported for favicons: the browser picks whichever
      link matches its own color scheme, no JS needed, so there's no
      flash and no dependency on our theme toggle at all. -->
-<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: light)">
-<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-247" sizes="any" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-247" media="(prefers-color-scheme: dark)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: light)">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-247" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon/light/favicon.ico?v=20260811-271" sizes="any" media="(prefers-color-scheme: light)">
+<link rel="icon" href="assets/favicon/dark/favicon.ico?v=20260811-271" sizes="any" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg?v=20260811-271" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/svg+xml" href="assets/favicon-dark.svg?v=20260811-271" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/light/favicon-32.png?v=20260811-271" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/dark/favicon-32.png?v=20260811-271" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/light/favicon-16.png?v=20260811-271" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/dark/favicon-16.png?v=20260811-271" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/light/apple-touch-icon.png?v=20260811-271" media="(prefers-color-scheme: light)">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/dark/apple-touch-icon.png?v=20260811-271" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/light/favicon-192.png?v=20260811-271" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/dark/favicon-192.png?v=20260811-271" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -211,6 +211,11 @@ footer .brand-logo{height:24px;}
 }
 .nav-links a{transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;}
 .nav-links a:hover{color:var(--text-0); background:var(--surface-hover);}
+.nav-compare-link{
+  font:inherit; color:inherit; background:none; border:none; white-space:nowrap;
+  transition:color .2s ease, background .2s ease; padding:9px 14px; border-radius:100px; position:relative;
+}
+.nav-compare-link:hover{color:var(--text-0); background:var(--surface-hover);}
 .nav-right{display:flex; align-items:center; gap:14px;}
 .nav-cta{padding:9px 20px; font-size:13px; white-space:nowrap;}
 @media (max-width:600px){.nav-cta{padding:8px 14px; font-size:12px;}}
@@ -366,7 +371,7 @@ footer .brand-logo{height:24px;}
    object-fit:cover never has to crop — the box and the source share
    a ratio. Widths are chosen so both rows render at ~the same tile
    height, so the pair still reads as one balanced strip. */
-.filmstrip-tile{flex:0 0 auto; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--bg-2); box-shadow:0 18px 40px -22px rgba(0,0,0,0.4); transition:transform .3s ease, box-shadow .3s ease;}
+.filmstrip-tile{position:relative; flex:0 0 auto; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); background:var(--bg-2); box-shadow:0 18px 40px -22px rgba(0,0,0,0.4); transition:transform .3s ease, box-shadow .3s ease;}
 .filmstrip-tile:hover{transform:translateY(-6px) scale(1.03); box-shadow:0 22px 46px -18px rgba(0,0,0,0.5); z-index:2;}
 .filmstrip-tile.tile-video{width:118px; aspect-ratio:9/16;}
 .filmstrip-tile.tile-static{width:168px; aspect-ratio:4/5;}
@@ -467,10 +472,10 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
    components themselves got denser; this keeps headline-to-content
    distance proportional to the now-shorter content beneath it. */
 #process .section-head,#testimonials .section-head,#messages .section-head{margin-bottom:26px;}
-/* A quiet shortcut straight to the AI Reel comparison table (inside
-   the Reels package modal), so comparing tiers doesn't require first
-   discovering it's buried in a modal's own scroll — without
-   duplicating that table's markup onto the main page. */
+/* The single entry point into the standalone AI Reel comparison
+   modal (#compareModalBackdrop) — deliberately the only "compare"
+   trigger on the page; the comparison table itself never appears
+   inside a package card or its detail modal. */
 .compare-packages-link{
   display:inline-flex; align-items:center; gap:7px; margin-top:16px; padding:8px 14px 8px 16px;
   border-radius:100px; border:1px solid var(--line); background:var(--surface-1); color:var(--text-1);
@@ -578,24 +583,31 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
   padding:5px 10px; border-radius:10px; background:rgba(10,10,13,0.55); backdrop-filter:blur(6px);
   font-size:10.5px; color:#fff; font-style:italic; line-height:1.4;
 }
-/* Style-band label — reels only, bottom-right so it never fights the
-   category pill (top-left) for width on narrower cards. A
-   visible-production-style estimate (see item.band in
-   creative-data.js), naming the same 4 tiers as the package badges —
-   rendered as plain small text with no pill/background/border (two
-   colored chips per card read as more going on than a quiet style
-   note warrants). Text-shadow carries the legibility a background
-   chip would otherwise provide. The label text itself stays one
-   neutral color across all 4 tiers; only the icon picks up that
-   tier's own tq-1..4 color, via `color` set on the <svg> specifically
-   so it doesn't cascade back onto the text next to it. */
+/* Package-tier label — Reels and Catalogue, bottom-left and
+   deliberately small/quiet: a quick reference, not a headline
+   competing with the creative itself. A visible-production-style
+   estimate (see item.band in creative-data.js), naming the same
+   tiers as the package badges. Still a solid pill chip (not bare
+   text on a shadow, which read as unclear/barely visible against
+   busy thumbnails) — just scaled down and moved out of the way at
+   the bottom. The chip itself stays one neutral dark background
+   across all 4 tiers; the tier's own tq-1..4 color shows on the icon
+   and the chip's border, so the 4 tiers stay visually distinct
+   without needing 4 different background colors.
+*/
 .wc-band-pill{
-  position:absolute; bottom:7px; right:9px; z-index:2;
-  display:flex; align-items:center; gap:3px;
-  font-size:8px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
-  color:rgba(255,255,255,.72); text-shadow:0 1px 2px rgba(0,0,0,.85), 0 0 6px rgba(0,0,0,.5);
+  position:absolute; bottom:8px; left:8px; z-index:2;
+  display:inline-flex; align-items:center; gap:3px;
+  padding:3px 7px 3px 6px; border-radius:100px;
+  background:rgba(10,10,13,0.72); backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,.14);
+  font-family:var(--font-mono); font-size:7.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap;
+  color:#fff;
 }
 .wc-band-pill svg{width:7px; height:7px; flex:0 0 auto;}
+.wc-band-pill.tq-1{border-color:color-mix(in srgb, var(--sky) 55%, transparent);}
+.wc-band-pill.tq-2{border-color:color-mix(in srgb, var(--teal) 55%, transparent);}
+.wc-band-pill.tq-3{border-color:color-mix(in srgb, var(--violet) 55%, transparent);}
+.wc-band-pill.tq-4{border-color:color-mix(in srgb, var(--gold) 55%, transparent);}
 .wc-band-pill.tq-1 svg{color:var(--sky);}
 .wc-band-pill.tq-2 svg{color:var(--teal);}
 .wc-band-pill.tq-3 svg{color:var(--violet);}
@@ -907,6 +919,39 @@ html[data-theme="dark"] .brand-logos-track img:hover{filter:invert(1) opacity(1)
 html.pkg-modal-open{overflow:hidden; scrollbar-gutter:stable;}
 body.pkg-modal-open{overflow:hidden;}
 
+/* Standalone comparison modal — a plain centered dialog (fade/scale,
+   no FLIP morph since it doesn't grow out of a clicked card), reusing
+   the same scroll-lock classes as the package-detail modal so only
+   one of the two is ever "the thing locking the page" at a time. */
+.compare-modal-backdrop{
+  position:fixed; inset:0; z-index:950; display:flex; align-items:center; justify-content:center; padding:20px;
+  background:rgba(4,6,10,.66); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  opacity:0; visibility:hidden; transition:opacity .25s ease, visibility 0s linear .25s;
+}
+.compare-modal-backdrop.open{opacity:1; visibility:visible; transition:opacity .25s ease, visibility 0s linear 0s;}
+.compare-modal{
+  position:relative; width:min(1040px, 100%); max-height:min(88vh, 860px); border-radius:var(--radius);
+  background:var(--bg-1); border:1px solid var(--line); box-shadow:0 30px 70px -20px rgba(0,0,0,.5), var(--inset-hi);
+  display:flex; flex-direction:column; overflow:hidden;
+  transform:scale(.96); opacity:0; transition:transform .25s cubic-bezier(.34,1.3,.64,1), opacity .2s ease;
+}
+.compare-modal-backdrop.open .compare-modal{transform:scale(1); opacity:1;}
+.compare-modal-head{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-shrink:0;
+  padding:18px 22px; border-bottom:1px solid var(--line-soft);
+}
+.compare-modal-head h3{font-size:17px; font-weight:700; color:var(--text-0); margin:0;}
+.compare-modal-close{
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; background:var(--surface-1); border:1px solid var(--line);
+  color:var(--text-1); transition:background .2s ease, color .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.compare-modal-close svg{width:15px; height:15px;}
+.compare-modal-close:hover{background:var(--surface-hover); color:var(--text-0); transform:rotate(90deg);}
+.compare-modal-close:focus-visible{outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--violet) 40%, transparent);}
+.compare-modal-scroll{padding:20px clamp(16px,3vw,26px) 24px; overflow-y:auto;}
+@media (max-width:640px){.compare-modal{width:100%; max-height:92vh;}}
+
 .svc-panel-inner{padding:22px clamp(20px,4vw,40px) 26px;}
 /* Title+subtitle stacked above price, always — never a left/right
    split that flex-wraps. The row layout used to put the price at
@@ -981,7 +1026,12 @@ body.pkg-modal-open{overflow:hidden;}
 .tier-quality-badge svg{width:10px; height:10px; flex:0 0 auto;}
 .tq-1{background:rgba(90,180,240,.16); color:var(--sky);}
 .tq-2{background:rgba(47,217,196,.16); color:var(--teal);}
-.tq-3{background:var(--violet-soft); color:var(--violet);}
+/* Violet reads noticeably dimmer than the other 3 accents at the same
+   opacity against a dark background (lower luminance), so "Popular"
+   consistently looked the least prominent of the four tier badges —
+   a stronger fill plus a hairline border brings it back in line with
+   its siblings rather than leaving it the odd one out. */
+.tq-3{background:rgba(139,124,246,.26); color:#b3a6ff; border:1px solid rgba(139,124,246,.4);}
 .tq-4{background:rgba(245,194,107,.18); color:var(--gold);}
 table.compare-table th .tier-quality-badge{margin-top:6px;}
 .qtier-chip:focus-visible{outline:none; background:var(--surface-hover);}
@@ -995,33 +1045,73 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    being buried inside the Included tab's spec grid, so understanding
    a package doesn't require a click first. Row dividers only, no
    card/box treatment, so it reads as one continuous fact strip. */
-.svc-glance{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:0;
-  margin-top:20px; padding-top:18px; border-top:1px solid var(--line-soft);
+.svc-section-eyebrow{
+  display:block; margin-top:26px; margin-bottom:10px; font-family:var(--font-mono); font-size:10.5px;
+  font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--text-2);
 }
-.svc-glance-item{padding:0 22px; border-left:1px solid var(--line-soft);}
-.svc-glance-item:first-child{padding-left:0; border-left:none;}
-/* Only reels carry a 5th item (Quality, see renderServiceGlance() in
-   app.js) — rather than wrap it into row 2 as a lone bordered column,
-   give it the full row's width below the first 4 (grid-column:1/-1),
-   which also suits its longer sentence-length value better than a
-   quarter-width column would. */
-.svc-glance-item:nth-child(5){border-left:none; padding-left:0; padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft); grid-column:1/-1;}
+.svc-section-eyebrow:first-of-type{margin-top:22px;}
+/* Fixed 6-item grid (3 cols × 2 rows): Duration, Format, Turnaround on
+   row 1, Script Approval, Script Revisions, Creative Revisions on row
+   2 — see renderServiceGlance() in app.js. Quality moved to its own
+   dedicated section (#svcQualityBlock) rather than sharing this strip,
+   so every cell here stays a short, scannable value, not a sentence. */
+.svc-glance{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+  padding-top:4px;
+}
+.svc-glance-item{padding:0 22px 14px; border-left:1px solid var(--line-soft);}
+.svc-glance-item:nth-child(3n+1){padding-left:0; border-left:none;}
+.svc-glance-item:nth-child(n+4){padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft);}
 .svc-glance-item span{display:block; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-2); margin-bottom:7px;}
 .svc-glance-item b{display:block; font-size:13.5px; font-weight:600; color:var(--text-0); line-height:1.45;}
-.glance-rev-line{display:block; margin-bottom:5px;}
-.glance-rev-line:last-child{margin-bottom:0;}
-.glance-rev-line i{font-style:normal; font-weight:700; color:var(--violet); margin-right:4px;}
 @media (max-width:760px){
   .svc-glance{grid-template-columns:repeat(2,1fr); row-gap:22px;}
-  .svc-glance-item:nth-child(3){border-left:none; padding-left:0;}
+  .svc-glance-item:nth-child(n+3){padding-top:14px; margin-top:3px; border-top:1px solid var(--line-soft);}
+  .svc-glance-item:nth-child(odd){border-left:none; padding-left:0;}
+  .svc-glance-item:nth-child(even){border-left:1px solid var(--line-soft); padding-left:22px;}
 }
 @media (max-width:420px){
   .svc-glance{grid-template-columns:1fr; row-gap:18px;}
-  .svc-glance-item{border-left:none !important; padding-left:0 !important;}
+  .svc-glance-item{border-left:none !important; padding-left:0 !important; padding-top:14px !important; margin-top:0 !important; border-top:1px solid var(--line-soft) !important;}
+  .svc-glance-item:first-child{border-top:none !important; padding-top:0 !important;}
 }
 
-.scope-panel{margin-top:22px;}
+/* Creative quality — its own distinct section (Section C) instead of
+   a 6th glance-grid cell, since it's a sentence-length explanation of
+   cut/transition/pacing differences, not a short scannable value. */
+.svc-quality-block{
+  padding:14px 18px; border-radius:12px; background:var(--surface-1); border:1px solid var(--line-soft);
+}
+.svc-quality-block p{margin:0; font-size:13.5px; line-height:1.6; color:var(--text-1);}
+
+/* Script vs. creative revisions, kept as two visually separate cards
+   (never merged into one generic "Revisions" block) — see Section E. */
+.revision-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.revision-block{padding:16px 18px; border-radius:12px; background:var(--surface-1); border:1px solid var(--line-soft);}
+.revision-block h4{margin:0 0 8px; font-size:13px; font-weight:700; color:var(--text-0);}
+.revision-count{margin:0 0 6px; font-size:15px; font-weight:700; color:var(--violet);}
+.revision-desc{margin:0 0 12px; font-size:12.5px; line-height:1.55; color:var(--text-2);}
+.revision-examples{display:flex; flex-direction:column; gap:8px; padding-top:10px; border-top:1px solid var(--line-soft);}
+.revision-examples div{font-size:12px; line-height:1.55; color:var(--text-2);}
+.revision-examples span{display:block; font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-1); margin-bottom:2px;}
+@media (max-width:640px){.revision-split{grid-template-columns:1fr;}}
+
+/* Section I — recap + the one in-modal path into the order builder. */
+.svc-final-action{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  margin-top:26px; padding:18px 20px; border-radius:14px; background:var(--surface-1); border:1px solid var(--line-soft);
+}
+.svc-final-name{font-size:14px; font-weight:700; color:var(--text-0); margin-bottom:4px;}
+.svc-final-specs{font-size:12px; color:var(--text-2); line-height:1.5;}
+.svc-final-price-wrap{display:flex; align-items:center; gap:14px; flex-shrink:0;}
+.svc-final-price{font-size:19px; font-weight:800; color:var(--text-0);}
+.svc-final-add-btn{
+  padding:11px 20px; border-radius:9px; background:var(--violet); color:var(--btn-ink); font-size:13.5px; font-weight:700;
+  white-space:nowrap; transition:filter .2s ease, transform .2s ease;
+}
+.svc-final-add-btn:hover{filter:brightness(1.08); transform:translateY(-1px);}
+
+.scope-panel{margin-top:4px;}
 /* Segmented pill switch — the selected list gets a filled, full-
    contrast segment while the other two fade back, so which of the
    three lists is currently on screen is obvious at a glance instead
@@ -1084,7 +1174,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    taller row from wrapped text is preferable to text nobody can read
    without scrolling sideways inside an already-open modal. */
 .compare-wrap{overflow-x:auto; margin-top:16px; border-radius:14px; border:1px solid var(--line-soft); padding:4px 10px;}
-table.compare-table{width:100%; border-collapse:collapse; font-size:12px; table-layout:fixed;}
+table.compare-table{width:100%; min-width:640px; border-collapse:collapse; font-size:12px; table-layout:fixed;}
 table.compare-table th,table.compare-table td{padding:11px 8px; text-align:left; border-bottom:1px solid var(--line-soft); white-space:normal; line-height:1.4; word-break:break-word;}
 table.compare-table th:first-child,table.compare-table td:first-child{padding-left:2px; width:17%; color:var(--text-2); font-weight:600;}
 table.compare-table tbody tr:last-child td{border-bottom:none;}
@@ -1144,6 +1234,12 @@ table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct
 .mini-toggle[open]>summary{margin-bottom:12px;}
 .mini-toggle .ob-facts{margin:0;}
 
+.prod-terms{margin-top:14px; display:flex; flex-direction:column; gap:16px;}
+.prod-term h4{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--text-1); margin:0 0 5px;}
+.prod-term p{font-size:13px; line-height:1.6; color:var(--text-2); margin:0;}
+.prod-term ul{margin:6px 0 0; padding-left:18px; font-size:13px; line-height:1.6; color:var(--text-2);}
+.prod-term li{margin-bottom:2px;}
+
 /* Team-only pitch aids nested inside the reel compare table (see
    PUBLIC:STRIP markers around them in the markup) — a rule-based tier
    suggestion for reps to use on a call, and a quick-add row so adding
@@ -1159,6 +1255,49 @@ table.compare-table tr td:first-child.price-row-label, table.compare-table tr.ct
 .tier-recommend-btn.active{background:var(--violet-soft); color:var(--violet); border-color:var(--violet);}
 .tier-recommend-note{flex-basis:100%; margin-top:2px; font-size:12.5px; color:var(--text-2); line-height:1.55; min-height:1em;}
 table.compare-table tr.ct-add-row td{border-bottom:none; padding-top:16px;}
+/* Compare-selection checkboxes — a distinct action from Quick Add
+   (which places an order line item immediately): checking 2+ of these
+   reveals a bar (#ctCompareBar) to view just the checked tiers side
+   by side, with no effect on the actual order until the rep/customer
+   explicitly adds one from that filtered view. */
+table.compare-table tr.ct-compare-row td{padding-top:4px; padding-bottom:14px;}
+.ct-compare-check{display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:12px; color:var(--text-2);}
+.ct-compare-check input{position:absolute; opacity:0; width:1px; height:1px;}
+.ct-compare-check span{
+  width:16px; height:16px; border-radius:5px; border:1.5px solid var(--line); flex:0 0 auto;
+  transition:background .2s ease, border-color .2s ease;
+}
+.ct-compare-check span::after{
+  content:''; display:block; width:100%; height:100%;
+  -webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>') center/68% no-repeat;
+  mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>') center/68% no-repeat;
+  background:var(--btn-ink); opacity:0; transition:opacity .15s ease;
+}
+.ct-compare-check input:checked + span{background:var(--violet); border-color:var(--violet);}
+.ct-compare-check input:checked + span::after{opacity:1;}
+.ct-compare-check input:focus-visible + span{outline:2px solid var(--violet); outline-offset:2px;}
+.ct-compare-bar{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px;
+  padding:10px 14px; border-radius:10px; background:var(--violet-soft); border:1px solid color-mix(in srgb, var(--violet) 35%, transparent);
+  font-size:13px; color:var(--text-0);
+}
+.ct-compare-bar[hidden]{display:none;}
+.ct-compare-view-btn:disabled{opacity:.5; cursor:not-allowed; filter:none;}
+.ct-compare-bar strong{color:var(--violet);}
+.ct-compare-bar-actions{display:flex; align-items:center; gap:8px;}
+.ct-compare-view-btn{padding:7px 14px; border-radius:7px; background:var(--violet); color:var(--btn-ink); font-size:12.5px; font-weight:700;}
+.ct-compare-view-btn:hover{filter:brightness(1.08);}
+.ct-compare-clear-btn{padding:7px 10px; font-size:12.5px; color:var(--text-2); transition:color .2s ease;}
+.ct-compare-clear-btn:hover{color:var(--text-0);}
+/* Filtered view: hide every column that isn't checked, leaving the
+   row-label column and only the compared tiers, so this reuses the
+   exact same table/markup instead of a second parallel component. */
+table.compare-table.compare-filtering [data-tier-col]:not(.compare-active){display:none;}
+.ct-compare-exit-row{display:none;}
+table.compare-table.compare-filtering .ct-compare-exit-row{display:table-row;}
+.ct-compare-exit-row td{border-bottom:none; padding-top:10px;}
+.ct-compare-exit-btn{font-size:12px; color:var(--text-2); text-decoration:underline; text-underline-offset:2px;}
+.ct-compare-exit-btn:hover{color:var(--text-0);}
 .ct-add-btn{
   padding:7px 16px; border-radius:8px; border:1px solid var(--violet); background:transparent;
   font-size:12px; font-weight:700; color:var(--violet); transition:background .2s ease, color .2s ease, transform .2s ease;
@@ -2758,8 +2897,8 @@ footer{padding:64px 0 0; margin-top:40px;}
   <div class="wrap">
     <div class="nav-pill">
       <a href="#hero" class="brand" aria-label="Home">
-        <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light">
-        <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
+        <img src="assets/logo/fastrr-ads-black.png?v=20260811-271" alt="Fastrr Ads" class="brand-logo brand-logo-light">
+        <img src="assets/logo/fastrr-ads-white.png?v=20260811-271" alt="Fastrr Ads" class="brand-logo brand-logo-dark">
       </a>
       <div class="nav-links">
         <a href="#showcase">Work</a>
@@ -2838,18 +2977,30 @@ footer{padding:64px 0 0; margin-top:40px;}
       <button class="showcase-tab" data-cat="static">Static Creatives</button>
       <button class="showcase-tab" data-cat="carousel">Carousel Creatives</button>
     </div>
-    <!-- Band filter — reels only (toggled via .is-hidden in
-         renderShowcase()/switchShowcaseCat() in app.js). Groups samples
-         by visible production style/complexity, using the same 4 names
-         as the package tiers — not a record of which tier each sample
-         was actually made under, see the note above. -->
-    <div class="showcase-band-tabs reveal-on-scroll" id="showcaseBandTabs">
+    <!-- Band filters — one bar per category that actually has bands
+         (Reels: 4, Catalogue: 2), toggled via .is-hidden in
+         renderShowcase()/switchShowcaseCat() in app.js so only the one
+         matching the active showcase tab is ever visible. Groups
+         samples by which upload folder they came from (see
+         scripts/generate_creative_manifest.py) — for Reels specifically
+         that reuses the same 4 names as the package tiers, by request,
+         not a record of which tier each sample was actually made under,
+         see the note above. -->
+    <div class="showcase-band-tabs reveal-on-scroll" id="showcaseBandTabsReels">
       <span class="showcase-band-label">AI Reel style</span>
       <div class="showcase-band-switch">
         <button class="showcase-band-tab active" data-band="all">All</button>
         <button class="showcase-band-tab" data-band="starter">Starter</button>
         <button class="showcase-band-tab" data-band="standard">Standard</button>
         <button class="showcase-band-tab" data-band="popular">Popular</button>
+        <button class="showcase-band-tab" data-band="premium">Premium</button>
+      </div>
+    </div>
+    <div class="showcase-band-tabs is-hidden reveal-on-scroll" id="showcaseBandTabsCatalogue">
+      <span class="showcase-band-label">Catalogue style</span>
+      <div class="showcase-band-switch">
+        <button class="showcase-band-tab active" data-band="all">All</button>
+        <button class="showcase-band-tab" data-band="standard">Standard</button>
         <button class="showcase-band-tab" data-band="premium">Premium</button>
       </div>
     </div>
@@ -2928,7 +3079,7 @@ footer{padding:64px 0 0; margin-top:40px;}
         <span class="pkg-card-name">360° Catalogue Video</span>
         <span class="pkg-card-desc">AI-generated 360° product rotation, catalogue-ready.</span>
         <span class="pkg-card-foot">
-          <span class="pkg-card-price">From ₹1,800</span>
+          <span class="pkg-card-price">From ₹1,400</span>
           <span class="pkg-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="8 7 17 7 17 16"></polyline></svg></span>
         </span>
       </button>
@@ -2986,8 +3137,20 @@ footer{padding:64px 0 0; margin-top:40px;}
               <button class="tier-chip" data-tier="4"><span>Studio Cut</span><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em><b>₹8,000</b><span class="tier-chip-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span></button>
             </div>
 
+            <div class="tier-row is-hidden" id="catalogueTierRow">
+              <button class="tier-chip active" data-tier="1"><span>Standard</span><em class="tier-quality-badge tq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Standard</em><b>₹1,400</b><span class="tier-chip-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span></button>
+              <button class="tier-chip" data-tier="2"><span>Premium</span><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em><b>₹2,000</b><span class="tier-chip-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span></button>
+            </div>
+
+            <span class="svc-section-eyebrow">Key delivery specs</span>
             <div class="svc-glance" id="svcGlance"></div>
 
+            <span class="svc-section-eyebrow">Creative quality</span>
+            <div class="svc-quality-block" id="svcQualityBlock">
+              <p id="svcQualityText"></p>
+            </div>
+
+            <span class="svc-section-eyebrow">What's included, not included &amp; client-provided</span>
             <div class="scope-panel" id="scopePanel">
               <div class="scope-tab-bar">
                 <button class="scope-tab-btn active" data-tab="inc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Included</button>
@@ -2997,83 +3160,207 @@ footer{padding:64px 0 0; margin-top:40px;}
               <div class="scope-body" id="scopeBody"></div>
             </div>
 
-            <!-- Side-by-side tier comparison, AI Reels only (see the
-                 compareToggle/reelCompareTable logic in renderScopePanel()
-                 in app-v2.js, which only toggles visibility/highlighting —
-                 the actual rows below are static, hand-written from the
-                 same DATA.reel1-4 values the scope panel above renders
-                 from, so the two can't drift out of sync with each other). -->
-            <details class="rules-compare-toggle" id="rulesCompareToggle" open>
-              <summary>Compare all 4 AI Reel tiers</summary>
+            <!-- Script revisions and creative revisions are deliberately
+                 kept as two separate, clearly labelled blocks rather than
+                 one generic "Revisions" line — a script round happens
+                 before approval, a creative round happens after the first
+                 draft, and they're not interchangeable. -->
+            <span class="svc-section-eyebrow">Revisions &amp; limitations</span>
+            <div class="revision-split" id="revisionSplit">
+              <div class="revision-block">
+                <h4>Script revisions</h4>
+                <p class="revision-count" id="svcScriptRevisionCount"></p>
+                <p class="revision-desc" id="svcScriptRevisionDesc"></p>
+                <div class="revision-examples">
+                  <div><span>Covered</span>Small wording tweaks, reordering a point, fixing a factual detail you flag before approval.</div>
+                  <div><span>Not covered</span>A new concept, a different offer, or a full rewrite after you've already approved the script.</div>
+                </div>
+              </div>
+              <div class="revision-block">
+                <h4>Creative revisions</h4>
+                <p class="revision-count" id="svcCreativeRevisionCount"></p>
+                <p class="revision-desc" id="svcCreativeRevisionDesc"></p>
+                <div class="revision-examples">
+                  <div><span>Covered</span>Minor in-frame text or placement fixes, small timing adjustments, edit refinements within the approved direction.</div>
+                  <div><span>Not covered</span>A new concept, replacement model, language change, new scenes, or substantial regeneration — these may need additional charges and time.</div>
+                </div>
+              </div>
+            </div>
 
-              
-              <div class="compare-wrap">
-                <table class="compare-table" id="reelCompareTable">
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th data-tier-col="1">Quick Cut<br><em class="tier-quality-badge tq-1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>Starter</em></th>
-                      <th data-tier-col="2">Story Cut<br><em class="tier-quality-badge tq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Standard</em></th>
-                      <th data-tier-col="3">Director's Cut<br><em class="tier-quality-badge tq-3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>Popular</em></th>
-                      <th data-tier-col="4">Studio Cut<br><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="ct-price-row">
-                      <td>Price</td>
-                      <td data-tier-col="1">₹2,500</td>
-                      <td data-tier-col="2">₹3,500</td>
-                      <td data-tier-col="3">₹5,000</td>
-                      <td data-tier-col="4">₹8,000</td>
-                    </tr>
-                    <tr>
-                      <td>Max length</td>
-                      <td data-tier-col="1">25 sec</td>
-                      <td data-tier-col="2">35 sec</td>
-                      <td data-tier-col="3">50 sec</td>
-                      <td data-tier-col="4">1 min</td>
-                    </tr>
-                    <tr>
-                      <td>Production quality</td>
-                      <td data-tier-col="1">Basic: straightforward cuts, standard transitions</td>
-                      <td data-tier-col="2">Enhanced: smoother pacing, improved transitions, added detailing</td>
-                      <td data-tier-col="3">Premium: cinematic pacing, advanced transitions, richer detailing</td>
-                      <td data-tier-col="4">Highest: cinematic transitions, advanced detailing, most polished</td>
-                    </tr>
-                    <tr>
-                      <td>Script / hook approval</td>
-                      <td data-tier-col="1">No separate approval step</td>
-                      <td data-tier-col="2">1 script shared for approval</td>
-                      <td data-tier-col="3">1 script + 2 hook options</td>
-                      <td data-tier-col="4">1 script + 2 hook options</td>
-                    </tr>
-                    <tr>
-                      <td>Revisions</td>
-                      <td data-tier-col="1">1 (minor, in-frame only)</td>
-                      <td data-tier-col="2">1 (small script/comms changes)</td>
-                      <td data-tier-col="3">1 (small script/comms changes)</td>
-                      <td data-tier-col="4">2 (small script/comms changes)</td>
-                    </tr>
-                    <tr>
-                      <td>Turnaround</td>
-                      <td data-tier-col="1">1–2 working days</td>
-                      <td data-tier-col="2">Up to 3 working days</td>
-                      <td data-tier-col="3">Up to 4 working days</td>
-                      <td data-tier-col="4">Up to 5 working days</td>
-                    </tr>
-                    <tr>
-                      <td>Team involvement</td>
-                      <td data-tier-col="1">KAM support</td>
-                      <td data-tier-col="2">KAM + Video Editor</td>
-                      <td data-tier-col="3">KAM + Editor + Content Writer + Creative Director</td>
-                      <td data-tier-col="4">KAM + Editor + dedicated Content Writer + Creative Director + custom music</td>
-                    </tr>
-                  </tbody>
-                                  </table>
+            <!-- Shared production policy, same wording across every
+                 service/tier modal — covers the things that cause
+                 client disputes when left unstated: when the TAT clock
+                 actually starts, what "1 revision" does and doesn't
+                 cover, script-approval responsibility, and how AI
+                 product accuracy works. Static text, not pulled from
+                 DATA, since it applies identically regardless of which
+                 service/tier is open. -->
+            <details class="rules-compare-toggle" id="productionTermsToggle">
+              <summary>Production terms &amp; policies</summary>
+              <div class="prod-terms">
+                <div class="prod-term">
+                  <h4>Turnaround time</h4>
+                  <p>Turnaround time applies to one reel (or one creative/SKU, for other services) and begins once the order/payment confirmation, complete creative brief, required product assets and other necessary inputs have been received. For packages that require script approval, production begins after written script approval. Client-side delays, pending approvals, incomplete assets, scope changes and additional revisions may extend the delivery timeline. Bulk orders and multiple creatives may require additional time, which will be communicated before production.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Format &amp; duration</h4>
+                  <p>Each AI Reel package includes one final vertical video in 9:16 format, subject to the maximum duration specified in the selected package. The final duration depends on the agreed brief or approved script and the package limit. Additional aspect ratios, alternate cuts, extended durations and separate versions are not included unless specified in the confirmed order. The standard deliverable is one final exported video file. Captions, subtitles, on-screen text, custom music, source/project files and other additional deliverables are included only when explicitly listed in the order scope.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Script approval</h4>
+                  <p>For packages without a separate script-approval stage, the client is responsible for sharing all mandatory product information, selling points, offers, claims and restrictions before production. For packages that include script approval, the client must approve the script in writing before production starts. Changes requested after script approval, including new mandatory points, revised offers or a change in creative direction, may affect the scope, charges and delivery timeline. All factual, pricing, promotional and product claims must be verified by the client before approval.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Revision policy</h4>
+                  <p>A revision round means one consolidated set of feedback for the current deliverable. Minor revisions may include small text corrections, minor in-frame placement adjustments, limited timing changes and edit refinements that do not require a change to the approved concept or substantial regeneration. Changes to the approved script, offer, concept, model, language or scene sequence, requests for new scenes, substantial regeneration, new aspect ratios or additional deliverables are outside the standard minor-revision allowance. Requests outside the selected package scope may require additional charges and delivery time. Please share consolidated feedback through your designated KAM.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Product reference &amp; AI accuracy</h4>
+                  <p>Clients should provide clear, high-resolution product images or confirm the website/product page to be used as the visual reference. Raw product images are preferred, particularly images showing the front, back, sides, packaging, logo, labels and important product details where applicable. When website images are used, visual accuracy depends on the quality, resolution, clarity and availability of the source images. AI-generated visuals may contain inconsistencies in small text, labels, packaging, hands, product proportions or fine details. The production team will use the approved references to guide the output but cannot guarantee perfect reproduction of every detail in every generated frame. Mandatory product details, prohibited visual changes and required product angles must be communicated before production.</p>
+                </div>
+                <div class="prod-term">
+                  <h4>Client brief &amp; required inputs</h4>
+                  <p>Production begins once the brief and required inputs are complete. New requirements introduced after confirmation may affect the scope, cost and delivery timeline. What we typically need from you:</p>
+                  <ul>
+                    <li>Brand name, website and product name</li>
+                    <li>Product images or an approved website reference</li>
+                    <li>Objective of the creative and target audience</li>
+                    <li>Main selling points and features to highlight</li>
+                    <li>Offers, CTA, and any mandatory disclaimers or claims</li>
+                    <li>Preferred language and voiceover requirements</li>
+                    <li>Model preferences (gender, approximate age, appearance), where relevant</li>
+                    <li>Visual references and brand guidelines, if available</li>
+                    <li>Required inclusions and exclusions</li>
+                    <li>Product details that must not be altered</li>
+                    <li>Authorised approver and preferred communication channel</li>
+                  </ul>
+                </div>
+                <div class="prod-term">
+                  <h4>Communication &amp; KAM support</h4>
+                  <p>Each order has a designated KAM as the primary point of contact for brief coordination, status updates, feedback collection and delivery communication. WhatsApp is the primary channel for routine coordination; calls can be scheduled when a discussion is required. Creative feedback and approvals must be shared in writing through the designated communication channel. The production team will share updates at relevant milestones, and creative-team involvement depends on the selected package. Support does not include unlimited calls, continuous live updates or unrestricted direct access to production team members.</p>
+                </div>
               </div>
             </details>
+
+            <!-- Section I: final recap + the one in-modal path into the
+                 order builder, so a client/rep doesn't have to leave the
+                 modal and hunt for the right tier again in Quote. -->
+            <div class="svc-final-action" id="svcFinalAction">
+              <div class="svc-final-recap">
+                <div class="svc-final-name" id="svcFinalName"></div>
+                <div class="svc-final-specs" id="svcFinalSpecs"></div>
+              </div>
+              <div class="svc-final-price-wrap">
+                <div class="svc-final-price" id="svcFinalPrice"></div>
+                              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Standalone AI Reel comparison modal — the ONLY place the 4-tier
+         comparison table lives. It's a sibling of the package-detail
+         modal, not nested inside it, and opens from the single
+         "Compare AI Reel packages" button near the section heading
+         (#comparePackagesLink) so there's exactly one way in, matching
+         whatever tier is currently selected via the shared state.tier
+         (see .ct-sel sync in renderScopePanel()). Closing it never
+         touches pkgModal/state.tier/scroll position — see
+         openCompareModal()/closeCompareModal() in app-v2.js. -->
+    <div class="compare-modal-backdrop" id="compareModalBackdrop">
+      <div class="compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-label="Compare AI Reel packages">
+        <div class="compare-modal-head">
+          <h3>Compare AI Reel packages</h3>
+          <button type="button" class="compare-modal-close" id="compareModalClose" aria-label="Close comparison">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="compare-modal-scroll">
+          
+          <div class="compare-wrap">
+            <table class="compare-table" id="reelCompareTable">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th data-tier-col="1">Quick Cut<br><em class="tier-quality-badge tq-1"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h6l-1 8 10-12h-6l1-8Z"/></svg>Starter</em></th>
+                  <th data-tier-col="2">Story Cut<br><em class="tier-quality-badge tq-2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Standard</em></th>
+                  <th data-tier-col="3">Director's Cut<br><em class="tier-quality-badge tq-3"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.8 7.1-.7L12 2.5Z"/></svg>Popular</em></th>
+                  <th data-tier-col="4">Studio Cut<br><em class="tier-quality-badge tq-4"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 17h16l1.5-9-5.5 3.5-4-6-4 6-5.5-3.5L4 17Zm0 2h16v2H4v-2Z"/></svg>Premium</em></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="ct-price-row">
+                  <td>Price</td>
+                  <td data-tier-col="1">₹2,500</td>
+                  <td data-tier-col="2">₹3,500</td>
+                  <td data-tier-col="3">₹5,000</td>
+                  <td data-tier-col="4">₹8,000</td>
+                </tr>
+                <tr>
+                  <td>Min. order value</td>
+                  <td colspan="4">₹10,000 per order (not per package, mix and match tiers/services to reach it)</td>
+                </tr>
+                <tr>
+                  <td>Max length</td>
+                  <td data-tier-col="1">25 sec</td>
+                  <td data-tier-col="2">35 sec</td>
+                  <td data-tier-col="3">50 sec</td>
+                  <td data-tier-col="4">1 min</td>
+                </tr>
+                <tr>
+                  <td>Production quality</td>
+                  <td data-tier-col="1">Basic: straightforward cuts, standard transitions</td>
+                  <td data-tier-col="2">Enhanced: smoother pacing, improved transitions, added detailing</td>
+                  <td data-tier-col="3">Premium: cinematic pacing, advanced transitions, richer detailing</td>
+                  <td data-tier-col="4">Highest: cinematic transitions, advanced detailing, most polished</td>
+                </tr>
+                <tr>
+                  <td>Script / hook approval</td>
+                  <td data-tier-col="1">No separate approval step</td>
+                  <td data-tier-col="2">1 script shared for approval</td>
+                  <td data-tier-col="3">1 script + 2 hook options</td>
+                  <td data-tier-col="4">1 script + 2 hook options</td>
+                </tr>
+                <tr>
+                  <td>Revisions</td>
+                  <td data-tier-col="1">1 (minor, in-frame only)</td>
+                  <td data-tier-col="2">1 (small script/comms changes)</td>
+                  <td data-tier-col="3">1 (small script/comms changes)</td>
+                  <td data-tier-col="4">2 (small script/comms changes)</td>
+                </tr>
+                <tr>
+                  <td>Turnaround</td>
+                  <td data-tier-col="1">1–2 working days</td>
+                  <td data-tier-col="2">Up to 3 working days</td>
+                  <td data-tier-col="3">Up to 4 working days</td>
+                  <td data-tier-col="4">Up to 5 working days</td>
+                </tr>
+                <tr>
+                  <td>Team involvement</td>
+                  <td data-tier-col="1">KAM support</td>
+                  <td data-tier-col="2">KAM + Video Editor</td>
+                  <td data-tier-col="3">KAM + Editor + Content Writer + Creative Director</td>
+                  <td data-tier-col="4">KAM + Editor + dedicated Content Writer + Creative Director + custom music</td>
+                </tr>
+                <tr>
+                  <td>Voiceover language</td>
+                  <td data-tier-col="1">Hindi or English</td>
+                  <td data-tier-col="2">Hindi or English</td>
+                  <td data-tier-col="3">Hindi or English</td>
+                  <td data-tier-col="4">Hindi or English</td>
+                </tr>
+                <tr>
+                  <td>Key exclusions</td>
+                  <td data-tier-col="1">Script approval, extra hooks, major rework, extra dimensions</td>
+                  <td data-tier-col="2">Extra hooks, major post-approval script changes, extra dimensions</td>
+                  <td data-tier-col="3">Custom brand music, major rework, extra dimensions</td>
+                  <td data-tier-col="4">Major rework, extra dimensions, lip-sync to custom music</td>
+                </tr>
+              </tbody>
+                          </table>
+          </div>
+                  </div>
       </div>
     </div>
 
@@ -3185,6 +3472,13 @@ footer{padding:64px 0 0; margin-top:40px;}
             <button class="qtier-chip" data-tier="2">Story Cut</button>
             <button class="qtier-chip active" data-tier="3">Director's Cut</button>
             <button class="qtier-chip" data-tier="4">Studio Cut</button>
+          </div>
+        </div>
+        <div class="field-row" id="qCatalogueTierField" style="display:none;">
+          <label>Package</label>
+          <div class="tier-mini-row">
+            <button class="qtier-chip active" data-tier="1">Standard</button>
+            <button class="qtier-chip" data-tier="2">Premium</button>
           </div>
         </div>
 
@@ -3602,8 +3896,8 @@ footer{padding:64px 0 0; margin-top:40px;}
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand">
-          <img src="assets/logo/fastrr-ads-black.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
-          <img src="assets/logo/fastrr-ads-white.png?v=20260811-247" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
+          <img src="assets/logo/fastrr-ads-black.png?v=20260811-271" alt="Fastrr Ads" class="brand-logo brand-logo-light" loading="lazy">
+          <img src="assets/logo/fastrr-ads-white.png?v=20260811-271" alt="Fastrr Ads" class="brand-logo brand-logo-dark" loading="lazy">
         </div>
         <p class="footer-tagline">AI-powered creative production for performance marketing. Reels, catalogue videos, statics, and carousels, delivered fast.</p>
       </div>
@@ -3779,7 +4073,7 @@ footer{padding:64px 0 0; margin-top:40px;}
      sites fetch it on demand via window.__ensureJsPDF() (see the top
      of app.js) instead, the first time someone actually clicks
      Download PDF. -->
-<script src="assets/creative-data.js?v=20260811-247"></script>
-<script src="assets/app-v2.js?v=20260811-247"></script>
+<script src="assets/creative-data.js?v=20260811-271"></script>
+<script src="assets/app-v2.js?v=20260811-271"></script>
 </body>
 </html>
