@@ -279,7 +279,7 @@
       revisions: "1 revision (small script or communication changes)", scripting: "1 script shared for approval",
       revisionScript: "Shared with the 1 creative revision below, usable on the script before approval",
       revisionCreative: "1 revision, for a script change or a finished-reel communication change such as the hook or CTA",
-      revisionScriptShort: "1 revision (shared)",
+      revisionScriptShort: "1 revision (combined with creative)",
       revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
@@ -316,7 +316,7 @@
       revisions: "1 revision (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       revisionScript: "Shared with the 1 creative revision below, usable on the script or hooks before approval",
       revisionCreative: "1 revision, for a script/hook change or a finished-reel communication change",
-      revisionScriptShort: "1 revision (shared)",
+      revisionScriptShort: "1 revision (combined with creative)",
       revisionCreativeShort: "1 revision",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
@@ -353,7 +353,7 @@
       revisions: "2 revisions (small script or communication changes)", scripting: "1 script plus 2 hook options shared for approval",
       revisionScript: "Shared with the 2 creative revisions below, usable on the script or hooks before approval",
       revisionCreative: "2 revisions, for a script/hook change or a finished-reel communication change",
-      revisionScriptShort: "2 revisions (shared)",
+      revisionScriptShort: "2 revisions (combined with creative)",
       revisionCreativeShort: "2 revisions",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
@@ -978,6 +978,7 @@
       ["Script approval", scriptApprovalLabel(d)],
       ["Script revisions", d.revisionScriptShort || d.revisionScript || "—"],
       ["Creative revisions", d.revisionCreativeShort || d.revisionCreative || d.revisions || "—"],
+      ["Support", supportIncludedValue(d)],
     ].filter(([, v]) => v);
     document.getElementById("svcGlance").innerHTML = items
       .map(([k, v]) => `<div class="svc-glance-item"><span>${k}</span><b>${v}</b></div>`)
