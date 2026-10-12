@@ -81,13 +81,16 @@
      per the brief (supersedes the prototype for these two).
   ---------------------------------------------------------- */
   const DATA = {
-    catalogue: {
-      name: "360° Catalogue Video",
+    // Two pricing tiers, same pattern as the AI Reel tiers (reel1-4)
+    // below — tag/duration/price per the approved package scope;
+    // every other field (inclusions, exclusions, support) carries over
+    // unchanged from the previous single-tier version since no other
+    // scope difference between the two tiers has been confirmed yet.
+    catalogue1: {
+      name: "360° Catalogue Video: Standard", tier: 1, unit: "SKU", basePrice: 1400,
       short: "AI-generated 360° product rotation, catalogue-ready.",
       benefit: "Fastest way to make a product page feel alive.",
-      unit: "SKU",
-      basePrice: 1800,
-      duration: "8–15 sec",
+      duration: "10–15 sec",
       format: "1 of 1:1 / 4:5 / 9:16",
       revisions: "No revisions",
       scripting: "No scripting",
@@ -99,7 +102,7 @@
       turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
       included: [
         "AI-generated 360° rotation per SKU",
-        "Silent, looped motion, 8–15 sec",
+        "Silent, looped motion, 10–15 sec",
         "1 aspect ratio of your choice",
         "Clean/white or brand-background finish",
         "Lifestyle/product-use shots showing the product worn or used, where relevant",
@@ -116,12 +119,48 @@
         "SKU list with the product names that need a rotation",
         "Reference/inspiration for the rotation style (if any)",
       ],
-      deliver: "1 MP4 per SKU in the chosen aspect ratio, 8–15 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 10–15 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
       // Standard 360° rotation is deliberately silent/text-free/script-free (see
       // `excluded` above); the one exception is that a human CAN appear wearing or
       // using the product via lifestyle/product-use shots where relevant — that's
       // not the same as a scripted presenter piece, so it stays editor-only, no
       // writer/CD role.
+      support: ["editor", "call"],
+    },
+    catalogue2: {
+      name: "360° Catalogue Video: Premium", tier: 2, unit: "SKU", basePrice: 2000,
+      short: "AI-generated 360° product rotation, catalogue-ready.",
+      benefit: "A longer, more detailed rotation for hero SKUs.",
+      duration: "15–20 sec",
+      format: "1 of 1:1 / 4:5 / 9:16",
+      revisions: "No revisions",
+      scripting: "No scripting",
+      revisionScript: "Not applicable, no scripting on this service",
+      revisionCreative: "No revisions included",
+      revisionScriptShort: "N/A",
+      revisionCreativeShort: "None",
+      language: "Not applicable (silent, no voiceover)",
+      turnaround: "24–48 working hours per SKU after we receive all required details, assets, and final confirmation from you",
+      included: [
+        "AI-generated 360° rotation per SKU",
+        "Silent, looped motion, 15–20 sec",
+        "1 aspect ratio of your choice",
+        "Clean/white or brand-background finish",
+        "Lifestyle/product-use shots showing the product worn or used, where relevant",
+      ],
+      excluded: [
+        "Text overlays",
+        "Voiceover",
+        "Custom music",
+        "Offers or promotional elements",
+        "Scripting",
+        "Additional aspect ratios (quoted separately)",
+      ],
+      need: [
+        "SKU list with the product names that need a rotation",
+        "Reference/inspiration for the rotation style (if any)",
+      ],
+      deliver: "1 MP4 per SKU in the chosen aspect ratio, 15–20 sec, silent (no text, voiceover, or music), delivered via shared drive folder",
       support: ["editor", "call"],
     },
     static: {
@@ -465,6 +504,7 @@
   const state = {
     service: "reels", // reels | catalogue | static | carousel — also the order-builder's current selection
     tier: 3, // only relevant when service === 'reels'
+    catalogueTier: 1, // only relevant when service === 'catalogue' — 1 = Standard, 2 = Premium
     qty: 1, // builder quantity, for the item about to be added to the order
     cart: [], // order line items: { id, service, tier|null, qty }
     discountValue: 0, // order-level discount percent (0-100), applied once to the whole cart's subtotal
@@ -577,14 +617,28 @@
   // every re-render while the order stays above the threshold.
   let offerWasUnlocked = false;
 
+  // Reels (4 tiers) and Catalogue (2 tiers) both key into DATA as
+  // "<prefix><tier>" and track their own tier selection separately in
+  // state, so switching between them never clobbers the other's
+  // current tier. Every other service is tier-less (tier is always
+  // null, key is just the service name).
+  const TIER_KEY_PREFIX = { reels: "reel", catalogue: "catalogue" };
+  function tierStateKey(service) {
+    return service === "reels" ? "tier" : service === "catalogue" ? "catalogueTier" : null;
+  }
+  function tierFor(service) {
+    const key = tierStateKey(service);
+    return key ? state[key] : null;
+  }
   function keyFor(service, tier) {
-    return service === "reels" ? "reel" + tier : service;
+    const prefix = TIER_KEY_PREFIX[service];
+    return prefix ? prefix + tier : service;
   }
   function dataFor(service, tier) {
     return DATA[keyFor(service, tier)];
   }
   function currentKey() {
-    return keyFor(state.service, state.tier);
+    return keyFor(state.service, tierFor(state.service));
   }
   function currentData() {
     return DATA[currentKey()];
@@ -635,7 +689,7 @@
 
   function addToOrder() {
     const service = state.service;
-    const tier = service === "reels" ? state.tier : null;
+    const tier = tierFor(service);
     const qty = Math.max(1, state.qty || 1);
     const existing = state.cart.find((i) => i.service === service && i.tier === tier);
     let addedId;
@@ -687,6 +741,7 @@
   ---------------------------------------------------------- */
   const svcNav = document.getElementById("svcNav");
   const tierRow = document.getElementById("tierRow");
+  const catalogueTierRow = document.getElementById("catalogueTierRow");
   const scopePanel = document.getElementById("scopePanel");
   const pkgModalBackdrop = document.getElementById("pkgModalBackdrop");
   const pkgModal = document.getElementById("pkgModal");
@@ -708,12 +763,14 @@
   // FLIP-morph measures the modal's box, so the footprint never moves
   // while switching tiers afterward.
   function measureMaxTierHeight() {
-    if (state.service !== "reels") return 0;
-    const savedTier = state.tier;
+    const tierStateK = tierStateKey(state.service);
+    if (!tierStateK) return 0;
+    const tierCount = state.service === "reels" ? 4 : 2;
+    const savedTier = state[tierStateK];
     const savedScopeTab = state.scopeTab;
     let maxH = 0;
-    [1, 2, 3, 4].forEach((t) => {
-      state.tier = t;
+    for (let t = 1; t <= tierCount; t++) {
+      state[tierStateK] = t;
       renderServiceSummary();
       renderServiceGlance();
       renderQualitySection();
@@ -721,8 +778,8 @@
       renderRevisionsSection();
       renderFinalAction();
       maxH = Math.max(maxH, svcPanelInner.scrollHeight);
-    });
-    state.tier = savedTier;
+    }
+    state[tierStateK] = savedTier;
     state.scopeTab = savedScopeTab;
     renderServiceSummary();
     renderServiceGlance();
@@ -839,6 +896,14 @@
       tierRow.querySelectorAll(".tier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
+    }
+    if (catalogueTierRow) {
+      catalogueTierRow.classList.toggle("is-hidden", state.service !== "catalogue");
+      if (state.service === "catalogue") {
+        catalogueTierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+          chip.classList.toggle("active", Number(chip.dataset.tier) === state.catalogueTier);
+        });
+      }
     }
     svcNav.querySelectorAll(".pkg-card").forEach((card) => {
       card.classList.toggle("selected", card.dataset.svc === state.service);
@@ -1067,6 +1132,7 @@
   function renderCalculator() {
     const preview = computeBuilderPreview();
     const isReel = state.service === "reels";
+    const isCatalogue = state.service === "catalogue";
 
     // Keep the <select> itself in sync with state too — state.service can
     // change from outside this control, and previously nothing here ever
@@ -1075,14 +1141,24 @@
     const qServiceSelect = document.getElementById("qServiceSelect");
     if (qServiceSelect.value !== state.service) qServiceSelect.value = state.service;
 
-    // Tier chips only apply to AI Reel — hide the whole field for
-    // tier-less services, and keep exactly one chip marked .active,
-    // driven directly from state.tier.
-    document.getElementById("qTierField").style.display = isReel ? "" : "none";
+    // Tier chips only apply to AI Reel and Catalogue — hide each field
+    // for every other service, and keep exactly one chip marked
+    // .active per field, driven from that service's own tier state.
+    const qTierField = document.getElementById("qTierField");
+    qTierField.style.display = isReel ? "" : "none";
     if (isReel) {
-      document.querySelectorAll(".qtier-chip").forEach((chip) => {
+      qTierField.querySelectorAll(".qtier-chip").forEach((chip) => {
         chip.classList.toggle("active", Number(chip.dataset.tier) === state.tier);
       });
+    }
+    const qCatalogueTierField = document.getElementById("qCatalogueTierField");
+    if (qCatalogueTierField) {
+      qCatalogueTierField.style.display = isCatalogue ? "" : "none";
+      if (isCatalogue) {
+        qCatalogueTierField.querySelectorAll(".qtier-chip").forEach((chip) => {
+          chip.classList.toggle("active", Number(chip.dataset.tier) === state.catalogueTier);
+        });
+      }
     }
 
     document.getElementById("qUnitPrice").textContent =
@@ -1093,7 +1169,7 @@
       .map(([l, v]) => `<div class="ob-fact"><span class="dot"></span>${l}: <b>${v}</b></div>`)
       .join("");
 
-    const existing = state.cart.find((i) => i.service === state.service && i.tier === (isReel ? state.tier : null));
+    const existing = state.cart.find((i) => i.service === state.service && i.tier === tierFor(state.service));
     document.getElementById("obAddBtnLabel").textContent = existing
       ? `Add ${preview.qty} more (already in order)`
       : "Add to Order";
@@ -1838,6 +1914,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     });
   });
 
+  if (catalogueTierRow) {
+    catalogueTierRow.querySelectorAll(".tier-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        withScrollAnchor(() => {
+          state.catalogueTier = Number(chip.dataset.tier);
+          render();
+        });
+      });
+    });
+  }
+
   scopePanel.querySelectorAll(".scope-tab-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       withScrollAnchor(() => {
@@ -2035,7 +2122,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       switchShowcaseCat(state.service);
     });
   });
-  document.querySelectorAll(".qtier-chip").forEach((chip) => {
+  document.getElementById("qTierField").querySelectorAll(".qtier-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       withScrollAnchor(() => {
         state.tier = Number(chip.dataset.tier);
@@ -2043,6 +2130,17 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       });
     });
   });
+  const qCatalogueTierFieldEl = document.getElementById("qCatalogueTierField");
+  if (qCatalogueTierFieldEl) {
+    qCatalogueTierFieldEl.querySelectorAll(".qtier-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        withScrollAnchor(() => {
+          state.catalogueTier = Number(chip.dataset.tier);
+          render();
+        });
+      });
+    });
+  }
 
   document.getElementById("obAddBtn").addEventListener("click", () => {
     withScrollAnchor(addToOrder);
@@ -3639,7 +3737,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
     const micBtn = document.getElementById("fastyMicBtn");
     if (!toggle || !panel || !messagesEl || !form || !input) return;
 
-    const START_PRICE = { catalogue: DATA.catalogue.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
+    const START_PRICE = { catalogue: DATA.catalogue1.basePrice, static: DATA.static.basePrice, carousel: DATA.carousel.basePrice, reels: DATA.reel1.basePrice };
 
     /* ---- Language — English or Hindi (written the way people
        actually type/read it here: Devanagari grammar with common
@@ -4055,10 +4153,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
         id: "catalogue",
         test: /\b(catalogue|catalog|360)\b/i,
         reply: (text, lang) => {
-          const d = DATA.catalogue;
+          const std = DATA.catalogue1;
+          const prem = DATA.catalogue2;
           if (lang === "hi")
-            return `<p>Bilkul! Hamara <b>${escapeHtml(d.name)}</b> ${fmtINR(d.basePrice)} per SKU hai. ${escapeHtml(d.short)}</p><p>Isme ${d.duration.toLowerCase()} milta hai, ${d.revisions.toLowerCase()} included hai, aur hum usually 24 se 48 ghante mein deliver kar dete hain. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
-          return `<p>Sure! Our <b>${escapeHtml(d.name)}</b> is ${fmtINR(d.basePrice)} per SKU. ${escapeHtml(d.short)}</p><p>It runs ${d.duration.toLowerCase()}, comes with ${d.revisions.toLowerCase()}, and we'd typically deliver it within 24 to 48 hours. Let me take you to the calculator so you can add it right away.</p>`;
+            return `<p>Bilkul! 360° Catalogue Video 2 tiers mein aata hai: <b>Standard</b> ${fmtINR(std.basePrice)} per SKU (${std.duration.toLowerCase()}), aur <b>Premium</b> ${fmtINR(prem.basePrice)} per SKU (${prem.duration.toLowerCase()}).</p><p>Dono silent AI-generated rotations hain, koi revisions included nahi hain, aur hum usually 24 se 48 ghante mein deliver kar dete hain. Calculator mein le chalta hoon taaki aap seedha add kar sakein.</p>`;
+          return `<p>Sure! 360° Catalogue Video comes in 2 tiers: <b>Standard</b> at ${fmtINR(std.basePrice)} per SKU (${std.duration.toLowerCase()}), and <b>Premium</b> at ${fmtINR(prem.basePrice)} per SKU (${prem.duration.toLowerCase()}).</p><p>Both are silent AI-generated rotations with no revisions included, and we'd typically deliver within 24 to 48 hours. Let me take you to the calculator so you can add it right away.</p>`;
         },
         actions: (text, lang) => [ACTION_QUOTE(lang)],
         autoNav: "#quote",
