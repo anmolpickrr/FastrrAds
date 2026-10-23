@@ -206,7 +206,7 @@
       unit: "carousel",
       basePrice: 1499,
       duration: "Up to 5 slides",
-      format: "1:1 + 9:16 (2 sizes)",
+      format: "1 of 1:1 / 4:5",
       revisions: "1 revision",
       scripting: "Not applicable",
       revisionScript: "Not applicable, design-only, no scripting",
@@ -217,19 +217,19 @@
       turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
         "Up to 5-slide carousel",
-        "2 aspect ratios (1:1 and 9:16)",
+        "1 aspect ratio of your choice (1:1 or 4:5)",
         "Consistent visual narrative across slides",
       ],
       excluded: [
         "More than 5 slides (separate deliverable)",
-        "Extra aspect ratios beyond 1:1 & 9:16",
+        "Additional aspect ratios (quoted separately)",
         "New concepts or major creative rework (new order)",
       ],
       need: [
         "Brief/summary of the narrative, or up to 5 key points/features to spotlight",
         "References/inspiration (if any)",
       ],
-      deliver: "Up to 5 slides × 2 sizes, PNG/JPG set, numbered & sequenced, delivered via shared drive folder",
+      deliver: "Up to 5 slides in the chosen aspect ratio, PNG/JPG set, numbered & sequenced, delivered via shared drive folder",
       // Same reasoning as Static — design-only, `scripting: "Not applicable"`.
       support: ["editor", "call"],
     },
