@@ -1310,7 +1310,7 @@
     if (ocsDiscountRow) {
       ocsDiscountRow.hidden = !discountActive;
       if (discountActive) {
-        const pctDisplay = Math.round(cart.discountValue * 10) / 10;
+        const pctDisplay = Math.round(cart.discountValue * 100) / 100;
         document.getElementById("qDiscountPctCompact").textContent = `${pctDisplay}% off`;
       }
     }
