@@ -65,7 +65,7 @@ const NOT_CONFIGURED_MSG = "Order History isn't connected yet. Ask an admin to f
 // New accounts must sign up with one of these email domains. This is a
 // light client-side guard, not real security — Firestore rules are what
 // actually keep one member's orders private from another.
-const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com"];
+const ALLOWED_SIGNUP_DOMAINS = ["fastrr.com", "pickrr.com", "shiprocket.com"];
 
 // Accounts signed in with one of these emails see every rep's orders
 // (an "All Orders" view alongside their own), not just the ones they
