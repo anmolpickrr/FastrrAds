@@ -177,6 +177,8 @@
       revisionCreative: "1 revision",
       revisionScriptShort: "N/A",
       revisionCreativeShort: "1 revision",
+      revisionCreativeCovered: "Layout, text, or colour adjustments within the approved design direction.",
+      revisionCreativeNotCovered: "A new concept, new photography/product shots, additional aspect ratios, or a substantial redesign. These may require additional charges and time.",
       language: "Not applicable",
       turnaround: "24 working hours per creative after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -213,6 +215,8 @@
       revisionCreative: "1 revision",
       revisionScriptShort: "N/A",
       revisionCreativeShort: "1 revision",
+      revisionCreativeCovered: "Layout, text, or slide-order adjustments within the approved narrative.",
+      revisionCreativeNotCovered: "A new concept, more than 5 slides, additional aspect ratios, or a substantial redesign. These may require additional charges and time.",
       language: "Not applicable",
       turnaround: "24–48 working hours per carousel after we receive all required details, assets, and final confirmation from you",
       included: [
@@ -244,6 +248,8 @@
       revisionCreative: "1 revision covering minor text changes, element placement adjustments, or removal of elements",
       revisionScriptShort: "N/A",
       revisionCreativeShort: "1 revision (minor text/placement)",
+      revisionCreativeCovered: "Minor text changes, element placement adjustments, or removal of elements within the finished reel.",
+      revisionCreativeNotCovered: "Background music, captions/subtitles, badge changes, frame-level edits (VO, colour grading, product shots), a new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.",
       language: "Hindi / English voiceover",
       turnaround: "1 to 2 working days per reel after we receive everything needed from you",
       included: [
@@ -280,7 +286,11 @@
       revisionScript: "Shared with the 1 creative revision below, usable on the script before approval",
       revisionCreative: "1 revision covering all Quick Cut changes, plus background music changes, captions/subtitles, and unit/badge additions or adjustments",
       revisionScriptShort: "1 revision (combined with creative)",
+      revisionScriptCovered: "Wording changes to the shared script, reordering a point, trimming, or fixing a factual detail — made before you approve it.",
+      revisionScriptNotCovered: "A new concept, a different offer, a full rewrite, or any change requested after the script is already approved. These may require additional charges and time.",
       revisionCreativeShort: "1 revision (+ music, captions, badges)",
+      revisionCreativeCovered: "All Quick Cut edits (text/placement/element removal), plus background music changes, captions/subtitles, and unit/badge additions or adjustments.",
+      revisionCreativeNotCovered: "Frame-level edits (VO refinement, colour grading, product shots), a new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.",
       language: "Hindi / English voiceover",
       turnaround: "Up to 3 working days per reel after we receive everything needed from you",
       included: [
@@ -317,7 +327,11 @@
       revisionScript: "Shared with the 1 creative revision below, usable on the script or hooks before approval",
       revisionCreative: "1 revision covering all Quick Cut and Story Cut changes, plus changes to 1 frame only — such as VO refinement, colour grading, colour adjustments, adding elements, or product shot changes",
       revisionScriptShort: "1 revision (combined with creative)",
+      revisionScriptCovered: "Wording changes to the script or either hook option, reordering a point, trimming, or fixing a factual detail — made before you approve them.",
+      revisionScriptNotCovered: "A new concept, a different offer, a full rewrite, a new hook direction, or any change requested after the script/hooks are already approved. These may require additional charges and time.",
       revisionCreativeShort: "1 revision (+ 1 frame)",
+      revisionCreativeCovered: "All Quick Cut and Story Cut edits, plus changes to 1 frame only — VO refinement, colour grading, colour adjustments, adding elements, or product shot changes.",
+      revisionCreativeNotCovered: "Changes to more than 1 frame, a new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.",
       language: "Hindi / English voiceover",
       turnaround: "Up to 4 working days per reel after we receive everything needed from you",
       included: [
@@ -354,7 +368,11 @@
       revisionScript: "Shared with the 2 creative revisions below, usable on the script or hooks before approval",
       revisionCreative: "2 revisions covering all Quick Cut, Story Cut, and Director's Cut changes, plus changes to 2 frames only, within the same scope as Director's Cut",
       revisionScriptShort: "2 revisions (combined with creative)",
+      revisionScriptCovered: "Wording changes to the script or either hook option, reordering a point, trimming, or fixing a factual detail — made before you approve them.",
+      revisionScriptNotCovered: "A new concept, a different offer, a full rewrite, a new hook direction, or any change requested after the script/hooks are already approved. These may require additional charges and time.",
       revisionCreativeShort: "2 revisions (+ 2 frames)",
+      revisionCreativeCovered: "All Quick Cut, Story Cut, and Director's Cut edits, plus changes to 2 frames only, within the same scope as Director's Cut.",
+      revisionCreativeNotCovered: "Changes to more than 2 frames, a new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.",
       language: "Hindi / English voiceover",
       turnaround: "Up to 5 working days per reel after we receive everything needed from you",
       included: [
@@ -1010,19 +1028,34 @@
     const scriptCountEl = document.getElementById("svcScriptRevisionCount");
     const scriptDescEl = document.getElementById("svcScriptRevisionDesc");
     const scriptExamplesEl = document.getElementById("svcScriptRevisionExamples");
+    const scriptCoveredEl = document.getElementById("svcScriptRevisionCovered");
+    const scriptNotCoveredEl = document.getElementById("svcScriptRevisionNotCovered");
     const creativeCountEl = document.getElementById("svcCreativeRevisionCount");
     const creativeDescEl = document.getElementById("svcCreativeRevisionDesc");
+    const creativeExamplesEl = document.getElementById("svcCreativeRevisionExamples");
+    const creativeCoveredEl = document.getElementById("svcCreativeRevisionCovered");
+    const creativeNotCoveredEl = document.getElementById("svcCreativeRevisionNotCovered");
     if (!scriptCountEl) return;
     const scriptApplies = !!d.revisionScriptShort && d.revisionScriptShort !== "N/A";
     scriptCountEl.textContent = d.revisionScriptShort || "N/A";
     scriptDescEl.textContent = d.revisionScript || "Not applicable to this service.";
-    // The generic Covered/Not covered script examples only make sense
-    // for services with an actual script-approval step — showing them
-    // next to "N/A" would contradict the count above instead of
-    // clarifying it.
+    // The Covered/Not covered examples are per-package (d.revisionScriptCovered/
+    // NotCovered), not a generic shared line — each tier's revision scope is
+    // different, so the example shown has to match it. They only make sense
+    // for services with an actual script-approval step — showing them next to
+    // "N/A" would contradict the count above instead of clarifying it.
     if (scriptExamplesEl) scriptExamplesEl.hidden = !scriptApplies;
+    if (scriptApplies && scriptCoveredEl) scriptCoveredEl.textContent = d.revisionScriptCovered || "";
+    if (scriptApplies && scriptNotCoveredEl) scriptNotCoveredEl.textContent = d.revisionScriptNotCovered || "";
     creativeCountEl.textContent = d.revisionCreativeShort || d.revisions || "—";
     creativeDescEl.textContent = d.revisionCreative || d.revisions || "";
+    // Same per-package logic for creative revisions — and hidden entirely for
+    // services with no revisions at all (e.g. 360° Catalogue), where showing
+    // Covered/Not covered examples would contradict "None" above.
+    const creativeApplies = !!(d.revisionCreativeCovered || d.revisionCreativeNotCovered);
+    if (creativeExamplesEl) creativeExamplesEl.hidden = !creativeApplies;
+    if (creativeApplies && creativeCoveredEl) creativeCoveredEl.textContent = d.revisionCreativeCovered || "";
+    if (creativeApplies && creativeNotCoveredEl) creativeNotCoveredEl.textContent = d.revisionCreativeNotCovered || "";
   }
 
   // Section I (final recap + action): mirrors whatever's currently

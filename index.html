@@ -1095,7 +1095,7 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
 .revision-examples{display:flex; flex-direction:column; gap:8px; padding-top:10px; border-top:1px solid var(--line-soft);}
 .revision-examples[hidden]{display:none;}
 .revision-examples div{font-size:12px; line-height:1.55; color:var(--text-2);}
-.revision-examples span{display:block; font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-1); margin-bottom:2px;}
+.revision-examples div>span:first-child{display:block; font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-1); margin-bottom:2px;}
 @media (max-width:640px){.revision-split{grid-template-columns:1fr;}}
 
 /* Section I — recap + the one in-modal path into the order builder. */
@@ -3175,8 +3175,8 @@ footer{padding:64px 0 0; margin-top:40px;}
                 <p class="revision-count" id="svcScriptRevisionCount"></p>
                 <p class="revision-desc" id="svcScriptRevisionDesc"></p>
                 <div class="revision-examples" id="svcScriptRevisionExamples">
-                  <div><span>Covered</span>Wording changes, reordering a point, trimming, or fixing a factual detail — made before you approve the script.</div>
-                  <div><span>Not covered</span>A new concept, a different offer, a full rewrite, or any change requested after the script is already approved. These may require additional charges and time.</div>
+                  <div><span>Covered</span><span id="svcScriptRevisionCovered"></span></div>
+                  <div><span>Not covered</span><span id="svcScriptRevisionNotCovered"></span></div>
                 </div>
               </div>
               <div class="revision-block">
@@ -3184,9 +3184,9 @@ footer{padding:64px 0 0; margin-top:40px;}
                 <p class="revision-sub">Changes to the finished reel/creative, once production is underway.</p>
                 <p class="revision-count" id="svcCreativeRevisionCount"></p>
                 <p class="revision-desc" id="svcCreativeRevisionDesc"></p>
-                <div class="revision-examples">
-                  <div><span>Covered</span>The edits listed for your package above — e.g. text/placement fixes, music/caption changes, or frame-level touch-ups, within the approved direction.</div>
-                  <div><span>Not covered</span>A new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.</div>
+                <div class="revision-examples" id="svcCreativeRevisionExamples">
+                  <div><span>Covered</span><span id="svcCreativeRevisionCovered"></span></div>
+                  <div><span>Not covered</span><span id="svcCreativeRevisionNotCovered"></span></div>
                 </div>
               </div>
             </div>
