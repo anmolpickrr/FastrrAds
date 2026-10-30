@@ -1088,10 +1088,12 @@ table.compare-table th .tier-quality-badge{margin-top:6px;}
    (never merged into one generic "Revisions" block) — see Section E. */
 .revision-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
 .revision-block{padding:16px 18px; border-radius:12px; background:var(--surface-1); border:1px solid var(--line-soft);}
-.revision-block h4{margin:0 0 8px; font-size:13px; font-weight:700; color:var(--text-0);}
+.revision-block h4{margin:0 0 4px; font-size:13px; font-weight:700; color:var(--text-0);}
+.revision-sub{margin:0 0 10px; font-size:11.5px; line-height:1.4; color:var(--text-3, var(--text-2));}
 .revision-count{margin:0 0 6px; font-size:15px; font-weight:700; color:var(--violet);}
 .revision-desc{margin:0 0 12px; font-size:12.5px; line-height:1.55; color:var(--text-2);}
 .revision-examples{display:flex; flex-direction:column; gap:8px; padding-top:10px; border-top:1px solid var(--line-soft);}
+.revision-examples[hidden]{display:none;}
 .revision-examples div{font-size:12px; line-height:1.55; color:var(--text-2);}
 .revision-examples span{display:block; font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-1); margin-bottom:2px;}
 @media (max-width:640px){.revision-split{grid-template-columns:1fr;}}
@@ -3192,20 +3194,22 @@ footer{padding:64px 0 0; margin-top:40px;}
             <div class="revision-split" id="revisionSplit">
               <div class="revision-block">
                 <h4>Script revisions</h4>
+                <p class="revision-sub">Changes to the shared script/hook text, before you approve it.</p>
                 <p class="revision-count" id="svcScriptRevisionCount"></p>
                 <p class="revision-desc" id="svcScriptRevisionDesc"></p>
-                <div class="revision-examples">
-                  <div><span>Covered</span>Small wording tweaks, reordering a point, fixing a factual detail you flag before approval.</div>
-                  <div><span>Not covered</span>A new concept, a different offer, or a full rewrite after you've already approved the script.</div>
+                <div class="revision-examples" id="svcScriptRevisionExamples">
+                  <div><span>Covered</span>Wording changes, reordering a point, trimming, or fixing a factual detail — made before you approve the script.</div>
+                  <div><span>Not covered</span>A new concept, a different offer, a full rewrite, or any change requested after the script is already approved. These may require additional charges and time.</div>
                 </div>
               </div>
               <div class="revision-block">
                 <h4>Creative revisions</h4>
+                <p class="revision-sub">Changes to the finished reel/creative, once production is underway.</p>
                 <p class="revision-count" id="svcCreativeRevisionCount"></p>
                 <p class="revision-desc" id="svcCreativeRevisionDesc"></p>
                 <div class="revision-examples">
-                  <div><span>Covered</span>Minor in-frame text or placement fixes, small timing adjustments, edit refinements within the approved direction.</div>
-                  <div><span>Not covered</span>A new concept, replacement model, language change, new scenes, or substantial regeneration — these may need additional charges and time.</div>
+                  <div><span>Covered</span>The edits listed for your package above — e.g. text/placement fixes, music/caption changes, or frame-level touch-ups, within the approved direction.</div>
+                  <div><span>Not covered</span>A new concept, replacement model, language change, new scenes, or substantial regeneration. These may require additional charges and time.</div>
                 </div>
               </div>
             </div>

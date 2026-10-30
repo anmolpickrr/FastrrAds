@@ -1009,11 +1009,18 @@
     const d = currentData();
     const scriptCountEl = document.getElementById("svcScriptRevisionCount");
     const scriptDescEl = document.getElementById("svcScriptRevisionDesc");
+    const scriptExamplesEl = document.getElementById("svcScriptRevisionExamples");
     const creativeCountEl = document.getElementById("svcCreativeRevisionCount");
     const creativeDescEl = document.getElementById("svcCreativeRevisionDesc");
     if (!scriptCountEl) return;
+    const scriptApplies = !!d.revisionScriptShort && d.revisionScriptShort !== "N/A";
     scriptCountEl.textContent = d.revisionScriptShort || "N/A";
     scriptDescEl.textContent = d.revisionScript || "Not applicable to this service.";
+    // The generic Covered/Not covered script examples only make sense
+    // for services with an actual script-approval step — showing them
+    // next to "N/A" would contradict the count above instead of
+    // clarifying it.
+    if (scriptExamplesEl) scriptExamplesEl.hidden = !scriptApplies;
     creativeCountEl.textContent = d.revisionCreativeShort || d.revisions || "—";
     creativeDescEl.textContent = d.revisionCreative || d.revisions || "";
   }
