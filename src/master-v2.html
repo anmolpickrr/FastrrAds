@@ -1320,76 +1320,63 @@ table.compare-table.compare-filtering .ct-compare-exit-row{display:table-row;}
 table.compare-table td.ct-sel .ct-add-btn{background:var(--violet); color:var(--btn-ink); border-color:var(--violet);}
 table.compare-table td.ct-sel .ct-add-btn:hover{background:var(--violet-strong, var(--violet)); filter:brightness(1.08);}
 
-/* ---------- HOW WE WORK (always-visible timeline) ----------
-   Rebuilt from a tab-switcher-with-hidden-panels (read the brief, had
-   to click to see what's behind each tab) into a single horizontal
-   rail where all 5 steps are visible and scannable at once — the
-   standard agency "here's the whole process at a glance" pattern,
-   not a feature-tour carousel. A connecting line runs under every
-   step number; each step is its own card with icon, title and
-   description, no click required to read any of it. Below ~980px the
-   rail becomes a vertical timeline (line moves to the left edge,
-   cards stack) since five cards can't sit side by side on a phone. */
+/* ---------- HOW WE WORK (editorial numbered columns) ----------
+   An agency process page reads as editorial copy with oversized folio
+   numbers, not a SaaS feature-tour component — no rounded chip
+   badges, no circle-and-line stepper, no bordered icon tiles. Each
+   step is a huge ghost numeral bleeding behind the icon/title (the
+   kind of number treatment a print spread or Pentagram/Basic-style
+   process page uses), separated from its neighbor by a single hairline
+   rule instead of a connecting progress bar. Icons sit bare (just
+   color, no background tile) so the type does the work. */
 .process-rail{
-  position:relative; margin-top:22px;
-  display:grid; grid-template-columns:repeat(5, 1fr); gap:0;
-}
-/* The connecting line sits in its own full-width strip above the
-   cards, one segment per gap, each number badge centered over its
-   card column — reads as a single continuous thread the steps sit on. */
-.process-rail-line{
-  position:relative; grid-column:1 / -1; height:2px; margin:0 calc(50% / 5) 28px;
-  background:var(--line-soft); border-radius:2px;
-}
-.process-rail-line-fill{
-  position:absolute; inset:0; width:100%; border-radius:2px;
-  background:linear-gradient(90deg, var(--violet), var(--teal));
+  position:relative; margin-top:36px; padding-top:28px; border-top:1px solid var(--line-soft);
+  display:grid; grid-template-columns:repeat(5, 1fr);
 }
 .process-step{
-  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:10px;
-  padding:0 14px 0 0; text-align:left;
+  position:relative; display:flex; flex-direction:column; gap:14px;
+  padding:0 24px 0 0; text-align:left; border-left:1px solid var(--line-soft);
+  padding-left:20px;
 }
+.process-step:first-child{border-left:none; padding-left:0;}
 .process-step:last-child{padding-right:0;}
+/* The oversized folio number — large, low-opacity, display font —
+   sits as a graphic mark behind the content rather than inside a
+   circle badge. font-feature "tnum" keeps the two-digit numerals
+   tabular so every step's number occupies the same visual weight. */
 .process-step-num{
-  position:absolute; top:-45px; left:calc(50% / 5 - 14px); width:28px; height:28px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--text-2);
-  background:var(--surface-0); border:2px solid var(--violet); z-index:1;
+  display:block; font-family:var(--font-display); font-size:52px; font-weight:800; line-height:1;
+  letter-spacing:-0.03em; background:linear-gradient(135deg, var(--text-0), var(--line-soft));
+  -webkit-background-clip:text; background-clip:text; color:transparent; opacity:.5;
 }
-.process-step-icon{
-  width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
-  background:linear-gradient(135deg, color-mix(in srgb, var(--violet) 20%, transparent), color-mix(in srgb, var(--teal) 12%, transparent));
-  border:1px solid color-mix(in srgb, var(--violet) 20%, var(--line-soft)); color:var(--violet);
-  transition:transform .3s cubic-bezier(.16,1,.3,1);
-}
-.process-step-icon svg{width:19px; height:19px;}
-.process-step:hover .process-step-icon{transform:translateY(-3px);}
-.process-step-meta{font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--text-2);}
-.process-step h3{font-size:15px; font-weight:700; letter-spacing:-0.01em; margin:0;}
-.process-step p{font-size:12.5px; color:var(--text-1); line-height:1.55; margin:0;}
+.process-step-icon{display:flex; color:var(--violet); margin-top:-6px;}
+.process-step-icon svg{width:22px; height:22px;}
+.process-step-meta{font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-2);}
+.process-step h3{font-size:19px; font-weight:800; letter-spacing:-0.015em; margin:2px 0 0;}
+.process-step p{font-size:13px; color:var(--text-1); line-height:1.6; margin:0;}
 /* Footer bridge — closes the gap between "here's our process" and the
-   next section being the actual place to act on it. */
+   next section being the actual place to act on it. Kept deliberately
+   plain (no card chrome) — a rule and a line of copy, same editorial
+   register as the rail above it. */
 .process-footer{
   display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  margin-top:32px; padding:14px 18px; border-radius:14px; border:1px solid var(--line-soft); background:var(--glass);
+  margin-top:36px; padding-top:22px; border-top:1px solid var(--line-soft);
 }
-.process-footer p{margin:0; font-size:12.5px; color:var(--text-2);}
-.process-footer p b{color:var(--text-0); font-weight:600;}
+.process-footer p{margin:0; font-size:14px; color:var(--text-1);}
+.process-footer p b{color:var(--text-0); font-weight:700;}
 .process-footer-cta{
-  display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border-radius:100px;
-  background:var(--violet); color:#fff; font-size:12.5px; font-weight:700; white-space:nowrap;
-  transition:transform .2s ease, box-shadow .2s ease;
+  display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--text-0);
+  white-space:nowrap; padding-bottom:2px; border-bottom:1.5px solid var(--text-0);
+  transition:gap .2s ease, color .2s ease, border-color .2s ease;
 }
-.process-footer-cta:hover{transform:translateY(-1px); box-shadow:0 8px 20px -8px color-mix(in srgb, var(--violet) 55%, transparent);}
-.process-footer-cta svg{width:14px; height:14px; transition:transform .2s ease;}
-.process-footer-cta:hover svg{transform:translateX(2px);}
+.process-footer-cta:hover{gap:12px; color:var(--violet); border-color:var(--violet);}
+.process-footer-cta svg{width:15px; height:15px;}
 @media (max-width:980px){
-  .process-rail{grid-template-columns:1fr; gap:26px;}
-  .process-rail-line{position:absolute; inset:0 auto 0 13px; width:2px; height:auto; margin:0;}
-  .process-rail-line-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--violet), var(--teal));}
-  .process-step{padding:0 0 0 38px;}
-  .process-step-num{top:0; left:0;}
-  .process-footer{flex-direction:column; align-items:flex-start;}
+  .process-rail{grid-template-columns:1fr; gap:28px;}
+  .process-step{border-left:none; padding-left:0; padding-right:0; padding-bottom:28px; border-bottom:1px solid var(--line-soft);}
+  .process-step:last-child{border-bottom:none; padding-bottom:0;}
+  .process-step-num{font-size:44px;}
+  .process-footer{flex-direction:column; align-items:flex-start; gap:12px;}
 }
 
 /* ---------- ORDER BUILDER / CALCULATOR ----------
@@ -1407,24 +1394,23 @@ table.compare-table td.ct-sel .ct-add-btn:hover{background:var(--violet-strong, 
 /* Visual creative-type picker — 2x2 icon cards replacing a plain
    <select>, same icon set as the Services pkg-cards above so picking
    what to quote reads as the same system, not a generic form field. */
-.qtype-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+/* Bare icon + bold label, no colored-square badge — the badge-in-a-box
+   treatment is exactly the small-chip language that reads as generic
+   SaaS-form chrome rather than something an agency actually designed.
+   Selection state is a confident filled fill, not a thin ring. */
+.qtype-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 .qtype-card{
-  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:8px;
-  padding:13px 14px; border-radius:12px; border:1px solid var(--line); background:var(--surface-1);
+  position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:16px;
+  padding:20px 18px; border-radius:14px; border:1px solid var(--line); background:var(--surface-1);
   color:var(--text-1); text-align:left; transition:border-color .2s ease, background .2s ease, transform .2s ease;
 }
-.qtype-card:hover{border-color:color-mix(in srgb, var(--violet) 35%, var(--line)); transform:translateY(-1px);}
+.qtype-card:hover{border-color:color-mix(in srgb, var(--violet) 40%, var(--line)); transform:translateY(-2px);}
 .qtype-card.active{
-  border-color:var(--violet); background:color-mix(in srgb, var(--violet) 9%, var(--surface-1));
-  box-shadow:0 0 0 1px var(--violet);
+  border-color:var(--violet); background:linear-gradient(135deg, color-mix(in srgb, var(--violet) 16%, var(--surface-1)), var(--surface-1));
 }
-.qtype-icon{
-  width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center;
-  background:var(--violet-soft); color:var(--violet);
-}
-.qtype-icon svg{width:15px; height:15px;}
-.qtype-label{font-size:12.5px; font-weight:600; color:var(--text-0);}
-.qtype-card.active .qtype-label{color:var(--violet);}
+.qtype-icon{display:flex; color:var(--violet);}
+.qtype-icon svg{width:24px; height:24px;}
+.qtype-label{font-size:14.5px; font-weight:700; color:var(--text-0); letter-spacing:-0.01em;}
 @media (max-width:360px){.qtype-grid{grid-template-columns:1fr;}}
 .select-input,.text-input{
   padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--surface-1); color:var(--text-0);
@@ -3368,39 +3354,33 @@ footer{padding:64px 0 0; margin-top:40px;}
       <p>Five steps, start to finish: here's what happens between the brief you send us and the file landing in your drive.</p>
     </div>
     <div class="process-rail reveal-on-scroll">
-      <div class="process-rail-line"><span class="process-rail-line-fill" aria-hidden="true"></span></div>
       <div class="process-step">
         <span class="process-step-num" aria-hidden="true">01</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h6"/></svg></span>
-        <span class="process-step-meta">Step 01</span>
         <h3>Share your brief</h3>
         <p>Tell us about the brand, the product, and what the creative needs to say. One brief covers the whole order.</p>
       </div>
       <div class="process-step">
         <span class="process-step-num" aria-hidden="true">02</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 10 2 2 4-4"/></svg></span>
-        <span class="process-step-meta">Step 02</span>
         <h3>Script &amp; direction</h3>
         <p>Story Cut and up get the script to approve first. Director's Cut and Studio Cut also get two hook options to pick from.</p>
       </div>
       <div class="process-step">
         <span class="process-step-num" aria-hidden="true">03</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.9 4.6L18 9l-4.1 1.4L12 15l-1.9-4.6L6 9l4.1-1.4L12 3Z"/><path d="M19 15.5 19.8 17.5 22 18.3 19.8 19.1 19 21.1 18.2 19.1 16 18.3 18.2 17.5 19 15.5Z"/></svg></span>
-        <span class="process-step-meta">Step 03</span>
         <h3>Production</h3>
         <p>We build it: AI voiceover, editing, and transitions, with a Content Writer and Creative Director on anything Director's Cut or above.</p>
       </div>
       <div class="process-step">
         <span class="process-step-num" aria-hidden="true">04</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></span>
-        <span class="process-step-meta">Step 04</span>
         <h3>Review &amp; revise</h3>
         <p>Every package comes with revision rounds, so if something needs tightening up, we fix it before it's final.</p>
       </div>
       <div class="process-step">
         <span class="process-step-num" aria-hidden="true">05</span>
         <span class="process-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
-        <span class="process-step-meta">Step 05</span>
         <h3>Delivery</h3>
         <p>The finished file lands in your shared drive. Turnaround depends on the package, and it's always shown upfront.</p>
       </div>
