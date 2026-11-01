@@ -1175,12 +1175,17 @@
     const isReel = state.service === "reels";
     const isCatalogue = state.service === "catalogue";
 
-    // Keep the <select> itself in sync with state too — state.service can
-    // change from outside this control, and previously nothing here ever
-    // wrote back to qServiceSelect.value, so the dropdown could silently show a
-    // different service than the one actually active/priced below it.
-    const qServiceSelect = document.getElementById("qServiceSelect");
-    if (qServiceSelect.value !== state.service) qServiceSelect.value = state.service;
+    // Keep the type-picker cards in sync with state too — state.service can
+    // change from outside this control (e.g. a Services pkg-card click), so
+    // every render re-syncs which card shows as selected.
+    const qTypeGridEl = document.getElementById("qTypeGrid");
+    if (qTypeGridEl) {
+      qTypeGridEl.querySelectorAll(".qtype-card").forEach((card) => {
+        const isActive = card.dataset.svc === state.service;
+        card.classList.toggle("active", isActive);
+        card.setAttribute("aria-checked", isActive ? "true" : "false");
+      });
+    }
 
     // Tier chips only apply to AI Reel and Catalogue — hide each field
     // for every other service, and keep exactly one chip marked
@@ -2167,11 +2172,13 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   }
 
   // order-builder service/tier controls
-  document.getElementById("qServiceSelect").addEventListener("change", (e) => {
-    withScrollAnchor(() => {
-      state.service = e.target.value;
-      render();
-      switchShowcaseCat(state.service);
+  document.getElementById("qTypeGrid").querySelectorAll(".qtype-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      withScrollAnchor(() => {
+        state.service = card.dataset.svc;
+        render();
+        switchShowcaseCat(state.service);
+      });
     });
   });
   document.getElementById("qTierField").querySelectorAll(".qtier-chip").forEach((chip) => {
@@ -3449,184 +3456,11 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   })();
 
   /* ----------------------------------------------------------
-     11b. WHATSAPP MOCK WINDOW (testimonials) — drag, a staggered
-     typing→bubble reveal once it scrolls into view, and "view more"
-     revealing the rest of the thread the same way. Pointer Events
-     unify mouse/touch/pen for the drag so there's no separate touch
-     path to keep in sync. Reveal sequencing is skipped (everything
-     shown immediately) under prefers-reduced-motion, same convention
-     as every other animation on this page.
+     11b. Testimonials wall is a static, pure-CSS marquee (see
+     .testi-marquee / .testi-row-track) — no JS needed, each row
+     scrolls on its own CSS animation.
   ---------------------------------------------------------- */
-  (function initTestimonialWindow() {
-    const win = document.getElementById("waWindow");
-    const head = document.getElementById("waWindowHead");
-    const body = document.getElementById("waWindowBody");
-    const typingRow = document.getElementById("waTypingRow");
-    const stage = document.getElementById("testiStage");
-    const statusEl = document.getElementById("waHeadStatus");
-    if (!win || !head || !body || !stage) return;
 
-    /* ---- Drag: clamped to a generous offset range around the
-       window's natural (centered) position rather than measuring
-       exact stage/window rects — simpler, and just as effective at
-       keeping it from being dragged off-section. Double-click/tap the
-       header resets it. ---- */
-    const MAX_DX = 160;
-    const MAX_DY = 100;
-    let curX = 0;
-    let curY = 0;
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let originX = 0;
-    let originY = 0;
-    function clampNum(v, min, max) {
-      return Math.max(min, Math.min(max, v));
-    }
-    function applyTransform() {
-      win.style.transform = curX || curY ? `translate(${curX}px, ${curY}px)` : "";
-    }
-    function onPointerMove(e) {
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
-      curX = clampNum(originX + dx, -MAX_DX, MAX_DX);
-      curY = clampNum(originY + dy, -MAX_DY, MAX_DY);
-      applyTransform();
-    }
-    function onPointerUp() {
-      win.classList.remove("wa-dragging");
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-    }
-    head.addEventListener("pointerdown", (e) => {
-      if (e.button != null && e.button !== 0) return; // primary button/touch only
-      win.classList.add("wa-dragging");
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-      originX = curX;
-      originY = curY;
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp, { once: true });
-      e.preventDefault();
-    });
-    head.addEventListener("dblclick", () => {
-      curX = 0;
-      curY = 0;
-      applyTransform();
-    });
-
-    /* ---- Continuous back-to-back reveal loop ----
-       Messages type in three at a time — enough to fill the panel
-       without ever needing to scroll it — hold on screen, fade out,
-       then the next three take their place; once the last group has
-       had its turn, it wraps back to the first. A live feed that
-       never just stops, rather than a one-time reveal gated behind a
-       "view more" click, but deliberately NOT an auto-scrolling one:
-       an earlier version kept nudging body.scrollTo() to follow a
-       thread of all 9 rows at once, and that constant scroll — right
-       next to a static page — read as the whole section "moving."
-       Batching to a fixed set that always fits removes the scroll
-       call entirely. Stays running for as long as the panel is
-       scrolled into view; pauses (not destroyed) while scrolled away
-       so it doesn't run invisibly in the background. */
-    const allRows = Array.from(body.querySelectorAll("[data-wa-msg]"));
-    function chunk(arr, size) {
-      const out = [];
-      for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-      return out;
-    }
-    const batches = chunk(allRows, 3);
-
-    function wait(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-    async function showTypingBeat() {
-      if (!typingRow) return;
-      typingRow.classList.add("wa-shown");
-      await wait(650);
-      typingRow.classList.remove("wa-shown");
-    }
-    async function revealSequence(rows) {
-      for (const row of rows) {
-        row.hidden = false;
-        if (!prefersReducedMotion) {
-          await wait(220);
-          await showTypingBeat();
-        }
-        row.classList.add("wa-shown");
-        if (!prefersReducedMotion) await wait(420);
-      }
-    }
-    function hideBatch(rows) {
-      rows.forEach((r) => r.classList.remove("wa-shown"));
-    }
-    function resetBatch(rows) {
-      rows.forEach((r) => {
-        r.hidden = true;
-        r.classList.remove("wa-shown");
-      });
-    }
-    function showAllImmediately(rows) {
-      rows.forEach((r) => {
-        r.hidden = false;
-        r.classList.add("wa-shown");
-      });
-    }
-
-    let running = false;
-    let visible = false;
-    async function loop() {
-      if (running) return;
-      running = true;
-      if (prefersReducedMotion) {
-        // Nothing left to animate — one static pass of every message
-        // is the correct end state under reduced motion, not an
-        // invisible infinite loop still ticking in the background.
-        showAllImmediately(allRows);
-        running = false;
-        return;
-      }
-      let batchIndex = 0;
-      while (visible) {
-        const batch = batches[batchIndex % batches.length];
-        await revealSequence(batch);
-        await wait(2600); // hold this group on screen before swapping
-        if (!visible) break;
-        hideBatch(batch);
-        await wait(450); // let the fade-out transition finish
-        resetBatch(batch);
-        batchIndex++;
-        await wait(300); // brief pause before the next group starts
-      }
-      running = false;
-    }
-    if ("IntersectionObserver" in window) {
-      const wio = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            visible = entry.isIntersecting;
-            if (visible) loop();
-          });
-        },
-        { threshold: 0.25 }
-      );
-      wio.observe(win);
-    } else {
-      visible = true;
-      loop();
-    }
-
-    /* ---- Status line cycles for a bit of life, paused under
-       prefers-reduced-motion since it's decorative, not informative. ---- */
-    if (statusEl && !prefersReducedMotion) {
-      const dot = '<span class="wa-head-status-dot" aria-hidden="true"></span>';
-      const statuses = [dot + "online", "typing…", dot + "online", "last seen just now"];
-      let si = 0;
-      setInterval(() => {
-        si = (si + 1) % statuses.length;
-        statusEl.innerHTML = statuses[si];
-      }, 4200);
-    }
-  })();
 
   /* ----------------------------------------------------------
      12. NAV: smooth scroll + active link highlight
@@ -3653,90 +3487,9 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
   // per-item ✕ and the cart-level Clear button (#orderCartClearBtn,
   // wired below) are the real, always-visible way to discard a draft.
 
-  // 11c. HOW WE WORK — step switcher: click or auto-advance cross-fades
-  // the display pane and slides the tab indicator; pauses on hover/focus.
-  (function initProcessSwitcher() {
-    const root = document.getElementById("processSwitcher");
-    if (!root) return;
-    const tabsWrap = document.getElementById("processTabs");
-    const indicator = document.getElementById("processTabIndicator");
-    const tabs = Array.from(root.querySelectorAll(".process-tab"));
-    const panels = Array.from(root.querySelectorAll(".process-panel"));
-    if (!tabs.length || !panels.length) return;
-
-    const ADVANCE_MS = 4500;
-    let active = 0;
-    let timer = null;
-
-    // offsetLeft/Top (not getBoundingClientRect) — scroll-independent,
-    // needed since the mobile tab strip scrolls horizontally.
-    function positionIndicator() {
-      if (!indicator || !tabsWrap) return;
-      const tab = tabs[active];
-      indicator.style.width = tab.offsetWidth + "px";
-      indicator.style.height = tab.offsetHeight + "px";
-      indicator.style.transform = `translate(${tab.offsetLeft}px, ${tab.offsetTop}px)`;
-    }
-
-    function show(index) {
-      active = ((index % tabs.length) + tabs.length) % tabs.length;
-      tabs.forEach((t, i) => {
-        t.classList.toggle("active", i === active);
-        t.classList.toggle("completed", i < active);
-        t.setAttribute("aria-selected", i === active ? "true" : "false");
-      });
-      panels.forEach((p, i) => p.classList.toggle("active", i === active));
-      tabs.forEach((t) => {
-        const bar = t.querySelector(".process-tab-progress");
-        if (!bar) return;
-        bar.classList.remove("running");
-      });
-      positionIndicator();
-      if (!prefersReducedMotion) {
-        const activeBar = tabs[active].querySelector(".process-tab-progress");
-        if (activeBar) {
-          void activeBar.offsetWidth;
-          activeBar.classList.add("running");
-        }
-      }
-    }
-
-    function stopAuto() {
-      if (timer) clearInterval(timer);
-      timer = null;
-    }
-    function startAuto() {
-      if (prefersReducedMotion) return;
-      stopAuto();
-      timer = setInterval(() => show(active + 1), ADVANCE_MS);
-    }
-
-    tabs.forEach((tab, i) => {
-      tab.addEventListener("click", () => {
-        show(i);
-        startAuto();
-      });
-    });
-    root.addEventListener("mouseenter", stopAuto);
-    root.addEventListener("mouseleave", startAuto);
-    root.addEventListener("focusin", stopAuto);
-    root.addEventListener("focusout", startAuto);
-
-    // The vertical/horizontal layout swap at 820px (and any other
-    // viewport change) moves every tab's position, so the indicator
-    // has to re-measure rather than keep its last transform.
-    let resizeRaf = null;
-    window.addEventListener("resize", () => {
-      if (resizeRaf) return;
-      resizeRaf = requestAnimationFrame(() => {
-        resizeRaf = null;
-        positionIndicator();
-      });
-    });
-
-    show(0);
-    startAuto();
-  })();
+  // 11c. HOW WE WORK is now a static always-visible timeline (see
+  // .process-rail) — no JS needed, every step renders and reads at
+  // once instead of being switched behind tabs.
 
   // Minimal cart-replacement hook so team.js (a separate script/
   // closure with no access to this file's private `state`) can drive
