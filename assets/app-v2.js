@@ -1251,8 +1251,19 @@
         title = `Orders above ${thresholdStr} auto-apply code <b>${PUBLIC_OFFER_CODE}</b> for ${PUBLIC_OFFER_PCT}% off.`;
         status = "Locked";
       }
+      // Below threshold: a slim fill bar makes "almost there" concrete
+      // instead of relying on the rupee figure in the sentence alone —
+      // most useful right when it matters most, close to unlocking.
+      const progressPct = unlocked ? 100 : Math.min(100, Math.round((cart.subtotal / PUBLIC_OFFER_THRESHOLD) * 100));
+      const progressBar = !unlocked
+        ? `<span class="oc-offer-progress"><span class="oc-offer-progress-fill" style="width:${progressPct}%"></span></span>`
+        : "";
       offerEl.innerHTML = `
-        <span class="oc-offer-main"><span class="oc-offer-kicker">${kicker}</span><span class="oc-offer-title">${title}</span></span>
+        <span class="oc-offer-main">
+          <span class="oc-offer-kicker">${kicker}</span>
+          <span class="oc-offer-title">${title}</span>
+          ${progressBar}
+        </span>
         <span class="oc-offer-stub"><span class="oc-offer-code">${PUBLIC_OFFER_CODE}</span><span class="oc-offer-code-status">${status}</span></span>
       `;
       offerEl.classList.toggle("is-unlocked", unlocked);
@@ -3671,6 +3682,7 @@ Feel free to also share anything else you'd like us to keep in mind.${specialReq
       active = ((index % tabs.length) + tabs.length) % tabs.length;
       tabs.forEach((t, i) => {
         t.classList.toggle("active", i === active);
+        t.classList.toggle("completed", i < active);
         t.setAttribute("aria-selected", i === active ? "true" : "false");
       });
       panels.forEach((p, i) => p.classList.toggle("active", i === active));
