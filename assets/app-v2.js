@@ -1343,7 +1343,20 @@
     // every reference to them here is null-guarded.
     const qDiscountInputEl = document.getElementById("qDiscountInput");
     if (qDiscountInputEl) {
-      qDiscountInputEl.value = state.discountValue;
+      // Only overwrite the field's raw text if it no longer parses to the
+      // current value — a straight `.value = state.discountValue` on every
+      // render clobbered whatever the user was mid-typing (e.g. "12." or
+      // "3.340"), snapping a trailing "." or "0" away the instant it was
+      // typed and making decimal entry like 12.5 or 3.345 impossible. An
+      // emptied field parses to NaN, which must read as equivalent to a
+      // 0 state (not force a "0" back in) so clearing the field to type
+      // a fresh value doesn't get a stray leading zero prepended.
+      const rawDiscount = qDiscountInputEl.value;
+      const parsedRawDiscount = rawDiscount === "" ? 0 : parseFloat(rawDiscount);
+      const emptyAtZero = rawDiscount === "" && state.discountValue === 0;
+      if (!emptyAtZero && parsedRawDiscount !== state.discountValue) {
+        qDiscountInputEl.value = state.discountValue;
+      }
       qDiscountInputEl.max = TEAM_MAX_DISCOUNT_PCT;
     }
     document.getElementById("qSubtotal").textContent = fmtINR(cart.subtotal);
@@ -1366,7 +1379,7 @@
     if (ocsDiscountRow) {
       ocsDiscountRow.hidden = !discountActive;
       if (discountActive) {
-        const pctDisplay = Math.round(cart.discountValue * 100) / 100;
+        const pctDisplay = Math.round(cart.discountValue * 1000) / 1000;
         document.getElementById("qDiscountPctCompact").textContent = `${pctDisplay}% off`;
       }
     }
